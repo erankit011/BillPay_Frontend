@@ -140,7 +140,7 @@ const Reports = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('Reports & Analytics')}</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">{t('Reports & Analytics')}</h1>
           <p className="text-gray-500 text-sm mt-1">{t('Detailed overview of your business performance')}</p>
         </div>
         
@@ -177,7 +177,7 @@ const Reports = () => {
                 <Calendar className="w-5 h-5 text-indigo-600" />
               </div>
             </div>
-            <p className="text-3xl font-bold text-gray-900">{formatCurrency(analytics?.monthlySales || 0)}</p>
+            <p className="text-3xl font-semibold text-gray-900">{formatCurrency(analytics?.monthlySales || 0)}</p>
           </div>
           
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:-translate-y-1 transition-transform duration-300">
@@ -187,7 +187,7 @@ const Reports = () => {
                 <IndianRupee className="w-5 h-5 text-green-600" />
               </div>
             </div>
-            <p className="text-3xl font-bold text-gray-900">{formatCurrency(analytics?.monthlyCollection || 0)}</p>
+            <p className="text-3xl font-semibold text-gray-900">{formatCurrency(analytics?.monthlyCollection || 0)}</p>
           </div>
 
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:-translate-y-1 transition-transform duration-300">
@@ -197,7 +197,7 @@ const Reports = () => {
                 <FileText className="w-5 h-5 text-red-600" />
               </div>
             </div>
-            <p className="text-3xl font-bold text-gray-900">{formatCurrency(analytics?.pendingAmount || 0)}</p>
+            <p className="text-3xl font-semibold text-gray-900">{formatCurrency(analytics?.pendingAmount || 0)}</p>
           </div>
         </div>
 
@@ -205,7 +205,7 @@ const Reports = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Bar Chart */}
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-            <h3 className="text-lg font-bold text-gray-900 mb-6">{t('Sales Trend (Last 6 Months)')}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">{t('Sales Trend (Last 6 Months)')}</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={salesData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
@@ -221,7 +221,7 @@ const Reports = () => {
 
           {/* Line Chart */}
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-            <h3 className="text-lg font-bold text-gray-900 mb-6">{t('Revenue Growth')}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">{t('Revenue Growth')}</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={salesData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>

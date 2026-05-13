@@ -46,7 +46,7 @@ const MainLayout = () => {
         className={`fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-300 lg:static lg:translate-x-0 flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="flex items-center justify-between h-16 px-6 border-b shrink-0">
-          <span className="text-2xl font-bold text-indigo-600">BakiPay</span>
+          <span className="text-2xl font-semibold text-indigo-600">BakiPay</span>
           <button className="lg:hidden" onClick={() => setSidebarOpen(false)}>
             <X className="w-6 h-6 text-gray-500" />
           </button>
@@ -99,7 +99,7 @@ const MainLayout = () => {
           
           <div className="ml-auto flex items-center">
             {/* User Profile placeholder */}
-            <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">
+            <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-semibold">
               U
             </div>
           </div>

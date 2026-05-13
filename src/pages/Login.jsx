@@ -58,7 +58,7 @@ const Login = ({ isRegister = false }) => {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+      <h2 className="text-2xl font-semibold text-gray-900 mb-6 text-center">
         {isRegister ? t('Create an Account') : t('Sign in to your account')}
       </h2>
       

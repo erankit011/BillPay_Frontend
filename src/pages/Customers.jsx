@@ -62,7 +62,7 @@ const CustomerLedger = ({ customer, onClose }) => {
           
           <div className="flex items-center justify-between p-6 border-b shrink-0 bg-gray-50/50">
             <div>
-              <h3 className="text-xl font-bold text-gray-900">{customer.name}</h3>
+              <h3 className="text-xl font-semibold text-gray-900">{customer.name}</h3>
               <p className="text-gray-500 text-sm flex items-center mt-1"><Phone className="w-3 h-3 mr-1" /> {customer.phone}</p>
             </div>
             <button onClick={onClose} className="text-gray-400 hover:text-gray-500"><X className="w-6 h-6" /></button>
@@ -89,7 +89,7 @@ const CustomerLedger = ({ customer, onClose }) => {
                           <p className="text-xs text-gray-500">{new Date(tx.createdAt).toLocaleString()} {tx.remarks && `• ${tx.remarks}`}</p>
                         </div>
                       </div>
-                      <p className={`font-bold ${tx.type === 'UDHAR' ? 'text-red-600' : 'text-green-600'}`}>
+                      <p className={`font-semibold ${tx.type === 'UDHAR' ? 'text-red-600' : 'text-green-600'}`}>
                         {tx.type === 'UDHAR' ? '+' : '-'}{formatCurrency(tx.amount)}
                       </p>
                     </div>
@@ -102,7 +102,7 @@ const CustomerLedger = ({ customer, onClose }) => {
             <div className="w-full md:w-80 bg-white p-6 border-t md:border-t-0 md:border-l flex flex-col shrink-0">
               <div className="mb-6 bg-gray-50 rounded-xl p-4 text-center border">
                 <p className="text-sm text-gray-500 mb-1">{t('Current Pending Balance')}</p>
-                <p className={`text-2xl font-bold ${customer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                <p className={`text-2xl font-semibold ${customer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
                   {formatCurrency(customer.balance)}
                 </p>
               </div>
@@ -187,7 +187,7 @@ const Customers = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('Customers')}</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">{t('Customers')}</h1>
           <p className="text-gray-500 text-sm">{t('Manage your customers and balances')}</p>
         </div>
         <button 
@@ -224,7 +224,7 @@ const Customers = () => {
             {filteredCustomers.map((customer, idx) => (
               <div key={customer._id} className="p-4 hover:bg-indigo-50/50 transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer group animate-fade-in" style={{ animationDelay: `${idx * 50}ms` }} onClick={() => setSelectedCustomer(customer)}>
                 <div className="flex items-start sm:items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xl shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors shadow-sm">
+                  <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold text-xl shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors shadow-sm">
                     {customer.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
@@ -239,7 +239,7 @@ const Customers = () => {
                 <div className="flex items-center justify-between sm:justify-end gap-6 sm:w-1/3 border-t sm:border-none pt-3 sm:pt-0">
                   <div className="text-left sm:text-right">
                     <p className="text-sm text-gray-500">{t('Pending Balance')}</p>
-                    <p className={`text-lg font-bold ${customer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                    <p className={`text-lg font-semibold ${customer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
                       {formatCurrency(customer.balance)}
                     </p>
                   </div>
@@ -263,7 +263,7 @@ const Customers = () => {
             <div className="fixed inset-0 transition-opacity bg-black/50 backdrop-blur-sm" onClick={() => setIsModalOpen(false)} />
             <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl sm:align-middle relative z-10 animate-scale-in">
               <div className="flex items-center justify-between mb-5">
-                <h3 className="text-xl font-bold text-gray-900">{t('Add New Customer')}</h3>
+                <h3 className="text-xl font-semibold text-gray-900">{t('Add New Customer')}</h3>
                 <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-700 hover:bg-gray-100 p-1 rounded-full transition-colors">
                   <X className="w-6 h-6" />
                 </button>

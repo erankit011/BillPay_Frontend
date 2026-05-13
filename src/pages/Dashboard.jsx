@@ -14,7 +14,7 @@ const DashboardCard = ({ title, value, icon: Icon, trend, trendUp, bgClass, text
     <div className="flex justify-between items-start">
       <div>
         <p className="text-gray-500 text-sm font-medium mb-1 group-hover:text-gray-700 transition-colors">{title}</p>
-        <h3 className="text-2xl font-bold text-gray-900">{value}</h3>
+        <h3 className="text-2xl font-semibold text-gray-900">{value}</h3>
       </div>
       <div className={`p-3 rounded-xl ${bgClass} transition-all duration-300 group-hover:scale-110`}>
         <Icon className={`w-6 h-6 ${textClass}`} />
@@ -59,7 +59,7 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('Dashboard Overview')}</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">{t('Dashboard Overview')}</h1>
           <p className="text-gray-500 text-sm mt-1">{t("Here's what's happening with your store today.")}</p>
         </div>
       </div>
@@ -127,7 +127,7 @@ const Dashboard = () => {
         {/* Sales vs Collections Chart */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 animate-fade-in" style={{ animationDelay: '200ms' }}>
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-bold text-gray-900">{t('Weekly Overview')}</h3>
+            <h3 className="text-lg font-semibold text-gray-900">{t('Weekly Overview')}</h3>
             <select className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2">
               <option>This Week</option>
               <option>Last Week</option>

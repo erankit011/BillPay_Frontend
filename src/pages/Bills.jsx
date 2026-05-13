@@ -96,7 +96,7 @@ const Bills = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('Billing & Invoices')}</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">{t('Billing & Invoices')}</h1>
           <p className="text-gray-500 text-sm">{t('Create bills and send WhatsApp invoices')}</p>
         </div>
         <button 
@@ -145,7 +145,7 @@ const Bills = () => {
               <tbody className="bg-white divide-y divide-gray-100">
                 {filteredBills.map((bill, idx) => (
                   <tr key={bill._id} className="hover:bg-indigo-50/50 transition-colors animate-fade-in group" style={{ animationDelay: `${idx * 50}ms` }}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-indigo-600">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-indigo-600">
                       {bill.invoiceNumber}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -154,7 +154,7 @@ const Bills = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(bill.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
                       {formatCurrency(bill.grandTotal)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -187,7 +187,7 @@ const Bills = () => {
             <div className="fixed inset-0 transition-opacity bg-black/50 backdrop-blur-sm" onClick={() => setIsModalOpen(false)} />
             <div className="inline-block w-full max-w-2xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl sm:align-middle relative z-10 animate-scale-in">
               <div className="flex items-center justify-between mb-5 pb-4 border-b">
-                <h3 className="text-xl font-bold text-gray-900">{t('Create New Bill')}</h3>
+                <h3 className="text-xl font-semibold text-gray-900">{t('Create New Bill')}</h3>
                 <button onClick={() => setIsModalOpen(false)} className="hover:bg-gray-100 p-1 rounded-full transition-colors"><X className="w-6 h-6 text-gray-400 hover:text-gray-700" /></button>
               </div>
               <form onSubmit={handleSubmit(handleCreateBill)} className="space-y-4">

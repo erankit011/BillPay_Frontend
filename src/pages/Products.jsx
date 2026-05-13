@@ -89,7 +89,7 @@ const Products = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('Inventory & Products')}</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">{t('Inventory & Products')}</h1>
           <p className="text-gray-500 text-sm">{t('Manage your shop items and stock levels')}</p>
         </div>
         <button 
@@ -133,7 +133,7 @@ const Products = () => {
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 group-hover:text-indigo-700 transition-colors">{product.name}</h3>
                     <div className="flex items-center text-sm mt-1 space-x-4">
-                      <span className="text-gray-900 font-bold">{formatCurrency(product.price)}</span>
+                      <span className="text-gray-900 font-semibold">{formatCurrency(product.price)}</span>
                       <span className={`px-2 py-0.5 rounded-md text-xs font-medium ${product.stock > 10 ? 'bg-green-100 text-green-700' : product.stock > 0 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>
                         {product.stock} {t('in stock')}
                       </span>
@@ -174,7 +174,7 @@ const Products = () => {
             <span className="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
             <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl sm:align-middle relative z-10 animate-scale-in">
               <div className="flex items-center justify-between mb-5 pb-4 border-b">
-                <h3 className="text-xl font-bold text-gray-900">
+                <h3 className="text-xl font-semibold text-gray-900">
                   {editingProduct ? t('Edit Product') : t('Add New Product')}
                 </h3>
                 <button onClick={closeModal} className="hover:bg-gray-100 p-1 rounded-full transition-colors text-gray-400 hover:text-gray-700">

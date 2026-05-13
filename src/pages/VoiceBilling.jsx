@@ -87,7 +87,7 @@ const VoiceBilling = () => {
   return (
     <div className="max-w-2xl mx-auto space-y-8">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900">{t('Voice Assistant')}</h1>
+        <h1 className="text-3xl font-semibold text-gray-900">{t('Voice Assistant')}</h1>
         <p className="text-gray-500 mt-2">{t('Just say what you want to record in Hindi or English')}</p>
         <p className="text-sm text-gray-400 mt-1">{t('Example:')} "Rahul ko 500 ka udhar diya"</p>
       </div>
@@ -131,7 +131,7 @@ const VoiceBilling = () => {
         <div className="bg-green-50 rounded-2xl p-6 border border-green-100 animate-in fade-in slide-in-from-bottom-4">
           <div className="flex items-center text-green-800 mb-4">
             <CheckCircle2 className="w-6 h-6 mr-2" />
-            <h3 className="text-lg font-bold">{t('Action Confirmed')}</h3>
+            <h3 className="text-lg font-semibold">{t('Action Confirmed')}</h3>
           </div>
           
           <div className="bg-white rounded-xl p-4 shadow-sm">

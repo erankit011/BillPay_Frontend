@@ -45,7 +45,7 @@ const Reminders = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('Reminders')}</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">{t('Reminders')}</h1>
           <p className="text-gray-500 text-sm">{t('Automate your payment recovery via WhatsApp/Email')}</p>
         </div>
         <button 
@@ -74,7 +74,7 @@ const Reminders = () => {
                     <User className="w-4 h-4 mr-2" />
                     {reminder.customerId?.name || t('Deleted Customer')}
                   </div>
-                  <span className={`px-2 py-1 rounded-md text-xs font-bold ${reminder.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' : reminder.status === 'SENT' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                  <span className={`px-2 py-1 rounded-md text-xs font-semibold ${reminder.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' : reminder.status === 'SENT' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                     {reminder.status}
                   </span>
                 </div>
@@ -97,7 +97,7 @@ const Reminders = () => {
             <div className="fixed inset-0 transition-opacity bg-black/50 backdrop-blur-sm" onClick={() => setIsModalOpen(false)} />
             <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl sm:align-middle relative z-10 animate-scale-in">
               <div className="flex items-center justify-between mb-5 pb-4 border-b">
-                <h3 className="text-xl font-bold text-gray-900">{t('Set Custom Reminder')}</h3>
+                <h3 className="text-xl font-semibold text-gray-900">{t('Set Custom Reminder')}</h3>
                 <button onClick={() => setIsModalOpen(false)} className="hover:bg-gray-100 p-1 rounded-full transition-colors"><X className="w-6 h-6 text-gray-400 hover:text-gray-700" /></button>
               </div>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
