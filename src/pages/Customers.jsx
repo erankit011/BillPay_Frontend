@@ -122,13 +122,13 @@ const CustomerLedger = ({ customer, onClose }) => {
                   <label className="block text-xs font-medium text-gray-500 mb-1">{t('Amount')}</label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><IndianRupee className="h-4 w-4 text-gray-400" /></div>
-                    <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} className="block w-full pl-9 pr-3 py-2.5 border border-gray-300 rounded-xl focus:ring-indigo-500 focus:border-indigo-500" placeholder="0.00" required />
+                    <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} className="block w-full pl-9 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500" placeholder="0.00" required />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">{t('Remarks (Optional)')}</label>
-                  <input type="text" value={remarks} onChange={(e) => setRemarks(e.target.value)} className="block w-full px-3 py-2.5 border border-gray-300 rounded-xl focus:ring-indigo-500 focus:border-indigo-500" placeholder={t("e.g. Paid in cash")} />
+                  <input type="text" value={remarks} onChange={(e) => setRemarks(e.target.value)} className="block w-full px-3 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500" placeholder={t("e.g. Paid in cash")} />
                 </div>
 
                 <div className="mt-auto pt-4">
@@ -192,7 +192,7 @@ const Customers = () => {
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl flex items-center shadow-sm w-full sm:w-auto justify-center"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl flex items-center shadow-sm w-full sm:w-auto justify-center"
         >
           <Plus className="w-5 h-5 mr-2" />
           {t('Add Customer')}
@@ -209,7 +209,7 @@ const Customers = () => {
           placeholder={t("Search by name or phone...")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-xl leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          className="block w-full pl-10 pr-3 py-2 bg-white border border-gray-200 rounded-xl leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
       </div>
 
@@ -222,13 +222,13 @@ const Customers = () => {
         ) : (
           <div className="divide-y divide-gray-100">
             {filteredCustomers.map((customer, idx) => (
-              <div key={customer._id} className="p-4 hover:bg-indigo-50/50 transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer group animate-fade-in" style={{ animationDelay: `${idx * 50}ms` }} onClick={() => setSelectedCustomer(customer)}>
+              <div key={customer._id} className="p-4 hover:bg-blue-50/50 transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer group animate-fade-in" style={{ animationDelay: `${idx * 50}ms` }} onClick={() => setSelectedCustomer(customer)}>
                 <div className="flex items-start sm:items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold text-xl shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors shadow-sm">
+                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-semibold text-xl shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors shadow-sm">
                     {customer.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 group-hover:text-indigo-700 transition-colors">{customer.name}</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">{customer.name}</h3>
                     <div className="flex items-center text-gray-500 text-sm mt-1">
                       <Phone className="w-4 h-4 mr-1 opacity-70" />
                       {customer.phone}
@@ -245,7 +245,7 @@ const Customers = () => {
                   </div>
                   <button 
                     onClick={(e) => { e.stopPropagation(); setSelectedCustomer(customer); }}
-                    className="text-indigo-600 hover:text-indigo-900 text-sm font-medium bg-indigo-50 px-4 py-2 rounded-lg"
+                    className="text-blue-600 hover:text-blue-900 text-sm font-medium bg-blue-50 px-4 py-2 rounded-lg"
                   >
                     {t('View Ledger')}
                   </button>
@@ -271,30 +271,30 @@ const Customers = () => {
               
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">{t('Full Name')}</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Full Name')}</label>
                   <input 
                     {...register('name')}
-                    className="mt-1 block w-full rounded-xl border-gray-300 border p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500"
                     placeholder={t("Enter customer name")}
                   />
                   {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">{t('Phone Number')}</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Phone Number')}</label>
                   <input 
                     {...register('phone')}
-                    className="mt-1 block w-full rounded-xl border-gray-300 border p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="10-digit number"
                   />
                   {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Email (Optional)</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Email (Optional)</label>
                   <input 
                     {...register('email')}
-                    className="mt-1 block w-full rounded-xl border-gray-300 border p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500"
                   />
                   {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
                 </div>
@@ -303,7 +303,7 @@ const Customers = () => {
                   <button
                     type="submit"
                     disabled={mutation.isPending}
-                    className="w-full inline-flex justify-center rounded-xl border border-transparent px-4 py-2.5 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none disabled:opacity-50"
+                    className="w-full inline-flex justify-center rounded-xl border border-gray-100 px-4 py-2.5 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none disabled:opacity-50"
                   >
                     {mutation.isPending ? t('Saving...') : t('Save Customer')}
                   </button>

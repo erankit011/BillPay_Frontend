@@ -13,7 +13,7 @@ const formatCurrency = (amount) => {
 
 const Reports = () => {
   const { t } = useTranslation();
-  const [statementPeriod, setStatementPeriod] = useState('7days'); // 'today', '7days', '30days', 'all'
+  const [statementPeriod, setStatementPeriod] = useState('all'); // 'today', '7days', '30days', 'all'
 
   // Fetch Dashboard Analytics
   const { data: analytics, isLoading: analyticsLoading } = useQuery({
@@ -29,6 +29,14 @@ const Reports = () => {
     queryKey: ['bills'],
     queryFn: async () => {
       const res = await api.get('/bills');
+      return res.data.data;
+    }
+  });
+
+  const { data: transactions = [] } = useQuery({
+    queryKey: ['transactions'],
+    queryFn: async () => {
+      const res = await api.get('/transactions');
       return res.data.data;
     }
   });
@@ -55,6 +63,12 @@ const Reports = () => {
     }
 
     const filteredBills = bills.filter(bill => new Date(bill.createdAt) >= startDate);
+    const filteredTransactions = transactions.filter(tx => new Date(tx.createdAt) >= startDate && tx.type === 'PAYMENT');
+
+    if (filteredBills.length === 0 && filteredTransactions.length === 0) {
+      alert(t("No data available for the selected period."));
+      return;
+    }
 
     // 2. Generate PDF using jsPDF and jspdf-autotable
     const doc = new jsPDF();
@@ -85,11 +99,6 @@ const Reports = () => {
 
     filteredBills.forEach(bill => {
       totalSales += bill.grandTotal;
-      if (bill.paymentStatus === 'PAID') {
-         totalCollections += bill.grandTotal;
-      } else if (bill.paymentStatus === 'PARTIAL') {
-         totalCollections += bill.amountPaid;
-      }
 
       const billData = [
         bill.invoiceNumber,
@@ -99,6 +108,10 @@ const Reports = () => {
         bill.paymentStatus
       ];
       tableRows.push(billData);
+    });
+
+    filteredTransactions.forEach(tx => {
+      totalCollections += tx.amount;
     });
     
     autoTable(doc, {
@@ -123,15 +136,7 @@ const Reports = () => {
     doc.save(`Store_Statement_${statementPeriod}.pdf`);
   };
 
-  // Mock data for charts
-  const salesData = [
-    { name: 'Jan', sales: 4000 },
-    { name: 'Feb', sales: 3000 },
-    { name: 'Mar', sales: 5000 },
-    { name: 'Apr', sales: 4500 },
-    { name: 'May', sales: 6000 },
-    { name: 'Jun', sales: 5500 },
-  ];
+  const salesData = analytics?.chartData || [];
 
   if (analyticsLoading) return <div className="p-8 text-center text-gray-500">{t('Loading')}...</div>;
 
@@ -149,7 +154,7 @@ const Reports = () => {
           <select 
             value={statementPeriod} 
             onChange={(e) => setStatementPeriod(e.target.value)}
-            className="bg-white border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 p-2 w-full sm:w-auto shadow-sm"
+            className="bg-white border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 w-full sm:w-auto shadow-sm"
           >
             <option value="today">{t('Today')}</option>
             <option value="7days">{t('Last 7 Days')}</option>
@@ -173,8 +178,8 @@ const Reports = () => {
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:-translate-y-1 transition-transform duration-300">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-gray-500 font-medium">{t('Monthly Sales')}</h3>
-              <div className="p-2 bg-indigo-50 rounded-lg">
-                <Calendar className="w-5 h-5 text-indigo-600" />
+              <div className="p-2 bg-blue-50 rounded-lg">
+                <Calendar className="w-5 h-5 text-blue-600" />
               </div>
             </div>
             <p className="text-3xl font-semibold text-gray-900">{formatCurrency(analytics?.monthlySales || 0)}</p>
@@ -205,13 +210,13 @@ const Reports = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Bar Chart */}
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">{t('Sales Trend (Last 6 Months)')}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">{t('Sales Trend (Last 7 Days)')}</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={salesData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6B7280' }} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6B7280' }} tickFormatter={(val) => `₹${val/1000}k`} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6B7280' }} tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(1) + 'k' : val}`} />
                   <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                   <Bar dataKey="sales" fill="#4F46E5" radius={[4, 4, 0, 0]} />
                 </BarChart>
@@ -227,7 +232,7 @@ const Reports = () => {
                 <LineChart data={salesData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6B7280' }} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6B7280' }} tickFormatter={(val) => `₹${val/1000}k`} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6B7280' }} tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(1) + 'k' : val}`} />
                   <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                   <Line type="monotone" dataKey="sales" stroke="#10B981" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
                 </LineChart>

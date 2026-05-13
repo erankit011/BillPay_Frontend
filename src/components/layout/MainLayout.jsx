@@ -37,7 +37,7 @@ const MainLayout = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
+    <div className="flex h-screen bg-[#F8FAFC] overflow-hidden font-sans selection:bg-indigo-100 selection:text-indigo-900">
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 
@@ -48,12 +48,12 @@ const MainLayout = () => {
 
       {/* Sidebar - Desktop & Mobile */}
       <aside 
-        className={`fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-300 lg:static lg:translate-x-0 flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-100 transform transition-transform duration-300 lg:static lg:translate-x-0 flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
-        <div className="flex items-center justify-between h-16 px-6 border-b shrink-0">
-          <span className="text-2xl font-semibold text-indigo-600">BakiPay</span>
-          <button className="lg:hidden" onClick={() => setSidebarOpen(false)}>
-            <X className="w-6 h-6 text-gray-500" />
+        <div className="flex items-center justify-between h-20 px-8 border-b border-gray-100 shrink-0">
+          <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">BakiPay</span>
+          <button className="lg:hidden p-2 -mr-2 rounded-lg text-gray-400 hover:bg-gray-50" onClick={() => setSidebarOpen(false)}>
+            <X className="w-5 h-5" />
           </button>
         </div>
         
@@ -63,7 +63,7 @@ const MainLayout = () => {
               key={item.path}
               to={item.path}
               className={({ isActive }) => 
-                `flex items-center px-4 py-3 rounded-xl transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700 font-medium' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'}`
+                `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${isActive ? 'bg-indigo-50 text-indigo-700 font-semibold shadow-[0_1px_2px_rgba(0,0,0,0.02)]' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 font-medium'}`
               }
               onClick={() => setSidebarOpen(false)}
             >
@@ -76,16 +76,16 @@ const MainLayout = () => {
         <div className="p-4 border-t shrink-0">
           <button 
             onClick={toggleLanguage}
-            className="flex items-center justify-center w-full px-4 py-3 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-xl transition-colors font-medium mb-3"
+            className="flex items-center justify-center w-full px-4 py-3 text-indigo-600 bg-indigo-50/50 hover:bg-indigo-100 rounded-xl transition-all duration-200 font-semibold mb-3 border border-indigo-100/50"
           >
             <Globe className="w-5 h-5 mr-2" />
             {i18n.language === 'en' ? 'हिंदी में बदलें' : 'Switch to English'}
           </button>
           <button 
             onClick={handleLogout}
-            className="flex items-center w-full px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+            className="flex items-center w-full px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition-all duration-200 font-medium group"
           >
-            <LogOut className="w-5 h-5 mr-3" />
+            <LogOut className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" />
             {t('Logout')}
           </button>
         </div>
@@ -94,17 +94,21 @@ const MainLayout = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden relative">
         {/* Top Header */}
-        <header className="h-16 bg-white shadow-sm flex items-center justify-between px-4 lg:px-8 z-10 shrink-0">
+        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-gray-100 flex items-center justify-between px-4 lg:px-8 z-10 shrink-0 sticky top-0">
           <button 
-            className="lg:hidden p-2 rounded-md hover:bg-gray-100"
+            className="lg:hidden p-2 rounded-xl text-gray-500 hover:bg-gray-100 transition-colors"
             onClick={() => setSidebarOpen(true)}
           >
-            <Menu className="w-6 h-6 text-gray-600" />
+            <Menu className="w-6 h-6" />
           </button>
           
-          <div className="ml-auto flex items-center">
+          <div className="ml-auto flex items-center gap-4">
+            <button className="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-colors relative">
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+            </button>
             {/* User Profile */}
-            <Link to="/profile" className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-semibold hover:bg-indigo-200 transition-colors overflow-hidden">
+            <Link to="/profile" className="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold shadow-sm hover:ring-2 hover:ring-indigo-100 transition-all overflow-hidden border border-indigo-100">
               {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
                 <img src={`${BASE_URL}${user.profileImage}`} alt="Profile" className="w-full h-full object-cover" />
               ) : (

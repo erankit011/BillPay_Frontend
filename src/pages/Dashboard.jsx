@@ -1,33 +1,31 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../api/axios';
-import { IndianRupee, Users, FileText, TrendingUp, TrendingDown, Sun, Clock, Calendar, Award, Wallet, AlertCircle } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { IndianRupee, Users, TrendingUp, Sun, Clock, Calendar, Award, Wallet, AlertCircle, TrendingDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
+  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount || 0);
 };
 
-const DashboardCard = ({ title, value, icon: Icon, trend, trendUp, bgClass, textClass }) => (
-  <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 flex flex-col justify-between group transform hover:-translate-y-1 animate-fade-in">
-    <div className="flex justify-between items-start">
-      <div>
-        <p className="text-gray-500 text-sm font-medium mb-1 group-hover:text-gray-700 transition-colors">{title}</p>
-        <h3 className="text-2xl font-semibold text-gray-900">{value}</h3>
+const LightMetricCard = ({ title, value, icon: Icon, trend, trendUp, colorClass, bgClass }) => (
+  <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] hover:shadow-md transition-all duration-300">
+    <div className="flex items-center justify-between mb-4">
+      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${bgClass}`}>
+        <Icon className={`w-5 h-5 ${colorClass}`} />
       </div>
-      <div className={`p-3 rounded-xl ${bgClass} transition-all duration-300 group-hover:scale-110`}>
-        <Icon className={`w-6 h-6 ${textClass}`} />
-      </div>
-    </div>
-    {trend && (
-      <div className="mt-4 flex items-center text-sm animate-slide-up">
-        <span className={trendUp ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
+      {trend && (
+        <div className={`flex items-center text-xs font-semibold px-2 py-1 rounded-full ${trendUp ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+          {trendUp ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
           {trend}
-        </span>
-        <span className="text-gray-400 ml-2 text-xs">vs last month</span>
-      </div>
-    )}
+        </div>
+      )}
+    </div>
+    <div>
+      <p className="text-gray-500 text-sm font-medium mb-1">{title}</p>
+      <h3 className="text-2xl font-semibold text-gray-900">{value}</h3>
+    </div>
   </div>
 );
 
@@ -41,113 +39,146 @@ const Dashboard = () => {
     }
   });
 
-  if (isLoading) return <div className="p-8 text-center text-gray-500">{t('Loading')}...</div>;
-  if (error) return <div className="p-8 text-center text-red-500">{t('Failed to load')}</div>;
+  if (isLoading) return <div className="p-8 text-center text-gray-500 font-medium">{t('Loading')}...</div>;
+  if (error) return <div className="p-8 text-center text-red-500 font-medium">{t('Failed to load')}</div>;
 
-  // Mock chart data for now
-  const chartData = [
-    { name: 'Mon', sales: 4000, collections: 2400 },
-    { name: 'Tue', sales: 3000, collections: 1398 },
-    { name: 'Wed', sales: 2000, collections: 9800 },
-    { name: 'Thu', sales: 2780, collections: 3908 },
-    { name: 'Fri', sales: 1890, collections: 4800 },
-    { name: 'Sat', sales: 2390, collections: 3800 },
-    { name: 'Sun', sales: 3490, collections: 4300 },
-  ];
+  const chartData = data?.chartData || [];
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+    <div className="space-y-8 max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">{t('Dashboard Overview')}</h1>
-          <p className="text-gray-500 text-sm mt-1">{t("Here's what's happening with your store today.")}</p>
+          <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">{t('Dashboard Overview')}</h1>
+          <p className="text-gray-500 text-sm mt-1">{t("Here's a summary of your business performance.")}</p>
+        </div>
+        <div className="bg-white border border-gray-200 rounded-xl p-1 flex shadow-sm">
+          <button className="px-4 py-2 text-sm font-semibold text-gray-900 bg-gray-100 rounded-lg">{t('Overview')}</button>
+          <button className="px-4 py-2 text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">{t('Analytics')}</button>
         </div>
       </div>
 
-      {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
-        <DashboardCard
-          title={t("Today's Sales")}
-          value={formatCurrency(data?.todaySales || 0)}
-          icon={Sun}
-          bgClass="bg-blue-50"
-          textClass="text-blue-600"
-        />
-        <DashboardCard
-          title={t("Yesterday's Sales")}
-          value={formatCurrency(data?.yesterdaySales || 0)}
-          icon={Clock}
-          bgClass="bg-indigo-50"
-          textClass="text-indigo-600"
-        />
-        <DashboardCard
-          title={t("This Week's Sales")}
-          value={formatCurrency(data?.weeklySales || 0)}
-          icon={Calendar}
-          bgClass="bg-violet-50"
-          textClass="text-violet-600"
-        />
-        <DashboardCard
-          title={t("This Month's Sales")}
-          value={formatCurrency(data?.monthlySales || 0)}
-          icon={TrendingUp}
-          bgClass="bg-purple-50"
-          textClass="text-purple-600"
-        />
-        <DashboardCard
-          title={t("Lifetime Sales")}
-          value={formatCurrency(data?.lifetimeSales || 0)}
-          icon={Award}
-          bgClass="bg-pink-50"
-          textClass="text-pink-600"
-        />
-        <DashboardCard
-          title={t("Today's Collections")}
-          value={formatCurrency(data?.todayCollection || 0)}
-          icon={Wallet}
-          bgClass="bg-green-50"
-          textClass="text-green-600"
-        />
-        <DashboardCard
-          title={t("Total Pending Udhar")}
-          value={formatCurrency(data?.pendingAmount || 0)}
-          icon={AlertCircle}
-          bgClass="bg-red-50"
-          textClass="text-red-600"
-        />
-        <DashboardCard
-          title={t("Total Customers")}
-          value={data?.totalCustomers || 0}
-          icon={Users}
-          bgClass="bg-teal-50"
-          textClass="text-teal-600"
-        />
+      {/* Primary Metrics Row */}
+      <div>
+        <h2 className="text-sm font-semibold text-gray-400 mb-3 tracking-wider">{t('PRIMARY METRICS')}</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <LightMetricCard
+            title={t("Today's Sales")}
+            value={formatCurrency(data?.todaySales)}
+            icon={Sun}
+            colorClass="text-blue-600"
+            bgClass="bg-blue-50"
+            trend="12%"
+            trendUp={true}
+          />
+          <LightMetricCard
+            title={t("Today's Collections")}
+            value={formatCurrency(data?.todayCollection)}
+            icon={Wallet}
+            colorClass="text-emerald-600"
+            bgClass="bg-emerald-50"
+            trend="5%"
+            trendUp={true}
+          />
+          <LightMetricCard
+            title={t("Pending Udhar")}
+            value={formatCurrency(data?.pendingAmount)}
+            icon={AlertCircle}
+            colorClass="text-red-600"
+            bgClass="bg-red-50"
+            trend="2%"
+            trendUp={false}
+          />
+          <LightMetricCard
+            title={t("Total Customers")}
+            value={data?.totalCustomers || 0}
+            icon={Users}
+            colorClass="text-indigo-600"
+            bgClass="bg-indigo-50"
+          />
+        </div>
       </div>
 
-        {/* Sales vs Collections Chart */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 animate-fade-in" style={{ animationDelay: '200ms' }}>
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">{t('Weekly Overview')}</h3>
-            <select className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2">
-              <option>This Week</option>
-              <option>Last Week</option>
-            </select>
+      {/* Secondary Metrics Row */}
+      <div>
+        <h2 className="text-sm font-semibold text-gray-400 mb-3 tracking-wider">{t('SALES HISTORY')}</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <LightMetricCard
+            title={t("Yesterday")}
+            value={formatCurrency(data?.yesterdaySales)}
+            icon={Clock}
+            colorClass="text-violet-600"
+            bgClass="bg-violet-50"
+          />
+          <LightMetricCard
+            title={t("This Week")}
+            value={formatCurrency(data?.weeklySales)}
+            icon={Calendar}
+            colorClass="text-purple-600"
+            bgClass="bg-purple-50"
+          />
+          <LightMetricCard
+            title={t("This Month")}
+            value={formatCurrency(data?.monthlySales)}
+            icon={TrendingUp}
+            colorClass="text-pink-600"
+            bgClass="bg-pink-50"
+          />
+          <LightMetricCard
+            title={t("Lifetime")}
+            value={formatCurrency(data?.lifetimeSales)}
+            icon={Award}
+            colorClass="text-orange-600"
+            bgClass="bg-orange-50"
+          />
+        </div>
+      </div>
+
+      {/* Chart Section */}
+      <div className="bg-white rounded-2xl p-6 lg:p-8 border border-gray-100 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)]">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">{t('Revenue vs Collections')}</h3>
+            <p className="text-sm text-gray-500 mt-1">{t('Weekly performance chart')}</p>
           </div>
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6B7280' }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6B7280' }} tickFormatter={(val) => `₹${val}`} />
-                <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                <Bar dataKey="sales" fill="#4F46E5" radius={[4, 4, 0, 0]} name={t("Sales")} barSize={32} />
-                <Bar dataKey="collections" fill="#10B981" radius={[4, 4, 0, 0]} name={t("Collections")} barSize={32} />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center text-sm font-semibold text-gray-600">
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-500 mr-2"></span>{t("Sales")}
+            </div>
+            <div className="flex items-center text-sm font-semibold text-gray-600">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 mr-2"></span>{t("Collections")}
+            </div>
           </div>
         </div>
 
+        <div className="h-[350px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <defs>
+                <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.15} />
+                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="colorCollections" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#34d399" stopOpacity={0.15} />
+                  <stop offset="95%" stopColor="#34d399" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }} dy={15} />
+              <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }} tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(1) + 'k' : val}`} dx={-10} />
+              <Tooltip
+                contentStyle={{ borderRadius: '12px', border: '1px solid #f1f5f9', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', fontWeight: '600' }}
+                cursor={{ stroke: '#cbd5e1', strokeWidth: 1, strokeDasharray: '4 4' }}
+              />
+              <Area type="monotone" dataKey="sales" stroke="#3b82f6" strokeWidth={2.5} fillOpacity={1} fill="url(#colorSales)" />
+              <Area type="monotone" dataKey="collections" stroke="#34d399" strokeWidth={2.5} fillOpacity={1} fill="url(#colorCollections)" />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
       </div>
+
+    </div>
   );
 };
 

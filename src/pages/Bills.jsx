@@ -101,7 +101,7 @@ const Bills = () => {
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl flex items-center shadow-sm w-full sm:w-auto justify-center"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl flex items-center shadow-sm w-full sm:w-auto justify-center"
         >
           <Plus className="w-5 h-5 mr-2" />
           {t('Create New Bill')}
@@ -117,7 +117,7 @@ const Bills = () => {
           placeholder={t("Search by invoice number or customer...")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-xl leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          className="block w-full pl-10 pr-3 py-2 bg-white border border-gray-200 rounded-xl leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
       </div>
 
@@ -134,18 +134,18 @@ const Bills = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('Invoice')}</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('Customer')}</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('Date')}</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('Amount')}</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('Status')}</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{t('Actions')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">{t('Invoice')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">{t('Customer')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">{t('Date')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">{t('Amount')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">{t('Status')}</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500  tracking-wider">{t('Actions')}</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
                 {filteredBills.map((bill, idx) => (
-                  <tr key={bill._id} className="hover:bg-indigo-50/50 transition-colors animate-fade-in group" style={{ animationDelay: `${idx * 50}ms` }}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-indigo-600">
+                  <tr key={bill._id} className="hover:bg-blue-50/50 transition-colors animate-fade-in group" style={{ animationDelay: `${idx * 50}ms` }}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-blue-600">
                       {bill.invoiceNumber}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -192,8 +192,8 @@ const Bills = () => {
               </div>
               <form onSubmit={handleSubmit(handleCreateBill)} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">{t('Select Customer')}</label>
-                  <select {...register('customerId')} className="mt-1 block w-full rounded-xl border-gray-300 border p-2.5">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Select Customer')}</label>
+                  <select {...register('customerId')} className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5">
                     <option value="">-- {t('Choose Customer')} --</option>
                     {customers.map(c => <option key={c._id} value={c._id}>{c.name} ({c.phone})</option>)}
                   </select>
@@ -201,26 +201,26 @@ const Bills = () => {
                 </div>
 
                 <div className="space-y-3">
-                  <label className="block text-sm font-medium text-gray-700">{t('Products')}</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Products')}</label>
                   {fields.map((field, index) => (
                     <div key={field.id} className="flex gap-2 items-center">
-                      <select {...register(`products.${index}.productId`)} className="flex-1 rounded-xl border-gray-300 border p-2.5">
+                      <select {...register(`products.${index}.productId`)} className="flex-1 rounded-xl bg-white border border-gray-200 px-3 py-2.5">
                         <option value="">-- {t('Product')} --</option>
                         {products.map(p => <option key={p._id} value={p._id}>{p.name} - ₹{p.price}</option>)}
                       </select>
-                      <input type="number" {...register(`products.${index}.quantity`)} placeholder="Qty" className="w-24 rounded-xl border-gray-300 border p-2.5" />
+                      <input type="number" {...register(`products.${index}.quantity`)} placeholder="Qty" className="w-24 rounded-xl bg-white border border-gray-200 px-3 py-2.5" />
                       <button type="button" onClick={() => remove(index)} className="text-red-500 hover:bg-red-50 p-2 rounded-xl"><X className="w-5 h-5"/></button>
                     </div>
                   ))}
-                  <button type="button" onClick={() => append({ productId: '', quantity: 1 })} className="text-indigo-600 text-sm font-medium hover:underline">+ {t('Add another product')}</button>
+                  <button type="button" onClick={() => append({ productId: '', quantity: 1 })} className="text-blue-600 text-sm font-medium hover:underline">+ {t('Add another product')}</button>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">{t('Amount Paid (Advance)')}</label>
-                  <input type="number" {...register('amountPaid')} className="mt-1 block w-full rounded-xl border-gray-300 border p-2.5" />
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Amount Paid (Advance)')}</label>
+                  <input type="number" {...register('amountPaid')} className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5" />
                 </div>
 
-                <button type="submit" disabled={mutation.isPending} className="w-full bg-indigo-600 text-white rounded-xl py-3 font-medium hover:bg-indigo-700 disabled:opacity-50">
+                <button type="submit" disabled={mutation.isPending} className="w-full bg-blue-600 text-white rounded-xl py-3 font-medium hover:bg-blue-700 disabled:opacity-50">
                   {mutation.isPending ? t('Processing...') : t('Generate Bill')}
                 </button>
               </form>

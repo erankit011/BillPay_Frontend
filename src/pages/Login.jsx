@@ -72,7 +72,7 @@ const Login = ({ isRegister = false }) => {
         {isRegister && (
           <>
             <div>
-              <label className="block text-sm font-medium text-gray-700">{t('Full Name')}</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Full Name')}</label>
               <input 
                 {...register('name')}
                 className={`mt-1 block w-full rounded-md border p-2 focus:ring-indigo-500 focus:border-indigo-500 ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
@@ -80,7 +80,7 @@ const Login = ({ isRegister = false }) => {
               {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">{t('Shop Name')}</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Shop Name')}</label>
               <input 
                 {...register('shopName')}
                 className={`mt-1 block w-full rounded-md border p-2 focus:ring-indigo-500 focus:border-indigo-500 ${errors.shopName ? 'border-red-500' : 'border-gray-300'}`}
@@ -88,7 +88,7 @@ const Login = ({ isRegister = false }) => {
               {errors.shopName && <p className="text-red-500 text-xs mt-1">{errors.shopName.message}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">{t('Phone Number')}</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Phone Number')}</label>
               <input 
                 {...register('phone')}
                 className={`mt-1 block w-full rounded-md border p-2 focus:ring-indigo-500 focus:border-indigo-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
@@ -99,7 +99,7 @@ const Login = ({ isRegister = false }) => {
         )}
         
         <div>
-          <label className="block text-sm font-medium text-gray-700">{t('Email Address')}</label>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Email Address')}</label>
           <input 
             type="email"
             {...register('email')}
@@ -109,7 +109,7 @@ const Login = ({ isRegister = false }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">{t('Password')}</label>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Password')}</label>
           <input 
             type="password"
             {...register('password')}
@@ -121,7 +121,7 @@ const Login = ({ isRegister = false }) => {
         <button 
           type="submit" 
           disabled={isLoading}
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+          className="w-full flex justify-center py-2 px-4 border border-gray-100 rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
         >
           {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : (isRegister ? t('Sign Up') : t('Sign In'))}
         </button>

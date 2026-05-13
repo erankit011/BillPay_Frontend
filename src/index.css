@@ -67,3 +67,10 @@
 .glass {
   @apply bg-white/80 backdrop-blur-md border border-white/20;
 }
+
+/* Remove Recharts Black Focus Outline */
+.recharts-wrapper,
+.recharts-surface,
+.recharts-responsive-container {
+  outline: none !important;
+}

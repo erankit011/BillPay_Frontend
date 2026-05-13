@@ -50,7 +50,7 @@ const Reminders = () => {
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl flex items-center shadow-sm w-full sm:w-auto justify-center"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl flex items-center shadow-sm w-full sm:w-auto justify-center"
         >
           <Plus className="w-5 h-5 mr-2" />
           {t('Set Reminder')}
@@ -70,7 +70,7 @@ const Reminders = () => {
             {reminders.map((reminder, idx) => (
               <div key={reminder._id} className="border border-gray-100 rounded-2xl p-4 hover:shadow-lg transition-all duration-300 bg-white hover:-translate-y-1 cursor-pointer animate-fade-in group" style={{ animationDelay: `${idx * 50}ms` }}>
                 <div className="flex justify-between items-start mb-3">
-                  <div className="flex items-center text-indigo-600 font-medium group-hover:text-indigo-800 transition-colors">
+                  <div className="flex items-center text-blue-600 font-medium group-hover:text-blue-800 transition-colors">
                     <User className="w-4 h-4 mr-2" />
                     {reminder.customerId?.name || t('Deleted Customer')}
                   </div>
@@ -102,28 +102,28 @@ const Reminders = () => {
               </div>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">{t('Customer')}</label>
-                  <select {...register('customerId')} className="mt-1 block w-full rounded-xl border-gray-300 border p-2.5" required>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Customer')}</label>
+                  <select {...register('customerId')} className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5" required>
                     <option value="">{t('Select a customer')}</option>
                     {customers.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">{t('Message')}</label>
-                  <textarea {...register('message')} className="mt-1 block w-full rounded-xl border-gray-300 border p-2.5" rows="3" required placeholder={t("Dear customer, your payment of ₹...")}></textarea>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Message')}</label>
+                  <textarea {...register('message')} className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5" rows="3" required placeholder={t("Dear customer, your payment of ₹...")}></textarea>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">{t('Scheduled Date')}</label>
-                  <input type="date" {...register('scheduledDate')} className="mt-1 block w-full rounded-xl border-gray-300 border p-2.5" required />
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Scheduled Date')}</label>
+                  <input type="date" {...register('scheduledDate')} className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5" required />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">{t('Channel')}</label>
-                  <select {...register('type')} className="mt-1 block w-full rounded-xl border-gray-300 border p-2.5">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Channel')}</label>
+                  <select {...register('type')} className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5">
                     <option value="WHATSAPP">WhatsApp</option>
                     <option value="EMAIL">Email</option>
                   </select>
                 </div>
-                <button type="submit" disabled={mutation.isPending} className="w-full bg-indigo-600 text-white rounded-xl py-3 font-medium hover:bg-indigo-700">
+                <button type="submit" disabled={mutation.isPending} className="w-full bg-blue-600 text-white rounded-xl py-3 font-medium hover:bg-blue-700">
                   {mutation.isPending ? t('Saving...') : t('Save Reminder')}
                 </button>
               </form>

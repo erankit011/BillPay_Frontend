@@ -92,7 +92,7 @@ const Profile = () => {
             <div className="flex items-center mb-6">
               <div className="relative mr-5">
                 <div 
-                  className="w-20 h-20 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-3xl font-bold shadow-sm border-2 border-white overflow-hidden"
+                  className="w-20 h-20 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-3xl font-semibold shadow-sm border-2 border-white overflow-hidden"
                 >
                   {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
                     <img src={`${BASE_URL}${user.profileImage}`} alt="Profile" className="w-full h-full object-cover" />
@@ -126,7 +126,7 @@ const Profile = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 mb-1 flex items-center">
                   <User className="w-4 h-4 mr-1" /> {t('Full Name')}
                 </label>
                 <input
@@ -134,20 +134,20 @@ const Profile = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full rounded-xl border-gray-300 border p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 focus:ring-indigo-500 focus:border-indigo-500"
                   required
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 mb-1 flex items-center">
                   <Mail className="w-4 h-4 mr-1" /> {t('Email Address')}
                 </label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
-                  className="w-full rounded-xl border-gray-300 border p-2.5 bg-gray-50 text-gray-500 cursor-not-allowed"
+                  className="w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 bg-gray-50 text-gray-500 cursor-not-allowed"
                   readOnly
                   disabled
                 />
@@ -155,14 +155,14 @@ const Profile = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 mb-1 flex items-center">
                   <Phone className="w-4 h-4 mr-1" /> {t('Phone Number')}
                 </label>
                 <input
                   type="text"
                   name="phone"
                   value={formData.phone}
-                  className="w-full rounded-xl border-gray-300 border p-2.5 bg-gray-50 text-gray-500 cursor-not-allowed"
+                  className="w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 bg-gray-50 text-gray-500 cursor-not-allowed"
                   readOnly
                   disabled
                 />
@@ -170,7 +170,7 @@ const Profile = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 mb-1 flex items-center">
                   <Store className="w-4 h-4 mr-1" /> {t('Shop Name')}
                 </label>
                 <input
@@ -178,7 +178,7 @@ const Profile = () => {
                   name="shopName"
                   value={formData.shopName}
                   onChange={handleChange}
-                  className="w-full rounded-xl border-gray-300 border p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 focus:ring-indigo-500 focus:border-indigo-500"
                   required
                 />
               </div>

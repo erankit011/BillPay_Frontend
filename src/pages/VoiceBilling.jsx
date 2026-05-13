@@ -97,8 +97,8 @@ const VoiceBilling = () => {
         {/* Ripple Effect Background when recording */}
         {isRecording && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-32 h-32 bg-indigo-100 rounded-full animate-ping opacity-75"></div>
-            <div className="absolute w-48 h-48 bg-indigo-50 rounded-full animate-ping opacity-50 animation-delay-300"></div>
+            <div className="w-32 h-32 bg-blue-100 rounded-full animate-ping opacity-75"></div>
+            <div className="absolute w-48 h-48 bg-blue-50 rounded-full animate-ping opacity-50 animation-delay-300"></div>
           </div>
         )}
 
@@ -109,7 +109,7 @@ const VoiceBilling = () => {
             className={`w-24 h-24 rounded-full flex items-center justify-center shadow-lg transition-all transform hover:scale-105 active:scale-95 ${
               isRecording 
                 ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse' 
-                : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                : 'bg-blue-600 hover:bg-blue-700 text-white'
             } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {isProcessing ? (

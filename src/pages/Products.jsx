@@ -94,7 +94,7 @@ const Products = () => {
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl flex items-center shadow-sm w-full sm:w-auto justify-center"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl flex items-center shadow-sm w-full sm:w-auto justify-center"
         >
           <Plus className="w-5 h-5 mr-2" />
           {t('Add Product')}
@@ -110,7 +110,7 @@ const Products = () => {
           placeholder={t("Search products...")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-xl leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          className="block w-full pl-10 pr-3 py-2 bg-white border border-gray-200 rounded-xl leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
       </div>
 
@@ -125,13 +125,13 @@ const Products = () => {
         ) : (
           <div className="divide-y divide-gray-100">
             {filteredProducts.map((product, idx) => (
-              <div key={product._id} className="p-4 hover:bg-indigo-50/50 transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in group" style={{ animationDelay: `${idx * 50}ms` }}>
+              <div key={product._id} className="p-4 hover:bg-blue-50/50 transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in group" style={{ animationDelay: `${idx * 50}ms` }}>
                 <div className="flex items-center gap-4 flex-1">
                   <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600 shrink-0 group-hover:bg-orange-500 group-hover:text-white transition-colors shadow-sm">
                     <Box className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 group-hover:text-indigo-700 transition-colors">{product.name}</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">{product.name}</h3>
                     <div className="flex items-center text-sm mt-1 space-x-4">
                       <span className="text-gray-900 font-semibold">{formatCurrency(product.price)}</span>
                       <span className={`px-2 py-0.5 rounded-md text-xs font-medium ${product.stock > 10 ? 'bg-green-100 text-green-700' : product.stock > 0 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>
@@ -144,7 +144,7 @@ const Products = () => {
                 <div className="flex items-center gap-2 border-t sm:border-none pt-3 sm:pt-0 justify-end w-full sm:w-auto">
                   <button 
                     onClick={() => openEditModal(product)}
-                    className="text-gray-500 hover:text-indigo-600 bg-gray-100 hover:bg-indigo-50 p-2 rounded-lg transition-colors"
+                    className="text-gray-500 hover:text-blue-600 bg-gray-100 hover:bg-blue-50 p-2 rounded-lg transition-colors"
                     title={t("Edit")}
                   >
                     <Edit className="w-5 h-5" />
@@ -184,10 +184,10 @@ const Products = () => {
               
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">{t('Product Name')}</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Product Name')}</label>
                   <input 
                     {...register('name')}
-                    className="mt-1 block w-full rounded-xl border-gray-300 border p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="e.g. Atta 5kg"
                   />
                   {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
@@ -195,22 +195,22 @@ const Products = () => {
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">{t('Price (₹)')}</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Price (₹)')}</label>
                     <input 
                       type="number"
                       step="0.01"
                       {...register('price')}
-                      className="mt-1 block w-full rounded-xl border-gray-300 border p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="0.00"
                     />
                     {errors.price && <p className="text-red-500 text-xs mt-1">{errors.price.message}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">{t('Stock Qty')}</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Stock Qty')}</label>
                     <input 
                       type="number"
                       {...register('stock')}
-                      className="mt-1 block w-full rounded-xl border-gray-300 border p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="0"
                     />
                     {errors.stock && <p className="text-red-500 text-xs mt-1">{errors.stock.message}</p>}
@@ -221,7 +221,7 @@ const Products = () => {
                   <button
                     type="submit"
                     disabled={createMutation.isPending || updateMutation.isPending}
-                    className="w-full inline-flex justify-center rounded-xl border border-transparent px-4 py-3 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none disabled:opacity-50"
+                    className="w-full inline-flex justify-center rounded-xl border border-gray-100 px-4 py-3 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none disabled:opacity-50"
                   >
                     {createMutation.isPending || updateMutation.isPending ? t('Saving...') : t('Save Product')}
                   </button>
