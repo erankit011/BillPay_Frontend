@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
 import { Home, Users, FileText, Mic, BarChart2, Settings, Menu, X, LogOut, Box, Bell, Globe } from 'lucide-react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/slices/authSlice';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 const navItems = [
   { path: '/', labelKey: 'Dashboard', icon: Home },
@@ -19,7 +20,11 @@ const navItems = [
 const MainLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const { t, i18n } = useTranslation();
+
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+  const BASE_URL = API_URL.replace('/api/v1', '');
 
   const handleLogout = () => {
     dispatch(logout());
@@ -98,10 +103,14 @@ const MainLayout = () => {
           </button>
           
           <div className="ml-auto flex items-center">
-            {/* User Profile placeholder */}
-            <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-semibold">
-              U
-            </div>
+            {/* User Profile */}
+            <Link to="/profile" className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-semibold hover:bg-indigo-200 transition-colors overflow-hidden">
+              {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
+                <img src={`${BASE_URL}${user.profileImage}`} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                user?.name?.charAt(0).toUpperCase() || 'U'
+              )}
+            </Link>
           </div>
         </header>
 

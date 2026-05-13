@@ -14,6 +14,7 @@ const Reports = lazy(() => import('../pages/Reports'));
 const Settings = lazy(() => import('../pages/Settings'));
 const Products = lazy(() => import('../pages/Products'));
 const Reminders = lazy(() => import('../pages/Reminders'));
+const Profile = lazy(() => import('../pages/Profile'));
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
@@ -56,6 +57,7 @@ const AppRoutes = () => {
           <Route path="voice" element={<VoiceBilling />} />
           <Route path="reports" element={<Reports />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
 
         {/* Fallback */}
