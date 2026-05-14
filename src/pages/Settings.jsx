@@ -66,36 +66,36 @@ const Settings = () => {
   };
 
   if (fetching) {
-    return <div className="p-8 text-center text-gray-500">Loading settings...</div>;
+    return <div className="p-8 text-center text-slate-500">Loading settings...</div>;
   }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">{t('Settings')}</h1>
-        <p className="text-gray-500 text-sm">{t('Manage your shop preferences and profile')}</p>
+        <h1 className="text-2xl font-semibold text-slate-800">{t('Settings')}</h1>
+        <p className="text-slate-500 text-sm">{t('Manage your shop preferences and profile')}</p>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-8">
           
           {/* Profile Section */}
           <section>
             <div className="flex items-center justify-between border-b pb-2 mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">{t('Profile Information')}</h2>
-              <Link to="/profile" className="text-sm text-indigo-600 hover:text-indigo-800 flex items-center font-medium">
+              <h2 className="text-lg font-semibold text-slate-800">{t('Profile Information')}</h2>
+              <Link to="/profile" className="text-sm text-slate-800 hover:text-indigo-800 flex items-center font-medium">
                 {t('Edit Profile')} <ArrowRight className="w-4 h-4 ml-1" />
               </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 opacity-75">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Shop Name')}</label>
-                <input type="text" className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 bg-gray-50 text-gray-500 cursor-not-allowed" value={user?.shopName || ''} readOnly disabled />
+                <label className="block text-sm font-semibold text-slate-700 mb-2">{t('Shop Name')}</label>
+                <input type="text" className="mt-1 block w-full rounded-xl bg-white border border-slate-200 px-3 py-2.5 bg-slate-50 text-slate-500 cursor-not-allowed" value={user?.shopName || ''} readOnly disabled />
                 <p className="mt-1.5 text-xs text-indigo-500 font-medium">{t('* Edit in Profile')}</p>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Phone Number')}</label>
-                <input type="text" className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 bg-gray-50 text-gray-500 cursor-not-allowed" value={user?.phone || ''} readOnly disabled />
+                <label className="block text-sm font-semibold text-slate-700 mb-2">{t('Phone Number')}</label>
+                <input type="text" className="mt-1 block w-full rounded-xl bg-white border border-slate-200 px-3 py-2.5 bg-slate-50 text-slate-500 cursor-not-allowed" value={user?.phone || ''} readOnly disabled />
                 <p className="mt-1.5 text-xs text-red-400 font-medium">{t('* Cannot be changed')}</p>
               </div>
             </div>
@@ -103,26 +103,26 @@ const Settings = () => {
 
           {/* Billing Preferences */}
           <section>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">{t('Billing Preferences')}</h2>
+            <h2 className="text-lg font-semibold text-slate-800 mb-4 border-b pb-2">{t('Billing Preferences')}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Invoice Prefix')}</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">{t('Invoice Prefix')}</label>
                 <input 
                   type="text" 
                   name="invoicePrefix"
                   value={formData.invoicePrefix}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 focus:ring-indigo-500 focus:border-indigo-500" 
+                  className="mt-1 block w-full rounded-xl bg-white border border-slate-200 px-3 py-2.5 focus:ring-indigo-500 focus:border-indigo-500" 
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Currency Symbol')}</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">{t('Currency Symbol')}</label>
                 <select 
                   name="currency"
                   value={formData.currency}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 block w-full rounded-xl bg-white border border-slate-200 px-3 py-2.5 focus:ring-indigo-500 focus:border-indigo-500"
                 >
                   <option value="INR">₹ (INR)</option>
                   <option value="USD">$ (USD)</option>
@@ -133,7 +133,7 @@ const Settings = () => {
 
           {/* WhatsApp Settings */}
           <section>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">{t('WhatsApp Automation')}</h2>
+            <h2 className="text-lg font-semibold text-slate-800 mb-4 border-b pb-2">{t('WhatsApp Automation')}</h2>
             <div className="space-y-4">
               <label className="flex items-center space-x-3 cursor-pointer">
                 <input 
@@ -141,9 +141,9 @@ const Settings = () => {
                   name="autoSendInvoices"
                   checked={formData.autoSendInvoices}
                   onChange={handleChange}
-                  className="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500" 
+                  className="form-checkbox h-5 w-5 text-slate-800 rounded border-gray-300 focus:ring-indigo-500" 
                 />
-                <span className="text-gray-700 font-medium">{t('Auto-send invoices on bill creation')}</span>
+                <span className="text-slate-700 font-medium">{t('Auto-send invoices on bill creation')}</span>
               </label>
               <label className="flex items-center space-x-3 cursor-pointer">
                 <input 
@@ -151,12 +151,12 @@ const Settings = () => {
                   name="autoSendReminders"
                   checked={formData.autoSendReminders}
                   onChange={handleChange}
-                  className="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500" 
+                  className="form-checkbox h-5 w-5 text-slate-800 rounded border-gray-300 focus:ring-indigo-500" 
                 />
-                <span className="text-gray-700 font-medium">{t('Auto-send payment reminders')}</span>
+                <span className="text-slate-700 font-medium">{t('Auto-send payment reminders')}</span>
               </label>
               <div className="pl-8 pt-2">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Send reminder before (days)')}</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">{t('Send reminder before (days)')}</label>
                 <input 
                   type="number" 
                   name="reminderDays"

@@ -138,23 +138,23 @@ const Reports = () => {
 
   const salesData = analytics?.chartData || [];
 
-  if (analyticsLoading) return <div className="p-8 text-center text-gray-500">{t('Loading')}...</div>;
+  if (analyticsLoading) return <div className="p-8 text-center text-slate-500">{t('Loading')}...</div>;
 
   return (
     <div className="space-y-6">
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">{t('Reports & Analytics')}</h1>
-          <p className="text-gray-500 text-sm mt-1">{t('Detailed overview of your business performance')}</p>
+          <h1 className="text-2xl font-semibold text-slate-800">{t('Reports & Analytics')}</h1>
+          <p className="text-slate-500 text-sm mt-1">{t('Detailed overview of your business performance')}</p>
         </div>
         
         {/* PDF Export Section with Filter */}
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto bg-gray-50 p-2 rounded-xl border border-gray-200">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-0 items-center gap-3 w-full md:w-auto bg-slate-50 p-2 rounded-xl border border-slate-200">
           <select 
             value={statementPeriod} 
             onChange={(e) => setStatementPeriod(e.target.value)}
-            className="bg-white border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 w-full sm:w-auto shadow-sm"
+            className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 p-2 w-full sm:w-auto shadow-sm"
           >
             <option value="today">{t('Today')}</option>
             <option value="7days">{t('Last 7 Days')}</option>
@@ -164,7 +164,7 @@ const Reports = () => {
           <button 
             onClick={downloadStatement}
             disabled={billsLoading}
-            className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg flex items-center shadow-sm w-full sm:w-auto justify-center font-medium transition-colors disabled:opacity-50"
+            className="bg-indigo-600 hover:bg-gray-800 text-white px-4 py-2 rounded-lg flex items-center shadow-sm w-full sm:w-auto justify-center font-medium transition-colors disabled:opacity-50"
           >
             <Download className="w-5 h-5 mr-2" />
             {t('Export PDF')}
@@ -175,42 +175,42 @@ const Reports = () => {
       <div className="space-y-6">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:-translate-y-1 transition-transform duration-300">
+          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-gray-500 font-medium">{t('Monthly Sales')}</h3>
-              <div className="p-2 bg-blue-50 rounded-lg">
-                <Calendar className="w-5 h-5 text-blue-600" />
+              <h3 className="text-slate-500 font-medium">{t('Monthly Sales')}</h3>
+              <div className="p-2 bg-slate-100 rounded-lg">
+                <Calendar className="w-5 h-5 text-slate-800" />
               </div>
             </div>
-            <p className="text-3xl font-semibold text-gray-900">{formatCurrency(analytics?.monthlySales || 0)}</p>
+            <p className="text-3xl font-semibold text-slate-800">{formatCurrency(analytics?.monthlySales || 0)}</p>
           </div>
           
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:-translate-y-1 transition-transform duration-300">
+          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-gray-500 font-medium">{t('Monthly Collections')}</h3>
+              <h3 className="text-slate-500 font-medium">{t('Monthly Collections')}</h3>
               <div className="p-2 bg-green-50 rounded-lg">
                 <IndianRupee className="w-5 h-5 text-green-600" />
               </div>
             </div>
-            <p className="text-3xl font-semibold text-gray-900">{formatCurrency(analytics?.monthlyCollection || 0)}</p>
+            <p className="text-3xl font-semibold text-slate-800">{formatCurrency(analytics?.monthlyCollection || 0)}</p>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:-translate-y-1 transition-transform duration-300">
+          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-gray-500 font-medium">{t('Total Pending')}</h3>
+              <h3 className="text-slate-500 font-medium">{t('Total Pending')}</h3>
               <div className="p-2 bg-red-50 rounded-lg">
                 <FileText className="w-5 h-5 text-red-600" />
               </div>
             </div>
-            <p className="text-3xl font-semibold text-gray-900">{formatCurrency(analytics?.pendingAmount || 0)}</p>
+            <p className="text-3xl font-semibold text-slate-800">{formatCurrency(analytics?.pendingAmount || 0)}</p>
           </div>
         </div>
 
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Bar Chart */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">{t('Sales Trend (Last 7 Days)')}</h3>
+          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+            <h3 className="text-lg font-semibold text-slate-800 mb-6">{t('Sales Trend (Last 7 Days)')}</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={salesData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
@@ -225,8 +225,8 @@ const Reports = () => {
           </div>
 
           {/* Line Chart */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">{t('Revenue Growth')}</h3>
+          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+            <h3 className="text-lg font-semibold text-slate-800 mb-6">{t('Revenue Growth')}</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={salesData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>

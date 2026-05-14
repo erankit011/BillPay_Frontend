@@ -94,89 +94,124 @@ const Bills = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-0 justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">{t('Billing & Invoices')}</h1>
-          <p className="text-gray-500 text-sm">{t('Create bills and send WhatsApp invoices')}</p>
+          <h1 className="text-2xl font-semibold text-slate-800">{t('Billing & Invoices')}</h1>
+          <p className="text-slate-500 text-sm">{t('Create bills and send WhatsApp invoices')}</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl flex items-center shadow-sm w-full sm:w-auto justify-center"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl flex items-center shadow-sm w-full sm:w-auto justify-center"
         >
           <Plus className="w-5 h-5 mr-2" />
           {t('Create New Bill')}
         </button>
       </div>
 
-      <div className="relative w-full max-w-md">
+      <div className="relative w-full md:max-w-md">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400" />
+          <Search className="h-5 w-5 text-slate-400" />
         </div>
         <input
           type="text"
           placeholder={t("Search by invoice number or customer...")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 pr-3 py-2 bg-white border border-gray-200 rounded-xl leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          className="block w-full pl-10 pr-3 py-2 bg-white border border-slate-200 rounded-xl leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         {isLoading ? (
-          <div className="p-8 text-center text-gray-500 flex justify-center"><Loader2 className="w-8 h-8 animate-spin" /></div>
+          <div className="p-8 text-center text-slate-500 flex justify-center"><Loader2 className="w-8 h-8 animate-spin" /></div>
         ) : filteredBills.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
+          <div className="p-8 text-center text-slate-500">
             <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
             <p>{t('No bills found. Create your first bill!')}</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">{t('Invoice')}</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">{t('Customer')}</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">{t('Date')}</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">{t('Amount')}</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500  tracking-wider">{t('Status')}</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500  tracking-wider">{t('Actions')}</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-100">
-                {filteredBills.map((bill, idx) => (
-                  <tr key={bill._id} className="hover:bg-blue-50/50 transition-colors animate-fade-in group" style={{ animationDelay: `${idx * 50}ms` }}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-blue-600">
-                      {bill.invoiceNumber}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{bill.customerId?.name || t('Walk-in Customer')}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(bill.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                      {formatCurrency(bill.grandTotal)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                        ${bill.paymentStatus === 'PAID' ? 'bg-green-100 text-green-800' : 
-                          bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-100 text-yellow-800' : 
-                          'bg-red-100 text-red-800'}`}>
-                        {bill.paymentStatus}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button 
-                        onClick={() => handleSendInvoice(bill._id)}
-                        className="text-green-600 hover:text-green-900 bg-green-50 px-3 py-1.5 rounded-lg flex items-center justify-center ml-auto"
-                      >
-                        <Send className="w-4 h-4 mr-1" /> {t('Send')}
-                      </button>
-                    </td>
+          <div>
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="min-w-[800px] w-full divide-y divide-slate-200">
+                <thead className="bg-slate-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 tracking-wider">{t('Invoice')}</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 tracking-wider">{t('Customer')}</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 tracking-wider">{t('Date')}</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 tracking-wider">{t('Amount')}</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 tracking-wider">{t('Status')}</th>
+                    <th className="px-6 py-3 text-right text-xs font-semibold text-slate-500 tracking-wider">{t('Actions')}</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="bg-white divide-y divide-slate-100">
+                  {filteredBills.map((bill, idx) => (
+                    <tr key={bill._id} className="hover:bg-slate-50 transition-colors animate-fade-in group" style={{ animationDelay: `${idx * 50}ms` }}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-indigo-600">
+                        {bill.invoiceNumber}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-slate-800 font-medium">{bill.customerId?.name || t('Walk-in Customer')}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+                        {new Date(bill.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-800">
+                        {formatCurrency(bill.grandTotal)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                          ${bill.paymentStatus === 'PAID' ? 'bg-emerald-100 text-emerald-800' : 
+                            bill.paymentStatus === 'PARTIAL' ? 'bg-amber-100 text-amber-800' : 
+                            'bg-rose-100 text-rose-800'}`}>
+                          {bill.paymentStatus}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button 
+                          onClick={() => handleSendInvoice(bill._id)}
+                          className="text-indigo-600 hover:text-white bg-indigo-50 hover:bg-indigo-600 px-3 py-1.5 rounded-lg flex items-center justify-center ml-auto transition-colors"
+                        >
+                          <Send className="w-4 h-4 mr-1" /> {t('Send')}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden divide-y divide-slate-100">
+              {filteredBills.map((bill, idx) => (
+                <div key={bill._id} className="p-4 animate-fade-in" style={{ animationDelay: `${idx * 50}ms` }}>
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <h4 className="text-sm font-semibold text-slate-800">{bill.customerId?.name || t('Walk-in Customer')}</h4>
+                      <p className="text-xs font-semibold text-indigo-600 mt-1">{bill.invoiceNumber}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-slate-800">{formatCurrency(bill.grandTotal)}</p>
+                      <p className="text-xs text-slate-500 mt-1">{new Date(bill.createdAt).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center mt-4">
+                    <span className={`px-2.5 py-1 inline-flex text-xs font-semibold rounded-md 
+                          ${bill.paymentStatus === 'PAID' ? 'bg-emerald-100 text-emerald-800' : 
+                            bill.paymentStatus === 'PARTIAL' ? 'bg-amber-100 text-amber-800' : 
+                            'bg-rose-100 text-rose-800'}`}>
+                      {bill.paymentStatus}
+                    </span>
+                    <button 
+                      onClick={() => handleSendInvoice(bill._id)}
+                      className="text-indigo-600 hover:text-white bg-indigo-50 hover:bg-indigo-600 px-3 py-1.5 rounded-lg flex items-center text-xs font-semibold transition-colors"
+                    >
+                      <Send className="w-3.5 h-3.5 mr-1" /> {t('Send')}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -187,13 +222,13 @@ const Bills = () => {
             <div className="fixed inset-0 transition-opacity bg-black/50 backdrop-blur-sm" onClick={() => setIsModalOpen(false)} />
             <div className="inline-block w-full max-w-2xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl sm:align-middle relative z-10 animate-scale-in">
               <div className="flex items-center justify-between mb-5 pb-4 border-b">
-                <h3 className="text-xl font-semibold text-gray-900">{t('Create New Bill')}</h3>
-                <button onClick={() => setIsModalOpen(false)} className="hover:bg-gray-100 p-1 rounded-full transition-colors"><X className="w-6 h-6 text-gray-400 hover:text-gray-700" /></button>
+                <h3 className="text-xl font-semibold text-slate-800">{t('Create New Bill')}</h3>
+                <button onClick={() => setIsModalOpen(false)} className="hover:bg-slate-100 p-1 rounded-full transition-colors"><X className="w-6 h-6 text-slate-400 hover:text-slate-700" /></button>
               </div>
               <form onSubmit={handleSubmit(handleCreateBill)} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Select Customer')}</label>
-                  <select {...register('customerId')} className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5">
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">{t('Select Customer')}</label>
+                  <select {...register('customerId')} className="mt-1 block w-full rounded-xl bg-white border border-slate-200 px-3 py-2.5">
                     <option value="">-- {t('Choose Customer')} --</option>
                     {customers.map(c => <option key={c._id} value={c._id}>{c.name} ({c.phone})</option>)}
                   </select>
@@ -201,26 +236,26 @@ const Bills = () => {
                 </div>
 
                 <div className="space-y-3">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Products')}</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">{t('Products')}</label>
                   {fields.map((field, index) => (
                     <div key={field.id} className="flex gap-2 items-center">
-                      <select {...register(`products.${index}.productId`)} className="flex-1 rounded-xl bg-white border border-gray-200 px-3 py-2.5">
+                      <select {...register(`products.${index}.productId`)} className="flex-1 rounded-xl bg-white border border-slate-200 px-3 py-2.5">
                         <option value="">-- {t('Product')} --</option>
                         {products.map(p => <option key={p._id} value={p._id}>{p.name} - ₹{p.price}</option>)}
                       </select>
-                      <input type="number" {...register(`products.${index}.quantity`)} placeholder="Qty" className="w-24 rounded-xl bg-white border border-gray-200 px-3 py-2.5" />
+                      <input type="number" {...register(`products.${index}.quantity`)} placeholder="Qty" className="w-24 rounded-xl bg-white border border-slate-200 px-3 py-2.5" />
                       <button type="button" onClick={() => remove(index)} className="text-red-500 hover:bg-red-50 p-2 rounded-xl"><X className="w-5 h-5"/></button>
                     </div>
                   ))}
-                  <button type="button" onClick={() => append({ productId: '', quantity: 1 })} className="text-blue-600 text-sm font-medium hover:underline">+ {t('Add another product')}</button>
+                  <button type="button" onClick={() => append({ productId: '', quantity: 1 })} className="text-slate-800 text-sm font-medium hover:underline">+ {t('Add another product')}</button>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Amount Paid (Advance)')}</label>
-                  <input type="number" {...register('amountPaid')} className="mt-1 block w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5" />
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">{t('Amount Paid (Advance)')}</label>
+                  <input type="number" {...register('amountPaid')} className="mt-1 block w-full rounded-xl bg-white border border-slate-200 px-3 py-2.5" />
                 </div>
 
-                <button type="submit" disabled={mutation.isPending} className="w-full bg-blue-600 text-white rounded-xl py-3 font-medium hover:bg-blue-700 disabled:opacity-50">
+                <button type="submit" disabled={mutation.isPending} className="w-full bg-indigo-600 text-white rounded-xl py-3 font-medium hover:bg-indigo-700 disabled:opacity-50">
                   {mutation.isPending ? t('Processing...') : t('Generate Bill')}
                 </button>
               </form>

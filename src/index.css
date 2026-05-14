@@ -68,9 +68,18 @@
   @apply bg-white/80 backdrop-blur-md border border-white/20;
 }
 
-/* Remove Recharts Black Focus Outline */
+/* Remove Recharts Black Focus Outline and Mobile Tap Highlights */
+* {
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+*:focus {
+  outline: none !important;
+}
+
 .recharts-wrapper,
 .recharts-surface,
-.recharts-responsive-container {
+.recharts-responsive-container,
+.recharts-wrapper * {
   outline: none !important;
 }

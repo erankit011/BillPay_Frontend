@@ -82,17 +82,17 @@ const Profile = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">{t('Profile')}</h1>
-        <p className="text-gray-500 text-sm">{t('Manage your account information')}</p>
+        <h1 className="text-2xl font-semibold text-slate-800">{t('Profile')}</h1>
+        <p className="text-slate-500 text-sm">{t('Manage your account information')}</p>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-8">
           <section>
             <div className="flex items-center mb-6">
               <div className="relative mr-5">
                 <div 
-                  className="w-20 h-20 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-3xl font-semibold shadow-sm border-2 border-white overflow-hidden"
+                  className="w-20 h-20 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center text-3xl font-semibold shadow-sm border-2 border-white overflow-hidden"
                 >
                   {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
                     <img src={`${BASE_URL}${user.profileImage}`} alt="Profile" className="w-full h-full object-cover" />
@@ -119,14 +119,14 @@ const Profile = () => {
                 className="hidden" 
               />
               <div>
-                <h2 className="text-xl font-medium text-gray-900">{user?.name}</h2>
-                <p className="text-gray-500">{user?.email}</p>
+                <h2 className="text-xl font-medium text-slate-800">{user?.name}</h2>
+                <p className="text-slate-500">{user?.email}</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2 mb-1 flex items-center">
+                <label className="block text-sm font-semibold text-slate-700 mb-2 mb-1 flex items-center">
                   <User className="w-4 h-4 mr-1" /> {t('Full Name')}
                 </label>
                 <input
@@ -134,20 +134,20 @@ const Profile = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full rounded-xl bg-white border border-slate-200 px-3 py-2.5 focus:ring-indigo-500 focus:border-indigo-500"
                   required
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2 mb-1 flex items-center">
+                <label className="block text-sm font-semibold text-slate-700 mb-2 mb-1 flex items-center">
                   <Mail className="w-4 h-4 mr-1" /> {t('Email Address')}
                 </label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
-                  className="w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 bg-gray-50 text-gray-500 cursor-not-allowed"
+                  className="w-full rounded-xl bg-white border border-slate-200 px-3 py-2.5 bg-slate-50 text-slate-500 cursor-not-allowed"
                   readOnly
                   disabled
                 />
@@ -155,14 +155,14 @@ const Profile = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2 mb-1 flex items-center">
+                <label className="block text-sm font-semibold text-slate-700 mb-2 mb-1 flex items-center">
                   <Phone className="w-4 h-4 mr-1" /> {t('Phone Number')}
                 </label>
                 <input
                   type="text"
                   name="phone"
                   value={formData.phone}
-                  className="w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 bg-gray-50 text-gray-500 cursor-not-allowed"
+                  className="w-full rounded-xl bg-white border border-slate-200 px-3 py-2.5 bg-slate-50 text-slate-500 cursor-not-allowed"
                   readOnly
                   disabled
                 />
@@ -170,7 +170,7 @@ const Profile = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2 mb-1 flex items-center">
+                <label className="block text-sm font-semibold text-slate-700 mb-2 mb-1 flex items-center">
                   <Store className="w-4 h-4 mr-1" /> {t('Shop Name')}
                 </label>
                 <input
@@ -178,7 +178,7 @@ const Profile = () => {
                   name="shopName"
                   value={formData.shopName}
                   onChange={handleChange}
-                  className="w-full rounded-xl bg-white border border-gray-200 px-3 py-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full rounded-xl bg-white border border-slate-200 px-3 py-2.5 focus:ring-indigo-500 focus:border-indigo-500"
                   required
                 />
               </div>
