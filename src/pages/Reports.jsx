@@ -213,7 +213,7 @@ const Reports = () => {
             <h3 className="text-lg font-semibold text-slate-800 mb-6">{t('Sales Trend (Last 7 Days)')}</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={salesData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                <BarChart data={salesData} margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6B7280' }} />
                   <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6B7280' }} tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(1) + 'k' : val}`} />
@@ -229,7 +229,7 @@ const Reports = () => {
             <h3 className="text-lg font-semibold text-slate-800 mb-6">{t('Revenue Growth')}</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={salesData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                <LineChart data={salesData} margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6B7280' }} />
                   <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6B7280' }} tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(1) + 'k' : val}`} />
