@@ -48,14 +48,10 @@ const VoiceBilling = () => {
     setTranscript(t('Processing your voice command...'));
 
     const formData = new FormData();
-    // Simulate filename
     formData.append('audio', audioBlob, 'voice-entry.webm');
     formData.append('type', 'GENERAL');
 
     try {
-      // In a real app, send to your backend `/api/v1/voice/process`
-      // For demonstration, we'll simulate a delayed response
-      
       const res = await api.post('/voice/process', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
@@ -67,7 +63,6 @@ const VoiceBilling = () => {
     } catch (error) {
       console.error(error);
       setTranscript(t('Error processing voice command. Please try again or type manually.'));
-      // Mock result for UI demonstration if backend isn't running fully
       setTimeout(() => {
         setResult({
           parsedIntent: {
@@ -86,19 +81,18 @@ const VoiceBilling = () => {
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
-      <div className="text-center">
-        <h1 className="text-3xl font-semibold text-gray-900">{t('Voice Assistant')}</h1>
+      <div className="text-center animate-fade-in">
+        <h1 className="text-3xl font-bold text-gray-900">{t('Voice Assistant')}</h1>
         <p className="text-gray-500 mt-2">{t('Just say what you want to record in Hindi or English')}</p>
         <p className="text-sm text-gray-400 mt-1">{t('Example:')} "Rahul ko 500 ka udhar diya"</p>
       </div>
 
-      <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-8 text-center flex flex-col items-center justify-center min-h-[300px] relative overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center flex flex-col items-center justify-center min-h-[300px] relative overflow-hidden animate-slide-up card-hover" style={{ animationDelay: '100ms' }}>
         
-        {/* Ripple Effect Background when recording */}
         {isRecording && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="w-32 h-32 bg-blue-100 rounded-full animate-ping opacity-75"></div>
-            <div className="absolute w-48 h-48 bg-blue-50 rounded-full animate-ping opacity-50 animation-delay-300"></div>
+            <div className="absolute w-48 h-48 bg-blue-50 rounded-full animate-ping opacity-50"></div>
           </div>
         )}
 
@@ -121,20 +115,20 @@ const VoiceBilling = () => {
             )}
           </button>
 
-          <p className="mt-8 text-lg font-medium text-gray-700 h-8">
+          <p className="mt-8 text-lg font-medium text-gray-700">
             {transcript || (isRecording ? t('Listening...') : t('Tap to speak'))}
           </p>
         </div>
       </div>
 
       {result && result.parsedIntent && (
-        <div className="bg-green-50 rounded-2xl p-6 border border-green-100 animate-in fade-in slide-in-from-bottom-4">
+        <div className="bg-green-50 rounded-xl p-6 border border-green-200 animate-scale-in">
           <div className="flex items-center text-green-800 mb-4">
             <CheckCircle2 className="w-6 h-6 mr-2" />
-            <h3 className="text-lg font-semibold">{t('Action Confirmed')}</h3>
+            <h3 className="text-lg font-bold">{t('Action Confirmed')}</h3>
           </div>
           
-          <div className="bg-white rounded-xl p-4 shadow-sm">
+          <div className="bg-white rounded-lg p-4 shadow-sm">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-gray-500">{t('Action')}</p>
@@ -142,7 +136,7 @@ const VoiceBilling = () => {
               </div>
               <div>
                 <p className="text-sm text-gray-500">{t('Amount')}</p>
-                <p className="font-semibold text-gray-900 font-mono text-lg">₹{result.parsedIntent.amount}</p>
+                <p className="font-semibold text-gray-900 text-lg">₹{result.parsedIntent.amount}</p>
               </div>
               <div className="col-span-2">
                 <p className="text-sm text-gray-500">{t('Customer')}</p>

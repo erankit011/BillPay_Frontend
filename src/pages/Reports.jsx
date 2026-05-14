@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../api/axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
-import { Download, FileText, Calendar, IndianRupee, FileDown } from 'lucide-react';
+import { Download, Calendar, IndianRupee } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { useTranslation } from 'react-i18next';
@@ -13,9 +13,8 @@ const formatCurrency = (amount) => {
 
 const Reports = () => {
   const { t } = useTranslation();
-  const [statementPeriod, setStatementPeriod] = useState('all'); // 'today', '7days', '30days', 'all'
+  const [statementPeriod, setStatementPeriod] = useState('all');
 
-  // Fetch Dashboard Analytics
   const { data: analytics, isLoading: analyticsLoading } = useQuery({
     queryKey: ['dashboardAnalytics'],
     queryFn: async () => {
@@ -24,7 +23,6 @@ const Reports = () => {
     }
   });
 
-  // Fetch All Bills for Statement
   const { data: bills = [], isLoading: billsLoading } = useQuery({
     queryKey: ['bills'],
     queryFn: async () => {
@@ -42,7 +40,6 @@ const Reports = () => {
   });
 
   const downloadStatement = () => {
-    // 1. Filter bills based on selected period
     const now = new Date();
     let startDate = new Date();
 
@@ -58,7 +55,7 @@ const Reports = () => {
         break;
       case 'all':
       default:
-        startDate = new Date(0); // Beginning of time
+        startDate = new Date(0);
         break;
     }
 
@@ -70,16 +67,12 @@ const Reports = () => {
       return;
     }
 
-    // 2. Generate PDF using jsPDF and jspdf-autotable
     const doc = new jsPDF();
     
-    // Header
-    doc.setFontSize(22);
-    doc.setTextColor(31, 41, 55); // Gray-800
-    doc.text(t('Store Statement'), 14, 22);
+    doc.setFontSize(20);
+    doc.text(t('Store Statement'), 14, 20);
     
-    doc.setFontSize(11);
-    doc.setTextColor(107, 114, 128); // Gray-500
+    doc.setFontSize(10);
     const periodLabels = {
       'today': t('Today'),
       '7days': t('Last 7 Days'),
@@ -87,10 +80,9 @@ const Reports = () => {
       'all': t('All Time')
     };
     
-    doc.text(`${t('Period')}: ${periodLabels[statementPeriod]}`, 14, 32);
-    doc.text(`${t('Generated on')}: ${new Date().toLocaleDateString()}`, 14, 38);
+    doc.text(`${t('Period')}: ${periodLabels[statementPeriod]}`, 14, 30);
+    doc.text(`${t('Generated on')}: ${new Date().toLocaleDateString()}`, 14, 36);
     
-    // Table
     const tableColumn = [t("Invoice No"), t("Customer"), t("Date"), t("Amount"), t("Status")];
     const tableRows = [];
     
@@ -99,7 +91,6 @@ const Reports = () => {
 
     filteredBills.forEach(bill => {
       totalSales += bill.grandTotal;
-
       const billData = [
         bill.invoiceNumber,
         bill.customerId?.name || t('Walk-in Customer'),
@@ -115,46 +106,41 @@ const Reports = () => {
     });
     
     autoTable(doc, {
-      startY: 45,
+      startY: 42,
       head: [tableColumn],
       body: tableRows,
       theme: 'grid',
-      headStyles: { fillColor: [79, 70, 229], textColor: 255 }, // Indigo-600
-      styles: { fontSize: 10, cellPadding: 4 },
-      alternateRowStyles: { fillColor: [249, 250, 251] },
+      headStyles: { fillColor: [37, 99, 235] },
     });
     
-    // Summary at the bottom
-    const finalY = doc.lastAutoTable.finalY || 45;
+    const finalY = doc.lastAutoTable.finalY || 42;
     
-    doc.setFontSize(12);
-    doc.setTextColor(31, 41, 55);
-    doc.text(`${t('Total Bills')}: ${filteredBills.length}`, 14, finalY + 15);
-    doc.text(`${t('Total Sales')}: Rs ${totalSales.toFixed(2)}`, 14, finalY + 22);
-    doc.text(`${t('Total Collections')}: Rs ${totalCollections.toFixed(2)}`, 14, finalY + 29);
+    doc.setFontSize(11);
+    doc.text(`${t('Total Bills')}: ${filteredBills.length}`, 14, finalY + 12);
+    doc.text(`${t('Total Sales')}: Rs ${totalSales.toFixed(2)}`, 14, finalY + 18);
+    doc.text(`${t('Total Collections')}: Rs ${totalCollections.toFixed(2)}`, 14, finalY + 24);
     
     doc.save(`Store_Statement_${statementPeriod}.pdf`);
   };
 
   const salesData = analytics?.chartData || [];
 
-  if (analyticsLoading) return <div className="p-8 text-center text-slate-500">{t('Loading')}...</div>;
+  if (analyticsLoading) return <div className="p-8 text-center text-gray-500">{t('Loading')}...</div>;
 
   return (
     <div className="space-y-6">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-5 rounded-xl border border-gray-200">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-800">{t('Reports & Analytics')}</h1>
-          <p className="text-slate-500 text-sm mt-1">{t('Detailed overview of your business performance')}</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('Reports & Analytics')}</h1>
+          <p className="text-gray-500 text-sm mt-1">{t('Detailed overview of your business performance')}</p>
         </div>
         
-        {/* PDF Export Section with Filter */}
-        <div className="flex flex-col md:flex-row gap-4 md:gap-0 items-center gap-3 w-full md:w-auto bg-slate-50 p-2 rounded-xl border border-slate-200">
+        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
           <select 
             value={statementPeriod} 
             onChange={(e) => setStatementPeriod(e.target.value)}
-            className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 p-2 w-full sm:w-auto shadow-sm"
+            className="bg-white border border-gray-200 text-gray-700 text-sm rounded-lg px-3 py-2"
           >
             <option value="today">{t('Today')}</option>
             <option value="7days">{t('Last 7 Days')}</option>
@@ -164,80 +150,64 @@ const Reports = () => {
           <button 
             onClick={downloadStatement}
             disabled={billsLoading}
-            className="bg-indigo-600 hover:bg-gray-800 text-white px-4 py-2 rounded-lg flex items-center shadow-sm w-full sm:w-auto justify-center font-medium transition-colors disabled:opacity-50"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center justify-center font-medium disabled:opacity-50"
           >
-            <Download className="w-5 h-5 mr-2" />
+            <Download className="w-4 h-4 mr-2" />
             {t('Export PDF')}
           </button>
         </div>
       </div>
 
-      <div className="space-y-6">
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-slate-500 font-medium">{t('Monthly Sales')}</h3>
-              <div className="p-2 bg-slate-100 rounded-lg">
-                <Calendar className="w-5 h-5 text-slate-800" />
-              </div>
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[
+          { title: t('Monthly Sales'), value: formatCurrency(analytics?.monthlySales || 0), icon: Calendar, color: "text-gray-400" },
+          { title: t('Monthly Collections'), value: formatCurrency(analytics?.monthlyCollection || 0), icon: IndianRupee, color: "text-green-600" },
+          { title: t('Total Pending'), value: formatCurrency(analytics?.pendingAmount || 0), icon: IndianRupee, color: "text-red-600" }
+        ].map((card, index) => (
+          <div 
+            key={index} 
+            className="bg-white p-5 rounded-xl border border-gray-200 hover:shadow-md transition-all duration-200 animate-fade-in"
+            style={{ animationDelay: `${index * 100}ms` }}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-gray-500 font-medium text-sm">{card.title}</h3>
+              <card.icon className={`w-5 h-5 ${card.color}`} />
             </div>
-            <p className="text-3xl font-semibold text-slate-800">{formatCurrency(analytics?.monthlySales || 0)}</p>
+            <p className="text-2xl font-bold text-gray-900">{card.value}</p>
           </div>
-          
-          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-slate-500 font-medium">{t('Monthly Collections')}</h3>
-              <div className="p-2 bg-green-50 rounded-lg">
-                <IndianRupee className="w-5 h-5 text-green-600" />
-              </div>
-            </div>
-            <p className="text-3xl font-semibold text-slate-800">{formatCurrency(analytics?.monthlyCollection || 0)}</p>
-          </div>
+        ))}
+      </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-slate-500 font-medium">{t('Total Pending')}</h3>
-              <div className="p-2 bg-red-50 rounded-lg">
-                <FileText className="w-5 h-5 text-red-600" />
-              </div>
-            </div>
-            <p className="text-3xl font-semibold text-slate-800">{formatCurrency(analytics?.pendingAmount || 0)}</p>
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-md transition-all duration-200 animate-fade-in" style={{ animationDelay: '300ms' }}>
+          <h3 className="text-lg font-bold text-gray-900 mb-4">{t('Sales Trend (Last 7 Days)')}</h3>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={salesData} margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(1) + 'k' : val}`} />
+                <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ borderRadius: '0.5rem', border: '1px solid #e5e7eb' }} />
+                <Bar dataKey="sales" fill="#2563eb" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Bar Chart */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-800 mb-6">{t('Sales Trend (Last 7 Days)')}</h3>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={salesData} margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6B7280' }} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6B7280' }} tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(1) + 'k' : val}`} />
-                  <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                  <Bar dataKey="sales" fill="#4F46E5" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* Line Chart */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-800 mb-6">{t('Revenue Growth')}</h3>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={salesData} margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6B7280' }} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6B7280' }} tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(1) + 'k' : val}`} />
-                  <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                  <Line type="monotone" dataKey="sales" stroke="#10B981" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+        <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-md transition-all duration-200 animate-fade-in" style={{ animationDelay: '400ms' }}>
+          <h3 className="text-lg font-bold text-gray-900 mb-4">{t('Revenue Growth')}</h3>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={salesData} margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(1) + 'k' : val}`} />
+                <Tooltip contentStyle={{ borderRadius: '0.5rem', border: '1px solid #e5e7eb' }} />
+                <Line type="monotone" dataKey="sales" stroke="#10b981" strokeWidth={2} dot={{ r: 3 }} />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>

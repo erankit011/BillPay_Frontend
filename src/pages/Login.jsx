@@ -57,41 +57,44 @@ const Login = ({ isRegister = false }) => {
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-semibold text-gray-900 mb-6 text-center">
+    <div className="animate-fade-in">
+      <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
         {isRegister ? t('Create an Account') : t('Sign in to your account')}
       </h2>
       
       {error && (
-        <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">
+        <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm border border-red-200 animate-scale-in">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 animate-slide-up" style={{ animationDelay: '100ms' }}>
         {isRegister && (
           <>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Full Name')}</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('Full Name')}</label>
               <input 
                 {...register('name')}
-                className={`mt-1 block w-full rounded-md border p-2 focus:ring-indigo-500 focus:border-indigo-500 ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
+                placeholder="Enter your name"
               />
               {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Shop Name')}</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('Shop Name')}</label>
               <input 
                 {...register('shopName')}
-                className={`mt-1 block w-full rounded-md border p-2 focus:ring-indigo-500 focus:border-indigo-500 ${errors.shopName ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.shopName ? 'border-red-500' : 'border-gray-300'}`}
+                placeholder="Enter shop name"
               />
               {errors.shopName && <p className="text-red-500 text-xs mt-1">{errors.shopName.message}</p>}
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Phone Number')}</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('Phone Number')}</label>
               <input 
                 {...register('phone')}
-                className={`mt-1 block w-full rounded-md border p-2 focus:ring-indigo-500 focus:border-indigo-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
+                placeholder="10-digit number"
               />
               {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
             </div>
@@ -99,21 +102,23 @@ const Login = ({ isRegister = false }) => {
         )}
         
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Email Address')}</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('Email Address')}</label>
           <input 
             type="email"
             {...register('email')}
-            className={`mt-1 block w-full rounded-md border p-2 focus:ring-indigo-500 focus:border-indigo-500 ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
+            className={`w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
+            placeholder="you@example.com"
           />
           {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">{t('Password')}</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('Password')}</label>
           <input 
             type="password"
             {...register('password')}
-            className={`mt-1 block w-full rounded-md border p-2 focus:ring-indigo-500 focus:border-indigo-500 ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
+            className={`w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
+            placeholder="••••••••"
           />
           {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
         </div>
@@ -121,20 +126,20 @@ const Login = ({ isRegister = false }) => {
         <button 
           type="submit" 
           disabled={isLoading}
-          className="w-full flex justify-center py-2 px-4 border border-gray-100 rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+          className="w-full flex justify-center py-2.5 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 btn-hover-lift transition-all"
         >
           {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : (isRegister ? t('Sign Up') : t('Sign In'))}
         </button>
       </form>
 
-      <div className="mt-6 text-center">
+      <div className="mt-6 text-center animate-fade-in" style={{ animationDelay: '200ms' }}>
         {isRegister ? (
           <p className="text-sm text-gray-600">
-            Already have an account? <Link to="/login" className="text-indigo-600 font-medium hover:text-indigo-500">{t('Sign In')}</Link>
+            Already have an account? <Link to="/login" className="text-blue-600 font-medium hover:text-blue-700">{t('Sign In')}</Link>
           </p>
         ) : (
           <p className="text-sm text-gray-600">
-            Don't have an account? <Link to="/register" className="text-indigo-600 font-medium hover:text-indigo-500">{t('Sign Up')}</Link>
+            Don't have an account? <Link to="/register" className="text-blue-600 font-medium hover:text-blue-700">{t('Sign Up')}</Link>
           </p>
         )}
       </div>

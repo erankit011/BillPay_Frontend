@@ -37,34 +37,35 @@ const MainLayout = () => {
   };
 
   return (
-    <div className="flex h-screen bg-[#F8FAFC] overflow-hidden font-sans selection:bg-slate-100 selection:text-indigo-900">
-      {/* Mobile Sidebar Overlay */}
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
+      {/* Mobile Overlay */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 z-20 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-20 bg-black/30 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar - Desktop & Mobile */}
+      {/* Sidebar */}
       <aside 
-        className={`fixed inset-y-0 left-0 z-30 w-64 bg-white border-r border-slate-100 transform transition-transform duration-300 lg:static lg:translate-x-0 flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 lg:static lg:translate-x-0 flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
-        <div className="flex items-center justify-between h-20 px-8 border-b border-slate-100 shrink-0">
-          <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">BakiPay</span>
-          <button className="lg:hidden p-2 -mr-2 rounded-lg text-slate-400 hover:bg-slate-50" onClick={() => setSidebarOpen(false)}>
-            <X className="w-5 h-5" />
+        <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200 animate-fade-in">
+          <span className="text-xl font-bold text-blue-600">BakiPay</span>
+          <button className="lg:hidden" onClick={() => setSidebarOpen(false)}>
+            <X className="w-5 h-5 text-gray-400" />
           </button>
         </div>
         
         <nav className="p-4 space-y-1 overflow-y-auto flex-1">
-          {navItems.map((item) => (
+          {navItems.map((item, index) => (
             <NavLink
               key={item.path}
               to={item.path}
               className={({ isActive }) => 
-                `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${isActive ? 'bg-slate-100 text-slate-800 font-semibold shadow-[0_1px_2px_rgba(0,0,0,0.02)]' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800 font-medium'}`
+                `flex items-center px-4 py-3 rounded-lg transition-all animate-slide-up ${isActive ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-600 hover:bg-gray-50 hover:translate-x-1'}`
               }
+              style={{ animationDelay: `${index * 50}ms` }}
               onClick={() => setSidebarOpen(false)}
             >
               <item.icon className="w-5 h-5 mr-3" />
@@ -73,42 +74,41 @@ const MainLayout = () => {
           ))}
         </nav>
         
-        <div className="p-4 border-t shrink-0">
+        <div className="p-4 border-t border-gray-200 animate-fade-in" style={{ animationDelay: '400ms' }}>
           <button 
             onClick={toggleLanguage}
-            className="flex items-center justify-center w-full px-4 py-3 text-slate-800 bg-slate-100/50 hover:bg-slate-100 rounded-xl transition-all duration-200 font-semibold mb-3 border border-indigo-100/50"
+            className="flex items-center justify-center w-full px-4 py-2.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-all font-medium mb-3 btn-hover-lift"
           >
             <Globe className="w-5 h-5 mr-2" />
-            {i18n.language === 'en' ? 'हिंदी में बदलें' : 'Switch to English'}
+            {i18n.language === 'en' ? 'हिंदी' : 'English'}
           </button>
           <button 
             onClick={handleLogout}
-            className="flex items-center w-full px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition-all duration-200 font-medium group"
+            className="flex items-center w-full px-4 py-2.5 text-red-600 hover:bg-red-50 rounded-lg transition-all font-medium btn-hover-lift"
           >
-            <LogOut className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" />
+            <LogOut className="w-5 h-5 mr-3" />
             {t('Logout')}
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden relative">
-        {/* Top Header */}
-        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-4 lg:px-8 z-10 shrink-0 sticky top-0">
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
+        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-10 animate-fade-in">
           <button 
-            className="lg:hidden p-2 rounded-xl text-slate-500 hover:bg-slate-100 transition-colors"
+            className="lg:hidden"
             onClick={() => setSidebarOpen(true)}
           >
-            <Menu className="w-6 h-6" />
+            <Menu className="w-6 h-6 text-gray-600" />
           </button>
           
           <div className="ml-auto flex items-center gap-4">
-            <button className="w-10 h-10 rounded-full flex items-center justify-center text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition-colors relative">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+            <button className="relative transition-transform hover:scale-110">
+              <Bell className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+              <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
             </button>
-            {/* User Profile */}
-            <Link to="/profile" className="w-10 h-10 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-bold shadow-sm hover:ring-2 hover:ring-indigo-100 transition-all overflow-hidden border border-indigo-100">
+            <Link to="/profile" className="w-9 h-9 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-semibold hover:bg-blue-200 transition-all overflow-hidden hover:scale-110">
               {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
                 <img src={`${BASE_URL}${user.profileImage}`} alt="Profile" className="w-full h-full object-cover" />
               ) : (
@@ -118,23 +118,24 @@ const MainLayout = () => {
           </div>
         </header>
 
-        {/* Scrollable Main Area */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-slate-50 p-4 lg:p-8 pb-24 lg:pb-8">
+        {/* Main Area */}
+        <main className="flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>
 
-        {/* Mobile Bottom Navigation */}
-        <nav className="lg:hidden fixed bottom-0 w-full bg-white border-t flex justify-around p-2 pb-safe z-20 shrink-0">
-          {navItems.slice(0, 5).map((item) => (
+        {/* Mobile Bottom Nav */}
+        <nav className="lg:hidden bg-white border-t border-gray-200 flex justify-around p-2">
+          {navItems.slice(0, 5).map((item, index) => (
             <NavLink
               key={item.path}
               to={item.path}
               className={({ isActive }) => 
-                `flex flex-col items-center p-2 rounded-lg transition-colors ${isActive ? 'text-slate-800' : 'text-slate-500 hover:text-slate-800'}`
+                `flex flex-col items-center p-2 rounded-lg transition-all animate-fade-in ${isActive ? 'text-blue-600' : 'text-gray-500'}`
               }
+              style={{ animationDelay: `${index * 50}ms` }}
             >
-              <item.icon className="w-6 h-6 mb-1" />
-              <span className="text-[10px] font-medium whitespace-nowrap overflow-hidden text-ellipsis w-14 text-center">{t(item.labelKey)}</span>
+              <item.icon className="w-5 h-5 mb-1" />
+              <span className="text-xs">{t(item.labelKey)}</span>
             </NavLink>
           ))}
         </nav>

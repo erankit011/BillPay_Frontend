@@ -7,12 +7,7 @@
   --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
 }
 
-@layer base {
-  body {
-    font-family: 'Inter', sans-serif;
-    @apply bg-gray-50 text-gray-900 antialiased;
-  }
-}
+
 
 @layer utilities {
   .pb-safe {
@@ -46,6 +41,24 @@
   .animate-scale-in {
     animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
+  
+  .animate-modal-overlay {
+    animation: fadeIn 0.2s ease-out forwards;
+  }
+  
+  .animate-modal-content {
+    animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  
+  /* Loading skeleton animation */
+  .animate-pulse-slow {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  /* Smooth page transitions */
+  .page-transition {
+    animation: pageTransition 0.3s ease-out forwards;
+  }
 }
 
 @keyframes fadeIn {
@@ -63,9 +76,73 @@
   to { opacity: 1; transform: scale(1); }
 }
 
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes pageTransition {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Glassmorphism helpers */
 .glass {
   @apply bg-white/80 backdrop-blur-md border border-white/20;
+}
+
+/* Button hover effects */
+.btn-hover-lift {
+  transition: all 0.2s ease;
+}
+
+.btn-hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-hover-lift:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.1);
+}
+
+/* Icon hover effects */
+.icon-hover {
+  transition: transform 0.2s ease;
+}
+
+.icon-hover:hover {
+  transform: scale(1.1);
+}
+
+/* Badge pulse animation */
+.badge-pulse {
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+/* Smooth transitions for all interactive elements */
+button, a, input, select, textarea {
+  transition: all 0.2s ease;
 }
 
 /* Remove Recharts Black Focus Outline and Mobile Tap Highlights */

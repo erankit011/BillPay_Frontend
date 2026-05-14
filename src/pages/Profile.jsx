@@ -61,7 +61,6 @@ const Profile = () => {
 
     setUploadingImage(true);
     try {
-      // Need to use multipart/form-data
       const res = await api.post('/auth/me/photo', formDataObj, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -81,19 +80,17 @@ const Profile = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-slate-800">{t('Profile')}</h1>
-        <p className="text-slate-500 text-sm">{t('Manage your account information')}</p>
+      <div className="animate-fade-in">
+        <h1 className="text-2xl font-bold text-gray-900">{t('Profile')}</h1>
+        <p className="text-gray-500 text-sm mt-1">{t('Manage your account information')}</p>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-8">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden animate-slide-up card-hover" style={{ animationDelay: '100ms' }}>
+        <form onSubmit={handleSubmit} className="p-6 space-y-8">
           <section>
             <div className="flex items-center mb-6">
-              <div className="relative mr-5">
-                <div 
-                  className="w-20 h-20 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center text-3xl font-semibold shadow-sm border-2 border-white overflow-hidden"
-                >
+              <div className="relative mr-5 animate-scale-in" style={{ animationDelay: '200ms' }}>
+                <div className="w-20 h-20 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-3xl font-bold border-2 border-white shadow-sm overflow-hidden transition-transform hover:scale-105">
                   {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
                     <img src={`${BASE_URL}${user.profileImage}`} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
@@ -101,11 +98,10 @@ const Profile = () => {
                   )}
                 </div>
                 
-                {/* Permanent Camera Button */}
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute bottom-0 right-0 bg-indigo-600 hover:bg-indigo-700 p-1.5 rounded-full text-white shadow-md border-2 border-white transition-colors"
+                  className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 p-1.5 rounded-full text-white shadow-md border-2 border-white transition-colors"
                   title={t('Upload Profile Photo')}
                 >
                   <Camera className="w-4 h-4" />
@@ -119,14 +115,14 @@ const Profile = () => {
                 className="hidden" 
               />
               <div>
-                <h2 className="text-xl font-medium text-slate-800">{user?.name}</h2>
-                <p className="text-slate-500">{user?.email}</p>
+                <h2 className="text-xl font-semibold text-gray-900">{user?.name}</h2>
+                <p className="text-gray-500">{user?.email}</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2 mb-1 flex items-center">
+                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
                   <User className="w-4 h-4 mr-1" /> {t('Full Name')}
                 </label>
                 <input
@@ -134,43 +130,43 @@ const Profile = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full rounded-xl bg-white border border-slate-200 px-3 py-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   required
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2 mb-1 flex items-center">
+                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
                   <Mail className="w-4 h-4 mr-1" /> {t('Email Address')}
                 </label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
-                  className="w-full rounded-xl bg-white border border-slate-200 px-3 py-2.5 bg-slate-50 text-slate-500 cursor-not-allowed"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 text-gray-500 cursor-not-allowed"
                   readOnly
                   disabled
                 />
-                <p className="mt-1.5 text-xs text-red-400 font-medium">{t('* Cannot be changed')}</p>
+                <p className="mt-1 text-xs text-red-500 font-medium">{t('* Cannot be changed')}</p>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2 mb-1 flex items-center">
+                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
                   <Phone className="w-4 h-4 mr-1" /> {t('Phone Number')}
                 </label>
                 <input
                   type="text"
                   name="phone"
                   value={formData.phone}
-                  className="w-full rounded-xl bg-white border border-slate-200 px-3 py-2.5 bg-slate-50 text-slate-500 cursor-not-allowed"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 text-gray-500 cursor-not-allowed"
                   readOnly
                   disabled
                 />
-                <p className="mt-1.5 text-xs text-red-400 font-medium">{t('* Cannot be changed')}</p>
+                <p className="mt-1 text-xs text-red-500 font-medium">{t('* Cannot be changed')}</p>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2 mb-1 flex items-center">
+                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
                   <Store className="w-4 h-4 mr-1" /> {t('Shop Name')}
                 </label>
                 <input
@@ -178,7 +174,7 @@ const Profile = () => {
                   name="shopName"
                   value={formData.shopName}
                   onChange={handleChange}
-                  className="w-full rounded-xl bg-white border border-slate-200 px-3 py-2.5 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   required
                 />
               </div>
@@ -189,7 +185,7 @@ const Profile = () => {
             <button
               type="submit"
               disabled={loading}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl flex items-center shadow-sm font-medium disabled:opacity-50"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg flex items-center font-medium disabled:opacity-50 btn-hover-lift transition-all"
             >
               <Save className="w-5 h-5 mr-2" />
               {loading ? t('Saving...') : t('Save Profile')}
