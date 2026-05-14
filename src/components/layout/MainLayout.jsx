@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/slices/authSlice';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import api from '../../api/axios';
 
 const navItems = [
   { path: '/', labelKey: 'Dashboard', icon: Home },
@@ -26,8 +27,18 @@ const MainLayout = () => {
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
   const BASE_URL = API_URL.replace('/api/v1', '');
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async () => {
+    try {
+      // Call logout endpoint to clear refresh token
+      await api.post('/auth/logout');
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      // Clear local storage and dispatch logout action
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('token');
+      dispatch(logout());
+    }
   };
 
   const toggleLanguage = () => {

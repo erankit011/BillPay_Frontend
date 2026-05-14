@@ -90,7 +90,7 @@ const Profile = () => {
           <section>
             <div className="flex items-center mb-6">
               <div className="relative mr-5 animate-scale-in" style={{ animationDelay: '200ms' }}>
-                <div className="w-20 h-20 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-3xl font-bold border-2 border-white shadow-sm overflow-hidden transition-transform hover:scale-105">
+                <div className="w-20 h-20 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-3xl font-bold border-2 border-white overflow-hidden transition-transform hover:scale-105">
                   {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
                     <img src={`${BASE_URL}${user.profileImage}`} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
@@ -101,7 +101,7 @@ const Profile = () => {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 p-1.5 rounded-full text-white shadow-md border-2 border-white transition-colors"
+                  className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 p-1.5 rounded-full text-white border-2 border-white transition-colors"
                   title={t('Upload Profile Photo')}
                 >
                   <Camera className="w-4 h-4" />

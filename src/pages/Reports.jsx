@@ -167,7 +167,7 @@ const Reports = () => {
         ].map((card, index) => (
           <div 
             key={index} 
-            className="bg-white p-5 rounded-xl border border-gray-200 hover:shadow-md transition-all duration-200 animate-fade-in"
+            className="bg-white p-5 rounded-xl border border-gray-200 hover:border-gray-300 transition-all duration-200 animate-fade-in"
             style={{ animationDelay: `${index * 100}ms` }}
           >
             <div className="flex items-center justify-between mb-3">
@@ -181,33 +181,45 @@ const Reports = () => {
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-md transition-all duration-200 animate-fade-in" style={{ animationDelay: '300ms' }}>
+        <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 animate-fade-in" style={{ animationDelay: '300ms' }}>
           <h3 className="text-lg font-bold text-gray-900 mb-4">{t('Sales Trend (Last 7 Days)')}</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={salesData} margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(1) + 'k' : val}`} />
-                <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ borderRadius: '0.5rem', border: '1px solid #e5e7eb' }} />
-                <Bar dataKey="sales" fill="#2563eb" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+          <div style={{ width: '100%', height: 256 }}>
+            {salesData && salesData.length > 0 ? (
+              <ResponsiveContainer>
+                <BarChart data={salesData} margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(1) + 'k' : val}`} />
+                  <Tooltip cursor={{fill: 'transparent'}} contentStyle={{ borderRadius: '0.5rem', border: '1px solid #e5e7eb' }} />
+                  <Bar dataKey="sales" fill="#2563eb" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-400">
+                <p>{t('No data available')}</p>
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-md transition-all duration-200 animate-fade-in" style={{ animationDelay: '400ms' }}>
+        <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 animate-fade-in" style={{ animationDelay: '400ms' }}>
           <h3 className="text-lg font-bold text-gray-900 mb-4">{t('Revenue Growth')}</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={salesData} margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(1) + 'k' : val}`} />
-                <Tooltip contentStyle={{ borderRadius: '0.5rem', border: '1px solid #e5e7eb' }} />
-                <Line type="monotone" dataKey="sales" stroke="#10b981" strokeWidth={2} dot={{ r: 3 }} />
-              </LineChart>
-            </ResponsiveContainer>
+          <div style={{ width: '100%', height: 256 }}>
+            {salesData && salesData.length > 0 ? (
+              <ResponsiveContainer>
+                <LineChart data={salesData} margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(1) + 'k' : val}`} />
+                  <Tooltip contentStyle={{ borderRadius: '0.5rem', border: '1px solid #e5e7eb' }} />
+                  <Line type="monotone" dataKey="sales" stroke="#10b981" strokeWidth={2} dot={{ r: 3 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-400">
+                <p>{t('No data available')}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

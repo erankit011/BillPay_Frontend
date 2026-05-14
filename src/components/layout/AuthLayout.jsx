@@ -12,6 +12,7 @@ const AuthLayout = () => {
       </div>
     );
   }
+  
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
@@ -24,7 +25,7 @@ const AuthLayout = () => {
           <h1 className="text-3xl font-bold text-blue-600 mb-2">BakiPay</h1>
           <p className="text-gray-600">Smart Billing & Udhar Management</p>
         </div>
-        <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <div className="bg-white rounded-xl border border-gray-200 p-8">
           <Outlet />
         </div>
       </div>
