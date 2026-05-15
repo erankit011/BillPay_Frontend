@@ -66,28 +66,28 @@ const Register = () => {
   };
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in px-2 sm:px-0">
       {/* Progress Steps - Compact Design */}
-      <div className="mb-6">
-        <div className="flex items-center justify-center gap-2 mb-3">
+      <div className="mb-4 sm:mb-6">
+        <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-2 sm:mb-3">
           {[1, 2, 3].map((s) => (
             <React.Fragment key={s}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
+              <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-semibold transition-colors ${
                 step >= s 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-200 text-gray-400'
               }`}>
-                {step > s ? <CheckCircle className="w-4 h-4" /> : s}
+                {step > s ? <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : s}
               </div>
               {s < 3 && (
-                <div className={`w-12 h-0.5 transition-all ${
+                <div className={`w-8 sm:w-12 h-0.5 transition-colors ${
                   step > s ? 'bg-blue-600' : 'bg-gray-200'
                 }`} />
               )}
             </React.Fragment>
           ))}
         </div>
-        <div className="flex justify-center gap-8 text-xs text-gray-600">
+        <div className="flex justify-center gap-6 sm:gap-8 text-xs text-gray-600">
           <span className={step === 1 ? 'font-semibold text-blue-600' : ''}>Personal</span>
           <span className={step === 2 ? 'font-semibold text-blue-600' : ''}>Business</span>
           <span className={step === 3 ? 'font-semibold text-blue-600' : ''}>Security</span>
@@ -95,11 +95,11 @@ const Register = () => {
       </div>
 
       {/* Header */}
-      <div className="text-center mb-6">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4 animate-scale-in">
-          <User className="w-8 h-8 text-blue-600" />
+      <div className="text-center mb-4 sm:mb-6">
+        <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-blue-100 rounded-full mb-3 sm:mb-4">
+          <User className="w-7 h-7 sm:w-8 sm:h-8 text-blue-600" />
         </div>
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
           {t('Create Account')}
         </h2>
         <p className="text-gray-600 text-sm">
@@ -110,12 +110,12 @@ const Register = () => {
       </div>
       
       {error && (
-        <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm border border-red-200 animate-scale-in">
+        <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm border border-red-200">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 animate-slide-up" style={{ animationDelay: '100ms' }}>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Step 1: Personal Info */}
         {step === 1 && (
           <div className="space-y-4">
@@ -126,7 +126,7 @@ const Register = () => {
               </label>
               <input 
                 {...register('name')}
-                className={`w-full rounded-lg border px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="Enter your full name"
                 autoFocus
               />
@@ -141,7 +141,7 @@ const Register = () => {
               <input 
                 type="email"
                 {...register('email')}
-                className={`w-full rounded-lg border px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="you@example.com"
               />
               {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
@@ -150,7 +150,7 @@ const Register = () => {
             <button 
               type="button"
               onClick={handleNext}
-              className="w-full flex justify-center items-center py-3 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 btn-hover-lift transition-all"
+              className="w-full flex justify-center items-center py-2.5 sm:py-3 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             >
               {t('Continue')}
               <ArrowRight className="w-5 h-5 ml-2" />
@@ -168,7 +168,7 @@ const Register = () => {
               </label>
               <input 
                 {...register('shopName')}
-                className={`w-full rounded-lg border px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all ${errors.shopName ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.shopName ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="Enter your shop name"
                 autoFocus
               />
@@ -182,25 +182,25 @@ const Register = () => {
               </label>
               <input 
                 {...register('phone')}
-                className={`w-full rounded-lg border px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="10-digit mobile number"
                 maxLength={10}
               />
               {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-2 sm:gap-3">
               <button 
                 type="button"
                 onClick={() => setStep(1)}
-                className="flex-1 py-3 px-4 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all"
+                className="flex-1 py-2.5 sm:py-3 px-4 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
               >
                 {t('Back')}
               </button>
               <button 
                 type="button"
                 onClick={handleNext}
-                className="flex-1 flex justify-center items-center py-3 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 btn-hover-lift transition-all"
+                className="flex-1 flex justify-center items-center py-2.5 sm:py-3 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors"
               >
                 {t('Continue')}
                 <ArrowRight className="w-5 h-5 ml-2" />
@@ -220,7 +220,7 @@ const Register = () => {
               <input 
                 type="password"
                 {...register('password')}
-                className={`w-full rounded-lg border px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="Create a strong password"
                 autoFocus
               />
@@ -239,18 +239,18 @@ const Register = () => {
               </div>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-2 sm:gap-3">
               <button 
                 type="button"
                 onClick={() => setStep(2)}
-                className="flex-1 py-3 px-4 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all"
+                className="flex-1 py-2.5 sm:py-3 px-4 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
               >
                 {t('Back')}
               </button>
               <button 
                 type="submit"
                 disabled={isLoading}
-                className="flex-1 flex justify-center items-center py-3 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 btn-hover-lift transition-all"
+                className="flex-1 flex justify-center items-center py-2.5 sm:py-3 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors"
               >
                 {isLoading ? (
                   <>

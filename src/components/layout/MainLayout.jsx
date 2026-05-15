@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import api from '../../api/axios';
 
 const navItems = [
-  { path: '/', labelKey: 'Dashboard', icon: Home },
+  { path: '/dashboard', labelKey: 'Dashboard', icon: Home },
   { path: '/customers', labelKey: 'Customers', icon: Users },
   { path: '/products', labelKey: 'Products', icon: Box },
   { path: '/bills', labelKey: 'Billing', icon: FileText },

@@ -5,6 +5,7 @@ import MainLayout from '../components/layout/MainLayout';
 import AuthLayout from '../components/layout/AuthLayout';
 
 // Lazy load pages for code splitting
+const Landing = lazy(() => import('../pages/Landing'));
 const Login = lazy(() => import('../pages/Login'));
 const Register = lazy(() => import('../pages/Register'));
 const VerifyOTP = lazy(() => import('../components/auth/VerifyOTP'));
@@ -24,7 +25,11 @@ const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
 
   if (isLoading) {
-    return <div className="flex h-screen items-center justify-center">Loading...</div>;
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-blue-600"></div>
+      </div>
+    );
   }
 
   if (!isAuthenticated) {
@@ -34,38 +39,135 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+const PublicRoute = ({ children }) => {
+  const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+};
+
 const AppRoutes = () => {
   return (
-    <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading BakiPay...</div>}>
+    <Suspense fallback={
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-blue-600"></div>
+      </div>
+    }>
       <Routes>
-        {/* Auth Routes */}
+        {/* Landing Page - Public */}
+        <Route path="/" element={<Landing />} />
+
+        {/* Auth Routes - Redirect to dashboard if already logged in */}
+        <Route path="/login" element={
+          <PublicRoute>
+            <AuthLayout />
+          </PublicRoute>
+        }>
+          <Route index element={<Login />} />
+        </Route>
+
+        <Route path="/register" element={
+          <PublicRoute>
+            <AuthLayout />
+          </PublicRoute>
+        }>
+          <Route index element={<Register />} />
+        </Route>
+
+        {/* OTP Verification Routes - No redirect, can be accessed anytime */}
         <Route element={<AuthLayout />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
           <Route path="/verify-email" element={<VerifyOTP type="registration" />} />
           <Route path="/verify-login-otp" element={<VerifyOTP type="login" />} />
+        </Route>
+
+        {/* Password Reset Routes */}
+        <Route element={<AuthLayout />}>
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
         </Route>
 
         {/* Protected Dashboard Routes */}
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <MainLayout />
-            </ProtectedRoute>
-          }
-        >
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }>
           <Route index element={<Dashboard />} />
-          <Route path="customers" element={<Customers />} />
-          <Route path="bills" element={<Bills />} />
-          <Route path="products" element={<Products />} />
-          <Route path="reminders" element={<Reminders />} />
-          <Route path="voice" element={<VoiceBilling />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="profile" element={<Profile />} />
+        </Route>
+
+        <Route path="/customers" element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<Customers />} />
+        </Route>
+
+        <Route path="/bills" element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<Bills />} />
+        </Route>
+
+        <Route path="/products" element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<Products />} />
+        </Route>
+
+        <Route path="/reminders" element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<Reminders />} />
+        </Route>
+
+        <Route path="/voice" element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<VoiceBilling />} />
+        </Route>
+
+        <Route path="/reports" element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<Reports />} />
+        </Route>
+
+        <Route path="/settings" element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<Settings />} />
+        </Route>
+
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<Profile />} />
         </Route>
 
         {/* Fallback */}
