@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { 
   Store, 
   Users, 
@@ -13,54 +14,56 @@ import {
   Clock,
   Globe
 } from 'lucide-react';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const Landing = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const features = [
     {
       icon: Receipt,
-      title: 'Smart Billing',
-      description: 'Create professional bills in seconds with our intuitive interface',
+      titleKey: 'Smart Billing',
+      descriptionKey: 'Create professional bills in seconds with our intuitive interface',
       color: 'blue'
     },
     {
       icon: Users,
-      title: 'Customer Management',
-      description: 'Track customers, credit history, and payment patterns easily',
+      titleKey: 'Customer Management',
+      descriptionKey: 'Track customers, credit history, and payment patterns easily',
       color: 'indigo'
     },
     {
       icon: BarChart3,
-      title: 'Business Insights',
-      description: 'Real-time analytics and reports to grow your business',
+      titleKey: 'Business Insights',
+      descriptionKey: 'Real-time analytics and reports to grow your business',
       color: 'purple'
     },
     {
       icon: Shield,
-      title: 'Secure & Reliable',
-      description: 'Bank-grade security with 99.9% uptime guarantee',
+      titleKey: 'Secure & Reliable',
+      descriptionKey: 'Bank-grade security with 99.9% uptime guarantee',
       color: 'green'
     },
     {
       icon: Zap,
-      title: 'Voice Billing',
-      description: 'Create bills using voice commands in your language',
+      titleKey: 'Voice Billing',
+      descriptionKey: 'Create bills using voice commands in your language',
       color: 'orange'
     },
     {
       icon: Clock,
-      title: 'Auto Reminders',
-      description: 'Automated payment reminders via SMS and WhatsApp',
+      titleKey: 'Auto Reminders',
+      descriptionKey: 'Automated payment reminders via SMS and WhatsApp',
       color: 'pink'
     }
   ];
 
   const stats = [
-    { value: '10,000+', label: 'Active Shops' },
-    { value: '₹50Cr+', label: 'Transactions' },
-    { value: '99.9%', label: 'Uptime' },
-    { value: '4.9/5', label: 'Rating' }
+    { value: '10,000+', labelKey: 'Active Shops' },
+    { value: '₹50Cr+', labelKey: 'Transactions' },
+    { value: '99.9%', labelKey: 'Uptime' },
+    { value: '4.9/5', labelKey: 'Rating' }
   ];
 
   return (
@@ -81,32 +84,25 @@ const Landing = () => {
 
       {/* Content */}
       <div className="relative z-10">
-        {/* Header */}
-        <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Store className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+        {/* Header - Clean Navbar */}
+        <header className="border-b border-gray-200">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
+              {/* Logo - Left */}
+              <div className="flex-shrink-0">
+                <span className="text-xl sm:text-2xl font-bold text-blue-600">BakiPay</span>
               </div>
-              <div>
-                <span className="text-xl sm:text-2xl font-bold text-gray-900">BakiPay</span>
-                <p className="text-xs text-gray-500 hidden sm:block">Smart Business Manager</p>
+
+              {/* Right Side - Language + Sign In Button */}
+              <div className="flex items-center gap-3">
+                <LanguageSwitcher variant="compact" />
+                <button
+                  onClick={() => navigate('/login')}
+                  className="px-4 sm:px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  {t('Sign In')}
+                </button>
               </div>
-            </div>
-            <div className="flex gap-2 sm:gap-3">
-              <button
-                onClick={() => navigate('/login')}
-                className="px-3 py-1.5 sm:px-5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:border-blue-600 hover:text-blue-600 transition-colors"
-              >
-                Sign In
-              </button>
-              <button
-                onClick={() => navigate('/register')}
-                className="px-3 py-1.5 sm:px-5 sm:py-2 text-xs sm:text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                <span className="hidden sm:inline">Get Started Free</span>
-                <span className="sm:hidden">Sign Up</span>
-              </button>
             </div>
           </div>
         </header>
@@ -116,9 +112,11 @@ const Landing = () => {
           <div className="max-w-6xl mx-auto">
             {/* Top Badge */}
             <div className="flex justify-center mb-6 sm:mb-8">
-              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-full">
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-full max-w-full">
                 <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600 flex-shrink-0" />
-                <span className="text-xs sm:text-sm font-semibold text-blue-700">Trusted by 10,000+ Shopkeepers</span>
+                <span className="text-xs sm:text-sm font-semibold text-blue-700 text-center break-words">
+                  {t('Trusted by 10,000+ Shopkeepers')}
+                </span>
               </div>
             </div>
 
@@ -127,27 +125,26 @@ const Landing = () => {
               <div className="text-center lg:text-left order-1">
                 {/* Main Heading */}
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
-                  Your Shop's
+                  {t("Your Shop's")}
                   <br />
-                  <span className="text-blue-600">Digital Partner</span>
+                  <span className="text-blue-600">{t('Digital Partner')}</span>
                 </h1>
                 
                 {/* Description */}
                 <p className="text-sm sm:text-base md:text-lg text-gray-600 mb-6 sm:mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                  Complete billing, udhar tracking, and business analytics in one place. 
-                  Built specifically for Indian shopkeepers.
+                  {t('Complete billing, udhar tracking, and business analytics in one place. Built specifically for Indian shopkeepers.')}
                 </p>
 
                 {/* Feature Pills */}
                 <div className="flex flex-wrap gap-2 justify-center lg:justify-start mb-6 sm:mb-8">
-                  <div className="px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm text-blue-700 font-medium">
-                    ✓ Voice Billing
+                  <div className="px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm text-blue-700 font-medium whitespace-nowrap">
+                    {t('✓ Voice Billing')}
                   </div>
-                  <div className="px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm text-blue-700 font-medium">
-                    ✓ Udhar Tracking
+                  <div className="px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm text-blue-700 font-medium whitespace-nowrap">
+                    {t('✓ Udhar Tracking')}
                   </div>
-                  <div className="px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm text-blue-700 font-medium">
-                    ✓ Auto Reminders
+                  <div className="px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm text-blue-700 font-medium whitespace-nowrap">
+                    {t('✓ Auto Reminders')}
                   </div>
                 </div>
 
@@ -157,14 +154,13 @@ const Landing = () => {
                     onClick={() => navigate('/register')}
                     className="group px-6 md:px-8 py-3 md:py-4 bg-blue-600 text-white rounded-lg font-semibold text-sm md:text-base hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
                   >
-                    <span>Start Free Trial</span>
-                    <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
+                    <span>{t('Get Started Free')}</span>
                   </button>
                   <button
                     onClick={() => navigate('/login')}
                     className="px-6 md:px-8 py-3 md:py-4 bg-white text-gray-700 rounded-lg font-semibold text-sm md:text-base border-2 border-gray-300 hover:border-blue-600 hover:text-blue-600 transition-colors"
                   >
-                    Sign In
+                    {t('Sign In')}
                   </button>
                 </div>
 
@@ -172,11 +168,11 @@ const Landing = () => {
                 <div className="mt-6 sm:mt-8 flex items-center gap-4 sm:gap-6 justify-center lg:justify-start text-xs sm:text-sm text-gray-600">
                   <div className="flex items-center gap-1.5">
                     <CheckCircle className="w-4 h-4 text-green-600" />
-                    <span>Free Forever Plan</span>
+                    <span>{t('Free Forever Plan')}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <CheckCircle className="w-4 h-4 text-green-600" />
-                    <span>No Credit Card</span>
+                    <span>{t('No Credit Card')}</span>
                   </div>
                 </div>
               </div>
@@ -193,7 +189,7 @@ const Landing = () => {
                         {stat.value}
                       </div>
                       <div className="text-xs sm:text-sm text-gray-600 font-medium">
-                        {stat.label}
+                        {t(stat.labelKey)}
                       </div>
                     </div>
                   ))}
@@ -207,10 +203,10 @@ const Landing = () => {
                     </div>
                     <div>
                       <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1">
-                        Start in Minutes
+                        {t('Start in Minutes')}
                       </h3>
                       <p className="text-xs sm:text-sm text-gray-600">
-                        Quick setup, no technical knowledge required. Start managing your business today.
+                        {t('Quick setup, no technical knowledge required. Start managing your business today.')}
                       </p>
                     </div>
                   </div>
@@ -225,10 +221,10 @@ const Landing = () => {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-10 sm:mb-16">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
-                Everything You Need
+                {t('Everything You Need')}
               </h2>
               <p className="text-base sm:text-lg text-gray-600">
-                Powerful features to manage your business efficiently
+                {t('Powerful features to manage your business efficiently')}
               </p>
             </div>
 
@@ -242,10 +238,10 @@ const Landing = () => {
                     <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-blue-600 group-hover:text-white transition-colors" />
                   </div>
                   <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
-                    {feature.title}
+                    {t(feature.titleKey)}
                   </h3>
                   <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                    {feature.description}
+                    {t(feature.descriptionKey)}
                   </p>
                 </div>
               ))}
@@ -259,26 +255,26 @@ const Landing = () => {
             <div className="text-center mb-8 sm:mb-12">
               <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white border-2 border-blue-200 rounded-full mb-3 sm:mb-4">
                 <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
-                <span className="text-xs sm:text-sm font-semibold text-blue-700">Complete Business Solution</span>
+                <span className="text-xs sm:text-sm font-semibold text-blue-700">{t('Complete Business Solution')}</span>
               </div>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
-                Why BakiPay?
+                {t('Why BakiPay?')}
               </h2>
               <p className="text-base sm:text-lg text-gray-600">
-                Everything you need to manage and grow your business
+                {t('Everything you need to manage and grow your business')}
               </p>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 mb-8 sm:mb-12">
               {[
-                { text: 'Easy Udhar (Credit) Tracking', icon: CheckCircle },
-                { text: 'Voice-Enabled Billing', icon: CheckCircle },
-                { text: 'Automated Payment Reminders', icon: CheckCircle },
-                { text: 'Multi-language Support', icon: CheckCircle },
-                { text: 'Real-time Business Reports', icon: CheckCircle },
-                { text: 'Mobile & Desktop Access', icon: CheckCircle },
-                { text: 'Customer Payment History', icon: CheckCircle },
-                { text: 'Secure Data Backup', icon: CheckCircle }
+                { textKey: 'Easy Udhar (Credit) Tracking', icon: CheckCircle },
+                { textKey: 'Voice-Enabled Billing', icon: CheckCircle },
+                { textKey: 'Automated Payment Reminders', icon: CheckCircle },
+                { textKey: 'Multi-language Support', icon: CheckCircle },
+                { textKey: 'Real-time Business Reports', icon: CheckCircle },
+                { textKey: 'Mobile & Desktop Access', icon: CheckCircle },
+                { textKey: 'Customer Payment History', icon: CheckCircle },
+                { textKey: 'Secure Data Backup', icon: CheckCircle }
               ].map((benefit, index) => (
                 <div
                   key={index}
@@ -287,7 +283,7 @@ const Landing = () => {
                   <div className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <benefit.icon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
                   </div>
-                  <span className="text-sm sm:text-base text-gray-900 font-medium">{benefit.text}</span>
+                  <span className="text-sm sm:text-base text-gray-900 font-medium">{t(benefit.textKey)}</span>
                 </div>
               ))}
             </div>
@@ -298,9 +294,9 @@ const Landing = () => {
                 className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors inline-flex items-center justify-center gap-2"
               >
                 <Zap className="w-5 h-5" />
-                Start Your Free Trial
+                {t('Start Your Free Trial')}
               </button>
-              <p className="text-gray-600 text-xs sm:text-sm mt-3 sm:mt-4">No credit card required • Free forever plan available</p>
+              <p className="text-gray-600 text-xs sm:text-sm mt-3 sm:mt-4">{t('No credit card required • Free forever plan available')}</p>
             </div>
           </div>
         </section>
@@ -310,17 +306,16 @@ const Landing = () => {
           <div className="max-w-4xl mx-auto text-center border-2 border-gray-200 rounded-2xl sm:rounded-3xl p-8 sm:p-12 bg-white">
             <Globe className="w-12 h-12 sm:w-16 sm:h-16 text-blue-600 mx-auto mb-4 sm:mb-6" />
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 sm:mb-6">
-              Ready to Go Digital?
+              {t('Ready to Go Digital?')}
             </h2>
             <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto">
-              Join thousands of shopkeepers who are growing their business with BakiPay. 
-              Start your free trial today.
+              {t('Join thousands of shopkeepers who are growing their business with BakiPay. Start your free trial today.')}
             </p>
             <button
               onClick={() => navigate('/register')}
               className="w-full sm:w-auto px-8 sm:px-10 py-3 sm:py-4 bg-blue-600 text-white rounded-xl font-bold text-base sm:text-lg hover:bg-blue-700 transition-colors inline-flex items-center justify-center gap-2"
             >
-              Create Free Account
+              {t('Create Free Account')}
               <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
           </div>
@@ -329,22 +324,19 @@ const Landing = () => {
         {/* Footer */}
         <footer className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Store className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-              </div>
-              <div>
-                <span className="font-bold text-gray-900 text-sm sm:text-base">BakiPay</span>
-                <p className="text-xs text-gray-500 hidden sm:block">Smart Business Manager</p>
-              </div>
+            {/* Logo - Text Only */}
+            <div>
+              <span className="font-bold text-gray-900 text-lg">BakiPay</span>
             </div>
+            
             <p className="text-xs sm:text-sm text-gray-600 text-center">
-              © 2024 BakiPay. All rights reserved.
+              {t('© 2024 BakiPay. All rights reserved.')}
             </p>
+            
             <div className="flex gap-4 sm:gap-6 text-xs sm:text-sm font-medium text-gray-600">
-              <a href="#" className="hover:text-blue-600 transition-colors">Privacy</a>
-              <a href="#" className="hover:text-blue-600 transition-colors">Terms</a>
-              <a href="#" className="hover:text-blue-600 transition-colors">Support</a>
+              <a href="#" className="hover:text-blue-600 transition-colors">{t('Privacy')}</a>
+              <a href="#" className="hover:text-blue-600 transition-colors">{t('Terms')}</a>
+              <a href="#" className="hover:text-blue-600 transition-colors">{t('Support')}</a>
             </div>
           </div>
         </footer>

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
-import { Home, Users, FileText, Mic, BarChart2, Settings, Menu, X, LogOut, Box, Bell, Globe } from 'lucide-react';
+import { Home, Users, FileText, Mic, BarChart2, Settings, Menu, X, LogOut, Box, Bell } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/slices/authSlice';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import api from '../../api/axios';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 const navItems = [
   { path: '/dashboard', labelKey: 'Dashboard', icon: Home },
@@ -39,12 +40,6 @@ const MainLayout = () => {
       localStorage.removeItem('token');
       dispatch(logout());
     }
-  };
-
-  const toggleLanguage = () => {
-    const newLang = i18n.language === 'en' ? 'hi' : 'en';
-    i18n.changeLanguage(newLang);
-    localStorage.setItem('language', newLang);
   };
 
   return (
@@ -87,13 +82,6 @@ const MainLayout = () => {
         
         <div className="p-4 border-t border-gray-200 animate-fade-in" style={{ animationDelay: '400ms' }}>
           <button 
-            onClick={toggleLanguage}
-            className="flex items-center justify-center w-full px-4 py-2.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-all font-medium mb-3 btn-hover-lift"
-          >
-            <Globe className="w-5 h-5 mr-2" />
-            {i18n.language === 'en' ? 'हिंदी' : 'English'}
-          </button>
-          <button 
             onClick={handleLogout}
             className="flex items-center w-full px-4 py-2.5 text-red-600 hover:bg-red-50 rounded-lg transition-all font-medium btn-hover-lift"
           >
@@ -106,20 +94,21 @@ const MainLayout = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-10 animate-fade-in">
+        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 z-10 animate-fade-in">
           <button 
-            className="lg:hidden"
+            className="lg:hidden p-2 -ml-2 hover:bg-gray-100 rounded-lg transition-colors"
             onClick={() => setSidebarOpen(true)}
           >
             <Menu className="w-6 h-6 text-gray-600" />
           </button>
           
-          <div className="ml-auto flex items-center gap-4">
-            <button className="relative transition-transform hover:scale-110">
-              <Bell className="w-5 h-5 text-gray-400 hover:text-gray-600" />
-              <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+          <div className="ml-auto flex items-center gap-2 sm:gap-3">
+            <LanguageSwitcher variant="compact" />
+            <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-all">
+              <Bell className="w-5 h-5 text-gray-500 hover:text-gray-700" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
             </button>
-            <Link to="/profile" className="w-9 h-9 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-semibold hover:bg-blue-200 transition-all overflow-hidden hover:scale-110">
+            <Link to="/profile" className="w-9 h-9 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-semibold hover:bg-blue-200 transition-all overflow-hidden hover:scale-105">
               {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
                 <img src={`${BASE_URL}${user.profileImage}`} alt="Profile" className="w-full h-full object-cover" />
               ) : (

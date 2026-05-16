@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
-import { Loader2, User, Mail, Phone, Store, Lock, ArrowRight, CheckCircle } from 'lucide-react';
+import { Loader2, User, Mail, Phone, Store, Lock, ArrowRight, CheckCircle, Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const registerSchema = yup.object({
@@ -19,6 +19,7 @@ const Register = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1); // 1: Personal Info, 2: Business Info, 3: Security
+  const [showPassword, setShowPassword] = useState(false);
   
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -217,13 +218,26 @@ const Register = () => {
                 <Lock className="w-4 h-4 inline mr-1" />
                 {t('Password')}
               </label>
-              <input 
-                type="password"
-                {...register('password')}
-                className={`w-full rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
-                placeholder="Create a strong password"
-                autoFocus
-              />
+              <div className="relative">
+                <input 
+                  type={showPassword ? "text" : "password"}
+                  {...register('password')}
+                  className={`w-full rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 pr-10 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
+                  placeholder="Create a strong password"
+                  autoFocus
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
               {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
               <p className="text-xs text-gray-500 mt-1">At least 6 characters</p>
             </div>
@@ -250,15 +264,15 @@ const Register = () => {
               <button 
                 type="submit"
                 disabled={isLoading}
-                className="flex-1 flex justify-center items-center py-2.5 sm:py-3 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                className="flex-1 flex justify-center items-center py-2.5 sm:py-3 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors whitespace-nowrap"
               >
                 {isLoading ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                    {t('Creating...')}
+                    <span>{t('Creating...')}</span>
                   </>
                 ) : (
-                  t('Create Account')
+                  <span>{t('Create Account')}</span>
                 )}
               </button>
             </div>

@@ -12,6 +12,16 @@ const VoiceBilling = () => {
   const [manualText, setManualText] = useState('');
   const [inputMode, setInputMode] = useState('manual'); // 'manual' or 'voice'
   
+  // Form data state for editing parsed data
+  const [formData, setFormData] = useState({
+    customerName: '',
+    amount: '',
+    intent: 'UDHAR',
+    paymentMode: 'CASH'
+  });
+  const [showForm, setShowForm] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  
   const recognitionRef = useRef(null);
 
   const startVoiceRecognition = () => {
@@ -102,19 +112,31 @@ const VoiceBilling = () => {
     setTranscript(t('Processing your command...'));
 
     const dummyBlob = new Blob(['dummy'], { type: 'audio/webm' });
-    const formData = new FormData();
-    formData.append('audio', dummyBlob, 'voice-entry.webm');
-    formData.append('type', 'GENERAL');
-    formData.append('manualTranscript', text);
+    const formDataToSend = new FormData();
+    formDataToSend.append('audio', dummyBlob, 'voice-entry.webm');
+    formDataToSend.append('type', 'GENERAL');
+    formDataToSend.append('manualTranscript', text);
 
     try {
-      const res = await api.post('/voice/process', formData, {
+      const res = await api.post('/voice/process', formDataToSend, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
       if (res.data.success) {
         setResult(res.data.data);
         setTranscript(res.data.data.transcript || text);
+        
+        // Populate form with parsed data
+        if (res.data.data.parsedIntent) {
+          const parsed = res.data.data.parsedIntent;
+          setFormData({
+            customerName: parsed.customerName || '',
+            amount: parsed.amount || '',
+            intent: parsed.intent || 'UDHAR',
+            paymentMode: parsed.paymentMode || 'CASH'
+          });
+          setShowForm(true);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -130,6 +152,66 @@ const VoiceBilling = () => {
 
     await processCommand(manualText);
     setManualText('');
+  };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!formData.customerName.trim() || !formData.amount) {
+      alert(t('Please fill in customer name and amount'));
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      // Create transaction with the edited data
+      const response = await api.post('/transactions', {
+        customerName: formData.customerName,
+        amount: parseFloat(formData.amount),
+        type: formData.intent,
+        paymentMode: formData.paymentMode,
+        description: transcript
+      });
+
+      if (response.data.success) {
+        alert(t('Transaction saved successfully!'));
+        // Reset form
+        setFormData({
+          customerName: '',
+          amount: '',
+          intent: 'UDHAR',
+          paymentMode: 'CASH'
+        });
+        setShowForm(false);
+        setResult(null);
+        setTranscript('');
+      }
+    } catch (error) {
+      console.error('Error saving transaction:', error);
+      alert(t('Error saving transaction. Please try again.'));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleCancelForm = () => {
+    setShowForm(false);
+    setFormData({
+      customerName: '',
+      amount: '',
+      intent: 'UDHAR',
+      paymentMode: 'CASH'
+    });
+    setResult(null);
+    setTranscript('');
   };
 
   return (
@@ -273,11 +355,11 @@ const VoiceBilling = () => {
       )}
 
       {/* Result Display */}
-      {result && result.parsedIntent && (
+      {result && result.parsedIntent && !showForm && (
         <div className="bg-green-50 rounded-xl p-6 border border-green-200 animate-scale-in">
           <div className="flex items-center text-green-800 mb-4">
             <CheckCircle2 className="w-6 h-6 mr-2" />
-            <h3 className="text-lg font-bold">{t('Action Confirmed')}</h3>
+            <h3 className="text-lg font-bold">{t('Command Recognized')}</h3>
           </div>
           
           <div className="bg-white rounded-lg p-4 border border-gray-200">
@@ -296,6 +378,131 @@ const VoiceBilling = () => {
               </div>
             </div>
           </div>
+          
+          <p className="text-sm text-gray-600 mt-4 text-center">
+            {t('Data has been processed. You can review and edit below.')}
+          </p>
+        </div>
+      )}
+
+      {/* Editable Form */}
+      {showForm && (
+        <div className="bg-white rounded-xl p-6 border border-gray-200 animate-slide-up">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-bold text-gray-900">{t('Review & Edit Transaction')}</h3>
+            <button
+              onClick={handleCancelForm}
+              className="text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              ✕
+            </button>
+          </div>
+
+          <form onSubmit={handleFormSubmit} className="space-y-4">
+            {/* Customer Name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                👤 {t('Customer Name')}
+              </label>
+              <input
+                type="text"
+                name="customerName"
+                value={formData.customerName}
+                onChange={handleFormChange}
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder={t('Enter customer name')}
+                required
+              />
+            </div>
+
+            {/* Amount */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                💰 {t('Amount')} (₹)
+              </label>
+              <input
+                type="number"
+                name="amount"
+                value={formData.amount}
+                onChange={handleFormChange}
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder={t('Enter amount')}
+                min="0"
+                step="0.01"
+                required
+              />
+            </div>
+
+            {/* Transaction Type */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                🎯 {t('Transaction Type')}
+              </label>
+              <select
+                name="intent"
+                value={formData.intent}
+                onChange={handleFormChange}
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="UDHAR">{t('Udhar (Given)')}</option>
+                <option value="PAYMENT">{t('Payment (Received)')}</option>
+              </select>
+            </div>
+
+            {/* Payment Mode */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                💳 {t('Payment Mode')}
+              </label>
+              <select
+                name="paymentMode"
+                value={formData.paymentMode}
+                onChange={handleFormChange}
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="CASH">{t('Cash')}</option>
+                <option value="UPI">{t('UPI')}</option>
+                <option value="CARD">{t('Card')}</option>
+                <option value="BANK_TRANSFER">{t('Bank Transfer')}</option>
+              </select>
+            </div>
+
+            {/* Original Command */}
+            {transcript && (
+              <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                <p className="text-xs text-gray-500 mb-1">{t('Original Command:')}</p>
+                <p className="text-sm text-gray-700">{transcript}</p>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-2">
+              <button
+                type="button"
+                onClick={handleCancelForm}
+                className="flex-1 py-3 px-4 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
+              >
+                {t('Cancel')}
+              </button>
+              <button
+                type="submit"
+                disabled={isSaving}
+                className="flex-1 py-3 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors"
+              >
+                {isSaving ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin inline mr-2" />
+                    {t('Saving...')}
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="w-5 h-5 inline mr-2" />
+                    {t('Save Transaction')}
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
         </div>
       )}
     </div>
