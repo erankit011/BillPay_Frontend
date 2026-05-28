@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Mic, Loader2, CheckCircle2, Keyboard } from 'lucide-react';
 import api from '../api/axios';
 import { useTranslation } from 'react-i18next';

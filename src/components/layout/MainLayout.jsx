@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
 import { Home, Users, FileText, Mic, BarChart2, Settings, Menu, X, LogOut, Box, Bell } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';

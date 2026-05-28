@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Save, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';

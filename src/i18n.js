@@ -256,11 +256,11 @@ const resources = {
   hi: {
     translation: {
       "Dashboard": "डैशबोर्ड",
-      "Customers": "ग्राहक (Customers)",
-      "Products": "सामान (Products)",
+      "Customers": "ग्राहक",
+      "Products": "सामान",
       "Billing": "बिलिंग",
-      "Reminders": "याद दिलाएं (Reminders)",
-      "Voice Entry": "आवाज़ से एंट्री (Voice Entry)",
+      "Reminders": "याद दिलाएं",
+      "Voice Entry": "आवाज़ से एंट्री",
       "Reports": "रिपोर्ट्स",
       "Settings": "सेटिंग्स",
       "Logout": "लॉग आउट",
