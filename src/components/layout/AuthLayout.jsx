@@ -23,24 +23,24 @@ const AuthLayout = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 flex items-center justify-center p-4 relative">
       <div className="w-full max-w-md">
         {/* Logo - Text Only */}
-        <div className="text-center mb-6 sm:mb-8">
+        {/* <div className="text-center mb-6 sm:mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-blue-600 mb-2">
             BakiPay
           </h1>
           <p className="text-sm text-gray-600">
             {t('Smart Billing & Udhar Management')}
           </p>
-        </div>
+        </div> */}
 
         {/* Auth Form Container */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 sm:p-8 shadow-sm">
+        <div className="bg-white rounded-xl border border-gray-200 p-6 sm:p-8">
           <Outlet />
         </div>
 
         {/* Footer Text */}
         <div className="text-center mt-6">
           <p className="text-xs text-gray-500">
-            © 2024 BakiPay. {t('All rights reserved')}.
+            © {new Date().getFullYear()} BakiPay. {t('All rights reserved')}.
           </p>
         </div>
       </div>

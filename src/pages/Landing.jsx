@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { 
-  Users, 
-  Receipt, 
-  Shield, 
+import {
+  Users,
+  Receipt,
+  Shield,
   Zap,
   ArrowRight,
   CheckCircle,
@@ -60,7 +60,7 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Grid Background - Same as Dashboard */}
-      <div 
+      <div
         className="absolute inset-0 opacity-[0.2]"
         style={{
           backgroundImage: `
@@ -122,7 +122,7 @@ const Landing = () => {
                   <br />
                   <span className="text-indigo-600">{t('Digital Partner')}</span>
                 </h1>
-                
+
                 {/* Description - Mobile Optimized */}
                 <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
                   {t('Complete billing, udhar tracking, and business analytics in one place. Built specifically for modern Indian shopkeepers to scale effortlessly.')}
@@ -183,7 +183,7 @@ const Landing = () => {
                       <h3 className="font-medium text-gray-800 text-lg">Dashboard Overview</h3>
                       <div className="w-10 h-10 bg-indigo-600 rounded-full"></div>
                     </div>
-                    
+
                     {/* Stats Cards Row */}
                     <div className="grid grid-cols-3 gap-3">
                       <div className="bg-white/40 rounded-2xl p-4 text-center">
@@ -347,11 +347,11 @@ const Landing = () => {
             <div>
               <span className="font-semibold text-gray-900 text-lg sm:text-xl">BakiPay</span>
             </div>
-            
+
             <p className="text-sm sm:text-base text-gray-600 order-3 md:order-2">
-              {t('© 2024 BakiPay. All rights reserved.')}
+              {t(`© ${new Date().getFullYear()} BakiPay. All rights reserved.`)}
             </p>
-            
+
             <div className="flex gap-6 sm:gap-8 text-sm sm:text-base font-medium text-gray-600 order-2 md:order-3">
               <a href="#" className="active:text-indigo-600 transition-colors touch-manipulation">{t('Privacy')}</a>
               <a href="#" className="active:text-indigo-600 transition-colors touch-manipulation">{t('Terms')}</a>
