@@ -20,6 +20,7 @@ const Settings = lazy(() => import('../pages/Settings'));
 const Products = lazy(() => import('../pages/Products'));
 const Reminders = lazy(() => import('../pages/Reminders'));
 const Profile = lazy(() => import('../pages/Profile'));
+const Notifications = lazy(() => import('../pages/Notifications'));
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
@@ -168,6 +169,14 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }>
           <Route index element={<Profile />} />
+        </Route>
+
+        <Route path="/notifications" element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<Notifications />} />
         </Route>
 
         {/* Fallback */}

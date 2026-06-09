@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, Fragment } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
-import { Loader2, User, Mail, Phone, Store, Lock, ArrowRight, CheckCircle, Eye, EyeOff } from 'lucide-react';
+import { Loader2, User, Mail, Phone, Store, Lock, ArrowRight, Eye, EyeOff, Camera } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const registerSchema = yup.object({
@@ -18,7 +18,7 @@ const registerSchema = yup.object({
 const Register = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [step, setStep] = useState(1); // 1: Personal Info, 2: Business Info, 3: Security
+  const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   
   const navigate = useNavigate();
@@ -67,226 +67,261 @@ const Register = () => {
   };
 
   return (
-    <div className="animate-fade-in px-2 sm:px-0">
-      {/* Progress Steps - Compact Design */}
-      <div className="mb-4 sm:mb-6">
-        <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-2 sm:mb-3">
-          {[1, 2, 3].map((s) => (
-            <React.Fragment key={s}>
-              <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-semibold transition-colors ${
-                step >= s 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-gray-200 text-gray-400'
-              }`}>
-                {step > s ? <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : s}
-              </div>
-              {s < 3 && (
-                <div className={`w-8 sm:w-12 h-0.5 transition-colors ${
-                  step > s ? 'bg-blue-600' : 'bg-gray-200'
-                }`} />
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-        <div className="flex justify-center gap-6 sm:gap-8 text-xs text-gray-600">
-          <span className={step === 1 ? 'font-semibold text-blue-600' : ''}>Personal</span>
-          <span className={step === 2 ? 'font-semibold text-blue-600' : ''}>Business</span>
-          <span className={step === 3 ? 'font-semibold text-blue-600' : ''}>Security</span>
-        </div>
+    <div className="w-full max-w-lg mx-auto px-4 md:px-6 animate-fade-in">
+      {/* BakiPay Branding */}
+      <div className="text-center mb-4 md:mb-6">
+        <h1 className="text-xl md:text-2xl font-semibold text-indigo-600">BakiPay</h1>
       </div>
 
-      {/* Header */}
-      <div className="text-center mb-4 sm:mb-6">
-        <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-blue-100 rounded-full mb-3 sm:mb-4">
-          <User className="w-7 h-7 sm:w-8 sm:h-8 text-blue-600" />
+      <div className="glass-panel rounded-xl p-6 md:p-8 lg:p-10 shadow-xl">
+        {/* Progress Steps - Horizontal Layout */}
+        <div className="mb-6 md:mb-8 lg:mb-10">
+          <div className="flex items-center justify-between max-w-md mx-auto px-2">
+            {[1, 2, 3].map((s, idx) => (
+              <Fragment key={s}>
+                <div className="flex flex-col items-center gap-1.5 md:gap-2">
+                  <div className={`w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center text-base md:text-lg lg:text-xl font-semibold transition-all ${
+                    step >= s 
+                      ? 'bg-indigo-600 text-white shadow-lg' 
+                      : 'bg-gray-200 text-gray-400'
+                  }`}>
+                    {s}
+                  </div>
+                  <span className={`text-[10px] md:text-xs lg:text-sm font-semibold whitespace-nowrap ${
+                    step >= s ? 'text-indigo-600' : 'text-gray-400'
+                  }`}>
+                    {s === 1 ? 'Personal' : s === 2 ? 'Business' : 'Security'}
+                  </span>
+                </div>
+                {idx < 2 && (
+                  <div className={`flex-1 h-0.5 md:h-1 mx-1.5 md:mx-3 rounded-full transition-all ${
+                    step > s ? 'bg-indigo-600' : 'bg-gray-200'
+                  }`} />
+                )}
+              </Fragment>
+            ))}
+          </div>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-          {t('Create Account')}
-        </h2>
-        <p className="text-gray-600 text-sm">
-          {step === 1 && 'Tell us about yourself'}
-          {step === 2 && 'Your business details'}
-          {step === 3 && 'Secure your account'}
-        </p>
-      </div>
-      
-      {error && (
-        <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm border border-red-200">
-          {error}
-        </div>
-      )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Step 1: Personal Info */}
+        {/* Header */}
+        <div className="text-center mb-5 md:mb-6 lg:mb-8">
+          <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900 mb-1.5 md:mb-2">
+            {t('Create Account')}
+          </h2>
+          <p className="text-xs md:text-sm lg:text-base text-gray-600 font-medium">
+            {step === 1 && 'Tell us about yourself to get started.'}
+            {step === 2 && 'Your business details'}
+            {step === 3 && 'Secure your account'}
+          </p>
+        </div>
+
+        {/* Profile Image Upload (Step 1 only) */}
         {step === 1 && (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                <User className="w-4 h-4 inline mr-1" />
-                {t('Full Name')}
-              </label>
-              <input 
-                {...register('name')}
-                className={`w-full rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
-                placeholder="Enter your full name"
-                autoFocus
-              />
-              {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
+          <div className="flex justify-center mb-5 md:mb-6 lg:mb-8">
+            <div className="relative">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gray-100 border-4 border-white shadow-lg overflow-hidden flex items-center justify-center">
+                <User className="w-10 h-10 md:w-12 md:h-12 text-gray-400" />
+              </div>
+              <button
+                type="button"
+                className="cursor-pointer absolute bottom-0 right-0 w-7 h-7 md:w-8 md:h-8 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg hover:bg-indigo-700 transition-colors active:scale-90"
+              >
+                <Camera className="w-3.5 h-3.5 md:w-4 md:h-4 text-white" />
+              </button>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                <Mail className="w-4 h-4 inline mr-1" />
-                {t('Email Address')}
-              </label>
-              <input 
-                type="email"
-                {...register('email')}
-                className={`w-full rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
-                placeholder="you@example.com"
-              />
-              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
-            </div>
-
-            <button 
-              type="button"
-              onClick={handleNext}
-              className="w-full flex justify-center items-center py-2.5 sm:py-3 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-            >
-              {t('Continue')}
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </button>
+          </div>
+        )}
+        
+        {error && (
+          <div className="bg-red-50 text-red-600 p-2.5 md:p-3 rounded-xl mb-4 md:mb-5 text-xs md:text-sm border border-red-200 animate-scale-in text-center font-semibold">
+            {error}
           </div>
         )}
 
-        {/* Step 2: Business Info */}
-        {step === 2 && (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                <Store className="w-4 h-4 inline mr-1" />
-                {t('Shop Name')}
-              </label>
-              <input 
-                {...register('shopName')}
-                className={`w-full rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.shopName ? 'border-red-500' : 'border-gray-300'}`}
-                placeholder="Enter your shop name"
-                autoFocus
-              />
-              {errors.shopName && <p className="text-red-500 text-xs mt-1">{errors.shopName.message}</p>}
-            </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-5">
+          {/* Step 1: Personal Info */}
+          {step === 1 && (
+            <div className="space-y-4 md:space-y-5">
+              <div>
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">
+                  Full Name
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-gray-400" />
+                  <input 
+                    {...register('name')}
+                    className={`w-full rounded-xl border-2 bg-white pl-10 md:pl-12 pr-4 py-2.5 md:py-3 lg:py-3.5 text-sm md:text-base text-gray-900 font-medium placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200 transition-colors duration-200 outline-none ${errors.name ? 'border-red-500' : 'border-gray-200'}`}
+                    placeholder="Jane Doe"
+                    autoFocus
+                  />
+                </div>
+                {errors.name && <p className="text-red-500 text-xs md:text-sm mt-1.5 font-semibold">{errors.name.message}</p>}
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                <Phone className="w-4 h-4 inline mr-1" />
-                {t('Phone Number')}
-              </label>
-              <input 
-                {...register('phone')}
-                className={`w-full rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
-                placeholder="10-digit mobile number"
-                maxLength={10}
-              />
-              {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
-            </div>
+              <div>
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-gray-400" />
+                  <input 
+                    type="email"
+                    {...register('email')}
+                    className={`w-full rounded-xl border-2 bg-white pl-10 md:pl-12 pr-4 py-2.5 md:py-3 lg:py-3.5 text-sm md:text-base text-gray-900 font-medium placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200 transition-colors duration-200 outline-none ${errors.email ? 'border-red-500' : 'border-gray-200'}`}
+                    placeholder="jane.doe@example.com"
+                  />
+                </div>
+                {errors.email && <p className="text-red-500 text-xs md:text-sm mt-1.5 font-semibold">{errors.email.message}</p>}
+              </div>
 
-            <div className="flex gap-2 sm:gap-3">
-              <button 
-                type="button"
-                onClick={() => setStep(1)}
-                className="flex-1 py-2.5 sm:py-3 px-4 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
-              >
-                {t('Back')}
-              </button>
               <button 
                 type="button"
                 onClick={handleNext}
-                className="flex-1 flex justify-center items-center py-2.5 sm:py-3 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+                className="cursor-pointer w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 md:py-3 lg:py-3.5 rounded-full font-semibold text-sm md:text-base flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all mt-6"
               >
-                {t('Continue')}
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <span>Continue</span>
+                <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
               </button>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Step 3: Security */}
-        {step === 3 && (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                <Lock className="w-4 h-4 inline mr-1" />
-                {t('Password')}
-              </label>
-              <div className="relative">
-                <input 
-                  type={showPassword ? "text" : "password"}
-                  {...register('password')}
-                  className={`w-full rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 pr-10 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
-                  placeholder="Create a strong password"
-                  autoFocus
-                />
-                <button
+          {/* Step 2: Business Info */}
+          {step === 2 && (
+            <div className="space-y-4 md:space-y-5">
+              <div>
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">
+                  Shop Name
+                </label>
+                <div className="relative">
+                  <Store className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-gray-400" />
+                  <input 
+                    {...register('shopName')}
+                    className={`w-full rounded-xl border-2 bg-white pl-10 md:pl-12 pr-4 py-2.5 md:py-3 lg:py-3.5 text-sm md:text-base text-gray-900 font-medium placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200 transition-colors duration-200 outline-none ${errors.shopName ? 'border-red-500' : 'border-gray-200'}`}
+                    placeholder="Enter your shop name"
+                    autoFocus
+                  />
+                </div>
+                {errors.shopName && <p className="text-red-500 text-xs md:text-sm mt-1.5 font-semibold">{errors.shopName.message}</p>}
+              </div>
+
+              <div>
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">
+                  Phone Number
+                </label>
+                <div className="relative">
+                  <Phone className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-gray-400" />
+                  <input 
+                    {...register('phone')}
+                    className={`w-full rounded-xl border-2 bg-white pl-10 md:pl-12 pr-4 py-2.5 md:py-3 lg:py-3.5 text-sm md:text-base text-gray-900 font-medium placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200 transition-colors duration-200 outline-none ${errors.phone ? 'border-red-500' : 'border-gray-200'}`}
+                    placeholder="10-digit mobile number"
+                    maxLength={10}
+                  />
+                </div>
+                {errors.phone && <p className="text-red-500 text-xs md:text-sm mt-1.5 font-semibold">{errors.phone.message}</p>}
+              </div>
+
+              <div className="flex gap-2.5 md:gap-3 mt-6">
+                <button 
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  onClick={() => setStep(1)}
+                  className="cursor-pointer flex-1 py-2.5 md:py-3 lg:py-3.5 px-4 rounded-full text-sm md:text-base font-semibold text-gray-700 bg-gray-200 hover:bg-gray-300 active:scale-95 transition-all"
                 >
-                  {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
+                  Back
+                </button>
+                <button 
+                  type="button"
+                  onClick={handleNext}
+                  className="cursor-pointer flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 md:py-3 lg:py-3.5 rounded-full font-semibold text-sm md:text-base flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all"
+                >
+                  <span>Continue</span>
+                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Step 3: Security */}
+          {step === 3 && (
+            <div className="space-y-4 md:space-y-5">
+              <div>
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-gray-400" />
+                  <input 
+                    type={showPassword ? "text" : "password"}
+                    {...register('password')}
+                    className={`w-full rounded-xl border-2 bg-white pl-10 md:pl-12 pr-11 md:pr-12 py-2.5 md:py-3 lg:py-3.5 text-sm md:text-base text-gray-900 font-medium placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200 transition-colors duration-200 outline-none ${errors.password ? 'border-red-500' : 'border-gray-200'}`}
+                    placeholder="Create a strong password"
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="cursor-pointer absolute right-3 md:right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none active:scale-90"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4 md:w-5 md:h-5" />
+                    ) : (
+                      <Eye className="w-4 h-4 md:w-5 md:h-5" />
+                    )}
+                  </button>
+                </div>
+                {errors.password && <p className="text-red-500 text-xs md:text-sm mt-1.5 font-semibold">{errors.password.message}</p>}
+                <p className="text-xs md:text-sm text-gray-500 mt-1.5 font-medium">At least 6 characters</p>
+              </div>
+
+              {/* Summary */}
+              <div className="bg-indigo-50 rounded-xl p-3 md:p-4 border border-indigo-100">
+                <p className="text-xs md:text-sm font-semibold text-indigo-900 mb-2">Account Summary:</p>
+                <div className="space-y-1 text-xs md:text-sm text-indigo-800 font-medium">
+                  <p className="truncate"><strong>Name:</strong> {watchedFields.name || '-'}</p>
+                  <p className="truncate"><strong>Email:</strong> {watchedFields.email || '-'}</p>
+                  <p className="truncate"><strong>Shop:</strong> {watchedFields.shopName || '-'}</p>
+                  <p className="truncate"><strong>Phone:</strong> {watchedFields.phone || '-'}</p>
+                </div>
+              </div>
+
+              <div className="flex gap-2.5 md:gap-3 mt-6">
+                <button 
+                  type="button"
+                  onClick={() => setStep(2)}
+                  className="cursor-pointer flex-1 py-2.5 md:py-3 lg:py-3.5 px-4 rounded-full text-sm md:text-base font-semibold text-gray-700 bg-gray-200 hover:bg-gray-300 active:scale-95 transition-all"
+                >
+                  Back
+                </button>
+                <button 
+                  type="submit"
+                  disabled={isLoading}
+                  className="cursor-pointer flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 md:py-3 lg:py-3.5 rounded-full font-semibold text-sm md:text-base flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shadow-lg active:scale-95 transition-all"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" />
+                      <span>Creating...</span>
+                    </>
                   ) : (
-                    <Eye className="w-5 h-5" />
+                    <span>Create Account</span>
                   )}
                 </button>
               </div>
-              {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
-              <p className="text-xs text-gray-500 mt-1">At least 6 characters</p>
             </div>
+          )}
+        </form>
 
-            {/* Summary */}
-            <div className="bg-blue-50 rounded-lg p-4 space-y-2 border border-blue-100">
-              <p className="text-xs font-semibold text-blue-900 mb-2">Account Summary:</p>
-              <div className="space-y-1 text-xs text-blue-800">
-                <p><strong>Name:</strong> {watchedFields.name || '-'}</p>
-                <p><strong>Email:</strong> {watchedFields.email || '-'}</p>
-                <p><strong>Shop:</strong> {watchedFields.shopName || '-'}</p>
-                <p><strong>Phone:</strong> {watchedFields.phone || '-'}</p>
-              </div>
-            </div>
-
-            <div className="flex gap-2 sm:gap-3">
-              <button 
-                type="button"
-                onClick={() => setStep(2)}
-                className="flex-1 py-2.5 sm:py-3 px-4 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
-              >
-                {t('Back')}
-              </button>
-              <button 
-                type="submit"
-                disabled={isLoading}
-                className="flex-1 flex justify-center items-center py-2.5 sm:py-3 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors whitespace-nowrap"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                    <span>{t('Creating...')}</span>
-                  </>
-                ) : (
-                  <span>{t('Create Account')}</span>
-                )}
-              </button>
-            </div>
-          </div>
-        )}
-      </form>
-
-      <div className="mt-6 text-center">
-        <p className="text-sm text-gray-600">
-          {t('Already have an account?')}{' '}
-          <Link to="/login" className="text-blue-600 font-medium hover:text-blue-700">
-            {t('Sign In')}
-          </Link>
-        </p>
+        {/* Footer */}
+        <div className="mt-5 md:mt-6 lg:mt-8 text-center">
+          <p className="text-xs md:text-sm text-gray-600 font-medium">
+            Already have an account?{' '}
+            <Link 
+              to="/login" 
+              className="cursor-pointer font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+            >
+              Sign In
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

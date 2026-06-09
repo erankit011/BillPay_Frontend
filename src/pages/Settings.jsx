@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Save, ArrowRight } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -66,123 +66,155 @@ const Settings = () => {
   };
 
   if (fetching) {
-    return <div className="p-8 text-center text-gray-500">Loading settings...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-indigo-600"></div>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="animate-fade-in">
-        <h1 className="text-2xl font-bold text-gray-900">{t('Settings')}</h1>
-        <p className="text-gray-500 text-sm mt-1">{t('Manage your shop preferences and profile')}</p>
-      </div>
+    <div className="w-full max-w-4xl mx-auto space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
+        {/* Header */}
+        <div className="animate-fade-in">
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900">{t('Settings')}</h1>
+          <p className="text-sm md:text-base font-medium text-gray-600 mt-1 md:mt-1.5">{t('Manage your shop preferences and profile')}</p>
+        </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden animate-slide-up card-hover" style={{ animationDelay: '100ms' }}>
-        <form onSubmit={handleSubmit} className="p-6 space-y-8">
-          
-          {/* Profile Section */}
-          <section>
-            <div className="flex items-center justify-between border-b border-gray-200 pb-3 mb-4">
-              <h2 className="text-lg font-bold text-gray-900">{t('Profile Information')}</h2>
-              <Link to="/profile" className="text-sm text-blue-600 hover:text-blue-700 flex items-center font-medium">
-                {t('Edit Profile')} <ArrowRight className="w-4 h-4 ml-1" />
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{t('Shop Name')}</label>
-                <input type="text" className="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 text-gray-500 cursor-not-allowed" value={user?.shopName || ''} readOnly disabled />
-                <p className="mt-1 text-xs text-blue-500 font-medium">{t('* Edit in Profile')}</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{t('Phone Number')}</label>
-                <input type="text" className="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 text-gray-500 cursor-not-allowed" value={user?.phone || ''} readOnly disabled />
-                <p className="mt-1 text-xs text-red-500 font-medium">{t('* Cannot be changed')}</p>
-              </div>
-            </div>
-          </section>
-
-          {/* Billing Preferences */}
-          <section>
-            <h2 className="text-lg font-bold text-gray-900 mb-4 border-b border-gray-200 pb-3">{t('Billing Preferences')}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{t('Invoice Prefix')}</label>
-                <input 
-                  type="text" 
-                  name="invoicePrefix"
-                  value={formData.invoicePrefix}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{t('Currency Symbol')}</label>
-                <select 
-                  name="currency"
-                  value={formData.currency}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden animate-slide-up" style={{ animationDelay: '100ms' }}>
+          <form onSubmit={handleSubmit} className="p-5 md:p-6 lg:p-8 space-y-6 md:space-y-8">
+            
+            {/* Profile Section */}
+            <section>
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-5 md:mb-6">
+                <h2 className="text-base md:text-lg lg:text-xl font-semibold text-gray-900">{t('Profile Information')}</h2>
+                <Link 
+                  to="/profile" 
+                  className="cursor-pointer text-sm md:text-base text-indigo-600 hover:text-indigo-700 font-semibold flex items-center gap-1 transition-colors active:scale-95 focus:outline-none focus:ring-1 focus:ring-indigo-600 rounded-xl px-2 py-1"
                 >
-                  <option value="INR">₹ (INR)</option>
-                  <option value="USD">$ (USD)</option>
-                </select>
+                  {t('Edit Profile')} →
+                </Link>
               </div>
-            </div>
-          </section>
-
-          {/* WhatsApp Settings */}
-          <section>
-            <h2 className="text-lg font-bold text-gray-900 mb-4 border-b border-gray-200 pb-3">{t('WhatsApp Automation')}</h2>
-            <div className="space-y-4">
-              <label className="flex items-center space-x-3 cursor-pointer">
-                <input 
-                  type="checkbox" 
-                  name="autoSendInvoices"
-                  checked={formData.autoSendInvoices}
-                  onChange={handleChange}
-                  className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" 
-                />
-                <span className="text-gray-700 font-medium">{t('Auto-send invoices on bill creation')}</span>
-              </label>
-              <label className="flex items-center space-x-3 cursor-pointer">
-                <input 
-                  type="checkbox" 
-                  name="autoSendReminders"
-                  checked={formData.autoSendReminders}
-                  onChange={handleChange}
-                  className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" 
-                />
-                <span className="text-gray-700 font-medium">{t('Auto-send payment reminders')}</span>
-              </label>
-              <div className="pl-8 pt-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">{t('Send reminder before (days)')}</label>
-                <input 
-                  type="number" 
-                  name="reminderDays"
-                  value={formData.reminderDays}
-                  onChange={handleChange}
-                  className="w-32 rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                  min="1"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6">
+                <div>
+                  <label className="block text-sm md:text-base font-semibold text-gray-800 mb-2">{t('Shop Name')}</label>
+                  <input 
+                    type="text" 
+                    className="w-full rounded-xl border border-gray-300 px-4 md:px-5 py-2.5 md:py-3 bg-white text-gray-900 text-sm md:text-base font-medium cursor-not-allowed" 
+                    value={user?.shopName || ''} 
+                    readOnly 
+                  />
+                  <p className="mt-1.5 text-xs md:text-sm text-indigo-600 font-semibold">{t('* Edit in Profile')}</p>
+                </div>
+                <div>
+                  <label className="block text-sm md:text-base font-semibold text-gray-800 mb-2">{t('Phone Number')}</label>
+                  <input 
+                    type="text" 
+                    className="w-full rounded-xl border border-gray-300 px-4 md:px-5 py-2.5 md:py-3 bg-white text-gray-900 text-sm md:text-base font-medium cursor-not-allowed" 
+                    value={user?.phone || ''} 
+                    readOnly 
+                  />
+                  <p className="mt-1.5 text-xs md:text-sm text-red-600 font-semibold">{t('* Cannot be changed')}</p>
+                </div>
               </div>
+            </section>
+
+            {/* Billing Preferences */}
+            <section>
+              <h2 className="text-base md:text-lg lg:text-xl font-semibold text-gray-900 mb-5 md:mb-6">{t('Billing Preferences')}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6">
+                <div>
+                  <label className="block text-sm md:text-base font-semibold text-gray-800 mb-2">{t('Invoice Prefix')}</label>
+                  <input 
+                    type="text" 
+                    name="invoicePrefix"
+                    value={formData.invoicePrefix}
+                    onChange={handleChange}
+                    className="w-full rounded-xl border border-gray-300 px-4 md:px-5 py-2.5 md:py-3 text-sm md:text-base font-medium focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200" 
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm md:text-base font-semibold text-gray-800 mb-2">{t('Currency Symbol')}</label>
+                  <select 
+                    name="currency"
+                    value={formData.currency}
+                    onChange={handleChange}
+                    className="cursor-pointer w-full rounded-xl border border-gray-300 px-4 md:px-5 py-2.5 md:py-3 text-sm md:text-base font-medium focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 appearance-none bg-white"
+                    style={{
+                      backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                      backgroundPosition: 'right 0.75rem center',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundSize: '1.5em 1.5em',
+                      paddingRight: '2.5rem'
+                    }}
+                  >
+                    <option value="INR">₹ (INR)</option>
+                    <option value="USD">$ (USD)</option>
+                  </select>
+                </div>
+              </div>
+            </section>
+
+            {/* WhatsApp Settings */}
+            <section>
+              <h2 className="text-base md:text-lg lg:text-xl font-semibold text-gray-900 mb-5 md:mb-6">{t('WhatsApp Automation')}</h2>
+              <div className="space-y-4 md:space-y-5">
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input 
+                    type="checkbox" 
+                    name="autoSendInvoices"
+                    checked={formData.autoSendInvoices}
+                    onChange={handleChange}
+                    className="cursor-pointer w-5 h-5 text-indigo-600 rounded border-gray-300 focus:ring-1 focus:ring-indigo-500 mt-0.5 flex-shrink-0" 
+                  />
+                  <span className="text-gray-900 font-medium text-sm md:text-base group-hover:text-gray-700 transition-colors">{t('Auto-send invoices on bill creation')}</span>
+                </label>
+                
+                <div>
+                  <label className="flex items-start gap-3 cursor-pointer group">
+                    <input 
+                      type="checkbox" 
+                      name="autoSendReminders"
+                      checked={formData.autoSendReminders}
+                      onChange={handleChange}
+                      className="cursor-pointer w-5 h-5 text-indigo-600 rounded border-gray-300 focus:ring-1 focus:ring-indigo-500 mt-0.5 flex-shrink-0" 
+                    />
+                    <span className="text-gray-900 font-medium text-sm md:text-base group-hover:text-gray-700 transition-colors">{t('Auto-send payment reminders')}</span>
+                  </label>
+                  
+                  {formData.autoSendReminders && (
+                    <div className="ml-8 mt-4">
+                      <label className="block text-sm md:text-base font-semibold text-gray-800 mb-2">{t('Send reminder before (days)')}</label>
+                      <input 
+                        type="number" 
+                        name="reminderDays"
+                        value={formData.reminderDays}
+                        onChange={handleChange}
+                        className="w-full md:w-48 rounded-xl border border-gray-300 px-4 md:px-5 py-2.5 md:py-3 text-sm md:text-base font-medium focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200" 
+                        min="1"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </section>
+
+            {/* Save Button */}
+            <div className="pt-4 md:pt-6 flex justify-end">
+              <button 
+                type="submit"
+                disabled={loading}
+                className="cursor-pointer bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 md:px-8 lg:px-10 py-2.5 md:py-3 lg:py-3.5 rounded-xl flex items-center font-semibold text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed shadow-lg active:scale-95 transition-all duration-200 w-full md:w-auto justify-center focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:ring-offset-2"
+              >
+                <Save className="w-5 h-5 mr-2" />
+                {loading ? t('Saving...') : t('Save Changes')}
+              </button>
             </div>
-          </section>
 
-          <div className="pt-4 flex justify-end">
-            <button 
-              type="submit"
-              disabled={loading}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg flex items-center font-medium disabled:opacity-50 btn-hover-lift transition-all"
-            >
-              <Save className="w-5 h-5 mr-2" />
-              {loading ? t('Saving...') : t('Save Changes')}
-            </button>
-          </div>
-
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
   );
 };
 

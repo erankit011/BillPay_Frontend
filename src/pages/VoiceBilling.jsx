@@ -215,296 +215,319 @@ const VoiceBilling = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8">
-      <div className="text-center animate-fade-in">
-        <h1 className="text-3xl font-bold text-gray-900">{t('Voice Assistant')}</h1>
-        <p className="text-gray-500 mt-2">{t('Record voice or type manually')}</p>
-        <p className="text-sm text-gray-400 mt-1">{t('Example:')} "Ankit Singh ko 100 rupya udhar diya"</p>
-      </div>
-
-      {/* Mode Toggle */}
-      <div className="flex justify-center gap-3 animate-slide-up" style={{ animationDelay: '100ms' }}>
-        <button
-          onClick={() => setInputMode('voice')}
-          className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
-            inputMode === 'voice'
-              ? 'bg-blue-600 text-white'
-              : 'bg-white text-gray-600 border border-gray-300 hover:border-blue-400'
-          }`}
-        >
-          <Mic className="w-5 h-5" />
-          {t('Voice Input')}
-        </button>
-        <button
-          onClick={() => setInputMode('manual')}
-          className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
-            inputMode === 'manual'
-              ? 'bg-blue-600 text-white'
-              : 'bg-white text-gray-600 border border-gray-300 hover:border-blue-400'
-          }`}
-        >
-          <Keyboard className="w-5 h-5" />
-          {t('Manual Input')}
-        </button>
-      </div>
-
-      {/* Voice Input Mode */}
-      {inputMode === 'voice' && (
-        <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center flex flex-col items-center justify-center min-h-[300px] relative overflow-hidden animate-slide-up card-hover" style={{ animationDelay: '200ms' }}>
-          
-          {isRecording && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-32 h-32 bg-blue-100 rounded-full animate-ping opacity-75"></div>
-              <div className="absolute w-48 h-48 bg-blue-50 rounded-full animate-ping opacity-50"></div>
-            </div>
-          )}
-
-          <div className="relative z-10 flex flex-col items-center">
-            <button
-              onClick={isRecording ? stopVoiceRecognition : startVoiceRecognition}
-              disabled={isProcessing}
-              className={`w-24 h-24 rounded-full flex items-center justify-center transition-all transform hover:scale-105 active:scale-95 ${
-                isRecording 
-                  ? 'bg-red-500 hover:bg-red-600 text-white' 
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'
-              } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
-            >
-              {isProcessing ? (
-                <Loader2 className="w-10 h-10 animate-spin" />
-              ) : (
-                <Mic className={`w-10 h-10 ${isRecording ? 'animate-pulse' : ''}`} />
-              )}
-            </button>
-
-            <p className="mt-8 text-lg font-medium text-gray-700">
-              {transcript || (isRecording ? t('Listening...') : t('Tap to speak'))}
-            </p>
-            
-            {isRecording && (
-              <p className="mt-2 text-sm text-gray-500 animate-pulse">
-                {t('Speak now...')}
-              </p>
-            )}
-
-            {!isRecording && !isProcessing && (
-              <div className="mt-6 text-xs text-gray-500 space-y-2 bg-orange-50 p-4 rounded-lg border border-orange-200">
-                <p className="font-medium text-orange-800">⚠️ {t('Voice Recognition Requirements:')}</p>
-                <p>• {t('Internet connection required')}</p>
-                <p>• {t('Works best in Chrome/Edge browser')}</p>
-                <p>• {t('Microphone permission needed')}</p>
-                <p className="text-blue-600 font-medium mt-2">💡 {t('Tip: Use Manual Input for offline operation')}</p>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Manual Input Mode */}
-      {inputMode === 'manual' && (
-        <form onSubmit={handleManualSubmit} className="bg-white rounded-2xl border border-gray-200 p-8 animate-slide-up card-hover" style={{ animationDelay: '200ms' }}>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                ⌨️ {t('Type your command')}
-              </label>
-              <input
-                type="text"
-                value={manualText}
-                onChange={(e) => setManualText(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
-                placeholder="Ankit Singh ko 100 rupya udhar diya"
-                disabled={isProcessing}
-                autoFocus
-              />
-              <div className="mt-3 text-xs text-gray-500 space-y-1 bg-gray-50 p-3 rounded-lg">
-                <p className="font-medium text-gray-700">📝 {t('Format:')}</p>
-                <p>• [Customer Name] ko [Amount] rupya udhar diya</p>
-                <p>• [Customer Name] se [Amount] rupya liya</p>
-                <p className="font-medium text-gray-700 mt-2">✅ {t('Examples:')}</p>
-                <p>• Rahul ko 500 rupya udhar diya</p>
-                <p>• Priya se 200 rupya liya</p>
-                <p>• Ankit Singh ko 1000 rupya udhar diya</p>
-              </div>
-            </div>
-            
-            <button
-              type="submit"
-              disabled={isProcessing || !manualText.trim()}
-              className="w-full flex justify-center py-3 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 btn-hover-lift transition-all"
-            >
-              {isProcessing ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                  {t('Processing...')}
-                </>
-              ) : (
-                <>
-                  <CheckCircle2 className="w-5 h-5 mr-2" />
-                  {t('Process Command')}
-                </>
-              )}
-            </button>
-          </div>
-          
-          {transcript && !isProcessing && (
-            <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
-              <p className="text-sm text-gray-700">{transcript}</p>
-            </div>
-          )}
-        </form>
-      )}
-
-      {/* Result Display */}
-      {result && result.parsedIntent && !showForm && (
-        <div className="bg-green-50 rounded-xl p-6 border border-green-200 animate-scale-in">
-          <div className="flex items-center text-green-800 mb-4">
-            <CheckCircle2 className="w-6 h-6 mr-2" />
-            <h3 className="text-lg font-bold">{t('Command Recognized')}</h3>
-          </div>
-          
-          <div className="bg-white rounded-lg p-4 border border-gray-200">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-500">{t('Action')}</p>
-                <p className="font-semibold text-gray-900">{result.parsedIntent.intent}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">{t('Amount')}</p>
-                <p className="font-semibold text-gray-900 text-lg">₹{result.parsedIntent.amount}</p>
-              </div>
-              <div className="col-span-2">
-                <p className="text-sm text-gray-500">{t('Customer')}</p>
-                <p className="font-semibold text-gray-900">{result.parsedIntent.customerName || t('Unknown')}</p>
-              </div>
-            </div>
-          </div>
-          
-          <p className="text-sm text-gray-600 mt-4 text-center">
-            {t('Data has been processed. You can review and edit below.')}
+    <div className="px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10 xl:px-12 xl:py-12">
+      <div className="max-w-[1440px] mx-auto">
+      <div className="max-w-xl mx-auto space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
+        {/* Header */}
+        <div className="text-center animate-fade-in">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Voice Assistant')}</h1>
+          <p className="text-xs sm:text-sm font-medium text-gray-600 mt-1 sm:mt-1.5">{t('Record voice or type manually')}</p>
+          <p className="text-xs sm:text-sm font-medium text-indigo-600 mt-1.5 sm:mt-2 px-4">
+            "{t('Example:')} Ankit Singh ko 100 rupya udhar diya"
           </p>
         </div>
-      )}
 
-      {/* Editable Form */}
-      {showForm && (
-        <div className="bg-white rounded-xl p-6 border border-gray-200 animate-slide-up">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-gray-900">{t('Review & Edit Transaction')}</h3>
+        {/* Mode Toggle - Mobile Optimized */}
+        <div className="flex justify-center animate-slide-up" style={{ animationDelay: '100ms' }}>
+          <div className="inline-flex bg-white/80 backdrop-blur-md rounded-xl p-1 border border-gray-200 w-full max-w-md">
             <button
-              onClick={handleCancelForm}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              onClick={() => setInputMode('voice')}
+              className={`cursor-pointer flex items-center justify-center gap-2 flex-1 px-5 md:px-6 py-2.5 md:py-3 rounded-xl font-semibold text-sm md:text-base transition-all duration-200 active:scale-[0.98] focus:outline-none ${
+                inputMode === 'voice'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-transparent text-gray-600 hover:bg-gray-50'
+              }`}
             >
-              ✕
+              <Mic className="w-5 h-5 flex-shrink-0" />
+              <span className="whitespace-nowrap">{t('Voice Input')}</span>
+            </button>
+            <button
+              onClick={() => setInputMode('manual')}
+              className={`cursor-pointer flex items-center justify-center gap-2 flex-1 px-5 md:px-6 py-2.5 md:py-3 rounded-xl font-semibold text-sm md:text-base transition-all duration-200 active:scale-[0.98] focus:outline-none ${
+                inputMode === 'manual'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-transparent text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              <Keyboard className="w-5 h-5 flex-shrink-0" />
+              <span className="whitespace-nowrap">{t('Manual Input')}</span>
             </button>
           </div>
+        </div>
 
-          <form onSubmit={handleFormSubmit} className="space-y-4">
-            {/* Customer Name */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                👤 {t('Customer Name')}
-              </label>
-              <input
-                type="text"
-                name="customerName"
-                value={formData.customerName}
-                onChange={handleFormChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder={t('Enter customer name')}
-                required
-              />
-            </div>
-
-            {/* Amount */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                💰 {t('Amount')} (₹)
-              </label>
-              <input
-                type="number"
-                name="amount"
-                value={formData.amount}
-                onChange={handleFormChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder={t('Enter amount')}
-                min="0"
-                step="0.01"
-                required
-              />
-            </div>
-
-            {/* Transaction Type */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                🎯 {t('Transaction Type')}
-              </label>
-              <select
-                name="intent"
-                value={formData.intent}
-                onChange={handleFormChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="UDHAR">{t('Udhar (Given)')}</option>
-                <option value="PAYMENT">{t('Payment (Received)')}</option>
-              </select>
-            </div>
-
-            {/* Payment Mode */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                💳 {t('Payment Mode')}
-              </label>
-              <select
-                name="paymentMode"
-                value={formData.paymentMode}
-                onChange={handleFormChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="CASH">{t('Cash')}</option>
-                <option value="UPI">{t('UPI')}</option>
-                <option value="CARD">{t('Card')}</option>
-                <option value="BANK_TRANSFER">{t('Bank Transfer')}</option>
-              </select>
-            </div>
-
-            {/* Original Command */}
-            {transcript && (
-              <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                <p className="text-xs text-gray-500 mb-1">{t('Original Command:')}</p>
-                <p className="text-sm text-gray-700">{transcript}</p>
+        {/* Voice Input Mode */}
+        {inputMode === 'voice' && (
+          <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-white rounded-xl p-6 md:p-8 lg:p-10 text-center flex flex-col items-center justify-center min-h-[400px] md:min-h-[450px] relative overflow-hidden animate-slide-up border border-indigo-100" style={{ animationDelay: '200ms' }}>
+            
+            {/* Animated Background Circles */}
+            {isRecording && (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="w-40 h-40 md:w-48 md:h-48 bg-indigo-200 rounded-full animate-ping opacity-60"></div>
+                <div className="absolute w-56 h-56 md:w-64 md:h-64 bg-indigo-100 rounded-full animate-ping opacity-40"></div>
               </div>
             )}
 
-            {/* Action Buttons */}
-            <div className="flex gap-3 pt-2">
+            <div className="relative z-10 flex flex-col items-center w-full space-y-6">
+              {/* Large Circular Mic Button */}
               <button
-                type="button"
-                onClick={handleCancelForm}
-                className="flex-1 py-3 px-4 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
+                onClick={isRecording ? stopVoiceRecognition : startVoiceRecognition}
+                disabled={isProcessing}
+                className={`cursor-pointer w-36 h-36 md:w-40 md:h-40 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 border-2 border-indigo-200 focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:ring-offset-2 ${
+                  isRecording 
+                    ? 'bg-red-500 text-white' 
+                    : 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white'
+                } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
-                {t('Cancel')}
+                {isProcessing ? (
+                  <Loader2 className="w-14 h-14 md:w-16 md:h-16 animate-spin" />
+                ) : (
+                  <Mic className={`w-14 h-14 md:w-16 md:h-16 ${isRecording ? 'animate-pulse' : ''}`} />
+                )}
               </button>
+
+              {/* Tap to speak text */}
+              <p className="text-base md:text-lg lg:text-xl font-semibold text-gray-900 px-4">
+                {transcript || (isRecording ? t('Listening...') : t('Tap to speak'))}
+              </p>
+              
+              {isRecording && (
+                <p className="text-sm font-medium text-gray-600 animate-pulse">
+                  {t('Speak now...')}
+                </p>
+              )}
+
+              {/* Requirements Box - Orange Theme */}
+              {!isRecording && !isProcessing && (
+                <div className="mt-4 w-full max-w-sm text-left space-y-3 bg-gradient-to-br from-orange-50 to-yellow-50 p-4 md:p-5 rounded-xl border border-orange-200">
+                  <div className="flex items-start gap-2">
+                    <div className="mt-0.5 text-orange-500 text-lg flex-shrink-0">⚠️</div>
+                    <div className="space-y-2 text-sm">
+                      <p className="font-semibold text-orange-800">{t('Voice Recognition Requirements:')}</p>
+                      <ul className="space-y-1 text-gray-700 font-medium">
+                        <li>• {t('Internet connection required')}</li>
+                        <li>• {t('Works best in Chrome/Edge browser')}</li>
+                        <li>• {t('Microphone permission needed')}</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2 pt-2 border-t border-orange-200">
+                    <div className="text-lg flex-shrink-0">💡</div>
+                    <p className="text-indigo-700 font-semibold text-sm">{t('Tip: Use Manual Input for offline operation')}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Manual Input Mode */}
+        {inputMode === 'manual' && (
+          <form onSubmit={handleManualSubmit} className="bg-white border border-gray-200 rounded-xl p-5 md:p-6 lg:p-8 animate-slide-up" style={{ animationDelay: '200ms' }}>
+            <div className="space-y-4 md:space-y-5">
+              <div>
+                <label className="block text-sm md:text-base font-semibold text-gray-800 mb-2">
+                  ⌨️ {t('Type your command')}
+                </label>
+                <input
+                  type="text"
+                  value={manualText}
+                  onChange={(e) => setManualText(e.target.value)}
+                  className="w-full rounded-xl border border-gray-300 px-4 md:px-5 py-2.5 md:py-3 text-sm md:text-base font-medium focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                  placeholder="Ankit Singh ko 100 rupya udhar diya"
+                  disabled={isProcessing}
+                  autoFocus
+                />
+                <div className="mt-3 text-sm font-medium text-gray-600 space-y-2 bg-gray-50 p-4 rounded-xl border border-gray-200">
+                  <p className="font-semibold text-gray-800">📝 {t('Format:')}</p>
+                  <p>• [Customer Name] ko [Amount] rupya udhar diya</p>
+                  <p>• [Customer Name] se [Amount] rupya liya</p>
+                  <p className="font-semibold text-gray-800 mt-2">✅ {t('Examples:')}</p>
+                  <p>• Rahul ko 500 rupya udhar diya</p>
+                  <p>• Priya se 200 rupya liya</p>
+                  <p>• Ankit Singh ko 1000 rupya udhar diya</p>
+                </div>
+              </div>
+              
               <button
                 type="submit"
-                disabled={isSaving}
-                className="flex-1 py-3 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                disabled={isProcessing || !manualText.trim()}
+                className="cursor-pointer w-full flex justify-center items-center px-5 md:px-6 lg:px-7 py-2.5 md:py-3 lg:py-3.5 rounded-xl text-sm md:text-base font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all duration-200 shadow-lg focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:ring-offset-2"
               >
-                {isSaving ? (
+                {isProcessing ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin inline mr-2" />
-                    {t('Saving...')}
+                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                    {t('Processing...')}
                   </>
                 ) : (
                   <>
-                    <CheckCircle2 className="w-5 h-5 inline mr-2" />
-                    {t('Save Transaction')}
+                    <CheckCircle2 className="w-5 h-5 mr-2" />
+                    {t('Process Command')}
                   </>
                 )}
               </button>
             </div>
+            
+            {transcript && !isProcessing && (
+              <div className="mt-4 p-4 bg-indigo-50 rounded-xl border border-indigo-200">
+                <p className="text-sm font-medium text-gray-700">{transcript}</p>
+              </div>
+            )}
           </form>
-        </div>
-      )}
+        )}
+
+        {/* Result Display */}
+        {result && result.parsedIntent && !showForm && (
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-5 md:p-6 lg:p-8 border border-green-200 animate-scale-in">
+            <div className="flex items-center text-green-700 mb-4 md:mb-5">
+              <CheckCircle2 className="w-6 h-6 md:w-7 md:h-7 mr-2 flex-shrink-0" />
+              <h3 className="text-base md:text-lg lg:text-xl font-semibold">{t('Command Recognized')}</h3>
+            </div>
+            
+            <div className="bg-white border border-gray-200 rounded-xl p-4 md:p-5 lg:p-6">
+              <div className="grid grid-cols-2 gap-4 md:gap-5">
+                <div>
+                  <p className="text-sm font-semibold text-gray-600 mb-1 uppercase tracking-wide">{t('Action')}</p>
+                  <p className="font-semibold text-gray-900 text-sm md:text-base">{result.parsedIntent.intent}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-600 mb-1 uppercase tracking-wide">{t('Amount')}</p>
+                  <p className="font-semibold text-indigo-600 text-lg md:text-xl">₹{result.parsedIntent.amount}</p>
+                </div>
+                <div className="col-span-2">
+                  <p className="text-sm font-semibold text-gray-600 mb-1 uppercase tracking-wide">{t('Customer')}</p>
+                  <p className="font-semibold text-gray-900 text-sm md:text-base truncate">{result.parsedIntent.customerName || t('Unknown')}</p>
+                </div>
+              </div>
+            </div>
+            
+            <p className="text-sm font-medium text-gray-700 mt-4 md:mt-5 text-center px-2">
+              {t('Data has been processed. You can review and edit below.')}
+            </p>
+          </div>
+        )}
+
+        {/* Editable Form */}
+        {showForm && (
+          <div className="bg-white border border-gray-200 rounded-xl p-5 md:p-6 lg:p-8 animate-slide-up">
+            <div className="flex items-center justify-between mb-5 md:mb-6">
+              <h3 className="text-base md:text-lg lg:text-xl font-semibold text-gray-900">{t('Review & Edit Transaction')}</h3>
+              <button
+                onClick={handleCancelForm}
+                className="cursor-pointer text-gray-400 hover:text-gray-600 w-9 h-9 md:w-10 md:h-10 flex items-center justify-center rounded-xl transition-colors active:scale-95 focus:outline-none focus:ring-1 focus:ring-gray-400 flex-shrink-0"
+              >
+                <span className="text-xl">✕</span>
+              </button>
+            </div>
+
+            <form onSubmit={handleFormSubmit} className="space-y-4 md:space-y-5">
+              {/* Customer Name */}
+              <div>
+                <label className="block text-sm md:text-base font-semibold text-gray-800 mb-2">
+                  👤 {t('Customer Name')}
+                </label>
+                <input
+                  type="text"
+                  name="customerName"
+                  value={formData.customerName}
+                  onChange={handleFormChange}
+                  className="w-full rounded-xl border border-gray-300 px-4 md:px-5 py-2.5 md:py-3 text-sm md:text-base font-medium focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                  placeholder={t('Enter customer name')}
+                  required
+                />
+              </div>
+
+              {/* Amount */}
+              <div>
+                <label className="block text-sm md:text-base font-semibold text-gray-800 mb-2">
+                  💰 {t('Amount')} (₹)
+                </label>
+                <input
+                  type="number"
+                  name="amount"
+                  value={formData.amount}
+                  onChange={handleFormChange}
+                  className="w-full rounded-xl border border-gray-300 px-4 md:px-5 py-2.5 md:py-3 text-sm md:text-base font-medium focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                  placeholder={t('Enter amount')}
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </div>
+
+              {/* Transaction Type */}
+              <div>
+                <label className="block text-sm md:text-base font-semibold text-gray-800 mb-2">
+                  🎯 {t('Transaction Type')}
+                </label>
+                <select
+                  name="intent"
+                  value={formData.intent}
+                  onChange={handleFormChange}
+                  className="cursor-pointer w-full rounded-xl border border-gray-300 px-4 md:px-5 py-2.5 md:py-3 text-sm md:text-base font-medium focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                >
+                  <option value="UDHAR">{t('Udhar (Given)')}</option>
+                  <option value="PAYMENT">{t('Payment (Received)')}</option>
+                </select>
+              </div>
+
+              {/* Payment Mode */}
+              <div>
+                <label className="block text-sm md:text-base font-semibold text-gray-800 mb-2">
+                  💳 {t('Payment Mode')}
+                </label>
+                <select
+                  name="paymentMode"
+                  value={formData.paymentMode}
+                  onChange={handleFormChange}
+                  className="cursor-pointer w-full rounded-xl border border-gray-300 px-4 md:px-5 py-2.5 md:py-3 text-sm md:text-base font-medium focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                >
+                  <option value="CASH">{t('Cash')}</option>
+                  <option value="UPI">{t('UPI')}</option>
+                  <option value="CARD">{t('Card')}</option>
+                  <option value="BANK_TRANSFER">{t('Bank Transfer')}</option>
+                </select>
+              </div>
+
+              {/* Original Command */}
+              {transcript && (
+                <div className="bg-indigo-50 rounded-xl p-4 border border-indigo-200">
+                  <p className="text-xs font-semibold text-indigo-700 mb-1">{t('Original Command:')}</p>
+                  <p className="text-sm font-medium text-gray-800 break-words">{transcript}</p>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex flex-col md:flex-row gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={handleCancelForm}
+                  className="cursor-pointer flex-1 px-5 md:px-6 py-2.5 md:py-3 rounded-xl text-sm md:text-base font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-2"
+                >
+                  {t('Cancel')}
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSaving}
+                  className="cursor-pointer flex-1 px-5 md:px-6 py-2.5 md:py-3 rounded-xl text-sm md:text-base font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all duration-200 flex items-center justify-center shadow-lg focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:ring-offset-2"
+                >
+                  {isSaving ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                      {t('Saving...')}
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-5 h-5 mr-2" />
+                      {t('Save Transaction')}
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+      </div>
+      </div>
     </div>
   );
 };

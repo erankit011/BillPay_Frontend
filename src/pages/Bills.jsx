@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Search, FileText, Send, X, Loader2 } from 'lucide-react';
+import { Plus, Search, FileText, Send, X, Loader2, Wallet, CreditCard, Users } from 'lucide-react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -93,90 +93,158 @@ const Bills = () => {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('Billing & Invoices')}</h1>
-          <p className="text-gray-500 text-sm mt-1">{t('Create bills and send WhatsApp invoices')}</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Billing & Invoices')}</h1>
+          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed">
+            {t('Manage your shop\'s transactions, track pending payments,')}<br className="hidden sm:block"/>
+            {t('and send instant WhatsApp invoices to your customers.')}
+          </p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center font-medium w-full sm:w-auto justify-center"
+          className="cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 rounded-full flex items-center font-semibold text-xs sm:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
         >
-          <Plus className="w-5 h-5 mr-2" />
+          <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
           {t('Create New Bill')}
         </button>
       </div>
 
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
+        {/* Total Revenue */}
+        <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-gray-200">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <p className="text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wide">{t('Total Revenue')}</p>
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-indigo-100 flex items-center justify-center">
+              <Wallet className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600" />
+            </div>
+          </div>
+          <p className="text-2xl sm:text-3xl font-semibold text-gray-900">
+            {formatCurrency(bills.reduce((sum, b) => sum + b.grandTotal, 0))}
+          </p>
+          <p className="text-xs text-green-600 font-semibold mt-1.5 sm:mt-2">+12.5% {t('this month')}</p>
+        </div>
+
+        {/* Pending Udhar */}
+        <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-gray-200">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <p className="text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wide">{t('Pending Udhar')}</p>
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-yellow-100 flex items-center justify-center">
+              <CreditCard className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600" />
+            </div>
+          </div>
+          <p className="text-2xl sm:text-3xl font-semibold text-gray-900">
+            {formatCurrency(
+              bills
+                .filter(b => b.paymentStatus === 'UNPAID' || b.paymentStatus === 'PARTIAL')
+                .reduce((sum, b) => sum + (b.grandTotal - (b.amountPaid || 0)), 0)
+            )}
+          </p>
+          <p className="text-xs text-gray-600 font-semibold mt-1.5 sm:mt-2">
+            {bills.filter(b => b.paymentStatus === 'UNPAID' || b.paymentStatus === 'PARTIAL').length} {t('Unpaid Invoices')}
+          </p>
+        </div>
+
+        {/* Active Customers */}
+        <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 md:col-span-2 lg:col-span-1 border border-gray-200">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <p className="text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wide">{t('Active Customers')}</p>
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-purple-100 flex items-center justify-center">
+              <Users className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
+            </div>
+          </div>
+          <p className="text-2xl sm:text-3xl font-semibold text-gray-900">
+            {new Set(bills.filter(b => b.customerId).map(b => b.customerId._id)).size}
+          </p>
+          <p className="text-xs text-gray-600 font-semibold mt-1.5 sm:mt-2">
+            {bills.filter(b => b.customerId && new Date(b.createdAt) > new Date(Date.now() - 7*24*60*60*1000)).length} {t('new this week')}
+          </p>
+        </div>
+      </div>
+
+      {/* Search Bar */}
       <div className="relative w-full md:max-w-md">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400" />
+        <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+          <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
         </div>
         <input
           type="text"
           placeholder={t("Search by invoice number or customer...")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 pr-3 py-2 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="block w-full pl-10 sm:pl-11 pr-3 sm:pr-4 py-2.5 sm:py-3 bg-white border border-gray-200 rounded-2xl focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-xs sm:text-sm transition-all"
         />
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      {/* Bills Table */}
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
         {isLoading ? (
-          <div className="p-8 text-center text-gray-500 flex justify-center"><Loader2 className="w-8 h-8 animate-spin" /></div>
+          <div className="p-8 md:p-12 text-center text-gray-500 flex justify-center">
+            <Loader2 className="w-6 h-6 md:w-8 md:h-8 animate-spin text-indigo-600" />
+          </div>
         ) : filteredBills.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
-            <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-            <p>{t('No bills found. Create your first bill!')}</p>
+          <div className="p-8 md:p-12 text-center text-gray-500">
+            <FileText className="w-12 h-12 md:w-16 md:h-16 text-gray-300 mx-auto mb-3 md:mb-4" />
+            <p className="font-semibold text-sm md:text-base">{t('No bills found. Create your first bill!')}</p>
           </div>
         ) : (
           <div>
             {/* Desktop Table */}
             <div className="hidden md:block overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full">
+                <thead className="bg-gray-50/50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Invoice')}</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Customer')}</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Date')}</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Amount')}</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Status')}</th>
-                    <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Actions')}</th>
+                    <th className="px-4 lg:px-6 py-3 lg:py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Invoice')}</th>
+                    <th className="px-4 lg:px-6 py-3 lg:py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Customer')}</th>
+                    <th className="px-4 lg:px-6 py-3 lg:py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Date')}</th>
+                    <th className="px-4 lg:px-6 py-3 lg:py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Amount')}</th>
+                    <th className="px-4 lg:px-6 py-3 lg:py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Status')}</th>
+                    <th className="px-4 lg:px-6 py-3 lg:py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Actions')}</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-100">
+                <tbody className="bg-white/50 divide-y divide-gray-100">
                   {filteredBills.map((bill, index) => (
                     <tr 
                       key={bill._id} 
-                      className="hover:bg-gray-50 transition-all duration-200 animate-fade-in"
+                      className="hover:bg-indigo-50/30 transition-all duration-200 animate-fade-in"
                       style={{ animationDelay: `${index * 50}ms` }}
                     >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-blue-600">
-                        {bill.invoiceNumber}
+                      <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                            <span className="text-xs font-semibold text-indigo-600">
+                              {bill.customerId?.name?.substring(0, 2).toUpperCase() || 'WI'}
+                            </span>
+                          </div>
+                          <span className="text-xs lg:text-sm font-semibold text-indigo-600">{bill.invoiceNumber}</span>
+                        </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900 font-medium">{bill.customerId?.name || t('Walk-in Customer')}</div>
+                      <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap">
+                        <div className="text-xs lg:text-sm font-semibold text-gray-900">{bill.customerId?.name || t('Walk-in Customer')}</div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(bill.createdAt).toLocaleDateString()}
+                      <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap text-xs lg:text-sm text-gray-600">
+                        {new Date(bill.createdAt).toLocaleDateString('en-GB')}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                      <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap text-xs lg:text-sm font-semibold text-gray-900">
                         {formatCurrency(bill.grandTotal)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 text-xs font-semibold rounded-md 
-                          ${bill.paymentStatus === 'PAID' ? 'bg-green-100 text-green-800' : 
-                            bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-100 text-yellow-800' : 
-                            'bg-red-100 text-red-800'}`}>
+                      <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap">
+                        <span className={`px-2.5 lg:px-3 py-1 lg:py-1.5 text-xs font-semibold rounded-full uppercase
+                          ${bill.paymentStatus === 'PAID' ? 'bg-green-100 text-green-700' : 
+                            bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-100 text-yellow-700' : 
+                            'bg-red-100 text-red-700'}`}>
                           {bill.paymentStatus}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap text-right">
                         <button 
                           onClick={() => handleSendInvoice(bill._id)}
-                          className="text-blue-600 hover:text-white bg-blue-50 hover:bg-blue-600 px-3 py-1.5 rounded-lg flex items-center justify-center ml-auto transition-colors"
+                          className="cursor-pointer text-indigo-600 font-semibold bg-indigo-50 hover:bg-indigo-100 px-3 lg:px-4 py-1.5 lg:py-2 rounded-full flex items-center justify-center ml-auto transition-all text-xs lg:text-sm active:scale-95"
                         >
-                          <Send className="w-4 h-4 mr-1" /> {t('Send')}
+                          <Send className="w-3.5 h-3.5 lg:w-4 lg:h-4 mr-1 lg:mr-1.5" /> {t('Send')}
                         </button>
                       </td>
                     </tr>
@@ -190,29 +258,34 @@ const Bills = () => {
               {filteredBills.map((bill, index) => (
                 <div 
                   key={bill._id} 
-                  className="p-4 animate-fade-in"
+                  className="p-4 animate-fade-in hover:bg-indigo-50/30 transition-colors"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <h4 className="text-sm font-semibold text-gray-900">{bill.customerId?.name || t('Walk-in Customer')}</h4>
-                      <p className="text-xs font-semibold text-blue-600 mt-1">{bill.invoiceNumber}</p>
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                      <span className="text-xs font-semibold text-indigo-600">
+                        {bill.customerId?.name?.substring(0, 2).toUpperCase() || 'WI'}
+                      </span>
                     </div>
-                    <div className="text-right">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-sm font-semibold text-gray-900 truncate">{bill.customerId?.name || t('Walk-in Customer')}</h4>
+                      <p className="text-xs font-semibold text-indigo-600 mt-0.5">{bill.invoiceNumber}</p>
+                      <p className="text-xs text-gray-500 mt-1">{new Date(bill.createdAt).toLocaleDateString('en-GB')}</p>
+                    </div>
+                    <div className="text-right flex-shrink-0">
                       <p className="text-sm font-semibold text-gray-900">{formatCurrency(bill.grandTotal)}</p>
-                      <p className="text-xs text-gray-500 mt-1">{new Date(bill.createdAt).toLocaleDateString()}</p>
                     </div>
                   </div>
-                  <div className="flex justify-between items-center mt-4">
-                    <span className={`px-2.5 py-1 text-xs font-semibold rounded-md 
-                          ${bill.paymentStatus === 'PAID' ? 'bg-green-100 text-green-800' : 
-                            bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-100 text-yellow-800' : 
-                            'bg-red-100 text-red-800'}`}>
+                  <div className="flex justify-between items-center mt-3 gap-2">
+                    <span className={`px-2.5 py-1.5 text-xs font-semibold rounded-full uppercase
+                          ${bill.paymentStatus === 'PAID' ? 'bg-green-100 text-green-700' : 
+                            bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-100 text-yellow-700' : 
+                            'bg-red-100 text-red-700'}`}>
                       {bill.paymentStatus}
                     </span>
                     <button 
                       onClick={() => handleSendInvoice(bill._id)}
-                      className="text-blue-600 hover:text-white bg-blue-50 hover:bg-blue-600 px-3 py-1.5 rounded-lg flex items-center text-xs font-semibold transition-colors"
+                      className="cursor-pointer text-indigo-600 font-semibold bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-full flex items-center text-xs transition-all active:scale-95 whitespace-nowrap"
                     >
                       <Send className="w-3.5 h-3.5 mr-1" /> {t('Send')}
                     </button>
@@ -220,59 +293,115 @@ const Bills = () => {
                 </div>
               ))}
             </div>
+
+            {/* Pagination Info */}
+            <div className="px-4 md:px-6 py-3 md:py-4 bg-gray-50/50 border-t border-gray-100">
+              <p className="text-xs text-gray-600">
+                {t('Showing')} 1 {t('to')} {filteredBills.length} {t('of')} {bills.length} {t('invoices')}
+              </p>
+            </div>
           </div>
         )}
       </div>
 
+      {/* Create Bill Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen px-4 py-8">
-            <div className="fixed inset-0 bg-black/30 animate-modal-overlay" onClick={() => setIsModalOpen(false)} />
-            <div className="relative bg-white rounded-xl border border-gray-200 max-w-2xl w-full p-6 animate-modal-content">
-              <div className="flex items-center justify-between mb-5 pb-4 border-b border-gray-200">
-                <h3 className="text-xl font-bold text-gray-900">{t('Create New Bill')}</h3>
-                <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
-                  <X className="w-6 h-6" />
+          <div className="flex items-center justify-center min-h-screen px-3 md:px-4 py-6 md:py-8">
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm animate-modal-overlay" onClick={() => setIsModalOpen(false)} />
+            <div className="relative bg-white border border-gray-200 rounded-xl max-w-2xl w-full p-5 md:p-6 lg:p-8 animate-modal-content">
+              <div className="flex items-center justify-between mb-5 md:mb-6 pb-4 md:pb-5 border-b border-gray-200">
+                <h3 className="text-lg md:text-xl lg:text-2xl font-semibold text-gray-900">{t('Create New Bill')}</h3>
+                <button 
+                  onClick={() => setIsModalOpen(false)} 
+                  className="cursor-pointer text-gray-400 hover:text-gray-600 w-9 h-9 md:w-10 md:h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-all active:scale-95 flex-shrink-0"
+                >
+                  <X className="w-5 h-5 md:w-6 md:h-6" />
                 </button>
               </div>
-              <form onSubmit={handleSubmit(handleCreateBill)} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('Select Customer')}</label>
-                  <select {...register('customerId')} className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">-- {t('Choose Customer')} --</option>
-                    {customers.map(c => <option key={c._id} value={c._id}>{c.name} ({c.phone})</option>)}
-                  </select>
-                  {errors.customerId && <p className="text-red-500 text-xs mt-1">{errors.customerId.message}</p>}
-                </div>
+              <form onSubmit={handleSubmit(handleCreateBill)} className="space-y-4 md:space-y-5">
+              {/* Customer Select */}
+              <div>
+                <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">{t('Select Customer')}</label>
+                <select 
+                  {...register('customerId')} 
+                  className="cursor-pointer w-full rounded-xl border border-gray-300 px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                >
+                  <option value="">-- {t('Choose Customer')} --</option>
+                  {customers.map(c => <option key={c._id} value={c._id}>{c.name} ({c.phone})</option>)}
+                </select>
+                {errors.customerId && <p className="text-red-500 text-xs mt-1.5 font-semibold">{errors.customerId.message}</p>}
+              </div>
 
-                <div className="space-y-3">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('Products')}</label>
-                  {fields.map((field, index) => (
-                    <div key={field.id} className="flex gap-2 items-center">
-                      <select {...register(`products.${index}.productId`)} className="flex-1 rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">-- {t('Product')} --</option>
-                        {products.map(p => <option key={p._id} value={p._id}>{p.name} - ₹{p.price}</option>)}
-                      </select>
-                      <input type="number" {...register(`products.${index}.quantity`)} placeholder="Qty" className="w-24 rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-                      <button type="button" onClick={() => remove(index)} className="text-red-500 hover:bg-red-50 p-2 rounded-lg"><X className="w-5 h-5"/></button>
-                    </div>
-                  ))}
-                  <button type="button" onClick={() => append({ productId: '', quantity: 1 })} className="text-gray-700 text-sm font-medium hover:underline">+ {t('Add another product')}</button>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('Amount Paid (Advance)')}</label>
-                  <input type="number" {...register('amountPaid')} className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-                </div>
-
-                <button type="submit" disabled={mutation.isPending} className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2.5 font-medium disabled:opacity-50">
-                  {mutation.isPending ? t('Processing...') : t('Generate Bill')}
+              {/* Products */}
+              <div className="space-y-2.5 md:space-y-3">
+                <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">{t('Products')}</label>
+                {fields.map((field, index) => (
+                  <div key={field.id} className="flex gap-2 items-start">
+                    <select 
+                      {...register(`products.${index}.productId`)} 
+                      className="cursor-pointer flex-1 rounded-xl border border-gray-300 px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                    >
+                      <option value="">-- {t('Product')} --</option>
+                      {products.map(p => <option key={p._id} value={p._id}>{p.name} - ₹{p.price}</option>)}
+                    </select>
+                    <input 
+                      type="number" 
+                      {...register(`products.${index}.quantity`)} 
+                      placeholder="Qty" 
+                      className="w-16 sm:w-20 rounded-xl sm:rounded-2xl border border-gray-300 px-2 sm:px-3 py-2.5 sm:py-3 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" 
+                    />
+                    {fields.length > 1 && (
+                      <button 
+                        type="button" 
+                        onClick={() => remove(index)} 
+                        className="cursor-pointer text-red-500 hover:bg-red-50 p-2.5 sm:p-3 rounded-xl sm:rounded-2xl active:scale-95 transition-all flex-shrink-0"
+                      >
+                        <X className="w-4 h-4 sm:w-5 sm:h-5"/>
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <button 
+                  type="button" 
+                  onClick={() => append({ productId: '', quantity: 1 })} 
+                  className="cursor-pointer text-indigo-600 text-xs sm:text-sm font-semibold hover:text-indigo-700 flex items-center gap-1 transition-colors"
+                >
+                  <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> {t('Add another product')}
                 </button>
-              </form>
-            </div>
+              </div>
+
+              {/* Amount Paid */}
+              <div>
+                <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-2">{t('Amount Paid (Advance)')}</label>
+                <input 
+                  type="number" 
+                  {...register('amountPaid')} 
+                  className="w-full rounded-xl sm:rounded-2xl border border-gray-300 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" 
+                  placeholder="0"
+                />
+              </div>
+
+              {/* Submit Button */}
+              <button 
+                type="submit" 
+                disabled={mutation.isPending} 
+                className="cursor-pointer w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-full py-2.5 sm:py-3 md:py-3.5 font-semibold text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-lg active:scale-[0.98] transition-all"
+              >
+                {mutation.isPending ? (
+                  <span className="flex items-center justify-center">
+                    <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin mr-2" />
+                    {t('Processing...')}
+                  </span>
+                ) : (
+                  t('Generate Bill')
+                )}
+              </button>
+            </form>
           </div>
         </div>
-      )}
+      </div>
+    )}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronDown, Check } from 'lucide-react';
+import { ChevronDown, Check, Languages } from 'lucide-react';
 
 const LanguageSwitcher = ({ variant = 'default' }) => {
   const { i18n } = useTranslation();
@@ -45,11 +45,11 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 bg-gray-50 hover:bg-blue-50 rounded-lg transition-all border border-gray-200 hover:border-blue-300"
+          className="flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-700 bg-indigo-50/40 hover:bg-indigo-50 border border-indigo-100 hover:border-indigo-200 rounded-full transition-all active:scale-95 cursor-pointer"
           aria-label="Change language"
         >
-          <span className="uppercase font-semibold">{currentLanguage.code}</span>
-          <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+          <Languages className="w-3.5 h-3.5 text-indigo-500" />
+          <span className="uppercase tracking-wider">EN/HI</span>
         </button>
 
         {isOpen && (
@@ -59,12 +59,12 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
                 key={lang.code}
                 onClick={() => changeLanguage(lang.code)}
                 className={`w-full flex items-center justify-between px-3 py-2.5 text-sm hover:bg-gray-50 transition-colors ${
-                  currentLanguage.code === lang.code ? 'text-blue-600 bg-blue-50 font-medium' : 'text-gray-700'
+                  currentLanguage.code === lang.code ? 'text-indigo-600 bg-indigo-50 font-medium' : 'text-gray-700'
                 }`}
               >
                 <span>{lang.nativeName}</span>
                 {currentLanguage.code === lang.code && (
-                  <Check className="w-4 h-4 text-blue-600" />
+                  <Check className="w-4 h-4 text-indigo-600" />
                 )}
               </button>
             ))}

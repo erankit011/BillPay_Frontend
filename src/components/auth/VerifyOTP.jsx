@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { Mail, Shield, KeyRound, Loader2, CheckCircle2 } from 'lucide-react';
+import { Shield, Clock, ArrowRight } from 'lucide-react';
 import { loginSuccess } from '../../redux/slices/authSlice';
 import api from '../../api/axios';
 import { useTranslation } from 'react-i18next';
@@ -19,8 +19,8 @@ const VerifyOTP = ({ type = 'registration' }) => {
   const [resendLoading, setResendLoading] = useState(false);
   const [timer, setTimer] = useState(120); // 2 minutes
   const [canResend, setCanResend] = useState(false);
-  const [success, setSuccess] = useState(false);
   
+  const inputRefs = useRef([]);
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -32,40 +32,25 @@ const VerifyOTP = ({ type = 'registration' }) => {
   // Configuration based on type
   const config = {
     registration: {
-      icon: Mail,
-      title: 'Verify Your Email',
-      subtitle: 'We sent a verification code to',
-      helpText: 'Check your email for the code',
-      backLink: '/register',
-      backText: 'Back to Register',
+      title: 'Verify Your Identity',
       verifyEndpoint: '/auth/verify-email',
       resendEndpoint: '/auth/resend-verification-otp',
-      successMessage: 'Email Verified!',
-      successSubtext: 'Your account has been verified successfully.',
     },
     login: {
-      icon: Shield,
       title: 'Verify Your Identity',
-      subtitle: 'We sent a verification code to',
-      helpText: 'This is an extra security step to protect your account',
-      backLink: '/login',
-      backText: 'Back to Login',
       verifyEndpoint: '/auth/login/verify-password-otp',
       resendEndpoint: '/auth/login/resend-password-otp',
-      successMessage: 'Login Successful!',
-      successSubtext: `Welcome back, ${userName}!`,
     }
   };
 
   const currentConfig = config[type];
-  const IconComponent = currentConfig.icon;
 
   // Redirect if no email
   useEffect(() => {
     if (!email) {
-      navigate(currentConfig.backLink);
+      navigate(type === 'registration' ? '/register' : '/login');
     }
-  }, [email, navigate, currentConfig.backLink]);
+  }, [email, navigate, type]);
 
   // Timer countdown
   useEffect(() => {
@@ -87,7 +72,15 @@ const VerifyOTP = ({ type = 'registration' }) => {
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Mask email
+  const maskEmail = (email) => {
+    if (!email) return '';
+    const [username, domain] = email.split('@');
+    const maskedUsername = username.substring(0, 1) + '****';
+    return `${maskedUsername}@${domain}`;
   };
 
   // Handle OTP input change
@@ -103,17 +96,24 @@ const VerifyOTP = ({ type = 'registration' }) => {
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
+    setError(null);
 
     // Auto-focus next input
     if (value && index < 5) {
-      document.getElementById(`otp-${index + 1}`)?.focus();
+      inputRefs.current[index + 1]?.focus();
     }
   };
 
   // Handle backspace
   const handleKeyDown = (index, e) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
-      document.getElementById(`otp-${index - 1}`)?.focus();
+    if (e.key === 'Backspace') {
+      if (!otp[index] && index > 0) {
+        inputRefs.current[index - 1]?.focus();
+      } else {
+        const newOtp = [...otp];
+        newOtp[index] = '';
+        setOtp(newOtp);
+      }
     }
   };
 
@@ -133,7 +133,7 @@ const VerifyOTP = ({ type = 'registration' }) => {
 
     // Focus last filled input
     const lastIndex = Math.min(pastedData.length, 5);
-    document.getElementById(`otp-${lastIndex}`)?.focus();
+    inputRefs.current[lastIndex]?.focus();
   };
 
   // Verify OTP
@@ -142,7 +142,7 @@ const VerifyOTP = ({ type = 'registration' }) => {
     
     const otpCode = otp.join('');
     if (otpCode.length !== 6) {
-      setError('Please enter complete 6-digit OTP');
+      setError('Please enter complete 6-digit code');
       return;
     }
 
@@ -166,19 +166,14 @@ const VerifyOTP = ({ type = 'registration' }) => {
           token: res.data.data.accessToken,
         }));
 
-        // Show success
-        setSuccess(true);
-
-        // Redirect to dashboard after 2 seconds
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 2000);
+        // Redirect to dashboard
+        navigate('/dashboard');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid OTP. Please try again.');
+      setError(err.response?.data?.message || 'Invalid code. Please try again.');
       // Clear OTP on error
       setOtp(['', '', '', '', '', '']);
-      document.getElementById('otp-0')?.focus();
+      inputRefs.current[0]?.focus();
     } finally {
       setIsLoading(false);
     }
@@ -198,154 +193,130 @@ const VerifyOTP = ({ type = 'registration' }) => {
         setCanResend(false);
         setTimer(120);
         setOtp(['', '', '', '', '', '']);
-        document.getElementById('otp-0')?.focus();
+        inputRefs.current[0]?.focus();
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to resend OTP');
+      setError(err.response?.data?.message || 'Failed to resend code');
     } finally {
       setResendLoading(false);
     }
   };
 
-  // Success screen
-  if (success) {
-    return (
-      <div className="text-center animate-scale-in">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6 animate-bounce">
-          <CheckCircle2 className="w-10 h-10 text-green-600" />
-        </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          {t(currentConfig.successMessage)}
-        </h2>
-        <p className="text-gray-600 mb-4">
-          {t(currentConfig.successSubtext)}
-        </p>
-        <div className="flex items-center justify-center gap-2 text-blue-600">
-          <Loader2 className="w-5 h-5 animate-spin" />
-          <span className="text-sm">{t('Redirecting to dashboard...')}</span>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="animate-fade-in">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4 animate-scale-in">
-          <IconComponent className="w-8 h-8 text-blue-600" />
+    <div className="w-full max-w-md mx-auto px-4 sm:px-6">
+      <div className="glass-panel rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 animate-fade-in">
+        {/* Shield Icon */}
+        <div className="flex justify-center mb-5 sm:mb-6 animate-scale-in">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
+            <Shield className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+          </div>
         </div>
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">
-          {t(currentConfig.title)}
-        </h2>
-        <p className="text-gray-600 text-sm">
-          {t(currentConfig.subtitle)}
-        </p>
-        <p className="text-blue-600 font-semibold mt-1 text-sm">{email}</p>
-      </div>
 
-      {/* Error message */}
-      {error && (
-        <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm border border-red-200 animate-scale-in">
-          {error}
+        {/* Header */}
+        <div className="text-center mb-6 sm:mb-8">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 mb-2 sm:mb-3">
+            {t('Verify Your Identity')}
+          </h2>
+          <p className="text-gray-600 text-xs sm:text-sm mb-1">
+            {t("We've sent a 6-digit verification code")}
+          </p>
+          <p className="text-gray-600 text-xs sm:text-sm mb-2">
+            {t('to')}
+          </p>
+          <p className="text-gray-900 font-semibold text-sm sm:text-base">
+            {maskEmail(email)}
+          </p>
         </div>
-      )}
 
-      {/* OTP Input */}
-      <form onSubmit={handleVerify} className="space-y-4 animate-slide-up" style={{ animationDelay: '100ms' }}>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3 text-center">
-            <KeyRound className="w-4 h-4 inline mr-1" />
-            {t('Enter 6-Digit Code')}
-          </label>
-          <div className="flex gap-2 justify-center mb-2" onPaste={handlePaste}>
+        {/* Error message */}
+        {error && (
+          <div className="bg-red-50 text-red-600 p-3 rounded-xl mb-4 sm:mb-6 text-xs sm:text-sm border border-red-200 animate-scale-in text-center">
+            {error}
+          </div>
+        )}
+
+        {/* OTP Input */}
+        <form onSubmit={handleVerify} className="space-y-5 sm:space-y-6">
+          <div className="flex gap-2 sm:gap-2.5 md:gap-3 justify-center" onPaste={handlePaste}>
             {otp.map((digit, index) => (
               <input
                 key={index}
-                id={`otp-${index}`}
+                ref={(el) => (inputRefs.current[index] = el)}
                 type="text"
                 inputMode="numeric"
                 maxLength={1}
                 value={digit}
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
-                className="w-12 h-14 text-center text-2xl font-bold border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-all outline-none"
+                className="w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 text-center text-lg sm:text-xl md:text-2xl font-semibold bg-white border-2 border-gray-200 rounded-full focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all outline-none text-gray-900"
                 disabled={isLoading}
+                autoFocus={index === 0}
               />
             ))}
           </div>
-          {timer > 0 && (
-            <div className="flex items-center justify-center gap-1 text-xs font-medium text-blue-600 mt-2">
-              <span className="animate-pulse">⏱️</span>
-              <span>{formatTime(timer)}</span>
-            </div>
-          )}
-          <p className="text-xs text-gray-500 text-center mt-2">
-            {type === 'login' 
-              ? t('This is an extra security step to protect your account')
-              : t('Check your email for the code')
-            }
-          </p>
-        </div>
 
-        {/* Verify Button */}
-        <button
-          type="submit"
-          disabled={isLoading || otp.join('').length !== 6}
-          className="w-full flex justify-center items-center py-3 px-4 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed btn-hover-lift transition-all"
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-5 h-5 animate-spin mr-2" />
-              {t('Verifying...')}
-            </>
-          ) : (
-            t(type === 'registration' ? 'Verify Email' : 'Verify & Login')
-          )}
-        </button>
+          {/* Timer */}
+          <div className="flex items-center justify-center gap-2 text-xs sm:text-sm">
+            <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-500" />
+            <span className="text-gray-600">
+              {t('Code expires in')}
+            </span>
+            <span className="text-indigo-600 font-semibold">
+              {formatTime(timer)}
+            </span>
+          </div>
 
-        {/* Resend Button */}
-        <button
-          type="button"
-          onClick={handleResend}
-          disabled={!canResend || resendLoading}
-          className={`w-full text-sm font-medium py-2 rounded-lg transition-all ${
-            canResend
-              ? 'text-blue-600 hover:text-blue-700 hover:bg-blue-50'
-              : 'text-gray-400 cursor-not-allowed'
-          }`}
-        >
-          {resendLoading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin inline mr-2" />
-              {t('Sending...')}
-            </>
-          ) : !canResend && timer > 0 ? (
-            <>
-              {t('Resend code in')} {formatTime(timer)}
-            </>
-          ) : (
-            t('Resend Code')
-          )}
-        </button>
-      </form>
+          {/* Verify Button */}
+          <button
+            type="submit"
+            disabled={isLoading || otp.join('').length !== 6}
+            className="w-full cursor-pointer bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-3 sm:py-3.5 rounded-full font-semibold text-sm sm:text-base flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg active:scale-95 transition-all"
+          >
+            {isLoading ? (
+              <>
+                <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <span>{t('Verifying...')}</span>
+              </>
+            ) : (
+              <>
+                <span>{t('Verify & Login')}</span>
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+              </>
+            )}
+          </button>
 
-      {/* Help text */}
-      <div className="mt-6 text-center animate-fade-in" style={{ animationDelay: '200ms' }}>
-        <p className="text-xs text-gray-500">
-          {t("Didn't receive the code? Check your spam folder")}
-          {type === 'registration' && (
-            <>
-              {' or '}
+          {/* Resend Link */}
+          <div className="text-center">
+            <p className="text-xs sm:text-sm text-gray-600">
+              {t("Didn't receive the code?")}{' '}
               <button
-                onClick={() => navigate('/register')}
-                className="text-blue-600 hover:text-blue-700 font-medium"
+                type="button"
+                onClick={handleResend}
+                disabled={!canResend || resendLoading}
+                className={`font-semibold transition-colors ${
+                  canResend
+                    ? 'text-indigo-600 hover:text-indigo-700 cursor-pointer'
+                    : 'text-gray-400 cursor-not-allowed'
+                }`}
               >
-                {t('use a different email')}
+                {resendLoading ? t('Sending...') : t('Resend')}
               </button>
-            </>
-          )}
-        </p>
+            </p>
+          </div>
+        </form>
+      </div>
+
+      {/* Help Link */}
+      <div className="text-center mt-4 sm:mt-6 animate-fade-in" style={{ animationDelay: '200ms' }}>
+        <button
+          onClick={() => navigate('/help')}
+          className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 font-medium flex items-center justify-center gap-2 mx-auto transition-colors"
+        >
+          <div className="w-4 h-4 rounded-full border-2 border-gray-400 flex items-center justify-center">
+            <span className="text-xs">?</span>
+          </div>
+          <span className="underline">{t('Need help accessing your account?')}</span>
+        </button>
       </div>
     </div>
   );

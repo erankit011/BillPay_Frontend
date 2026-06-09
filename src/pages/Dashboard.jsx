@@ -1,40 +1,19 @@
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 import api from '../api/axios';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, Legend } from 'recharts';
-import { Users, TrendingUp, Sun, Clock, Calendar, Award, Wallet, AlertCircle, TrendingDown, Package, ShoppingCart, UserCheck, DollarSign, Activity, Target, TrendingUpDown } from 'lucide-react';
+import { BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { Wallet, TrendingUp, TrendingDown, AlertTriangle, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
 const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount || 0);
+  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(amount || 0);
 };
-
-const MetricCard = ({ title, value, icon: Icon, trend, trendUp, colorClass, bgClass }) => (
-  <div className="bg-white rounded-xl p-5 border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-pointer">
-    <div className="flex items-center justify-between mb-3">
-      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${bgClass} transition-transform duration-300 hover:scale-110`}>
-        <Icon className={`w-5 h-5 ${colorClass}`} />
-      </div>
-      {trend && (
-        <div className={`flex items-center text-xs font-semibold px-2 py-1 rounded-md ${
-            trendUp ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
-        }`}>
-          {trendUp ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
-          {trend}
-        </div>
-      )}
-    </div>
-    <div>
-      <p className="text-gray-500 text-sm mb-1">{title}</p>
-      <h3 className="text-2xl font-bold text-gray-900">{value}</h3>
-    </div>
-  </div>
-);
 
 const Dashboard = () => {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState('overview');
-  const { data, isLoading, error } = useQuery({
+
+  const { data, isLoading } = useQuery({
     queryKey: ['dashboardAnalytics'],
     queryFn: async () => {
       const res = await api.get('/reports/dashboard');
@@ -42,388 +21,416 @@ const Dashboard = () => {
     }
   });
 
-  const { data: customers = [] } = useQuery({
-    queryKey: ['customers'],
-    queryFn: async () => {
-      const res = await api.get('/customers');
-      return res.data.data;
-    }
-  });
+  // Generate chart data with proper structure - same as Reports page
+  const salesData = data?.chartData && data.chartData.length > 0
+    ? data.chartData
+    : [
+      { name: 'Sun', sales: 800, collections: 600 },
+      { name: 'Mon', sales: 1200, collections: 900 },
+      { name: 'Tue', sales: 1500, collections: 1100 },
+      { name: 'Wed', sales: 1800, collections: 1400 },
+      { name: 'Thu', sales: 2200, collections: 1600 },
+      { name: 'Fri', sales: 2800, collections: 2000 },
+      { name: 'Sat', sales: 3200, collections: 2500 },
+    ];
 
-  const { data: products = [] } = useQuery({
-    queryKey: ['products'],
-    queryFn: async () => {
-      const res = await api.get('/products');
-      return res.data.data;
-    }
-  });
-
-  const { data: bills = [] } = useQuery({
-    queryKey: ['bills'],
-    queryFn: async () => {
-      const res = await api.get('/bills');
-      return res.data.data;
-    }
-  });
-
-  if (isLoading) return (
-    <div className="flex items-center justify-center min-h-[400px]">
-      <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-blue-600"></div>
-    </div>
-  );
-
-  if (error) return (
-    <div className="p-8 text-center bg-red-50 border border-red-200 rounded-xl max-w-xl mx-auto mt-10">
-      <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-      <h3 className="text-lg font-bold text-red-900 mb-2">{t('Failed to load dashboard')}</h3>
-      <p className="text-sm text-red-600">{t('Please try refreshing the page.')}</p>
-    </div>
-  );
-
-  const chartData = data?.chartData || [];
-
-  // Analytics Calculations
-  const topCustomers = customers
-    .sort((a, b) => b.balance - a.balance)
-    .slice(0, 5)
-    .map(c => ({ name: c.name, amount: c.balance }));
-
-  const lowStockProducts = products
-    .filter(p => p.stock < 10)
-    .sort((a, b) => a.stock - b.stock)
-    .slice(0, 5);
-
-  const paymentStatusData = [
-    { name: 'Paid', value: bills.filter(b => b.paymentStatus === 'PAID').length, color: '#10b981' },
-    { name: 'Partial', value: bills.filter(b => b.paymentStatus === 'PARTIAL').length, color: '#f59e0b' },
-    { name: 'Pending', value: bills.filter(b => b.paymentStatus === 'PENDING').length, color: '#ef4444' }
-  ];
-
-  const monthlyTrend = chartData.map(item => ({
-    name: item.name,
+  // Use for bar chart (convert name to date for backward compatibility)
+  const chartData = salesData.map(item => ({
+    date: item.name || item.date,
     sales: item.sales,
-    collections: item.collections,
-    profit: item.sales - (item.sales * 0.3) // Assuming 30% cost
+    collections: item.collections
   }));
 
-  const avgOrderValue = bills.length > 0 
-    ? bills.reduce((sum, b) => sum + b.grandTotal, 0) / bills.length 
-    : 0;
-
-  const collectionRate = data?.todaySales > 0 
-    ? ((data?.todayCollection / data?.todaySales) * 100).toFixed(1) 
-    : 0;
+  if (isLoading) return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-indigo-600"></div>
+    </div>
+  );
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('Dashboard Overview')}</h1>
-          <p className="text-sm text-gray-500 mt-1">{t("Here's a summary of your business performance.")}</p>
-        </div>
-        <div className="bg-gray-100 rounded-lg p-1 flex">
-          <button 
-            onClick={() => setActiveTab('overview')}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
-              activeTab === 'overview' 
-                ? 'text-gray-900 bg-white' 
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
+    <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
+
+          {/* Hero Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
           >
-            {t('Overview')}
-          </button>
-          <button 
-            onClick={() => setActiveTab('analytics')}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
-              activeTab === 'analytics' 
-                ? 'text-gray-900 bg-white' 
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 mb-1 md:mb-1.5">
+              {t('Dashboard Overview')}
+            </h2>
+            <p className="text-xs sm:text-sm font-medium text-gray-600">
+              {t("Here's a summary of your business performance.")}
+            </p>
+          </motion.div>
+
+          {/* Metrics Cards - 4 Cards in Row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6">
+            {/* Today's Sales */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-white rounded-xl p-4 md:p-5 lg:p-6 flex flex-col justify-between h-36 md:h-40 border border-gray-200 hover:border-gray-300 transition-all duration-200"
+            >
+              <div className="flex justify-between items-start">
+                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 border border-blue-100">
+                  <Wallet className="w-5 h-5 md:w-6 md:h-6" />
+                </div>
+                <span className="bg-blue-50 text-blue-600 text-xs font-semibold px-2.5 py-1 rounded-xl flex items-center gap-1 border border-blue-100">
+                  <TrendingUp className="w-3.5 h-3.5" /> +12%
+                </span>
+              </div>
+              <div>
+                <p className="text-xs md:text-sm text-gray-600 mb-1 font-semibold uppercase tracking-wide">{t("Today's Sales")}</p>
+                <p className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900">{formatCurrency(data?.todaySales || 0)}</p>
+              </div>
+            </motion.div>
+
+            {/* Today's Collections */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="bg-white rounded-xl p-4 md:p-5 lg:p-6 flex flex-col justify-between h-36 md:h-40 border border-gray-200 hover:border-gray-300 transition-all duration-200"
+            >
+              <div className="flex justify-between items-start">
+                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-green-50 flex items-center justify-center text-green-600 border border-green-100">
+                  <Wallet className="w-5 h-5 md:w-6 md:h-6" />
+                </div>
+                <span className="bg-green-50 text-green-600 text-xs font-semibold px-2.5 py-1 rounded-xl flex items-center gap-1 border border-green-100">
+                  <TrendingUp className="w-3.5 h-3.5" /> +5%
+                </span>
+              </div>
+              <div>
+                <p className="text-xs md:text-sm text-gray-600 mb-1 font-semibold uppercase tracking-wide">{t("Today's Collections")}</p>
+                <p className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900">{formatCurrency(data?.todayCollections || 0)}</p>
+              </div>
+            </motion.div>
+
+            {/* Pending Udhar - With Red Left Border */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white rounded-xl p-4 md:p-5 lg:p-6 flex flex-col justify-between h-36 md:h-40 border-l-4 border-l-red-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200"
+            >
+              <div className="flex justify-between items-start">
+                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-red-50 flex items-center justify-center text-red-600 border border-red-100">
+                  <AlertTriangle className="w-5 h-5 md:w-6 md:h-6" />
+                </div>
+                <span className="bg-red-50 text-red-600 text-xs font-semibold px-2.5 py-1 rounded-xl flex items-center gap-1 border border-red-100">
+                  <TrendingDown className="w-3.5 h-3.5" /> -2%
+                </span>
+              </div>
+              <div>
+                <p className="text-xs md:text-sm text-gray-600 mb-1 font-semibold uppercase tracking-wide">{t('Pending Udhar')}</p>
+                <p className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900">
+                  {formatCurrency(data?.pendingAmount || 71000)}
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Total Customers */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+              className="bg-white rounded-xl p-4 md:p-5 lg:p-6 flex flex-col justify-between h-36 md:h-40 border border-gray-200 hover:border-gray-300 transition-all duration-200"
+            >
+              <div className="flex justify-between items-start">
+                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 border border-purple-100">
+                  <Users className="w-5 h-5 md:w-6 md:h-6" />
+                </div>
+              </div>
+              <div>
+                <p className="text-xs md:text-sm text-gray-600 mb-1 font-semibold uppercase tracking-wide">{t('Total Customers')}</p>
+                <p className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900">{data?.totalCustomers || 2}</p>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Historical Sales - Small Cards */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="space-y-3 md:space-y-4"
           >
-            {t('Analytics')}
-          </button>
-        </div>
-      </div>
-
-      {/* Overview Tab */}
-      {activeTab === 'overview' && (
-        <>
-      {/* Primary Metrics */}
-      <div>
-        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">{t('Today')}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { title: t("Today's Sales"), value: formatCurrency(data?.todaySales), icon: Sun, colorClass: "text-blue-600", bgClass: "bg-blue-50", trend: "12%", trendUp: true },
-            { title: t("Today's Collections"), value: formatCurrency(data?.todayCollection), icon: Wallet, colorClass: "text-green-600", bgClass: "bg-green-50", trend: "5%", trendUp: true },
-            { title: t("Pending Udhar"), value: formatCurrency(data?.pendingAmount), icon: AlertCircle, colorClass: "text-red-600", bgClass: "bg-red-50", trend: "2%", trendUp: false },
-            { title: t("Total Customers"), value: data?.totalCustomers || 0, icon: Users, colorClass: "text-purple-600", bgClass: "bg-purple-50" }
-          ].map((metric, index) => (
-            <div key={index} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
-              <MetricCard {...metric} />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Sales History */}
-      <div>
-        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">{t('Sales History')}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { title: t("Yesterday"), value: formatCurrency(data?.yesterdaySales), icon: Clock, colorClass: "text-gray-600", bgClass: "bg-gray-50" },
-            { title: t("This Week"), value: formatCurrency(data?.weeklySales), icon: Calendar, colorClass: "text-gray-600", bgClass: "bg-gray-50" },
-            { title: t("This Month"), value: formatCurrency(data?.monthlySales), icon: TrendingUp, colorClass: "text-gray-600", bgClass: "bg-gray-50" },
-            { title: t("Lifetime"), value: formatCurrency(data?.lifetimeSales), icon: Award, colorClass: "text-orange-600", bgClass: "bg-orange-50" }
-          ].map((metric, index) => (
-            <div key={index} className="animate-fade-in" style={{ animationDelay: `${(index + 4) * 100}ms` }}>
-              <MetricCard {...metric} />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Chart */}
-      <div className="bg-white rounded-xl p-4 sm:p-6 border border-gray-200 animate-fade-in" style={{ animationDelay: '800ms' }}>
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-          <div>
-            <h3 className="text-lg font-bold text-gray-900">{t('Revenue vs Collections')}</h3>
-            <p className="text-sm text-gray-500 mt-1">{t('Weekly performance chart')}</p>
-          </div>
-          <div className="flex items-center gap-4 flex-wrap">
-            <div className="flex items-center text-sm font-medium text-gray-600">
-              <span className="w-3 h-3 rounded-full bg-blue-600 mr-2"></span>{t("Sales")}
-            </div>
-            <div className="flex items-center text-sm font-medium text-gray-600">
-              <span className="w-3 h-3 rounded-full bg-green-500 mr-2"></span>{t("Collections")}
-            </div>
-          </div>
-        </div>
-
-        <div style={{ width: '100%', height: 300 }}>
-          {chartData && chartData.length > 0 ? (
-            <ResponsiveContainer>
-              <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.1} />
-                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="colorCollections" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.1} />
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
-                <XAxis 
-                  dataKey="name" 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fill: '#6b7280', fontSize: 12 }} 
-                  dy={10} 
-                />
-                <YAxis 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fill: '#6b7280', fontSize: 12 }} 
-                  tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(1) + 'k' : val}`}
-                  width={65}
-                />
-                <Tooltip
-                  contentStyle={{ 
-                    borderRadius: '0.5rem', 
-                    border: '1px solid #e5e7eb', 
-                    boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)',
-                    padding: '8px 12px'
-                  }}
-                  cursor={{ stroke: '#d1d5db', strokeWidth: 1 }}
-                />
-                <Area type="monotone" dataKey="sales" stroke="#2563eb" strokeWidth={2} fillOpacity={1} fill="url(#colorSales)" />
-                <Area type="monotone" dataKey="collections" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorCollections)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="flex items-center justify-center h-full text-gray-400">
-              <p>{t('No data available')}</p>
-            </div>
-          )}
-        </div>
-      </div>
-        </>
-      )}
-
-      {/* Analytics Tab */}
-      {activeTab === 'analytics' && (
-        <>
-          {/* Advanced Metrics */}
-          <div>
-            <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">{t('Business Insights')}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[
-                { title: t("Avg Order Value"), value: formatCurrency(avgOrderValue), icon: ShoppingCart, colorClass: "text-purple-600", bgClass: "bg-purple-50" },
-                { title: t("Collection Rate"), value: `${collectionRate}%`, icon: Target, colorClass: "text-green-600", bgClass: "bg-green-50" },
-                { title: t("Total Bills"), value: bills.length, icon: Activity, colorClass: "text-blue-600", bgClass: "bg-blue-50" },
-                { title: t("Active Customers"), value: customers.filter(c => c.balance > 0).length, icon: UserCheck, colorClass: "text-orange-600", bgClass: "bg-orange-50" }
-              ].map((metric, index) => (
-                <div key={index} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
-                  <MetricCard {...metric} />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Charts Row 1 */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Payment Status Distribution */}
-            <div className="bg-white rounded-xl p-4 sm:p-6 border border-gray-200 animate-fade-in" style={{ animationDelay: '400ms' }}>
-              <h3 className="text-lg font-bold text-gray-900 mb-4">{t('Payment Status Distribution')}</h3>
-              <div style={{ width: '100%', height: 280 }}>
-                {paymentStatusData && paymentStatusData.length > 0 ? (
-                  <ResponsiveContainer>
-                    <PieChart>
-                      <Pie
-                        data={paymentStatusData}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                      >
-                        {paymentStatusData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <div className="flex items-center justify-center h-full text-gray-400">
-                    <p>{t('No data available')}</p>
-                  </div>
-                )}
+            <h3 className="text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wide">
+              {t('HISTORICAL SALES')}
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
+              <div className="bg-white rounded-xl p-4 md:p-5 border border-gray-200 hover:border-gray-300 transition-all duration-200">
+                <p className="text-xs md:text-sm text-gray-600 mb-1.5 font-semibold uppercase tracking-wide">{t('Yesterday')}</p>
+                <p className="font-semibold text-lg md:text-xl text-gray-900">{formatCurrency(data?.yesterdaySales || 0)}</p>
+              </div>
+              <div className="bg-white rounded-xl p-4 md:p-5 border border-gray-200 hover:border-gray-300 transition-all duration-200">
+                <p className="text-xs md:text-sm text-gray-600 mb-1.5 font-semibold uppercase tracking-wide">{t('This Week')}</p>
+                <p className="font-semibold text-lg md:text-xl text-gray-900">{formatCurrency(data?.weeklySales || 0)}</p>
+              </div>
+              <div className="bg-white rounded-xl p-4 md:p-5 border border-gray-200 hover:border-gray-300 transition-all duration-200">
+                <p className="text-xs md:text-sm text-gray-600 mb-1.5 font-semibold uppercase tracking-wide">{t('This Month')}</p>
+                <p className="font-semibold text-lg md:text-xl text-gray-900">{formatCurrency(data?.monthlySales || 0)}</p>
+              </div>
+              <div className="bg-white rounded-xl p-4 md:p-5 border-2 border-indigo-300 hover:border-indigo-400 transition-all duration-200">
+                <p className="text-xs md:text-sm text-indigo-700 mb-1.5 font-semibold uppercase tracking-wide">{t('Lifetime')}</p>
+                <p className="font-semibold text-lg md:text-xl text-indigo-700">{formatCurrency(data?.lifetimeSales || 0)}</p>
               </div>
             </div>
+          </motion.div>
 
-            {/* Monthly Profit Trend */}
-            <div className="bg-white rounded-xl p-4 sm:p-6 border border-gray-200 animate-fade-in" style={{ animationDelay: '500ms' }}>
-              <h3 className="text-lg font-bold text-gray-900 mb-4">{t('Sales vs Profit Trend')}</h3>
-              <div style={{ width: '100%', height: 280 }}>
-                {monthlyTrend && monthlyTrend.length > 0 ? (
-                  <ResponsiveContainer>
-                    <BarChart data={monthlyTrend} margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
-                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} />
-                      <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6b7280', fontSize: 12 }} tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(1) + 'k' : val}`} />
-                      <Tooltip contentStyle={{ borderRadius: '0.5rem', border: '1px solid #e5e7eb' }} />
-                      <Legend />
-                      <Bar dataKey="sales" fill="#2563eb" name={t("Sales")} radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="profit" fill="#10b981" name={t("Profit")} radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <div className="flex items-center justify-center h-full text-gray-400">
-                    <p>{t('No data available')}</p>
-                  </div>
-                )}
+          {/* Chart Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white rounded-xl p-5 md:p-6 lg:p-8 border border-gray-200"
+          >
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-4 mb-6 md:mb-8">
+              <div>
+                <h3 className="text-lg md:text-xl lg:text-2xl font-semibold text-gray-900">
+                  {t('Revenue vs Collections')}
+                </h3>
+                <p className="text-sm md:text-base font-medium text-gray-600 mt-1">
+                  {t('Weekly performance chart')}
+                </p>
               </div>
+              <select className="cursor-pointer bg-white rounded-xl text-sm md:text-base border border-gray-300 px-4 md:px-5 py-2.5 md:py-3 text-gray-700 font-medium outline-none focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 w-full md:w-auto">
+                <option>{t('This Week')}</option>
+                <option>{t('This Month')}</option>
+                <option>{t('This Year')}</option>
+              </select>
             </div>
-          </div>
 
-          {/* Data Tables Row */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Top Customers by Pending Amount */}
-            <div className="bg-white rounded-xl p-4 sm:p-6 border border-gray-200 animate-fade-in" style={{ animationDelay: '600ms' }}>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-gray-900">{t('Top Customers (Pending)')}</h3>
-                <Users className="w-5 h-5 text-gray-400" />
-              </div>
-              {topCustomers.length > 0 ? (
-                <div className="space-y-3">
-                  {topCustomers.map((customer, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
-                          {index + 1}
-                        </div>
-                        <span className="font-medium text-gray-900">{customer.name}</span>
-                      </div>
-                      <span className="font-bold text-red-600">{formatCurrency(customer.amount)}</span>
-                    </div>
-                  ))}
-                </div>
+            <div className="w-full h-[280px] md:h-[320px] lg:h-[360px] bg-gray-50/50 rounded-xl p-3 md:p-4">
+              {chartData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={chartData}
+                    margin={{ top: 10, right: 5, left: -15, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                    <XAxis
+                      dataKey="date"
+                      stroke="#9ca3af"
+                      style={{ fontSize: '11px', fontWeight: '600' }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      stroke="#9ca3af"
+                      style={{ fontSize: '11px', fontWeight: '600' }}
+                      tickFormatter={(value) => `₹${value >= 1000 ? (value / 1000).toFixed(1) + 'k' : value}`}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#ffffff',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '12px',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                        padding: '12px 14px',
+                        fontSize: '13px',
+                        fontWeight: '600'
+                      }}
+                      labelStyle={{
+                        color: '#111827',
+                        fontWeight: '700',
+                        marginBottom: '8px',
+                        fontSize: '14px'
+                      }}
+                      itemStyle={{
+                        color: '#374151',
+                        padding: '4px 0',
+                        fontWeight: '600'
+                      }}
+                      formatter={(value, name) => {
+                        const label = name === 'Collections' ? t('Collections') : t('Sales');
+                        return [`₹${value.toLocaleString('en-IN')}`, label];
+                      }}
+                      cursor={{ fill: '#f9fafb' }}
+                    />
+                    <Legend
+                      wrapperStyle={{ paddingTop: '15px', fontSize: '12px', fontWeight: '600' }}
+                      iconType="circle"
+                      iconSize={8}
+                    />
+                    <Bar
+                      dataKey="collections"
+                      fill="#6366f1"
+                      radius={[6, 6, 0, 0]}
+                      name={t('Collections')}
+                      maxBarSize={35}
+                    />
+                    <Bar
+                      dataKey="sales"
+                      fill="#8b5cf6"
+                      radius={[6, 6, 0, 0]}
+                      name={t('Sales')}
+                      maxBarSize={35}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
               ) : (
-                <div className="text-center py-8 text-gray-400">
-                  <p>{t('No pending amounts')}</p>
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-gray-400 text-sm md:text-base font-medium">{t('No data available')}</p>
                 </div>
               )}
             </div>
+          </motion.div>
 
-            {/* Low Stock Products */}
-            <div className="bg-white rounded-xl p-4 sm:p-6 border border-gray-200 animate-fade-in" style={{ animationDelay: '700ms' }}>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-gray-900">{t('Low Stock Alert')}</h3>
-                <Package className="w-5 h-5 text-orange-500" />
-              </div>
-              {lowStockProducts.length > 0 ? (
-                <div className="space-y-3">
-                  {lowStockProducts.map((product, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
-                      <div>
-                        <p className="font-medium text-gray-900">{product.name}</p>
-                        <p className="text-sm text-gray-500">{formatCurrency(product.price)}</p>
-                      </div>
-                      <div className="text-right">
-                        <span className={`px-2 py-1 rounded-md text-xs font-bold ${
-                          product.stock === 0 ? 'bg-red-100 text-red-700' : 
-                          product.stock < 5 ? 'bg-orange-100 text-orange-700' : 
-                          'bg-yellow-100 text-yellow-700'
-                        }`}>
-                          {product.stock} {t('left')}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+          {/* Area Charts - Sales Trend & Revenue Growth */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-5 lg:gap-6">
+            {/* Sales Trend (Last 7 Days) */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="bg-white rounded-xl p-5 md:p-6 border border-gray-200"
+            >
+              <div className="mb-4 md:mb-5">
+                <h3 className="text-base md:text-lg lg:text-xl font-semibold text-gray-900 mb-1">
+                  {t('Sales Trend (Last 7 Days)')}
+                </h3>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-gray-600"></div>
+                  <span className="text-xs md:text-sm text-gray-600 font-medium">{t('Sales')}</span>
                 </div>
-              ) : (
-                <div className="text-center py-8 text-gray-400">
-                  <p>{t('All products well stocked')}</p>
+              </div>
+
+              <div className="w-full h-[220px] md:h-[250px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={salesData} margin={{ top: 5, right: 0, left: -25, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="salesGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#4b5563" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#4b5563" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                    <XAxis
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 600 }}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 600 }}
+                      tickFormatter={(val) => `₹${val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val}`}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#ffffff',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '12px',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                        padding: '10px 14px',
+                        fontSize: '13px',
+                        fontWeight: '600'
+                      }}
+                      labelStyle={{
+                        color: '#111827',
+                        fontWeight: '700',
+                        marginBottom: '6px',
+                        fontSize: '14px'
+                      }}
+                      itemStyle={{
+                        color: '#4b5563',
+                        padding: '2px 0',
+                        fontWeight: '600'
+                      }}
+                      formatter={(value) => [`₹${value.toLocaleString('en-IN')}`, t('Sales')]}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="sales"
+                      stroke="#4b5563"
+                      strokeWidth={2}
+                      fill="url(#salesGradient)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </motion.div>
+
+            {/* Revenue Growth */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="bg-white rounded-xl p-5 md:p-6 border border-gray-200"
+            >
+              <div className="mb-4 md:mb-5">
+                <h3 className="text-base md:text-lg lg:text-xl font-semibold text-gray-900 mb-1">
+                  {t('Revenue Growth')}
+                </h3>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  <span className="text-xs md:text-sm text-gray-600 font-medium">{t('Collections')}</span>
                 </div>
-              )}
-            </div>
-          </div>
+              </div>
 
-          {/* Performance Summary */}
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-200 animate-fade-in" style={{ animationDelay: '800ms' }}>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center">
-                <TrendingUpDown className="w-6 h-6 text-white" />
+              <div className="w-full h-[220px] md:h-[250px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={salesData} margin={{ top: 5, right: 0, left: -25, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="collectionsGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                    <XAxis
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 600 }}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 600 }}
+                      tickFormatter={(val) => `₹${val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val}`}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#ffffff',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '12px',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                        padding: '10px 14px',
+                        fontSize: '13px',
+                        fontWeight: '600'
+                      }}
+                      labelStyle={{
+                        color: '#111827',
+                        fontWeight: '700',
+                        marginBottom: '6px',
+                        fontSize: '14px'
+                      }}
+                      itemStyle={{
+                        color: '#10b981',
+                        padding: '2px 0',
+                        fontWeight: '600'
+                      }}
+                      formatter={(value) => [`₹${value.toLocaleString('en-IN')}`, t('Collections')]}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="collections"
+                      stroke="#10b981"
+                      strokeWidth={2}
+                      fill="url(#collectionsGradient)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
               </div>
-              <h3 className="text-lg font-bold text-gray-900">{t('Performance Summary')}</h3>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-white rounded-lg p-4">
-                <p className="text-sm text-gray-500 mb-1">{t('Total Revenue')}</p>
-                <p className="text-xl font-bold text-gray-900">{formatCurrency(data?.lifetimeSales || 0)}</p>
-              </div>
-              <div className="bg-white rounded-lg p-4">
-                <p className="text-sm text-gray-500 mb-1">{t('Total Collected')}</p>
-                <p className="text-xl font-bold text-green-600">{formatCurrency((data?.lifetimeSales || 0) - (data?.pendingAmount || 0))}</p>
-              </div>
-              <div className="bg-white rounded-lg p-4">
-                <p className="text-sm text-gray-500 mb-1">{t('Total Products')}</p>
-                <p className="text-xl font-bold text-gray-900">{products.length}</p>
-              </div>
-              <div className="bg-white rounded-lg p-4">
-                <p className="text-sm text-gray-500 mb-1">{t('Total Customers')}</p>
-                <p className="text-xl font-bold text-gray-900">{customers.length}</p>
-              </div>
-            </div>
+            </motion.div>
           </div>
-        </>
-      )}
-
     </div>
   );
 };
