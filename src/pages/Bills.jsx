@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Search, FileText, Send, X, Loader2, Wallet, CreditCard, Users } from 'lucide-react';
+import { Plus, Search, FileText, Send, X, Loader2, Wallet, CreditCard, Users, Mail, MessageSquare, MoreVertical } from 'lucide-react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -26,7 +26,19 @@ const Bills = () => {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null); // For send invoice dropdown
   const queryClient = useQueryClient();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (openDropdown && !event.target.closest('.relative')) {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [openDropdown]);
 
   const { data: bills = [], isLoading } = useQuery({
     queryKey: ['bills'],
@@ -78,12 +90,33 @@ const Bills = () => {
     mutation.mutate(data);
   };
 
-  const handleSendInvoice = async (billId) => {
+  const handleSendInvoice = async (billId, sendVia = 'whatsapp') => {
     try {
-      await api.post(`/invoices/generate/${billId}`);
-      alert(t('Invoice generated and sent via WhatsApp successfully!'));
+      const bill = bills.find(b => b._id === billId);
+      
+      // Validate if customer has required contact info
+      if (sendVia === 'email' && !bill?.customerId?.email) {
+        alert(t('Customer email not provided! Please add customer email first.'));
+        return;
+      }
+      
+      if (sendVia === 'whatsapp' && !bill?.customerId?.phone) {
+        alert(t('Customer phone number not provided!'));
+        return;
+      }
+      
+      await api.post(`/invoices/generate/${billId}`, { sendVia });
+      
+      if (sendVia === 'email') {
+        alert(t('Invoice sent via email successfully!'));
+      } else if (sendVia === 'both') {
+        alert(t('Invoice sent via WhatsApp and email successfully!'));
+      } else {
+        alert(t('Invoice sent via WhatsApp successfully!'));
+      }
     } catch (err) {
-      alert(t('Failed to send invoice'));
+      const errorMsg = err.response?.data?.message || err.message;
+      alert(t('Failed to send invoice') + ': ' + errorMsg);
     }
   };
 
@@ -240,12 +273,61 @@ const Bills = () => {
                         </span>
                       </td>
                       <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap text-right">
-                        <button 
-                          onClick={() => handleSendInvoice(bill._id)}
-                          className="cursor-pointer text-indigo-600 font-semibold bg-indigo-50 hover:bg-indigo-100 px-3 lg:px-4 py-1.5 lg:py-2 rounded-full flex items-center justify-center ml-auto transition-all text-xs lg:text-sm active:scale-95"
-                        >
-                          <Send className="w-3.5 h-3.5 lg:w-4 lg:h-4 mr-1 lg:mr-1.5" /> {t('Send')}
-                        </button>
+                        <div className="relative inline-block" onClick={(e) => e.stopPropagation()}>
+                          <button 
+                            onClick={() => setOpenDropdown(openDropdown === bill._id ? null : bill._id)}
+                            className="cursor-pointer text-indigo-600 font-semibold bg-indigo-50 hover:bg-indigo-100 px-3 lg:px-4 py-1.5 lg:py-2 rounded-full flex items-center justify-center ml-auto transition-all text-xs lg:text-sm active:scale-95"
+                          >
+                            <Send className="w-3.5 h-3.5 lg:w-4 lg:h-4 mr-1 lg:mr-1.5" /> {t('Send')}
+                            <MoreVertical className="w-3.5 h-3.5 ml-1" />
+                          </button>
+                          
+                          {/* Dropdown Menu */}
+                          {openDropdown === bill._id && (
+                            <div className="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleSendInvoice(bill._id, 'whatsapp');
+                                  setOpenDropdown(null);
+                                }}
+                                className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95"
+                              >
+                                <MessageSquare className="w-4 h-4 text-green-600 flex-shrink-0" />
+                                <span>{t('Send via WhatsApp')}</span>
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleSendInvoice(bill._id, 'email');
+                                  setOpenDropdown(null);
+                                }}
+                                className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={!bill.customerId?.email}
+                              >
+                                <Mail className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                                <span className={!bill.customerId?.email ? 'text-gray-400' : ''}>
+                                  {t('Send via Email')}
+                                  {!bill.customerId?.email && <span className="text-xs"> (No email)</span>}
+                                </span>
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleSendInvoice(bill._id, 'both');
+                                  setOpenDropdown(null);
+                                }}
+                                className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={!bill.customerId?.email || !bill.customerId?.phone}
+                              >
+                                <Send className="w-4 h-4 text-indigo-600 flex-shrink-0" />
+                                <span className={(!bill.customerId?.email || !bill.customerId?.phone) ? 'text-gray-400' : ''}>
+                                  {t('Send Both')}
+                                </span>
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -283,12 +365,62 @@ const Bills = () => {
                             'bg-red-100 text-red-700'}`}>
                       {bill.paymentStatus}
                     </span>
-                    <button 
-                      onClick={() => handleSendInvoice(bill._id)}
-                      className="cursor-pointer text-indigo-600 font-semibold bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-full flex items-center text-xs transition-all active:scale-95 whitespace-nowrap"
-                    >
-                      <Send className="w-3.5 h-3.5 mr-1" /> {t('Send')}
-                    </button>
+                    
+                    <div className="relative" onClick={(e) => e.stopPropagation()}>
+                      <button 
+                        onClick={() => setOpenDropdown(openDropdown === bill._id ? null : bill._id)}
+                        className="cursor-pointer text-indigo-600 font-semibold bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-full flex items-center text-xs transition-all active:scale-95 whitespace-nowrap"
+                      >
+                        <Send className="w-3.5 h-3.5 mr-1" /> {t('Send')}
+                        <MoreVertical className="w-3 h-3 ml-0.5" />
+                      </button>
+                      
+                      {/* Dropdown Menu */}
+                      {openDropdown === bill._id && (
+                        <div className="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSendInvoice(bill._id, 'whatsapp');
+                              setOpenDropdown(null);
+                            }}
+                            className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95"
+                          >
+                            <MessageSquare className="w-4 h-4 text-green-600 flex-shrink-0" />
+                            <span>{t('Send via WhatsApp')}</span>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSendInvoice(bill._id, 'email');
+                              setOpenDropdown(null);
+                            }}
+                            className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={!bill.customerId?.email}
+                          >
+                            <Mail className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                            <span className={!bill.customerId?.email ? 'text-gray-400' : ''}>
+                              {t('Send via Email')}
+                              {!bill.customerId?.email && <span className="text-xs"> (No email)</span>}
+                            </span>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSendInvoice(bill._id, 'both');
+                              setOpenDropdown(null);
+                            }}
+                            className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={!bill.customerId?.email || !bill.customerId?.phone}
+                          >
+                            <Send className="w-4 h-4 text-indigo-600 flex-shrink-0" />
+                            <span className={(!bill.customerId?.email || !bill.customerId?.phone) ? 'text-gray-400' : ''}>
+                              {t('Send Both')}
+                            </span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}

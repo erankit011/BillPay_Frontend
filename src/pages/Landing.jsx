@@ -1,4 +1,6 @@
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Users,
@@ -17,6 +19,14 @@ import LanguageSwitcher from '../components/LanguageSwitcher';
 const Landing = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const features = [
     {

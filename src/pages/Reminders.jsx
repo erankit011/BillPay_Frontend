@@ -30,7 +30,10 @@ const Reminders = () => {
     }
   });
 
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, watch } = useForm();
+
+  const selectedCustomerId = watch('customerId');
+  const selectedType = watch('type');
 
   const mutation = useMutation({
     mutationFn: (reminderData) => {
@@ -45,6 +48,10 @@ const Reminders = () => {
       setIsEditMode(false);
       setEditingReminder(null);
       reset();
+    },
+    onError: (error) => {
+      // Handle error - will be displayed in the form
+      console.error('Reminder creation failed:', error);
     }
   });
 
@@ -81,6 +88,14 @@ const Reminders = () => {
   };
 
   const onSubmit = (data) => {
+    // Check if EMAIL type is selected and customer has no email
+    if (data.type === 'EMAIL') {
+      const selectedCustomer = customers.find(c => c._id === data.customerId);
+      if (!selectedCustomer?.email) {
+        alert(t('Customer email not provided! Please add customer email first or use WhatsApp reminder.'));
+        return;
+      }
+    }
     mutation.mutate(data);
   };
 
@@ -100,7 +115,9 @@ const Reminders = () => {
   const recoveryRate = reminders.length > 0 ? Math.round((sentCount / reminders.length) * 100) : 84;
 
   return (
-    <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
+    <div className="px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10 xl:px-12 xl:py-12">
+      <div className="max-w-[1440px] mx-auto">
+        <div className="space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4">
           <div>
@@ -396,6 +413,22 @@ const Reminders = () => {
                       <option value="WHATSAPP">WhatsApp</option>
                       <option value="EMAIL">Email</option>
                     </select>
+                    
+                    {/* Warning message if EMAIL selected but customer has no email */}
+                    {selectedType === 'EMAIL' && selectedCustomerId && (() => {
+                      const customer = customers.find(c => c._id === selectedCustomerId);
+                      if (!customer?.email) {
+                        return (
+                          <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2 animate-scale-in">
+                            <Mail className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                            <p className="text-xs md:text-sm text-amber-800 font-medium">
+                              ⚠️ {t('This customer does not have an email address. Please add their email first or use WhatsApp reminder.')}
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    })()}
                   </div>
 
                   {/* Submit Button */}
@@ -411,6 +444,8 @@ const Reminders = () => {
             </div>
           </div>
         )}
+        </div>
+      </div>
     </div>
   );
 };
