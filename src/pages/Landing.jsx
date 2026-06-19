@@ -7,12 +7,8 @@ import {
   Receipt,
   Shield,
   Zap,
-  ArrowRight,
-  CheckCircle,
-  Sparkles,
   BarChart3,
   Clock,
-  Globe
 } from 'lucide-react';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 
@@ -33,253 +29,250 @@ const Landing = () => {
       icon: Receipt,
       titleKey: 'Smart Billing',
       descriptionKey: 'Create professional bills in seconds with our intuitive interface',
-      color: 'blue'
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-50'
     },
     {
       icon: Users,
       titleKey: 'Customer Management',
       descriptionKey: 'Track customers, credit history, and payment patterns easily',
-      color: 'indigo'
+      color: 'text-green-600',
+      bgColor: 'bg-green-50'
     },
     {
       icon: BarChart3,
       titleKey: 'Business Insights',
       descriptionKey: 'Real-time analytics and reports to grow your business',
-      color: 'purple'
+      color: 'text-yellow-600',
+      bgColor: 'bg-yellow-50'
     },
     {
       icon: Shield,
       titleKey: 'Secure & Reliable',
       descriptionKey: 'Bank-grade security with 99.9% uptime guarantee',
-      color: 'green'
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-50'
     },
     {
       icon: Zap,
       titleKey: 'Voice Billing',
       descriptionKey: 'Create bills using voice commands in your language',
-      color: 'orange'
+      color: 'text-red-600',
+      bgColor: 'bg-red-50'
     },
     {
       icon: Clock,
       titleKey: 'Auto Reminders',
       descriptionKey: 'Automated payment reminders via SMS and WhatsApp',
-      color: 'pink'
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-50'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Grid Background - Same as Dashboard */}
-      <div
-        className="absolute inset-0 opacity-[0.2]"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, rgba(199, 196, 216, 0.2) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(199, 196, 216, 0.2) 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px'
-        }}
-      />
+    <div className="min-h-screen bg-white font-sans">
+      {/* Header */}
+      <header className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 safe-top">
+        <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+          <div className="flex items-center justify-between h-14 sm:h-16 w-full">
+            {/* Logo */}
+            <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
+              <img src="/logo.svg" alt="UdharPay Logo" className="h-10 sm:h-12 md:h-14 object-contain scale-[1.5] sm:scale-[1.7] md:scale-[2] origin-left ml-2 sm:ml-4" />
+            </div>
 
-      {/* Content */}
-      <div className="relative z-10">
-        {/* Header - Mobile-Optimized Navbar */}
-        <header className="bg-white/70 backdrop-blur-3xl fixed top-0 w-full z-50 border-b border-white/20 shadow-sm safe-top">
-          <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-            <div className="flex items-center justify-between h-14 sm:h-16">
-              {/* Logo */}
-              <div className="flex-shrink-0">
-                <span className="text-lg sm:text-xl md:text-2xl font-semibold text-indigo-600 tracking-tight">BakiPay</span>
-              </div>
-
-              {/* Right Side - Language + Sign In Button */}
-              <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
-                <div className="hidden xs:block">
-                  <LanguageSwitcher variant="compact" />
-                </div>
-                <button
-                  onClick={() => navigate('/login')}
-                  className="cursor-pointer px-3 py-2 sm:px-4 sm:py-2.5 md:px-6 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-full active:scale-95 transition-transform duration-150 shadow-lg touch-manipulation"
-                >
-                  {t('Sign In')}
-                </button>
-              </div>
+            {/* Right Side */}
+            <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+              <LanguageSwitcher variant="default" />
+              <button
+                onClick={() => navigate('/login')}
+                className="cursor-pointer px-4 sm:px-5 h-9 flex items-center justify-center text-sm font-medium text-white bg-[#093C5D] rounded-md hover:bg-[#072C44] transition-colors"
+              >
+                {t('Sign in')}
+              </button>
             </div>
           </div>
-        </header>
+        </div>
+      </header>
 
-        <div className="pt-14 sm:pt-16" />
-
-        {/* Hero Section - Mobile-First Responsive */}
-        <section className="px-4 sm:px-6 lg:px-8 py-10 sm:py-16 lg:py-20 xl:py-24 max-w-7xl mx-auto">
-          <div className="w-full">
-            {/* Top Badge - Mobile Optimized */}
-            <div className="flex justify-center mb-8 sm:mb-10 px-2">
-              <div className="inline-flex items-center gap-1.5 px-4 py-2.5 sm:px-5 sm:py-3 glass-card rounded-full text-indigo-600 max-w-[90vw] text-center">
-                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" style={{ fill: 'currentColor' }} />
-                <span className="text-sm sm:text-base font-medium">
-                  {t('Trusted by 10,000+ Shopkeepers')}
-                </span>
-              </div>
+      {/* Main Content */}
+      <main className="pt-20 sm:pt-24 pb-10 sm:pb-16 flex flex-col gap-10 sm:gap-20">
+        
+        {/* HERO SECTION */}
+        <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center w-full">
+          <div className="max-w-4xl mx-auto flex flex-col items-center">
+            {/* Trust Badge */}
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[#093C5D]/5 border border-[#093C5D]/10 text-[#093C5D] text-xs sm:text-sm font-medium mb-6 sm:mb-8">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#093C5D] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#093C5D]"></span>
+              </span>
+              {t('Smart Choice for Indian Retailers')}
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              {/* Left Content - Mobile Optimized */}
-              <div className="text-center lg:text-left order-1 space-y-6 sm:space-y-8">
-                {/* Main Heading - Responsive Typography */}
-                <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-gray-900 leading-tight">
-                  {t("Your Shop's")}
-                  <br />
-                  <span className="text-indigo-600">{t('Digital Partner')}</span>
-                </h1>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-gray-900 tracking-tight leading-tight sm:leading-tight md:leading-tight lg:leading-tight mb-5 sm:mb-6">
+              <span className="block sm:inline">{t("Your Shop's")}</span>{' '}
+              <span className="text-[#093C5D] block sm:inline">{t("Digital Partner")}</span>
+            </h1>
+            
+            <p className="text-sm sm:text-lg md:text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto mb-8 sm:mb-10 px-2 sm:px-0">
+              {t('Complete billing, udhar tracking, and easy business analytics. Built for modern Indian shopkeepers to scale effortlessly.')}
+            </p>
 
-                {/* Description - Mobile Optimized */}
-                <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                  {t('Complete billing, udhar tracking, and business analytics in one place. Built specifically for modern Indian shopkeepers to scale effortlessly.')}
-                </p>
-
-                {/* Feature Pills - Mobile Responsive */}
-                <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-                  <div className="px-4 py-2 sm:px-5 sm:py-2.5 glass-card rounded-full text-sm sm:text-base text-indigo-600 font-medium flex items-center gap-2 touch-manipulation">
-                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                    {t('Voice Billing')}
-                  </div>
-                  <div className="px-4 py-2 sm:px-5 sm:py-2.5 glass-card rounded-full text-sm sm:text-base text-indigo-600 font-medium flex items-center gap-2 touch-manipulation">
-                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                    {t('Udhar Tracking')}
-                  </div>
-                  <div className="px-4 py-2 sm:px-5 sm:py-2.5 glass-card rounded-full text-sm sm:text-base text-indigo-600 font-medium flex items-center gap-2 touch-manipulation">
-                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                    {t('Auto Reminders')}
-                  </div>
-                </div>
-
-                {/* CTA Buttons - Mobile Stack */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                  <button
-                    onClick={() => navigate('/register')}
-                    className="cursor-pointer w-full sm:w-auto px-8 py-4 bg-indigo-600 text-white rounded-2xl font-medium text-base md:text-lg active:scale-95 transition-transform duration-150 flex items-center justify-center gap-3 shadow-xl touch-manipulation min-h-[56px]"
-                  >
-                    <span>{t('Get Started Free')}</span>
-                  </button>
-                  <button
-                    onClick={() => navigate('/login')}
-                    className="cursor-pointer w-full sm:w-auto px-8 py-4 glass-card text-gray-900 rounded-2xl font-medium text-base md:text-lg active:scale-95 transition-transform duration-150 touch-manipulation min-h-[56px]"
-                  >
-                    {t('Book Demo')}
-                  </button>
-                </div>
-
-                {/* Trust Indicators - Mobile Responsive */}
-                <div className="flex flex-col xs:flex-row items-center gap-4 xs:gap-6 justify-center lg:justify-start text-sm sm:text-base text-gray-600">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    <span>{t('Free Forever Plan')}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    <span>{t('No Credit Card')}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Content - Floating Dashboard Mockup - Hide on Small Mobile */}
-              <div className="order-2 relative w-full h-[350px] sm:h-[450] md:h-[550px] hidden lg:block">
-                <div className="relative w-full h-full perspective-1000">
-                  {/* Main Dashboard Panel */}
-                  <div className="absolute inset-0 glass-card rounded-3xl p-5 transform rotate-y-[-12deg] rotate-x-[8deg] shadow-2xl flex flex-col gap-4">
-                    {/* Dashboard Header */}
-                    <div className="flex justify-between items-center p-5 bg-white/25 rounded-2xl">
-                      <h3 className="font-medium text-gray-800 text-lg">Dashboard Overview</h3>
-                      <div className="w-10 h-10 bg-indigo-600 rounded-full"></div>
-                    </div>
-
-                    {/* Stats Cards Row */}
-                    <div className="grid grid-cols-3 gap-3">
-                      <div className="bg-white/40 rounded-2xl p-4 text-center">
-                        <div className="text-xl font-semibold text-indigo-600">₹0.00</div>
-                        <div className="text-xs text-gray-600">Today's Sales</div>
-                      </div>
-                      <div className="bg-white/40 rounded-2xl p-4 text-center">
-                        <div className="text-xl font-semibold text-indigo-600">₹71,000</div>
-                        <div className="text-xs text-gray-600">Pending</div>
-                      </div>
-                      <div className="bg-white/40 rounded-2xl p-4 text-center">
-                        <div className="text-xl font-semibold text-indigo-600">2</div>
-                        <div className="text-xs text-gray-600">Customers</div>
-                      </div>
-                    </div>
-
-                    {/* Chart Area */}
-                    <div className="bg-white/30 rounded-2xl p-5 flex-1">
-                      <div className="w-full h-full bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl opacity-70 flex items-center justify-center">
-                        <BarChart3 className="w-16 h-16 text-indigo-400" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Floating Secondary Panel */}
-                  <div className="absolute top-10 right-10 w-52 h-36 glass-card rounded-2xl p-4 transform rotate-[8deg] shadow-xl">
-                    <div className="text-sm font-medium text-gray-700 mb-3">Quick Actions</div>
-                    <div className="space-y-2">
-                      <div className="bg-white/40 rounded-xl p-3 text-sm">Add Customer</div>
-                      <div className="bg-white/40 rounded-xl p-3 text-sm">Create Bill</div>
-                    </div>
-                  </div>
-
-                  {/* Decorative glowing orb */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-indigo-300/20 rounded-full blur-3xl -z-10"></div>
-                </div>
-              </div>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto mx-auto px-4 sm:px-0">
+              <button
+                onClick={() => navigate('/register')}
+                className="cursor-pointer w-full sm:w-auto min-w-[200px] h-12 sm:h-14 bg-[#093C5D] text-white rounded-lg font-semibold text-base sm:text-lg hover:bg-[#072C44] transition-all flex items-center justify-center"
+              >
+                {t('Get started free')}
+              </button>
             </div>
+            
+            <p className="text-xs sm:text-sm text-gray-500 mt-6 sm:mt-8 font-medium flex items-center justify-center gap-1.5 flex-wrap">
+              {t('Trusted by 10,000+ Shopkeepers')} <span className="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-gray-300 mx-1"></span><span className="sm:hidden w-full h-0"></span> {t('No credit card required')}
+            </p>
           </div>
-        </section>
 
-        {/* Stats Section - Mobile-First 3 Cards */}
-        <section className="px-4 sm:px-6 lg:px-8 mb-16 sm:mb-20 lg:mb-24 max-w-7xl mx-auto">
-          <div className="w-full">
-            <div className="grid grid-cols-1 xs:grid-cols-3 gap-6 max-w-5xl mx-auto">
-              <div className="glass-card rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center min-h-[120px] sm:min-h-[140px] touch-manipulation">
-                <h3 className="text-2xl xs:text-3xl sm:text-4xl font-semibold text-indigo-600 mb-2">10,000+</h3>
-                <p className="text-sm sm:text-base text-gray-600 font-medium">{t('Active Shops')}</p>
+          {/* Hero Image/Mockup Block */}
+          <div className="mt-16 sm:mt-24 w-full max-w-5xl mx-auto text-center px-4 sm:px-0">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-3 tracking-tight">
+              {t('A dashboard designed for simplicity')}
+            </h2>
+            <p className="text-sm sm:text-medium text-gray-500 mb-10 sm:mb-12 max-w-xl mx-auto">
+              {t('Get a complete overview of your sales, outstanding balances, and recent activities without the clutter. Visualizing your business has never been this easy.')}
+            </p>
+
+            <div className="rounded-2xl border border-gray-100 bg-white p-6 sm:p-10 mb-[-1px] sm:mb-0 relative overflow-hidden ring-1 ring-gray-900/5">
+              
+              {/* Background ambient glow inside the container */}
+              <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-blue-50 blur-3xl opacity-50 pointer-events-none"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-orange-50 blur-3xl opacity-50 pointer-events-none"></div>
+
+              {/* Mac-style Window Header */}
+              <div className="relative z-10 flex items-center gap-2 mb-6 sm:mb-8 border-b border-gray-100 pb-4">
+                <div className="w-3 h-3 rounded-full bg-[#FF5F56]"></div>
+                <div className="w-3 h-3 rounded-full bg-[#FFBD2E]"></div>
+                <div className="w-3 h-3 rounded-full bg-[#27C93F]"></div>
+                <div className="ml-3 sm:ml-4 h-6 w-32 sm:w-48 bg-gray-50/80 rounded border border-gray-100"></div>
               </div>
-              <div className="glass-card rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center min-h-[120px] sm:min-h-[140px] touch-manipulation">
-                <h3 className="text-2xl xs:text-3xl sm:text-4xl font-semibold text-indigo-600 mb-2">₹50Cr+</h3>
-                <p className="text-sm sm:text-base text-gray-600 font-medium">{t('Transactions')}</p>
-              </div>
-              <div className="glass-card rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center min-h-[120px] sm:min-h-[140px] touch-manipulation">
-                <h3 className="text-2xl xs:text-3xl sm:text-4xl font-semibold text-indigo-600 mb-2">4.9/5</h3>
-                <p className="text-sm sm:text-base text-gray-600 font-medium">{t('Rating')}</p>
+
+              {/* Layout Wrapper */}
+              <div className="relative z-10 flex gap-6 sm:gap-8 pt-2">
+                {/* Abstract Sidebar */}
+                <div className="hidden sm:flex flex-col gap-6 w-40 shrink-0 border-r border-gray-50 pr-6">
+                  {/* Logo Skeleton */}
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="h-6 w-6 rounded-md bg-[#093C5D]/20"></div>
+                    <div className="h-5 w-20 bg-gray-100 rounded-md"></div>
+                  </div>
+                  
+                  {/* Nav Items Skeletons */}
+                  <div className="flex flex-col gap-4">
+                    <div className="h-6 w-full bg-[#093C5D]/10 rounded border border-[#093C5D]/20"></div>
+                    <div className="h-5 w-4/5 bg-gray-50 rounded border border-gray-100"></div>
+                    <div className="h-5 w-3/4 bg-gray-50 rounded border border-gray-100"></div>
+                    <div className="h-5 w-5/6 bg-gray-50 rounded border border-gray-100"></div>
+                  </div>
+                </div>
+
+                {/* Main Content Area */}
+                <div className="flex-1">
+                  {/* Top Bar Skeleton */}
+                  <div className="flex justify-between items-center mb-8 pb-4 border-b border-gray-50">
+                     <div className="h-7 w-48 sm:w-64 bg-gray-100 rounded-md border border-gray-50"></div>
+                     <div className="h-9 w-9 bg-gray-100 rounded-full hidden sm:block border border-gray-200/60"></div>
+                  </div>
+
+                  {/* Cards Skeleton */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+                    <div className="rounded-xl p-5 text-left border border-green-100/50 bg-green-50/30 backdrop-blur-sm">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                        <span className="h-2.5 w-16 bg-gray-200/80 rounded-full"></span>
+                      </div>
+                      <div className="h-7 w-24 bg-gray-300/80 rounded-md mb-2"></div>
+                      <div className="h-2 w-32 bg-gray-200/60 rounded-full"></div>
+                    </div>
+                    
+                    <div className="rounded-xl p-5 text-left border border-orange-100/50 bg-orange-50/30 backdrop-blur-sm">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-2.5 h-2.5 rounded-full bg-orange-400"></div>
+                        <span className="h-2.5 w-16 bg-gray-200/80 rounded-full"></span>
+                      </div>
+                      <div className="h-7 w-20 bg-gray-300/80 rounded-md mb-2"></div>
+                      <div className="h-2 w-28 bg-gray-200/60 rounded-full"></div>
+                    </div>
+
+                    <div className="rounded-xl p-5 text-left border border-[#093C5D]/10 bg-[#093C5D]/[0.03] backdrop-blur-sm">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#093C5D]"></div>
+                        <span className="h-2.5 w-16 bg-gray-200/80 rounded-full"></span>
+                      </div>
+                      <div className="h-7 w-28 bg-gray-300/80 rounded-md mb-2"></div>
+                      <div className="h-2 w-36 bg-gray-200/60 rounded-full"></div>
+                    </div>
+                  </div>
+
+                  {/* Chart Area */}
+                  <div className="relative h-48 sm:h-56 w-full border border-gray-100 rounded-xl bg-gray-50/30 flex items-end justify-between gap-3 sm:gap-6 px-4 pt-4 overflow-hidden">
+                    {/* Chart Header */}
+                    <div className="absolute top-4 left-5 right-5 flex justify-between items-center text-xs">
+                        <div className="h-3 w-28 bg-gray-200/80 rounded-full"></div>
+                        <div className="h-3 w-16 bg-gray-200/80 rounded-full"></div>
+                    </div>
+
+                    {/* Grid lines */}
+                    <div className="absolute inset-x-0 bottom-1/3 border-b border-gray-200/60 border-dashed"></div>
+                    <div className="absolute inset-x-0 bottom-2/3 border-b border-gray-200/60 border-dashed"></div>
+                    
+                    {/* Abstract Bars */}
+                    {[
+                      { h1: 30, h2: 15 },
+                      { h1: 45, h2: 10 },
+                      { h1: 35, h2: 20 },
+                      { h1: 60, h2: 15 },
+                      { h1: 50, h2: 25 },
+                      { h1: 75, h2: 15 },
+                      { h1: 55, h2: 20 }
+                    ].map((data, i) => (
+                      <div key={i} className="relative flex-1 flex flex-col justify-end items-center h-full z-10 w-full group">
+                        {/* Upper portion */}
+                        <div className="w-full max-w-[24px] sm:max-w-[40px] bg-orange-200/80 rounded-t-md transition-all duration-300 group-hover:bg-orange-300" style={{ height: `${data.h2}%` }}></div>
+                        {/* Lower portion */}
+                        <div className="w-full max-w-[24px] sm:max-w-[40px] bg-gray-200/90 rounded-b-md transition-all duration-300 group-hover:bg-gray-300" style={{ height: `${data.h1 - data.h2}%` }}></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Features Section - Mobile Optimized */}
-        <section className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 bg-white max-w-full">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12 sm:mb-16 lg:mb-20">
-              <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-semibold text-gray-900 mb-4 sm:mb-6">
-                {t('Everything You Need')}
+        {/* FEATURES GRID */}
+        <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+          <div className="bg-[#F5F5F5] rounded-2xl sm:rounded-3xl py-12 sm:py-16 px-4 sm:px-8">
+            <div className="text-center mb-10 sm:mb-12">
+              <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 tracking-tight mb-2 sm:mb-3">
+                {t('Everything you need to grow')}
               </h2>
-              <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                {t('Powerful features to manage your business efficiently')}
+              <p className="text-base text-gray-600 max-w-xl mx-auto">
+                {t('All the powerful tools packed into one simple interface.')}
               </p>
             </div>
 
-            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto">
               {features.map((feature, index) => (
                 <div
                   key={index}
-                  className="group p-6 sm:p-8 glass-card rounded-2xl touch-manipulation min-h-[180px] sm:min-h-[200px] transition-transform duration-200 active:scale-95"
+                  className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 transition-colors hover:border-[#093C5D]/30"
                 >
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-active:bg-indigo-100 transition-colors">
-                    <feature.icon className="w-6 h-6 sm:w-8 sm:h-8 text-indigo-600" />
+                  <div className={`w-10 h-10 ${feature.bgColor} rounded-md flex items-center justify-center mb-4`}>
+                    <feature.icon className={`w-5 h-5 ${feature.color}`} />
                   </div>
-                  <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900 mb-3 leading-tight">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1 sm:mb-2">
                     {t(feature.titleKey)}
                   </h3>
-                  <p className="text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed">
+                  <p className="text-sm text-gray-600 leading-relaxed">
                     {t(feature.descriptionKey)}
                   </p>
                 </div>
@@ -288,90 +281,73 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* Benefits Section - Mobile Responsive */}
-        <section className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 max-w-7xl mx-auto">
-          <div className="glass-card rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden">
-            {/* Subtle background */}
-            <div className="absolute top-0 right-0 w-[400px] lg:w-[600px] h-[400px] lg:h-[600px] bg-indigo-200/30 rounded-full blur-3xl -z-10 translate-x-1/3 -translate-y-1/3"></div>
-
-            <div className="text-center mb-10 sm:mb-12 lg:mb-16">
-              <div className="inline-flex items-center gap-2 px-4 py-2.5 sm:px-5 sm:py-3 bg-white/60 border border-white rounded-full text-indigo-600 mb-4 sm:mb-6">
-                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-                <span className="text-sm sm:text-base font-medium">{t('Complete Business Solution')}</span>
-              </div>
-              <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-semibold text-gray-900 mb-4 sm:mb-6">
-                {t('Why BakiPay?')}
-              </h2>
-              <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                {t('Everything you need to manage and grow your business')}
-              </p>
+        {/* STATS SECTION */}
+        <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center max-w-4xl mx-auto border-y border-gray-200 sm:border sm:border-gray-200 bg-white sm:rounded-2xl py-8 sm:py-10">
+            <div className="p-2 sm:p-4">
+              <h3 className="text-3xl sm:text-4xl font-bold text-[#093C5D] mb-1">10K+</h3>
+              <p className="text-sm text-gray-600 font-medium">{t('Active Shops')}</p>
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              {[
-                { textKey: 'Easy Udhar (Credit) Tracking', icon: CheckCircle },
-                { textKey: 'Voice-Enabled Billing', icon: CheckCircle },
-                { textKey: 'Automated Payment Reminders', icon: CheckCircle },
-                { textKey: 'Multi-language Support', icon: CheckCircle },
-                { textKey: 'Real-time Business Reports', icon: CheckCircle },
-                { textKey: 'Mobile & Desktop Access', icon: CheckCircle }
-              ].map((benefit, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-4 p-4 sm:p-5 bg-white/80 backdrop-blur-md border border-white/50 rounded-2xl shadow-sm touch-manipulation min-h-[60px] transition-transform duration-150 active:scale-95"
-                >
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-indigo-50 rounded-full flex items-center justify-center flex-shrink-0">
-                    <benefit.icon className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600" />
-                  </div>
-                  <span className="text-sm sm:text-base lg:text-lg text-gray-900 font-medium">{t(benefit.textKey)}</span>
-                </div>
-              ))}
+            <div className="p-2 sm:p-4 border-t sm:border-t-0 sm:border-l border-gray-200 pt-6 sm:pt-4">
+              <h3 className="text-3xl sm:text-4xl font-bold text-[#093C5D] mb-1">₹50Cr</h3>
+              <p className="text-sm text-gray-600 font-medium">{t('Transactions')}</p>
+            </div>
+            <div className="p-2 sm:p-4 border-t sm:border-t-0 sm:border-l border-gray-200 pt-6 sm:pt-4">
+              <h3 className="text-3xl sm:text-4xl font-bold text-[#093C5D] mb-1">4.9</h3>
+              <p className="text-sm text-gray-600 font-medium">{t('Store Rating')}</p>
             </div>
           </div>
         </section>
 
-        {/* CTA Section - Mobile Optimized */}
-        <section className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 max-w-7xl mx-auto">
-          <div className="glass-card rounded-3xl p-8 sm:p-12 lg:p-20 text-center relative overflow-hidden flex flex-col items-center justify-center border-t border-white/60">
-            <Globe className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 text-indigo-600 mx-auto mb-6 sm:mb-8" />
-            <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-semibold text-gray-900 mb-6 sm:mb-8">
-              {t('Ready to Go Digital?')}
+        {/* CTA */}
+        <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+          <div className="bg-[#093C5D] rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center flex flex-col items-center">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-3 sm:mb-4">
+              {t('Ready to digitize your shop?')}
             </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600 mb-8 sm:mb-10 max-w-3xl mx-auto leading-relaxed">
-              {t('Join thousands of shopkeepers who are growing their business with BakiPay. Start your free trial today.')}
+            <p className="text-sm sm:text-base text-[#F5F5F5] opacity-90 mb-8 sm:mb-10 max-w-xl">
+              {t('Join thousands of shopkeepers growing their business with UdharPay today.')}
             </p>
             <button
               onClick={() => navigate('/register')}
-              className="w-full xs:w-auto px-8 sm:px-10 lg:px-12 py-4 sm:py-5 bg-indigo-600 text-white rounded-2xl font-medium text-base sm:text-lg lg:text-xl active:scale-95 transition-transform duration-150 inline-flex items-center justify-center gap-3 shadow-2xl touch-manipulation min-h-[56px] max-w-sm mx-auto"
+              className="cursor-pointer w-full sm:w-auto min-w-[200px] h-12 flex items-center justify-center bg-white text-[#093C5D] rounded-md font-semibold text-base hover:bg-gray-100 transition-colors"
             >
-              {t('Create Free Account')}
-              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
+              {t('Create free account')}
             </button>
           </div>
         </section>
+      </main>
 
-        {/* Footer - Mobile Responsive */}
-        <footer className="px-4 sm:px-6 lg:px-8 py-8 sm:py-10 max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
-            {/* Logo - Text Only */}
-            <div>
-              <span className="font-semibold text-gray-900 text-lg sm:text-xl">BakiPay</span>
+      {/* Footer */}
+      <footer className="bg-white border-t border-gray-200 py-8 md:py-12 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-5 md:gap-6">
+            <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
+              <img src="/logo.svg" alt="UdharPay Logo" className="h-10 sm:h-12 md:h-14 object-contain scale-[1.5] sm:scale-[1.7] md:scale-[2] origin-left ml-2 sm:ml-4" />
             </div>
 
-            <p className="text-sm sm:text-base text-gray-600 order-3 md:order-2">
-              {t(`© ${new Date().getFullYear()} BakiPay. All rights reserved.`)}
-            </p>
-
-            <div className="flex gap-6 sm:gap-8 text-sm sm:text-base font-medium text-gray-600 order-2 md:order-3">
-              <a href="#" className="active:text-indigo-600 transition-colors touch-manipulation">{t('Privacy')}</a>
-              <a href="#" className="active:text-indigo-600 transition-colors touch-manipulation">{t('Terms')}</a>
-              <a href="#" className="active:text-indigo-600 transition-colors touch-manipulation">{t('Support')}</a>
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 md:gap-10 text-sm text-gray-600 font-medium">
+              <span onClick={() => navigate('/privacy-policy')} className="cursor-pointer hover:text-[#093C5D] transition-colors">{t('Privacy Policy')}</span>
+              <span onClick={() => navigate('/terms-of-service')} className="cursor-pointer hover:text-[#093C5D] transition-colors">{t('Terms of Service')}</span>
+              <span onClick={() => navigate('/contact-support')} className="cursor-pointer hover:text-[#093C5D] transition-colors">{t('Contact Support')}</span>
             </div>
           </div>
-        </footer>
-      </div>
+          
+          <div className="mt-8 md:mt-10 pt-6 md:pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 text-center">
+            <p className="text-sm text-gray-500 font-medium order-3 md:order-1 mt-2 md:mt-0">
+              {t(`© ${new Date().getFullYear()} UdharPay. All rights reserved.`)}
+            </p>
+            
+            <p className="text-sm text-gray-600 font-medium flex items-center justify-center gap-1.5 order-1 md:order-2">
+              {t('Developer:')} <span className="font-medium text-gray-900 tracking-wide">Developed with ❤️ by</span> <span className="text-[#093C5D] font-semibold animate-pulse">ANKIT</span>
+            </p>
+
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
 
 export default Landing;
+

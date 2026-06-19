@@ -19,15 +19,14 @@ const VerifyOTP = ({ type = 'registration' }) => {
   const [resendLoading, setResendLoading] = useState(false);
   const [timer, setTimer] = useState(120); // 2 minutes
   const [canResend, setCanResend] = useState(false);
-  
+
   const inputRefs = useRef([]);
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  
+
   const email = location.state?.email;
-  const userName = location.state?.name || 'User';
 
   // Configuration based on type
   const config = {
@@ -139,7 +138,7 @@ const VerifyOTP = ({ type = 'registration' }) => {
   // Verify OTP
   const handleVerify = async (e) => {
     e.preventDefault();
-    
+
     const otpCode = otp.join('');
     if (otpCode.length !== 6) {
       setError('Please enter complete 6-digit code');
@@ -203,41 +202,40 @@ const VerifyOTP = ({ type = 'registration' }) => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto px-4 sm:px-6">
-      <div className="glass-panel rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 animate-fade-in">
-        {/* Shield Icon */}
-        <div className="flex justify-center mb-5 sm:mb-6 animate-scale-in">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
-            <Shield className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+    <div className="w-full flex justify-center animate-fade-in relative z-10">
+      <div className="w-full max-w-md pt-2 pb-6 px-1 sm:px-4 flex flex-col items-center">
+        
+        {/* Shield Icon Container */}
+        <div className="mb-6 sm:mb-8 animate-scale-in">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#113853] flex items-center justify-center shadow-lg">
+            <Shield className="w-9 h-9 sm:w-11 sm:h-11 text-white stroke-[2]" />
           </div>
         </div>
 
-        {/* Header */}
-        <div className="text-center mb-6 sm:mb-8">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 mb-2 sm:mb-3">
+        {/* Headlines */}
+        <div className="text-center w-full mb-8 sm:mb-10">
+          <h2 className="text-2xl sm:text-[32px] font-bold text-gray-900 mb-4 sm:mb-5 tracking-tight">
             {t('Verify Your Identity')}
           </h2>
-          <p className="text-gray-600 text-xs sm:text-sm mb-1">
-            {t("We've sent a 6-digit verification code")}
-          </p>
-          <p className="text-gray-600 text-xs sm:text-sm mb-2">
-            {t('to')}
-          </p>
-          <p className="text-gray-900 font-semibold text-sm sm:text-base">
-            {maskEmail(email)}
-          </p>
+          <div className="text-gray-500 text-sm sm:text-base font-medium leading-[1.6]">
+            <p>{t("We've sent a 6-digit verification code")}</p>
+            <p className="mb-2">{t('to')}</p>
+            <p className="text-gray-900 font-bold tracking-wide text-base sm:text-lg">
+              {maskEmail(email)}
+            </p>
+          </div>
         </div>
 
-        {/* Error message */}
+        {/* Error Message */}
         {error && (
-          <div className="bg-red-50 text-red-600 p-3 rounded-xl mb-4 sm:mb-6 text-xs sm:text-sm border border-red-200 animate-scale-in text-center">
+          <div className="w-full bg-red-50 text-red-600 p-3 rounded-xl mb-6 text-sm font-medium border border-red-100 animate-scale-in text-center">
             {error}
           </div>
         )}
 
-        {/* OTP Input */}
-        <form onSubmit={handleVerify} className="space-y-5 sm:space-y-6">
-          <div className="flex gap-2 sm:gap-2.5 md:gap-3 justify-center" onPaste={handlePaste}>
+        <form onSubmit={handleVerify} className="w-full space-y-8">
+          {/* OTP Input Rings */}
+          <div className="flex justify-center gap-2 sm:gap-3 md:gap-4" onPaste={handlePaste}>
             {otp.map((digit, index) => (
               <input
                 key={index}
@@ -248,75 +246,76 @@ const VerifyOTP = ({ type = 'registration' }) => {
                 value={digit}
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
-                className="w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 text-center text-lg sm:text-xl md:text-2xl font-semibold bg-white border-2 border-gray-200 rounded-full focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all outline-none text-gray-900"
+                className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 text-center text-xl sm:text-2xl font-semibold bg-white border border-gray-200 rounded-full focus:border-[#8BA0B3] focus:ring-2 focus:ring-[#8BA0B3]/20 transition-all outline-none text-gray-900 shadow-sm placeholder-gray-300"
                 disabled={isLoading}
                 autoFocus={index === 0}
               />
             ))}
           </div>
 
-          {/* Timer */}
-          <div className="flex items-center justify-center gap-2 text-xs sm:text-sm">
-            <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-500" />
-            <span className="text-gray-600">
+          {/* Code Expires Timer */}
+          <div className="flex items-center justify-center gap-2 text-[15px] pt-1">
+            <Clock className="w-4 h-4 text-gray-500" />
+            <span className="text-gray-500 font-medium">
               {t('Code expires in')}
             </span>
-            <span className="text-indigo-600 font-semibold">
+            <span className="text-[#113853] font-bold">
               {formatTime(timer)}
             </span>
           </div>
 
-          {/* Verify Button */}
+          {/* Action Button */}
           <button
             type="submit"
             disabled={isLoading || otp.join('').length !== 6}
-            className="w-full cursor-pointer bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-3 sm:py-3.5 rounded-full font-semibold text-sm sm:text-base flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg active:scale-95 transition-all"
+            className="w-full h-14 sm:h-[60px] cursor-pointer bg-[#8BA0B3] hover:bg-[#788E9E] text-white rounded-[30px] font-bold text-[17px] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98] shadow-sm mt-2"
           >
             {isLoading ? (
               <>
-                <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div className="w-5 h-5 border-[2.5px] border-white border-t-white/30 rounded-full animate-spin" />
                 <span>{t('Verifying...')}</span>
               </>
             ) : (
               <>
-                <span>{t('Verify & Login')}</span>
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>{type === 'login' ? t('Verify & Login') : t('Verify Account')}</span>
+                <ArrowRight className="w-5 h-5 ml-1 stroke-[2.5]" />
               </>
             )}
           </button>
 
-          {/* Resend Link */}
-          <div className="text-center">
-            <p className="text-xs sm:text-sm text-gray-600">
+          {/* Resend Actions */}
+          <div className="text-center pt-1">
+            <span className="text-gray-500 text-[15px] font-medium">
               {t("Didn't receive the code?")}{' '}
-              <button
-                type="button"
-                onClick={handleResend}
-                disabled={!canResend || resendLoading}
-                className={`font-semibold transition-colors ${
-                  canResend
-                    ? 'text-indigo-600 hover:text-indigo-700 cursor-pointer'
-                    : 'text-gray-400 cursor-not-allowed'
-                }`}
-              >
-                {resendLoading ? t('Sending...') : t('Resend')}
-              </button>
-            </p>
+            </span>
+            <button
+              type="button"
+              onClick={handleResend}
+              disabled={!canResend || resendLoading}
+              className={`text-[15px] font-bold ml-1 transition-colors ${
+                canResend
+                  ? 'text-[#8BA0B3] hover:text-[#5F7485] cursor-pointer'
+                  : 'text-[#A0AAB3] cursor-not-allowed'
+              }`}
+            >
+               {resendLoading ? t('Sending...') : t('Resend')}
+            </button>
           </div>
         </form>
-      </div>
 
-      {/* Help Link */}
-      <div className="text-center mt-4 sm:mt-6 animate-fade-in" style={{ animationDelay: '200ms' }}>
-        <button
-          onClick={() => navigate('/help')}
-          className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 font-medium flex items-center justify-center gap-2 mx-auto transition-colors"
-        >
-          <div className="w-4 h-4 rounded-full border-2 border-gray-400 flex items-center justify-center">
-            <span className="text-xs">?</span>
-          </div>
-          <span className="underline">{t('Need help accessing your account?')}</span>
-        </button>
+        {/* Footer Help */}
+        <div className="text-center mt-10 sm:mt-12 animate-fade-in w-full" style={{ animationDelay: '200ms' }}>
+          <button
+            onClick={() => navigate('/help')}
+            className="text-[15px] text-gray-500 hover:text-gray-900 font-medium flex items-center justify-center gap-2.5 mx-auto transition-colors"
+          >
+            <div className="w-5 h-5 rounded-full border-[1.5px] border-gray-400 text-gray-500 flex items-center justify-center font-bold font-serif text-[12px]">
+              ?
+            </div>
+            <span className="underline decoration-gray-300 underline-offset-[5px] decoration-[1.5px]">{t('Need help accessing your account?')}</span>
+          </button>
+        </div>
+
       </div>
     </div>
   );

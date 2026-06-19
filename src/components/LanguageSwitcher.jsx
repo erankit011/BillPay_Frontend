@@ -45,10 +45,10 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-700 bg-indigo-50/40 hover:bg-indigo-50 border border-indigo-100 hover:border-indigo-200 rounded-full transition-all active:scale-95 cursor-pointer"
+          className="flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold text-[#093C5D] hover:text-[#072C44] bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-full transition-all active:scale-95 cursor-pointer"
           aria-label="Change language"
         >
-          <Languages className="w-3.5 h-3.5 text-indigo-500" />
+          <Languages className="w-3.5 h-3.5 text-[#093C5D]" />
           <span className="uppercase tracking-wider">EN/HI</span>
         </button>
 
@@ -59,12 +59,12 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
                 key={lang.code}
                 onClick={() => changeLanguage(lang.code)}
                 className={`w-full flex items-center justify-between px-3 py-2.5 text-sm hover:bg-gray-50 transition-colors ${
-                  currentLanguage.code === lang.code ? 'text-indigo-600 bg-indigo-50 font-medium' : 'text-gray-700'
+                  currentLanguage.code === lang.code ? 'text-[#093C5D] bg-gray-50 font-medium' : 'text-gray-700'
                 }`}
               >
                 <span>{lang.nativeName}</span>
                 {currentLanguage.code === lang.code && (
-                  <Check className="w-4 h-4 text-indigo-600" />
+                  <Check className="w-4 h-4 text-[#093C5D]" />
                 )}
               </button>
             ))}
@@ -79,7 +79,7 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-blue-600 bg-white border border-gray-300 hover:border-blue-500 rounded-lg transition-all"
+        className="flex items-center justify-center gap-1.5 px-3 h-9 text-sm font-medium text-gray-700 hover:text-[#093C5D] bg-white border border-gray-300 rounded-md transition-colors cursor-pointer"
         aria-label="Change language"
       >
         <span className="uppercase">{currentLanguage.code}</span>
@@ -87,18 +87,18 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-1.5 w-36 bg-white rounded-lg shadow-xl border border-gray-200 py-1.5 z-50 animate-fade-in">
+        <div className="absolute right-0 mt-1.5 w-28 bg-white rounded-md border border-gray-200 py-1 z-50 animate-fade-in">
           {languages.map((lang) => (
             <button
               key={lang.code}
               onClick={() => changeLanguage(lang.code)}
               className={`w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-gray-50 transition-colors ${
-                currentLanguage.code === lang.code ? 'text-blue-600 bg-blue-50' : 'text-gray-700'
-              }`}
+                currentLanguage.code === lang.code ? 'text-[#093C5D] bg-gray-50 font-medium' : 'text-gray-700'
+              } cursor-pointer`}
             >
-              <span className="font-medium">{lang.nativeName}</span>
+              <span>{lang.nativeName}</span>
               {currentLanguage.code === lang.code && (
-                <Check className="w-4 h-4 text-blue-600" />
+                <Check className="w-3.5 h-3.5 text-[#093C5D]" />
               )}
             </button>
           ))}

@@ -22,6 +22,11 @@ const Reminders = lazy(() => import('../pages/Reminders'));
 const Profile = lazy(() => import('../pages/Profile'));
 const Notifications = lazy(() => import('../pages/Notifications'));
 
+// Static pages
+const PrivacyPolicy = lazy(() => import('../pages/PrivacyPolicy'));
+const TermsOfService = lazy(() => import('../pages/TermsOfService'));
+const ContactSupport = lazy(() => import('../pages/ContactSupport'));
+
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
 
@@ -68,6 +73,11 @@ const AppRoutes = () => {
       <Routes>
         {/* Landing Page - Public */}
         <Route path="/" element={<Landing />} />
+        
+        {/* Static Pages - Public */}
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/contact-support" element={<ContactSupport />} />
 
         {/* Auth Routes - Redirect to dashboard if already logged in */}
         <Route path="/login" element={
