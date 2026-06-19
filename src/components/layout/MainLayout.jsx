@@ -146,7 +146,7 @@ const MainLayout = () => {
   const closeSidebar = () => setSidebarOpen(false);
 
   return (
-    <div className="flex min-h-screen bg-[#F5F5F5] overflow-hidden">
+    <div className="min-h-screen bg-[#F5F5F5]">
       {/* Sidebar Desktop */}
       <aside className="hidden md:flex flex-col h-screen bg-white md:w-[220px] min-[1440px]:w-[240px] fixed left-0 top-0 border-r border-gray-100 z-50">
         {/* Brand - same height as header h-16, aligned */}
@@ -161,8 +161,8 @@ const MainLayout = () => {
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 active:scale-95 ${isActive
-                  ? 'bg-[#093C5D] text-white font-medium shadow-sm shadow-[#093C5D]/20'
+                `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 active:scale-95 ${isActive
+                  ? 'bg-[#093C5D] text-white font-semibold'
                   : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 font-medium'
                 }`
               }
@@ -245,7 +245,7 @@ const MainLayout = () => {
                 <Link
                   to="/settings"
                   onClick={closeSidebar}
-                  className="flex items-center gap-3 px-4 py-2 text-gray-600 hover:text-indigo-600 transition-colors font-medium"
+                  className="flex items-center gap-3 px-4 py-2 text-gray-600 hover:text-[#093C5D] transition-colors font-medium"
                 >
                   <HelpCircle className="w-5 h-5" />
                   <span className="text-sm">{t('Help')}</span>
@@ -328,7 +328,7 @@ const MainLayout = () => {
                     <div className="flex items-center gap-2">
                       <h3 className="text-lg font-semibold text-gray-900">Notifications</h3>
                       {notificationCount > 0 && (
-                        <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                        <span className="bg-[#E5E7EB] text-[#082a42] text-xs font-bold px-2 py-0.5 rounded-full">
                           {notificationCount}
                         </span>
                       )}
@@ -336,7 +336,7 @@ const MainLayout = () => {
                     {notifications.some(n => !n.read) && (
                       <button
                         onClick={markAllAsRead}
-                        className="text-xs text-indigo-600 font-semibold hover:text-indigo-700 transition-colors active:scale-95 px-2 py-1"
+                        className="text-xs text-[#093C5D] font-semibold hover:text-[#082a42] transition-colors active:scale-95 px-2 py-1"
                       >
                         Mark all read
                       </button>
@@ -359,12 +359,12 @@ const MainLayout = () => {
                           <div
                             key={notification._id}
                             onClick={() => !notification.read && markAsRead(notification._id)}
-                            className={`p-4 hover:bg-gray-50 active:bg-gray-100 transition-colors cursor-pointer ${!notification.read ? 'bg-indigo-50/50' : ''
+                            className={`p-4 hover:bg-gray-50 active:bg-gray-100 transition-colors cursor-pointer ${!notification.read ? 'bg-[#F5F5F5]/50' : ''
                               }`}
                           >
                             <div className="flex items-start gap-3">
                               {/* Icon */}
-                              <div className="flex-shrink-0 w-11 h-11 rounded-full bg-gradient-to-br from-indigo-100 to-indigo-50 flex items-center justify-center text-xl shadow-sm">
+                              <div className="flex-shrink-0 w-11 h-11 rounded-full bg-gradient-to-br from-[#E5E7EB] to-[#F5F5F5] flex items-center justify-center text-xl shadow-sm">
                                 {getNotificationIcon(notification.type)}
                               </div>
 
@@ -376,7 +376,7 @@ const MainLayout = () => {
                                     {notification.title}
                                   </h4>
                                   {!notification.read && (
-                                    <span className="w-2 h-2 bg-indigo-600 rounded-full flex-shrink-0 mt-1.5"></span>
+                                    <span className="w-2 h-2 bg-[#093C5D] rounded-full flex-shrink-0 mt-1.5"></span>
                                   )}
                                 </div>
                                 <p className="text-sm text-gray-600 mb-2 line-clamp-2 leading-relaxed">
@@ -399,7 +399,7 @@ const MainLayout = () => {
                       <Link
                         to="/notifications"
                         onClick={() => setNotificationOpen(false)}
-                        className="block text-center text-sm text-indigo-600 font-semibold hover:text-indigo-700 active:scale-95 transition-all py-2 rounded-lg hover:bg-white"
+                        className="block text-center text-sm text-[#093C5D] font-semibold hover:text-[#082a42] active:scale-95 transition-all py-2 rounded-lg hover:bg-white"
                       >
                         View all notifications →
                       </Link>
@@ -441,7 +441,7 @@ const MainLayout = () => {
       </header>
 
       {/* Main Content */}
-      <main className="md:ml-[220px] min-[1440px]:ml-[240px] pt-[88px] md:pt-[96px] lg:pt-[104px] min-[1440px]:pt-[120px] px-4 md:px-6 lg:px-8 min-[1440px]:px-12 pb-6 md:pb-8 lg:pb-10 min-[1440px]:pb-12 min-h-screen w-full">
+      <main className="md:ml-[220px] min-[1440px]:ml-[240px] pt-[88px] md:pt-[96px] lg:pt-[104px] min-[1440px]:pt-[120px] px-4 md:px-6 lg:px-8 min-[1440px]:px-12 pb-6 md:pb-8 lg:pb-10 min-[1440px]:pb-12 min-h-screen">
         <div className="max-w-[1440px] mx-auto w-full">
           <Outlet />
         </div>

@@ -128,7 +128,7 @@ const Bills = () => {
   return (
     <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Billing & Invoices')}</h1>
           <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed">
@@ -138,7 +138,7 @@ const Bills = () => {
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 rounded-full flex items-center font-semibold text-xs sm:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
+          className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg flex items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
         >
           <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
           {t('Create New Bill')}
@@ -146,55 +146,61 @@ const Bills = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
         {/* Total Revenue */}
-        <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-gray-200">
-          <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <p className="text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wide">{t('Total Revenue')}</p>
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-indigo-100 flex items-center justify-center">
-              <Wallet className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600" />
+        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+              <Wallet className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
-          <p className="text-2xl sm:text-3xl font-semibold text-gray-900">
-            {formatCurrency(bills.reduce((sum, b) => sum + b.grandTotal, 0))}
-          </p>
-          <p className="text-xs text-green-600 font-semibold mt-1.5 sm:mt-2">+12.5% {t('this month')}</p>
+          <div className="mt-auto pt-2 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Revenue')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
+              {formatCurrency(bills.reduce((sum, b) => sum + b.grandTotal, 0))}
+            </p>
+            <p className="text-[10px] md:text-xs text-green-600 font-medium truncate mt-0.5">+12.5% {t('this month')}</p>
+          </div>
         </div>
 
         {/* Pending Udhar */}
-        <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 border border-gray-200">
-          <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <p className="text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wide">{t('Pending Udhar')}</p>
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-yellow-100 flex items-center justify-center">
-              <CreditCard className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600" />
+        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+              <CreditCard className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
-          <p className="text-2xl sm:text-3xl font-semibold text-gray-900">
-            {formatCurrency(
-              bills
-                .filter(b => b.paymentStatus === 'UNPAID' || b.paymentStatus === 'PARTIAL')
-                .reduce((sum, b) => sum + (b.grandTotal - (b.amountPaid || 0)), 0)
-            )}
-          </p>
-          <p className="text-xs text-gray-600 font-semibold mt-1.5 sm:mt-2">
-            {bills.filter(b => b.paymentStatus === 'UNPAID' || b.paymentStatus === 'PARTIAL').length} {t('Unpaid Invoices')}
-          </p>
+          <div className="mt-auto pt-2 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Pending Udhar')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
+              {formatCurrency(
+                bills
+                  .filter(b => b.paymentStatus === 'UNPAID' || b.paymentStatus === 'PARTIAL')
+                  .reduce((sum, b) => sum + (b.grandTotal - (b.amountPaid || 0)), 0)
+              )}
+            </p>
+            <p className="text-[10px] md:text-xs text-red-500 font-medium truncate mt-0.5">
+              {bills.filter(b => b.paymentStatus === 'UNPAID' || b.paymentStatus === 'PARTIAL').length} {t('Unpaid Invoices')}
+            </p>
+          </div>
         </div>
 
         {/* Active Customers */}
-        <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 md:col-span-2 lg:col-span-1 border border-gray-200">
-          <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <p className="text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wide">{t('Active Customers')}</p>
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-purple-100 flex items-center justify-center">
-              <Users className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
+        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+              <Users className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
-          <p className="text-2xl sm:text-3xl font-semibold text-gray-900">
-            {new Set(bills.filter(b => b.customerId).map(b => b.customerId._id)).size}
-          </p>
-          <p className="text-xs text-gray-600 font-semibold mt-1.5 sm:mt-2">
-            {bills.filter(b => b.customerId && new Date(b.createdAt) > new Date(Date.now() - 7*24*60*60*1000)).length} {t('new this week')}
-          </p>
+          <div className="mt-auto pt-2 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Active Customers')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
+              {new Set(bills.filter(b => b.customerId).map(b => b.customerId._id)).size}
+            </p>
+            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">
+              {bills.filter(b => b.customerId && new Date(b.createdAt) > new Date(Date.now() - 7*24*60*60*1000)).length} {t('new this week')}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -208,7 +214,7 @@ const Bills = () => {
           placeholder={t("Search by invoice number or customer...")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 sm:pl-11 pr-3 sm:pr-4 py-2.5 sm:py-3 bg-white border border-gray-200 rounded-2xl focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-xs sm:text-sm transition-all"
+          className="block w-full pl-10 sm:pl-11 pr-3 sm:pr-4 py-2.5 sm:py-3 bg-white border border-gray-200 rounded-2xl focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-xs sm:text-sm transition-all"
         />
       </div>
 
@@ -216,7 +222,7 @@ const Bills = () => {
       <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
         {isLoading ? (
           <div className="p-8 md:p-12 text-center text-gray-500 flex justify-center">
-            <Loader2 className="w-6 h-6 md:w-8 md:h-8 animate-spin text-indigo-600" />
+            <Loader2 className="w-6 h-6 md:w-8 md:h-8 animate-spin text-[#093C5D]" />
           </div>
         ) : filteredBills.length === 0 ? (
           <div className="p-8 md:p-12 text-center text-gray-500">
@@ -242,17 +248,17 @@ const Bills = () => {
                   {filteredBills.map((bill, index) => (
                     <tr 
                       key={bill._id} 
-                      className="hover:bg-indigo-50/30 transition-all duration-200 animate-fade-in"
+                      className="hover:bg-[#093C5D]/5/30 transition-all duration-200 animate-fade-in"
                       style={{ animationDelay: `${index * 50}ms` }}
                     >
                       <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                            <span className="text-xs font-semibold text-indigo-600">
+                          <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-[#F5F5F5] flex items-center justify-center flex-shrink-0">
+                            <span className="text-xs font-semibold text-[#093C5D]">
                               {bill.customerId?.name?.substring(0, 2).toUpperCase() || 'WI'}
                             </span>
                           </div>
-                          <span className="text-xs lg:text-sm font-semibold text-indigo-600">{bill.invoiceNumber}</span>
+                          <span className="text-xs lg:text-sm font-semibold text-[#093C5D]">{bill.invoiceNumber}</span>
                         </div>
                       </td>
                       <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap">
@@ -276,7 +282,7 @@ const Bills = () => {
                         <div className="relative inline-block" onClick={(e) => e.stopPropagation()}>
                           <button 
                             onClick={() => setOpenDropdown(openDropdown === bill._id ? null : bill._id)}
-                            className="cursor-pointer text-indigo-600 font-semibold bg-indigo-50 hover:bg-indigo-100 px-3 lg:px-4 py-1.5 lg:py-2 rounded-full flex items-center justify-center ml-auto transition-all text-xs lg:text-sm active:scale-95"
+                            className="cursor-pointer text-[#093C5D] font-semibold bg-[#093C5D]/5 hover:bg-[#F5F5F5] px-3 lg:px-4 py-1.5 lg:py-2 rounded-full flex items-center justify-center ml-auto transition-all text-xs lg:text-sm active:scale-95"
                           >
                             <Send className="w-3.5 h-3.5 lg:w-4 lg:h-4 mr-1 lg:mr-1.5" /> {t('Send')}
                             <MoreVertical className="w-3.5 h-3.5 ml-1" />
@@ -305,7 +311,7 @@ const Bills = () => {
                                 className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                                 disabled={!bill.customerId?.email}
                               >
-                                <Mail className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                                <Mail className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
                                 <span className={!bill.customerId?.email ? 'text-gray-400' : ''}>
                                   {t('Send via Email')}
                                   {!bill.customerId?.email && <span className="text-xs"> (No email)</span>}
@@ -320,7 +326,7 @@ const Bills = () => {
                                 className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                                 disabled={!bill.customerId?.email || !bill.customerId?.phone}
                               >
-                                <Send className="w-4 h-4 text-indigo-600 flex-shrink-0" />
+                                <Send className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
                                 <span className={(!bill.customerId?.email || !bill.customerId?.phone) ? 'text-gray-400' : ''}>
                                   {t('Send Both')}
                                 </span>
@@ -340,18 +346,18 @@ const Bills = () => {
               {filteredBills.map((bill, index) => (
                 <div 
                   key={bill._id} 
-                  className="p-4 animate-fade-in hover:bg-indigo-50/30 transition-colors"
+                  className="p-4 animate-fade-in hover:bg-[#093C5D]/5/30 transition-colors"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <div className="flex items-start gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                      <span className="text-xs font-semibold text-indigo-600">
+                    <div className="w-10 h-10 rounded-full bg-[#F5F5F5] flex items-center justify-center flex-shrink-0">
+                      <span className="text-xs font-semibold text-[#093C5D]">
                         {bill.customerId?.name?.substring(0, 2).toUpperCase() || 'WI'}
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="text-sm font-semibold text-gray-900 truncate">{bill.customerId?.name || t('Walk-in Customer')}</h4>
-                      <p className="text-xs font-semibold text-indigo-600 mt-0.5">{bill.invoiceNumber}</p>
+                      <p className="text-xs font-semibold text-[#093C5D] mt-0.5">{bill.invoiceNumber}</p>
                       <p className="text-xs text-gray-500 mt-1">{new Date(bill.createdAt).toLocaleDateString('en-GB')}</p>
                     </div>
                     <div className="text-right flex-shrink-0">
@@ -369,7 +375,7 @@ const Bills = () => {
                     <div className="relative" onClick={(e) => e.stopPropagation()}>
                       <button 
                         onClick={() => setOpenDropdown(openDropdown === bill._id ? null : bill._id)}
-                        className="cursor-pointer text-indigo-600 font-semibold bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-full flex items-center text-xs transition-all active:scale-95 whitespace-nowrap"
+                        className="cursor-pointer text-[#093C5D] font-semibold bg-[#093C5D]/5 hover:bg-[#F5F5F5] px-3 py-1.5 rounded-full flex items-center text-xs transition-all active:scale-95 whitespace-nowrap"
                       >
                         <Send className="w-3.5 h-3.5 mr-1" /> {t('Send')}
                         <MoreVertical className="w-3 h-3 ml-0.5" />
@@ -398,7 +404,7 @@ const Bills = () => {
                             className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={!bill.customerId?.email}
                           >
-                            <Mail className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                            <Mail className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
                             <span className={!bill.customerId?.email ? 'text-gray-400' : ''}>
                               {t('Send via Email')}
                               {!bill.customerId?.email && <span className="text-xs"> (No email)</span>}
@@ -413,7 +419,7 @@ const Bills = () => {
                             className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={!bill.customerId?.email || !bill.customerId?.phone}
                           >
-                            <Send className="w-4 h-4 text-indigo-600 flex-shrink-0" />
+                            <Send className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
                             <span className={(!bill.customerId?.email || !bill.customerId?.phone) ? 'text-gray-400' : ''}>
                               {t('Send Both')}
                             </span>
@@ -457,7 +463,7 @@ const Bills = () => {
                 <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">{t('Select Customer')}</label>
                 <select 
                   {...register('customerId')} 
-                  className="cursor-pointer w-full rounded-xl border border-gray-300 px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                  className="cursor-pointer w-full rounded-xl border border-gray-300 px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm focus:ring-2 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all"
                 >
                   <option value="">-- {t('Choose Customer')} --</option>
                   {customers.map(c => <option key={c._id} value={c._id}>{c.name} ({c.phone})</option>)}
@@ -472,7 +478,7 @@ const Bills = () => {
                   <div key={field.id} className="flex gap-2 items-start">
                     <select 
                       {...register(`products.${index}.productId`)} 
-                      className="cursor-pointer flex-1 rounded-xl border border-gray-300 px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                      className="cursor-pointer flex-1 rounded-xl border border-gray-300 px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm focus:ring-2 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all"
                     >
                       <option value="">-- {t('Product')} --</option>
                       {products.map(p => <option key={p._id} value={p._id}>{p.name} - ₹{p.price}</option>)}
@@ -481,7 +487,7 @@ const Bills = () => {
                       type="number" 
                       {...register(`products.${index}.quantity`)} 
                       placeholder="Qty" 
-                      className="w-16 sm:w-20 rounded-xl sm:rounded-2xl border border-gray-300 px-2 sm:px-3 py-2.5 sm:py-3 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" 
+                      className="w-16 sm:w-20 rounded-xl sm:rounded-2xl border border-gray-300 px-2 sm:px-3 py-2.5 sm:py-3 text-xs sm:text-sm focus:ring-2 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all" 
                     />
                     {fields.length > 1 && (
                       <button 
@@ -497,7 +503,7 @@ const Bills = () => {
                 <button 
                   type="button" 
                   onClick={() => append({ productId: '', quantity: 1 })} 
-                  className="cursor-pointer text-indigo-600 text-xs sm:text-sm font-semibold hover:text-indigo-700 flex items-center gap-1 transition-colors"
+                  className="cursor-pointer text-[#093C5D] text-xs sm:text-sm font-semibold hover:text-[#082a42] flex items-center gap-1 transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> {t('Add another product')}
                 </button>
@@ -509,7 +515,7 @@ const Bills = () => {
                 <input 
                   type="number" 
                   {...register('amountPaid')} 
-                  className="w-full rounded-xl sm:rounded-2xl border border-gray-300 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" 
+                  className="w-full rounded-xl sm:rounded-2xl border border-gray-300 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm focus:ring-2 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all" 
                   placeholder="0"
                 />
               </div>
@@ -518,7 +524,7 @@ const Bills = () => {
               <button 
                 type="submit" 
                 disabled={mutation.isPending} 
-                className="cursor-pointer w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-full py-2.5 sm:py-3 md:py-3.5 font-semibold text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-lg active:scale-[0.98] transition-all"
+                className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-full py-2.5 sm:py-3 md:py-3.5 font-semibold text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-lg active:scale-[0.98] transition-all"
               >
                 {mutation.isPending ? (
                   <span className="flex items-center justify-center">

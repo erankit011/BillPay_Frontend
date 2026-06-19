@@ -148,7 +148,7 @@ const CustomerLedger = ({ customer, onClose }) => {
                       type="number" 
                       value={amount} 
                       onChange={(e) => setAmount(e.target.value)} 
-                      className="block w-full pl-9 pr-3 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 font-medium transition-colors duration-200" 
+                      className="block w-full pl-9 pr-3 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] font-medium transition-colors duration-200" 
                       placeholder="0.00" 
                       required 
                     />
@@ -163,7 +163,7 @@ const CustomerLedger = ({ customer, onClose }) => {
                     type="text" 
                     value={remarks} 
                     onChange={(e) => setRemarks(e.target.value)} 
-                    className="block w-full px-3 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 font-medium transition-colors duration-200" 
+                    className="block w-full px-3 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] font-medium transition-colors duration-200" 
                     placeholder={t("e.g. Paid in cash")} 
                   />
                 </div>
@@ -273,9 +273,9 @@ const Customers = () => {
 
   const getAvatarColor = (index) => {
     const colors = [
-      'bg-indigo-100 text-indigo-600',
+      'bg-[#F5F5F5] text-[#093C5D]',
       'bg-purple-100 text-purple-600',
-      'bg-blue-100 text-blue-600',
+      'bg-blue-100 text-[#093C5D]',
       'bg-green-100 text-green-600',
       'bg-yellow-100 text-yellow-600',
       'bg-pink-100 text-pink-600',
@@ -286,14 +286,14 @@ const Customers = () => {
   return (
     <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Customers')}</h1>
           <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5">{t('Manage your customers and their outstanding balances')}</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 rounded-full flex items-center font-semibold text-xs sm:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
+          className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg flex items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
         >
           <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
           {t('Add Customer')}
@@ -301,51 +301,57 @@ const Customers = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
         {/* Total Customers */}
-        <div className="bg-white rounded-xl p-4 md:p-5 border border-gray-200">
-          <div className="flex items-center justify-between mb-2 md:mb-3">
-            <p className="text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wide">{t('Total Customers')}</p>
-            <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-indigo-100 flex items-center justify-center">
-              <User className="w-5 h-5 md:w-6 md:h-6 text-indigo-600" />
+        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+              <User className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
-          <p className="text-2xl md:text-3xl font-semibold text-gray-900">{customers.length}</p>
-          <p className="text-xs text-gray-600 font-semibold mt-1.5 md:mt-2">{t('Active accounts')}</p>
+          <div className="mt-auto pt-2 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Customers')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{customers.length}</p>
+            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">{t('Active accounts')}</p>
+          </div>
         </div>
 
         {/* Total Pending */}
-        <div className="bg-white rounded-xl p-4 md:p-5 border border-gray-200">
-          <div className="flex items-center justify-between mb-2 md:mb-3">
-            <p className="text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wide">{t('Total Pending')}</p>
-            <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-red-100 flex items-center justify-center">
-              <IndianRupee className="w-5 h-5 md:w-6 md:h-6 text-red-600" />
+        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+              <IndianRupee className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
-          <p className="text-2xl md:text-3xl font-semibold text-gray-900">
-            {formatCurrency(customers.reduce((sum, c) => sum + (c.balance || 0), 0))}
-          </p>
-          <p className="text-xs text-red-600 font-semibold mt-1.5 md:mt-2">
-            {customers.filter(c => c.balance > 0).length} {t('with pending balance')}
-          </p>
+          <div className="mt-auto pt-2 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Pending')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
+              {formatCurrency(customers.reduce((sum, c) => sum + (c.balance || 0), 0))}
+            </p>
+            <p className="text-[10px] md:text-xs text-red-500 font-medium truncate mt-0.5">
+              {customers.filter(c => c.balance > 0).length} {t('with pending balance')}
+            </p>
+          </div>
         </div>
 
         {/* This Month */}
-        <div className="bg-white rounded-xl p-4 md:p-5 border border-gray-200">
-          <div className="flex items-center justify-between mb-2 md:mb-3">
-            <p className="text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wide">{t('This Month')}</p>
-            <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-green-100 flex items-center justify-center">
-              <History className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
+        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+              <History className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
-          <p className="text-2xl md:text-3xl font-semibold text-gray-900">
-            {customers.filter(c => {
-              const createdDate = new Date(c.createdAt);
-              const now = new Date();
-              return createdDate.getMonth() === now.getMonth() && createdDate.getFullYear() === now.getFullYear();
-            }).length}
-          </p>
-          <p className="text-xs text-green-600 font-semibold mt-1.5 md:mt-2">{t('New customers')}</p>
+          <div className="mt-auto pt-2 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('This Month')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
+              {customers.filter(c => {
+                const createdDate = new Date(c.createdAt);
+                const now = new Date();
+                return createdDate.getMonth() === now.getMonth() && createdDate.getFullYear() === now.getFullYear();
+              }).length}
+            </p>
+            <p className="text-[10px] md:text-xs text-green-600 font-medium truncate mt-0.5">{t('New customers')}</p>
+          </div>
         </div>
       </div>
 
@@ -359,7 +365,7 @@ const Customers = () => {
           placeholder={t("Search by invoice number or customer...")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-12 pr-4 py-2.5 md:py-3 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm md:text-base font-medium transition-colors duration-200"
+          className="block w-full pl-12 pr-4 py-2.5 md:py-3 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-sm md:text-base font-medium transition-colors duration-200"
         />
       </div>
 
@@ -367,7 +373,7 @@ const Customers = () => {
       <div className="space-y-3 md:space-y-4">
         {isLoading ? (
           <div className="flex justify-center items-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#093C5D]" />
           </div>
         ) : filteredCustomers.length === 0 ? (
           <div className="bg-white rounded-xl border border-gray-200 p-8 md:p-10 lg:p-12 text-center">
@@ -409,10 +415,10 @@ const Customers = () => {
                   {/* Edit Button */}
                   <button 
                     onClick={() => handleEdit(customer)}
-                    className="cursor-pointer p-2 md:p-2.5 hover:bg-indigo-50 rounded-xl transition-colors active:scale-90 group"
+                    className="cursor-pointer p-2 md:p-2.5 hover:bg-[#093C5D]/5 rounded-xl transition-colors active:scale-90 group"
                     title={t('Edit Customer')}
                   >
-                    <Edit className="w-4 h-4 md:w-5 md:h-5 text-indigo-600 group-hover:text-indigo-700" />
+                    <Edit className="w-4 h-4 md:w-5 md:h-5 text-[#093C5D] group-hover:text-[#082a42]" />
                   </button>
                   
                   {/* Delete Button */}
@@ -428,7 +434,7 @@ const Customers = () => {
                   {/* View Ledger Button */}
                   <button 
                     onClick={() => setSelectedCustomer(customer)}
-                    className="cursor-pointer text-indigo-600 border-2 border-indigo-600 hover:bg-indigo-50 px-3 py-1.5 md:px-4 md:py-2 rounded-full font-semibold active:scale-95 transition-all whitespace-nowrap text-xs md:text-sm"
+                    className="cursor-pointer text-[#093C5D] border-2 border-[#093C5D] hover:bg-[#093C5D]/5 px-3 py-1.5 md:px-4 md:py-2 rounded-full font-semibold active:scale-95 transition-all whitespace-nowrap text-xs md:text-sm"
                   >
                     {t('Ledger')}
                   </button>
@@ -459,7 +465,7 @@ const Customers = () => {
                   <label className="block text-sm md:text-base font-semibold text-gray-800 mb-2">{t('Full Name')}</label>
                   <input 
                     {...register('name')}
-                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
                     placeholder={t("Enter customer name")}
                   />
                   {errors.name && <p className="text-red-500 text-xs mt-1.5 font-semibold">{errors.name.message}</p>}
@@ -469,7 +475,7 @@ const Customers = () => {
                   <label className="block text-sm md:text-base font-semibold text-gray-800 mb-2">{t('Phone Number')}</label>
                   <input 
                     {...register('phone')}
-                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 disabled:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 disabled:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                     placeholder="10-digit number"
                     disabled={isEditMode}
                   />
@@ -483,7 +489,7 @@ const Customers = () => {
                   </label>
                   <input 
                     {...register('email')}
-                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
                     placeholder="customer@example.com"
                   />
                   {errors.email && <p className="text-red-500 text-xs mt-1.5 font-semibold">{errors.email.message}</p>}
@@ -495,7 +501,7 @@ const Customers = () => {
                   </label>
                   <textarea 
                     {...register('address')}
-                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 resize-none"
+                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 resize-none"
                     rows="3"
                     placeholder={t("Enter address")}
                   />
@@ -504,7 +510,7 @@ const Customers = () => {
                 <button
                   type="submit"
                   disabled={mutation.isPending}
-                  className="cursor-pointer w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-full px-5 md:px-6 py-2.5 md:py-3 font-semibold text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 active:scale-95 transition-all shadow-lg"
+                  className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-full px-5 md:px-6 py-2.5 md:py-3 font-semibold text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 active:scale-95 transition-all shadow-lg"
                 >
                   {mutation.isPending ? t('Saving...') : isEditMode ? t('Update Customer') : t('Save Customer')}
                 </button>

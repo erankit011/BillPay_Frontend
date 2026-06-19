@@ -137,14 +137,14 @@ const Reports = () => {
 
   if (analyticsLoading) return (
     <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-indigo-600"></div>
+      <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#093C5D]"></div>
     </div>
   );
 
   return (
     <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
           <div>
             <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Reports & Analytics')}</h1>
             <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5">{t('Detailed overview of your business performance')}</p>
@@ -154,7 +154,7 @@ const Reports = () => {
             <select 
               value={statementPeriod} 
               onChange={(e) => setStatementPeriod(e.target.value)}
-              className="cursor-pointer bg-white border border-gray-300 text-gray-700 text-xs sm:text-sm rounded-full px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 font-semibold w-full sm:w-auto focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+              className="cursor-pointer bg-white border border-gray-300 text-gray-700 text-xs sm:text-sm rounded-full px-4 sm:px-5 md:px-6 py-2 md:py-2.5 font-semibold w-full sm:w-auto focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
             >
               <option value="today">{t('Today')}</option>
               <option value="7days">{t('Last 7 Days')}</option>
@@ -164,7 +164,7 @@ const Reports = () => {
             <button 
               onClick={downloadStatement}
               disabled={billsLoading}
-              className="cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 rounded-full flex items-center font-semibold text-xs sm:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg flex items-center whitespace-nowrap shrink-0 font-semibold text-xs sm:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Download className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
               {t('Export PDF')}
@@ -172,36 +172,42 @@ const Reports = () => {
           </div>
         </div>
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
-          <div className="bg-white border border-gray-200 rounded-xl p-4 md:p-5 animate-fade-in hover:border-gray-300 transition-all duration-200">
-            <div className="flex items-center justify-between mb-2 md:mb-3">
-              <h3 className="text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wide">{t('Monthly Sales')}</h3>
-              <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-gray-100 flex items-center justify-center">
-                <Calendar className="w-5 h-5 md:w-6 md:h-6 text-gray-600" />
+                {/* Summary Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
+          <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden animate-fade-in">
+            <div className="flex justify-between items-start gap-1">
+              <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+                <Calendar className="w-4 h-4 md:w-5 md:h-5" />
               </div>
             </div>
-            <p className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900">{formatCurrency(analytics?.monthlySales || 1200)}</p>
+            <div className="mt-auto pt-2 min-w-0">
+              <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Monthly Sales')}</p>
+              <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(analytics?.monthlySales || 1200)}</p>
+            </div>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-xl p-4 md:p-5 animate-fade-in hover:border-gray-300 transition-all duration-200" style={{ animationDelay: '100ms' }}>
-            <div className="flex items-center justify-between mb-2 md:mb-3">
-              <h3 className="text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wide">{t('Monthly Collections')}</h3>
-              <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-green-100 flex items-center justify-center">
-                <Wallet className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
+          <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden animate-fade-in" style={{ animationDelay: '100ms' }}>
+            <div className="flex justify-between items-start gap-1">
+              <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+                <Wallet className="w-4 h-4 md:w-5 md:h-5" />
               </div>
             </div>
-            <p className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900">{formatCurrency(analytics?.monthlyCollection || 2500)}</p>
+            <div className="mt-auto pt-2 min-w-0">
+              <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Monthly Collections')}</p>
+              <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(analytics?.monthlyCollection || 2500)}</p>
+            </div>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-xl p-4 md:p-5 animate-fade-in md:col-span-2 lg:col-span-1 hover:border-gray-300 transition-all duration-200" style={{ animationDelay: '200ms' }}>
-            <div className="flex items-center justify-between mb-2 md:mb-3">
-              <h3 className="text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wide">{t('Total Pending')}</h3>
-              <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-red-100 flex items-center justify-center">
-                <AlertCircle className="w-5 h-5 md:w-6 md:h-6 text-red-600" />
+          <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden animate-fade-in " style={{ animationDelay: '200ms' }}>
+            <div className="flex justify-between items-start gap-1">
+              <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+                <AlertCircle className="w-4 h-4 md:w-5 md:h-5" />
               </div>
             </div>
-            <p className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900">{formatCurrency(analytics?.pendingAmount || 69700)}</p>
+            <div className="mt-auto pt-2 min-w-0">
+              <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Pending')}</p>
+              <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(analytics?.pendingAmount || 69700)}</p>
+            </div>
           </div>
         </div>
 

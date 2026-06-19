@@ -29,7 +29,7 @@ const Landing = () => {
       icon: Receipt,
       titleKey: 'Smart Billing',
       descriptionKey: 'Create professional bills in seconds with our intuitive interface',
-      color: 'text-blue-600',
+      color: 'text-[#093C5D]',
       bgColor: 'bg-blue-50'
     },
     {
@@ -50,7 +50,7 @@ const Landing = () => {
       icon: Shield,
       titleKey: 'Secure & Reliable',
       descriptionKey: 'Bank-grade security with 99.9% uptime guarantee',
-      color: 'text-blue-600',
+      color: 'text-[#093C5D]',
       bgColor: 'bg-blue-50'
     },
     {

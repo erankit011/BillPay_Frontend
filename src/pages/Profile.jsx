@@ -79,10 +79,10 @@ const Profile = () => {
   const BASE_URL = API_URL.replace('/api/v1', '');
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
+    <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
       <div className="animate-fade-in">
         <h1 className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900">{t('Profile')}</h1>
-        <p className="text-gray-600 text-sm md:text-base mt-1 font-medium">{t('Manage your account information')}</p>
+        <p className="text-gray-600 text-xs md:text-sm mt-1 font-medium">{t('Manage your account information')}</p>
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden animate-slide-up card-hover" style={{ animationDelay: '100ms' }}>
@@ -90,7 +90,7 @@ const Profile = () => {
           <section>
             <div className="flex flex-col md:flex-row items-center md:items-start gap-4 mb-4 md:mb-6">
               <div className="relative animate-scale-in" style={{ animationDelay: '200ms' }}>
-                <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl md:text-3xl lg:text-4xl font-semibold border-4 border-white shadow-lg overflow-hidden transition-transform hover:scale-105">
+                <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full bg-[#E5E7EB] text-[#093C5D] flex items-center justify-center text-2xl md:text-3xl lg:text-4xl font-semibold border-4 border-white shadow-lg overflow-hidden transition-transform hover:scale-105">
                   {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
                     <img src={`${BASE_URL}${user.profileImage}`} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
@@ -102,7 +102,7 @@ const Profile = () => {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploadingImage}
-                  className="cursor-pointer absolute bottom-0 right-0 bg-indigo-600 hover:bg-indigo-700 p-2 md:p-2.5 rounded-full text-white border-2 border-white transition-all disabled:opacity-50 hover:scale-110 active:scale-90"
+                  className="cursor-pointer absolute bottom-0 right-0 bg-[#093C5D] hover:bg-[#082a42] p-2 md:p-2.5 rounded-full text-white border-2 border-white transition-all disabled:opacity-50 hover:scale-110 active:scale-90"
                   title={t('Upload Profile Photo')}
                 >
                   {uploadingImage ? (
@@ -121,14 +121,14 @@ const Profile = () => {
               />
               <div className="text-center md:text-left">
                 <h2 className="text-base md:text-lg lg:text-xl font-semibold text-gray-900">{user?.name}</h2>
-                <p className="text-sm md:text-base text-gray-500 break-all mt-1 font-medium">{user?.email}</p>
+                <p className="text-xs md:text-sm text-gray-500 break-all mt-1 font-medium">{user?.email}</p>
                 <p className="text-xs text-gray-400 mt-1 md:mt-1.5 font-medium">{t('Click camera icon to change photo')}</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 lg:gap-5">
               <div>
-                <label className="block text-sm md:text-base font-semibold text-gray-800 mb-1.5 md:mb-2 flex items-center">
+                <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-1.5 md:mb-2 flex items-center">
                   <User className="w-4 h-4 md:w-4 md:h-4 mr-1.5 flex-shrink-0" /> 
                   <span>{t('Full Name')}</span>
                 </label>
@@ -137,13 +137,13 @@ const Profile = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                  className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
                   required
                 />
               </div>
               
               <div>
-                <label className="block text-sm md:text-base font-semibold text-gray-800 mb-1.5 md:mb-2 flex items-center">
+                <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-1.5 md:mb-2 flex items-center">
                   <Mail className="w-4 h-4 md:w-4 md:h-4 mr-1.5 flex-shrink-0" /> 
                   <span>{t('Email Address')}</span>
                 </label>
@@ -151,7 +151,7 @@ const Profile = () => {
                   type="email"
                   name="email"
                   value={formData.email}
-                  className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium bg-gray-50 text-gray-500 cursor-not-allowed opacity-50"
+                  className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-xs md:text-sm font-medium bg-gray-50 text-gray-500 cursor-not-allowed opacity-50"
                   readOnly
                   disabled
                 />
@@ -159,7 +159,7 @@ const Profile = () => {
               </div>
 
               <div>
-                <label className="block text-sm md:text-base font-semibold text-gray-800 mb-1.5 md:mb-2 flex items-center">
+                <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-1.5 md:mb-2 flex items-center">
                   <Phone className="w-4 h-4 md:w-4 md:h-4 mr-1.5 flex-shrink-0" /> 
                   <span>{t('Phone Number')}</span>
                 </label>
@@ -167,7 +167,7 @@ const Profile = () => {
                   type="text"
                   name="phone"
                   value={formData.phone}
-                  className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium bg-gray-50 text-gray-500 cursor-not-allowed opacity-50"
+                  className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-xs md:text-sm font-medium bg-gray-50 text-gray-500 cursor-not-allowed opacity-50"
                   readOnly
                   disabled
                 />
@@ -175,7 +175,7 @@ const Profile = () => {
               </div>
 
               <div>
-                <label className="block text-sm md:text-base font-semibold text-gray-800 mb-1.5 md:mb-2 flex items-center">
+                <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-1.5 md:mb-2 flex items-center">
                   <Store className="w-4 h-4 md:w-4 md:h-4 mr-1.5 flex-shrink-0" /> 
                   <span>{t('Shop Name')}</span>
                 </label>
@@ -184,7 +184,7 @@ const Profile = () => {
                   name="shopName"
                   value={formData.shopName}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                  className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
                   required
                 />
               </div>
@@ -195,7 +195,7 @@ const Profile = () => {
             <button
               type="submit"
               disabled={loading}
-              className="cursor-pointer w-full md:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-5 md:px-6 lg:px-7 py-2.5 md:py-3 lg:py-3.5 rounded-full flex items-center justify-center font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shadow-lg transition-all text-sm md:text-base active:scale-95"
+              className="cursor-pointer w-full md:w-auto bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg flex items-center whitespace-nowrap shrink-0 justify-center font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shadow-lg transition-all text-xs md:text-sm active:scale-95"
             >
               <Save className="w-4 h-4 md:w-5 md:h-5 mr-2 flex-shrink-0" />
               <span>{loading ? t('Saving...') : t('Save Profile')}</span>

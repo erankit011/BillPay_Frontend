@@ -42,7 +42,7 @@ const Dashboard = () => {
 
   if (isLoading) return (
     <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-indigo-600"></div>
+      <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#093C5D]"></div>
     </div>
   );
 
@@ -76,7 +76,7 @@ const Dashboard = () => {
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <ChartNoAxesCombined className="w-4 h-4 md:w-5 md:h-5" />
             </div>
-            <span className="bg-blue-50 text-blue-600 text-[10px] md:text-xs font-semibold px-1.5 md:px-2 py-0.5 md:py-1 rounded-lg flex items-center gap-0.5 border border-blue-100 whitespace-nowrap shrink-0">
+            <span className="bg-blue-50 text-[#093C5D] text-[10px] md:text-xs font-semibold px-1.5 md:px-2 py-0.5 md:py-1 rounded-lg flex items-center gap-0.5 border border-blue-100 whitespace-nowrap shrink-0">
               <TrendingUp className="w-3 h-3" /> +12%
             </span>
           </div>

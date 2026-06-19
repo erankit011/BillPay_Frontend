@@ -132,14 +132,14 @@ const Products = () => {
   return (
     <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Inventory & Products')}</h1>
           <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5">{t('Manage your shop items, stock levels, and daily pricing.')}</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 rounded-full flex items-center font-semibold text-xs sm:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
+          className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg flex items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
         >
           <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
           {t('Add Product')}
@@ -147,36 +147,42 @@ const Products = () => {
       </div>
 
       {/* Stats Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-6">
-        <div className="bg-white rounded-xl p-4 md:p-5 border border-gray-200">
-          <div className="flex items-center justify-between mb-2 md:mb-3">
-            <p className="text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wide">{t('INVENTORY VALUE')}</p>
-            <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-indigo-100 flex items-center justify-center">
-              <Wallet className="w-5 h-5 md:w-6 md:h-6 text-indigo-600" />
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
+        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+              <Wallet className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
-          <p className="text-2xl md:text-3xl font-semibold text-gray-900">{formatCurrency(stats.totalValue)}</p>
-          <p className="text-xs text-gray-600 font-semibold mt-1.5 md:mt-2">{t('Total stock value')}</p>
+          <div className="mt-auto pt-2 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('INVENTORY VALUE')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(stats.totalValue)}</p>
+            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">{t('Total stock value')}</p>
+          </div>
         </div>
-        <div className="bg-white rounded-xl p-4 md:p-5 border border-gray-200">
-          <div className="flex items-center justify-between mb-2 md:mb-3">
-            <p className="text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wide">{t('ACTIVE ITEMS')}</p>
-            <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-blue-100 flex items-center justify-center">
-              <Box className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
+        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+              <Box className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
-          <p className="text-2xl md:text-3xl font-semibold text-gray-900">{stats.activeItems}</p>
-          <p className="text-xs text-gray-600 font-semibold mt-1.5 md:mt-2">{t('Products in catalog')}</p>
+          <div className="mt-auto pt-2 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('ACTIVE ITEMS')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{stats.activeItems}</p>
+            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">{t('Products in catalog')}</p>
+          </div>
         </div>
-        <div className="bg-white rounded-xl p-4 md:p-5 border border-gray-200">
-          <div className="flex items-center justify-between mb-2 md:mb-3">
-            <p className="text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wide">{t('LOW STOCK ALERT')}</p>
-            <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-red-100 flex items-center justify-center">
-              <AlertTriangle className="w-5 h-5 md:w-6 md:h-6 text-red-600" />
+        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+              <AlertTriangle className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
-          <p className="text-2xl md:text-3xl font-semibold text-red-600">{stats.lowStockItems}</p>
-          <p className="text-xs text-red-600 font-semibold mt-1.5 md:mt-2">{t('Items need restock')}</p>
+          <div className="mt-auto pt-2 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('LOW STOCK ALERT')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-red-600 truncate">{stats.lowStockItems}</p>
+            <p className="text-[10px] md:text-xs text-red-500 font-medium truncate mt-0.5">{t('Items need restock')}</p>
+          </div>
         </div>
       </div>
 
@@ -190,7 +196,7 @@ const Products = () => {
           placeholder={t("Search products...")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-12 pr-4 py-2.5 md:py-3 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm md:text-base font-medium transition-colors duration-200"
+          className="block w-full pl-12 pr-4 py-2.5 md:py-3 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-sm md:text-base font-medium transition-colors duration-200"
         />
       </div>
 
@@ -198,7 +204,7 @@ const Products = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-6">
         {isLoading ? (
           <div className="col-span-full flex justify-center items-center py-12">
-            <div className="animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-indigo-600"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-[#093C5D]"></div>
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="col-span-full bg-white rounded-xl border border-gray-200 p-8 md:p-10 lg:p-12 text-center">
@@ -216,7 +222,7 @@ const Products = () => {
                 <div className="absolute top-3 md:top-4 right-3 md:right-4 flex gap-2">
                   <button 
                     onClick={() => openEditModal(product)}
-                    className="cursor-pointer text-gray-600 bg-gray-100 hover:bg-gray-200 p-2 md:p-2.5 rounded-xl active:scale-90 transition-all"
+                    className="cursor-pointer text-gray-600 bg-gray-100 hover:bg-gray-200 p-2 md:p-2.5 rounded-lg active:scale-90 transition-all"
                     title={t("Edit")}
                   >
                     <Edit2 className="w-4 h-4" />
@@ -227,7 +233,7 @@ const Products = () => {
                         deleteMutation.mutate(product._id);
                       }
                     }}
-                    className="cursor-pointer text-gray-600 bg-gray-100 hover:bg-gray-200 p-2 md:p-2.5 rounded-xl active:scale-90 transition-all"
+                    className="cursor-pointer text-gray-600 bg-gray-100 hover:bg-gray-200 p-2 md:p-2.5 rounded-lg active:scale-90 transition-all"
                     title={t("Delete")}
                   >
                     <Trash2 className="w-4 h-4" />
@@ -245,7 +251,7 @@ const Products = () => {
                 </h3>
 
                 {/* Price */}
-                <p className="text-xl md:text-2xl font-semibold text-indigo-600 mb-2 md:mb-3">
+                <p className="text-xl md:text-2xl font-semibold text-[#093C5D] mb-2 md:mb-3">
                   {formatCurrency(product.price)}
                 </p>
 
@@ -270,9 +276,9 @@ const Products = () => {
             {/* New Inventory Card */}
             <button
               onClick={() => setIsModalOpen(true)}
-              className="cursor-pointer bg-white rounded-xl border-2 border-dashed border-indigo-300 hover:border-indigo-400 p-4 md:p-5 flex flex-col items-center justify-center min-h-[200px] md:min-h-[220px] active:scale-95 transition-all text-indigo-600"
+              className="cursor-pointer bg-white rounded-xl border-2 border-dashed border-[#093C5D]/30 hover:border-[#093C5D]/50 p-4 md:p-5 flex flex-col items-center justify-center min-h-[200px] md:min-h-[220px] active:scale-95 transition-all text-[#093C5D]"
             >
-              <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-2 md:mb-3">
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#F5F5F5] flex items-center justify-center mb-2 md:mb-3">
                 <PlusCircle className="w-5 h-5 md:w-6 md:h-6" />
               </div>
               <h3 className="font-semibold text-sm md:text-base mb-1">New Inventory</h3>
@@ -301,7 +307,7 @@ const Products = () => {
       </div>
 
       {/* Download Report Button */}
-      <button className="cursor-pointer flex items-center gap-2 text-indigo-600 font-semibold text-sm md:text-base active:scale-95 transition-transform">
+      <button className="cursor-pointer flex items-center gap-2 text-[#093C5D] font-semibold text-sm md:text-base active:scale-95 transition-transform">
         <Download className="w-4 h-4 md:w-5 md:h-5" />
         Download Inventory Report
       </button>
@@ -326,7 +332,7 @@ const Products = () => {
                   <label className="block text-sm md:text-base font-semibold text-gray-700 mb-1.5">{t('Product Name')}</label>
                   <input 
                     {...register('name')}
-                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
                     placeholder="e.g. Atta 5kg"
                   />
                   {errors.name && <p className="text-red-500 text-xs mt-1.5 font-semibold">{errors.name.message}</p>}
@@ -339,7 +345,7 @@ const Products = () => {
                       type="number"
                       step="0.01"
                       {...register('price')}
-                      className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                      className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
                       placeholder="0.00"
                     />
                     {errors.price && <p className="text-red-500 text-xs mt-1.5 font-semibold">{errors.price.message}</p>}
@@ -349,7 +355,7 @@ const Products = () => {
                     <input 
                       type="number"
                       {...register('stock')}
-                      className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200"
+                      className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
                       placeholder="0"
                     />
                     {errors.stock && <p className="text-red-500 text-xs mt-1.5 font-semibold">{errors.stock.message}</p>}
@@ -359,7 +365,7 @@ const Products = () => {
                 <button
                   type="submit"
                   disabled={createMutation.isPending || updateMutation.isPending}
-                  className="cursor-pointer w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-full px-5 md:px-6 py-2.5 md:py-3 font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 active:scale-95 transition-all text-sm md:text-base"
+                  className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-full px-5 md:px-6 py-2.5 md:py-3 font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 active:scale-95 transition-all text-sm md:text-base"
                 >
                   {createMutation.isPending || updateMutation.isPending ? t('Saving...') : t('Save Product')}
                 </button>
