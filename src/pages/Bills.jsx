@@ -214,7 +214,7 @@ const Bills = () => {
           placeholder={t("Search by invoice number or customer...")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 sm:pl-11 pr-3 sm:pr-4 py-2.5 sm:py-3 bg-white border border-gray-200 rounded-2xl focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-xs sm:text-sm transition-all"
+          className="block w-full pl-10 sm:pl-11 pr-3 sm:pr-4 py-2.5 sm:py-3 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-xs sm:text-sm transition-all"
         />
       </div>
 
@@ -248,7 +248,7 @@ const Bills = () => {
                   {filteredBills.map((bill, index) => (
                     <tr 
                       key={bill._id} 
-                      className="hover:bg-[#093C5D]/5/30 transition-all duration-200 animate-fade-in"
+                      className={`hover:bg-[#F5F5F5] transition-all duration-200 animate-fade-in relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
                       style={{ animationDelay: `${index * 50}ms` }}
                     >
                       <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap">
@@ -290,7 +290,7 @@ const Bills = () => {
                           
                           {/* Dropdown Menu */}
                           {openDropdown === bill._id && (
-                            <div className="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
+                            <div className="absolute right-0 mt-2 w-60 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -346,7 +346,7 @@ const Bills = () => {
               {filteredBills.map((bill, index) => (
                 <div 
                   key={bill._id} 
-                  className="p-4 animate-fade-in hover:bg-[#093C5D]/5/30 transition-colors"
+                  className={`p-4 animate-fade-in hover:bg-[#F5F5F5] transition-colors relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <div className="flex items-start gap-3 mb-3">
@@ -383,7 +383,7 @@ const Bills = () => {
                       
                       {/* Dropdown Menu */}
                       {openDropdown === bill._id && (
-                        <div className="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
+                        <div className="absolute right-0 mt-2 w-60 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
