@@ -284,7 +284,7 @@ const Customers = () => {
   };
 
   return (
-    <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
+    <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
@@ -383,61 +383,123 @@ const Customers = () => {
           filteredCustomers.map((customer, index) => (
             <div 
               key={customer._id} 
-              className="bg-white rounded-xl border border-gray-200 p-4 md:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 animate-fade-in"
+              className="bg-white rounded-xl border border-gray-200 hover:border-gray-300 p-4 md:p-5 animate-fade-in overflow-hidden transition-all duration-200"
               style={{ animationDelay: `${index * 50}ms` }}
             >
-              {/* Left Side - Customer Info */}
-              <div className="flex items-center gap-3 md:gap-4 w-full md:w-auto">
-                <div className={`w-12 h-12 md:w-14 md:h-14 rounded-full ${getAvatarColor(index)} flex items-center justify-center font-semibold text-base md:text-lg flex-shrink-0`}>
+              {/* Desktop Layout: Single row */}
+              <div className="hidden md:flex items-center gap-5">
+                {/* Avatar */}
+                <div className={`w-12 h-12 lg:w-14 lg:h-14 rounded-full ${getAvatarColor(index)} flex items-center justify-center font-semibold text-base lg:text-lg flex-shrink-0`}>
                   {getInitials(customer.name)}
                 </div>
+
+                {/* Name + Phone */}
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-base md:text-lg font-semibold text-gray-900 truncate">{customer.name}</h3>
-                  <div className="flex items-center text-gray-500 text-sm mt-0.5 font-medium">
+                  <h3 className="text-base lg:text-lg font-semibold text-gray-900 truncate">{customer.name}</h3>
+                  <div className="flex items-center text-gray-500 text-sm font-medium mt-0.5">
                     <Phone className="w-3.5 h-3.5 mr-1.5 flex-shrink-0" />
-                    <span className="truncate">{customer.phone}</span>
+                    <span>{customer.phone}</span>
                   </div>
                 </div>
-              </div>
-              
-              {/* Right Side - Balance & Actions */}
-              <div className="flex items-center gap-3 md:gap-4 w-full md:w-auto justify-between">
-                <div className="text-left md:text-right flex-1 md:flex-initial">
-                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-0.5">
+
+                {/* Pending Balance */}
+                <div className="text-right flex-shrink-0 min-w-[120px] lg:min-w-[140px]">
+                  <p className="text-[10px] lg:text-xs text-gray-500 font-semibold uppercase tracking-wider mb-0.5">
                     {t('PENDING BALANCE')}
                   </p>
-                  <p className={`text-lg md:text-xl lg:text-2xl font-semibold ${customer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                  <p className={`text-lg lg:text-xl font-semibold ${customer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
                     {formatCurrency(customer.balance)}
                   </p>
                 </div>
-                
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  {/* Edit Button */}
+
+                {/* Separator */}
+                <div className="w-px h-10 bg-gray-200 flex-shrink-0"></div>
+
+                {/* Actions */}
+                <div className="flex items-center gap-1.5 flex-shrink-0">
                   <button 
                     onClick={() => handleEdit(customer)}
-                    className="cursor-pointer p-2 md:p-2.5 hover:bg-[#093C5D]/5 rounded-xl transition-colors active:scale-90 group"
+                    className="cursor-pointer p-2.5 hover:bg-[#093C5D]/5 rounded-xl transition-colors active:scale-90 group"
                     title={t('Edit Customer')}
                   >
-                    <Edit className="w-4 h-4 md:w-5 md:h-5 text-[#093C5D] group-hover:text-[#082a42]" />
+                    <Edit className="w-[18px] h-[18px] text-[#093C5D] group-hover:text-[#082a42]" />
                   </button>
                   
-                  {/* Delete Button */}
                   <button 
                     onClick={() => handleDelete(customer)}
-                    className="cursor-pointer p-2 md:p-2.5 hover:bg-red-50 rounded-xl transition-colors active:scale-90 group"
+                    className="cursor-pointer p-2.5 hover:bg-red-50 rounded-xl transition-colors active:scale-90 group"
                     title={t('Delete Customer')}
                     disabled={deleteMutation.isPending}
                   >
-                    <Trash2 className="w-4 h-4 md:w-5 md:h-5 text-red-600 group-hover:text-red-700" />
+                    <Trash2 className="w-[18px] h-[18px] text-red-600 group-hover:text-red-700" />
                   </button>
                   
-                  {/* View Ledger Button */}
                   <button 
                     onClick={() => setSelectedCustomer(customer)}
-                    className="cursor-pointer text-[#093C5D] border-2 border-[#093C5D] hover:bg-[#093C5D]/5 px-3 py-1.5 md:px-4 md:py-2 rounded-full font-semibold active:scale-95 transition-all whitespace-nowrap text-xs md:text-sm"
+                    className="cursor-pointer ml-1 text-[#093C5D] border-2 border-[#093C5D] hover:bg-[#093C5D] hover:text-white px-4 py-2 rounded-full font-semibold active:scale-95 transition-all whitespace-nowrap text-sm"
                   >
                     {t('Ledger')}
                   </button>
+                </div>
+              </div>
+
+              {/* Mobile Layout: Compact stacked */}
+              <div className="md:hidden">
+                <div className="flex items-start gap-3">
+                  {/* Avatar */}
+                  <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full ${getAvatarColor(index)} flex items-center justify-center font-semibold text-sm sm:text-base flex-shrink-0 mt-0.5`}>
+                    {getInitials(customer.name)}
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    {/* Name + Phone */}
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="text-sm sm:text-base font-semibold text-gray-900 truncate">{customer.name}</h3>
+                      <div className="flex items-center text-gray-400 text-xs font-medium">
+                        <Phone className="w-3 h-3 mr-0.5 flex-shrink-0" />
+                        <span>{customer.phone}</span>
+                      </div>
+                    </div>
+
+                    {/* Balance + Actions Row */}
+                    <div className="flex items-center justify-between mt-2">
+                      <div>
+                        <p className="text-[9px] sm:text-[10px] text-gray-500 font-semibold uppercase tracking-wider leading-none mb-0.5">
+                          {t('PENDING BALANCE')}
+                        </p>
+                        <p className={`text-base sm:text-lg font-semibold ${customer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                          {formatCurrency(customer.balance)}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-0.5 sm:gap-1 flex-shrink-0">
+                        <button 
+                          onClick={() => handleEdit(customer)}
+                          className="cursor-pointer p-1.5 sm:p-2 hover:bg-[#093C5D]/5 rounded-lg transition-colors active:scale-90 group"
+                          title={t('Edit Customer')}
+                        >
+                          <Edit className="w-4 h-4 text-[#093C5D]" />
+                        </button>
+                        
+                        <button 
+                          onClick={() => handleDelete(customer)}
+                          className="cursor-pointer p-1.5 sm:p-2 hover:bg-red-50 rounded-lg transition-colors active:scale-90 group"
+                          title={t('Delete Customer')}
+                          disabled={deleteMutation.isPending}
+                        >
+                          <Trash2 className="w-4 h-4 text-red-600" />
+                        </button>
+                        
+                        <button 
+                          onClick={() => setSelectedCustomer(customer)}
+                          className="cursor-pointer ml-0.5 text-[#093C5D] border-2 border-[#093C5D] hover:bg-[#093C5D] hover:text-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full font-semibold active:scale-95 transition-all whitespace-nowrap text-[11px] sm:text-xs"
+                        >
+                          {t('Ledger')}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -449,7 +511,7 @@ const Customers = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen px-4 py-6 md:py-8">
-            <div className="fixed inset-0 bg-black/30 animate-modal-overlay" onClick={handleCloseModal} />
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm animate-modal-overlay" onClick={handleCloseModal} />
             <div className="relative bg-white rounded-xl border border-gray-200 max-w-md w-full p-5 md:p-6 animate-modal-content">
               <div className="flex items-center justify-between mb-4 md:mb-5 pb-4 border-b border-gray-200">
                 <h3 className="text-lg md:text-xl font-semibold text-gray-900">
@@ -510,7 +572,7 @@ const Customers = () => {
                 <button
                   type="submit"
                   disabled={mutation.isPending}
-                  className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-full px-5 md:px-6 py-2.5 md:py-3 font-semibold text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 active:scale-95 transition-all shadow-lg"
+                  className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-lg px-5 md:px-6 py-2.5 md:py-3 font-semibold text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 active:scale-95 transition-all shadow-lg"
                 >
                   {mutation.isPending ? t('Saving...') : isEditMode ? t('Update Customer') : t('Save Customer')}
                 </button>

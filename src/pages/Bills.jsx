@@ -524,7 +524,7 @@ const Bills = () => {
               <button 
                 type="submit" 
                 disabled={mutation.isPending} 
-                className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-full py-2.5 sm:py-3 md:py-3.5 font-semibold text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-lg active:scale-[0.98] transition-all"
+                className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-lg py-2.5 sm:py-3 md:py-3.5 font-semibold text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-lg active:scale-[0.98] transition-all"
               >
                 {mutation.isPending ? (
                   <span className="flex items-center justify-center">

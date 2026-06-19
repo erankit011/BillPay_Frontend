@@ -58,9 +58,8 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
               <button
                 key={lang.code}
                 onClick={() => changeLanguage(lang.code)}
-                className={`w-full flex items-center justify-between px-3 py-2.5 text-sm hover:bg-gray-50 transition-colors ${
-                  currentLanguage.code === lang.code ? 'text-[#093C5D] bg-gray-50 font-medium' : 'text-gray-700'
-                }`}
+                className={`w-full flex items-center justify-between px-3 py-2.5 text-sm hover:bg-gray-50 transition-colors ${currentLanguage.code === lang.code ? 'text-[#093C5D] bg-gray-50 font-medium' : 'text-gray-700'
+                  }`}
               >
                 <span>{lang.nativeName}</span>
                 {currentLanguage.code === lang.code && (
@@ -92,9 +91,8 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
             <button
               key={lang.code}
               onClick={() => changeLanguage(lang.code)}
-              className={`w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-gray-50 transition-colors ${
-                currentLanguage.code === lang.code ? 'text-[#093C5D] bg-gray-50 font-medium' : 'text-gray-700'
-              } cursor-pointer`}
+              className={`w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-gray-50 transition-colors ${currentLanguage.code === lang.code ? 'text-[#093C5D] bg-gray-50 font-medium' : 'text-gray-700'
+                } cursor-pointer`}
             >
               <span>{lang.nativeName}</span>
               {currentLanguage.code === lang.code && (

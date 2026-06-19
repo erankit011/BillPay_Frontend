@@ -300,7 +300,7 @@ const MainLayout = () => {
           <div className="relative">
             <button
               onClick={handleNotificationClick}
-              className="cursor-pointer relative p-2 sm:p-2.5 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-full transition-all duration-300 active:scale-95 flex items-center justify-center"
+              className="cursor-pointer border border-gray-200 relative p-2 sm:p-2.5 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-full transition-all duration-300 active:scale-95 flex items-center justify-center"
               aria-label="Notifications"
             >
               <Bell className="w-5 h-5" strokeWidth={2} />
@@ -322,7 +322,7 @@ const MainLayout = () => {
                 />
 
                 {/* Panel - Mobile: Full width from top, Desktop: Dropdown */}
-                <div className="fixed sm:absolute left-0 right-0 sm:left-auto top-14 sm:top-full sm:right-0 sm:mt-2 w-full sm:w-96 sm:max-w-md bg-white sm:rounded-2xl shadow-2xl sm:shadow-xl border-t sm:border border-gray-200 z-40 max-h-[calc(100vh-3.5rem)] sm:max-h-[500px] flex flex-col animate-fade-in">
+                <div className="fixed sm:absolute left-0 right-0 sm:left-auto top-14 sm:top-full sm:right-0 sm:mt-3 w-full sm:w-96 sm:max-w-md bg-white sm:rounded-2xl sm:border-b border-gray-200 z-40 max-h-[calc(100vh-3.5rem)] sm:max-h-[500px] flex flex-col animate-fade-in">
                   {/* Header */}
                   <div className="p-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0 bg-white">
                     <div className="flex items-center gap-2">
@@ -441,7 +441,7 @@ const MainLayout = () => {
       </header>
 
       {/* Main Content */}
-      <main className="md:ml-[220px] min-[1440px]:ml-[240px] pt-[88px] md:pt-[96px] lg:pt-[104px] min-[1440px]:pt-[120px] px-4 md:px-6 lg:px-8 min-[1440px]:px-12 pb-6 md:pb-8 lg:pb-10 min-[1440px]:pb-12 min-h-screen">
+      <main className="md:ml-[220px] min-[1440px]:ml-[240px] pt-[88px] md:pt-[96px] lg:pt-[104px] min-[1440px]:pt-[120px] px-4 md:px-6 lg:px-8 min-[1440px]:px-12 pb-6 md:pb-8 lg:pb-10 min-[1440px]:pb-12 min-h-screen overflow-x-hidden">
         <div className="max-w-[1440px] mx-auto w-full">
           <Outlet />
         </div>

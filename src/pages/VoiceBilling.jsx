@@ -271,16 +271,16 @@ const VoiceBilling = () => {
               <button
                 onClick={isRecording ? stopVoiceRecognition : startVoiceRecognition}
                 disabled={isProcessing}
-                className={`cursor-pointer w-36 h-36 md:w-40 md:h-40 rounded-lg flex items-center whitespace-nowrap shrink-0 justify-center transition-all duration-200 active:scale-90 border-2 border-[#D1D5DB] focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:ring-offset-2 ${
+                className={`cursor-pointer w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-40 lg:h-40 rounded-full flex items-center justify-center transition-all duration-300 active:scale-90 shadow-lg focus:outline-none focus:ring-2 focus:ring-[#093C5D]/40 focus:ring-offset-4 ${
                   isRecording 
-                    ? 'bg-red-500 text-white' 
-                    : 'bg-gradient-to-br from-[#093C5D] to-purple-600 text-white'
+                    ? 'bg-red-500 text-white shadow-red-500/30 border-4 border-red-300' 
+                    : 'bg-[#093C5D] hover:bg-[#082a42] text-white shadow-[#093C5D]/30 border-4 border-[#093C5D]/20'
                 } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 {isProcessing ? (
-                  <Loader2 className="w-14 h-14 md:w-16 md:h-16 animate-spin" />
+                  <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 animate-spin" />
                 ) : (
-                  <Mic className={`w-14 h-14 md:w-16 md:h-16 ${isRecording ? 'animate-pulse' : ''}`} />
+                  <Mic className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 ${isRecording ? 'animate-pulse' : ''}`} />
                 )}
               </button>
 
