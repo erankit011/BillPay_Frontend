@@ -11,8 +11,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'logo.png', 'icons/*'],
       manifest: {
-        name: 'BakiPay',
-        short_name: 'BakiPay',
+        name: 'UdharPay',
+        short_name: 'UdharPay',
         description: 'AI-powered Udhar Recovery & Billing',
         theme_color: '#ffffff',
         icons: [

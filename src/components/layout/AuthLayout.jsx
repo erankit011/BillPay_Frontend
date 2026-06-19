@@ -30,7 +30,7 @@ const AuthLayout = () => {
         </div>
 
         <div className="relative z-10 cursor-pointer block mt-4 lg:mt-0" onClick={() => navigate('/')}>
-          <img src="/logo.svg" alt="UdharPay Logo" className="h-12 lg:h-16 w-auto object-contain brightness-0 invert block origin-left" />
+          <span className="text-[28px] lg:text-[32px] font-semibold tracking-tight text-white select-none cursor-pointer" onClick={() => navigate('/')}>UdharPay<span className="inline-block w-2 h-2 lg:w-[9px] lg:h-[9px] rounded-full bg-[#2ECC71] ml-[2px] mb-[3px] align-baseline"></span></span>
         </div>
 
         <div className="relative z-10 my-auto">
@@ -78,7 +78,7 @@ const AuthLayout = () => {
         {/* Mobile Header */}
         <div className="lg:hidden w-full px-5 py-4 flex items-center justify-between border-b border-gray-100 flex-shrink-0 sticky top-0 bg-white/90 backdrop-blur-md z-50">
           <div className="cursor-pointer block" onClick={() => navigate('/')}>
-             <img src="/logo.svg" alt="UdharPay Logo" className="h-10 sm:h-12 w-auto object-contain block origin-left" />
+             <span className="text-[20px] sm:text-[22px] font-semibold tracking-tight text-[#093C5D] select-none cursor-pointer" onClick={() => navigate('/')}>UdharPay<span className="inline-block w-[6px] h-[6px] sm:w-[7px] sm:h-[7px] rounded-full bg-[#2ECC71] ml-[2px] mb-[2px] align-baseline"></span></span>
           </div>
         </div>
 

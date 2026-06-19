@@ -23,7 +23,7 @@ const PrivacyPolicy = () => {
                 <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
               <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                <img src="/logo.png" alt="UdharPay Logo" className="h-8 sm:h-10 md:h-12 object-contain" />
+                <span className="text-[18px] sm:text-[20px] md:text-[22px] font-semibold tracking-tight text-[#093C5D] select-none">UdharPay<span className="inline-block w-[5px] h-[5px] sm:w-[6px] sm:h-[6px] md:w-[7px] md:h-[7px] rounded-full bg-[#2ECC71] ml-[1px] mb-[2px] align-baseline"></span></span>
               </div>
             </div>
 

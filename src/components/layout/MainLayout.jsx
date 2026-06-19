@@ -146,15 +146,12 @@ const MainLayout = () => {
   const closeSidebar = () => setSidebarOpen(false);
 
   return (
-    <div className="flex min-h-screen glass-background overflow-hidden">
+    <div className="flex min-h-screen bg-[#F5F5F5] overflow-hidden">
       {/* Sidebar Desktop */}
-      <aside className="hidden md:flex flex-col h-screen bg-white md:w-[220px] min-[1440px]:w-[240px] fixed left-0 top-0 border-r border-gray-200 z-50">
+      <aside className="hidden md:flex flex-col h-screen bg-white md:w-[220px] min-[1440px]:w-[240px] fixed left-0 top-0 border-r border-gray-100 z-50">
         {/* Brand - same height as header h-16, aligned */}
-        <div className="h-[64px] min-[1440px]:h-[72px] flex items-center px-4 md:px-6 min-[1440px]:px-12 border-b border-gray-200 flex-shrink-0">
-          <div className="relative">
-            <h1 className="text-2xl font-bold text-indigo-600 tracking-tight">BakiPay</h1>
-            <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-indigo-600 to-purple-400 rounded-full"></span>
-          </div>
+        <div className="h-[64px] min-[1440px]:h-[72px] flex items-center px-5 min-[1440px]:px-7 border-b border-gray-100 flex-shrink-0">
+          <span className="text-[22px] min-[1440px]:text-[24px] font-semibold tracking-tight text-[#093C5D] select-none cursor-default">UdharPay<span className="inline-block w-[7px] h-[7px] min-[1440px]:w-2 min-[1440px]:h-2 rounded-full bg-[#2ECC71] ml-[2px] mb-[2px] align-baseline"></span></span>
         </div>
 
         {/* Links */}
@@ -164,9 +161,9 @@ const MainLayout = () => {
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-xl border-l-4 transition-all duration-300 active:scale-95 ${isActive
-                  ? 'text-indigo-600 bg-indigo-600/10 border-indigo-600 font-semibold hover:translate-x-1'
-                  : 'text-gray-600 border-transparent hover:translate-x-1 hover:text-indigo-600 font-medium'
+                `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 active:scale-95 ${isActive
+                  ? 'bg-[#093C5D] text-white font-medium shadow-sm shadow-[#093C5D]/20'
+                  : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 font-medium'
                 }`
               }
             >
@@ -177,19 +174,19 @@ const MainLayout = () => {
         </nav>
 
         {/* Footer */}
-        <div className="flex flex-col gap-1 px-3 py-3 border-t border-gray-200 flex-shrink-0">
+        <div className="flex flex-col gap-2 px-4 py-4 border-t border-gray-100 flex-shrink-0 mt-auto">
           <Link
             to="/settings"
-            className="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all font-medium"
+            className="flex items-center justify-center gap-2 w-full py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl transition-all font-medium border border-gray-200/60"
           >
-            <HelpCircle className="w-5 h-5" />
-            <span className="text-sm">{t('Help')}</span>
+            <HelpCircle className="w-4 h-4" />
+            <span className="text-sm">{t('Support')}</span>
           </Link>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all font-medium w-full"
+            className="flex items-center justify-center gap-2 w-full py-2.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all font-medium"
           >
-            <LogOut className="w-5 h-5" />
+            <LogOut className="w-4 h-4" />
             <span className="text-sm">{t('Logout')}</span>
           </button>
         </div>
@@ -210,18 +207,14 @@ const MainLayout = () => {
           }`}>
           <div className="flex flex-col h-full">
             {/* Header with Close Button - Same height and padding as main header */}
-            <div className="h-16 flex items-center px-4 border-b border-gray-200">
+            <div className="h-16 flex items-center justify-between px-4 border-b border-gray-100">
+              <span className="text-[20px] font-semibold tracking-tight text-[#093C5D] select-none">UdharPay<span className="inline-block w-[6px] h-[6px] rounded-full bg-[#2ECC71] ml-[2px] mb-[2px] align-baseline"></span></span>
               <button
                 onClick={closeSidebar}
-                className="p-2 hover:bg-gray-100 rounded-full transition-all active:scale-90 active:bg-gray-200"
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 transition-all"
                 aria-label="Close menu"
               >
-                <div className="w-6 h-6 flex items-center justify-center">
-                  <div className="relative w-full h-full">
-                    <span className="absolute top-1/2 left-0 w-full h-0.5 bg-gray-700 rotate-45 translate-y-0"></span>
-                    <span className="absolute top-1/2 left-0 w-full h-0.5 bg-gray-700 -rotate-45 translate-y-0"></span>
-                  </div>
-                </div>
+                <svg className="w-4 h-4 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
               </button>
             </div>
 
@@ -235,9 +228,9 @@ const MainLayout = () => {
                     to={item.path}
                     onClick={closeSidebar}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-4 py-3 rounded-xl border-l-4 transition-all duration-300 active:scale-95 ${isActive
-                        ? 'text-indigo-600 bg-indigo-600/10 border-indigo-600 font-semibold hover:translate-x-1'
-                        : 'text-gray-600 border-transparent hover:translate-x-1 hover:text-indigo-600 font-medium'
+                      `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 active:scale-95 ${isActive
+                        ? 'bg-[#093C5D] text-white font-medium shadow-sm shadow-[#093C5D]/20'
+                        : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 font-medium'
                       }`
                     }
                   >
@@ -273,32 +266,30 @@ const MainLayout = () => {
         </aside>
       </div>
 
-      <header className="fixed top-0 right-0 left-0 md:left-[220px] min-[1440px]:left-[240px] h-[64px] min-[1440px]:h-[72px] bg-white border-b border-gray-200 z-40 flex items-center justify-between px-4 md:px-6 lg:px-8 min-[1440px]:px-12">
-        {/* Left Side - Hamburger (Mobile) / Greeting (Desktop) */}
-        <div className="flex items-center gap-2 sm:gap-3">
+      <header className="fixed top-0 right-0 left-0 md:left-[220px] min-[1440px]:left-[240px] h-[64px] min-[1440px]:h-[72px] bg-white border-b border-gray-100 z-40 flex items-center justify-between px-4 md:px-6 lg:px-8 min-[1440px]:px-12">
+        {/* Left Side - Hamburger & Page Title */}
+        <div className="flex items-center gap-4">
           {/* Hamburger Menu Button (Mobile Only) */}
           {!sidebarOpen && (
             <button
               onClick={() => setSidebarOpen(true)}
-              className="md:hidden p-2 rounded-full transition-all active:scale-90 active:bg-gray-100 flex items-center justify-center"
+              className="md:hidden p-2 rounded-full transition-all active:scale-90 hover:bg-gray-50 flex items-center justify-center text-gray-700"
               aria-label="Open menu"
             >
-              <div className="w-6 h-6 flex items-center justify-center">
-                <div className="relative w-full h-full">
-                  <span className="absolute top-1/2 left-0 w-full h-0.5 bg-gray-700 -translate-y-2"></span>
-                  <span className="absolute top-1/2 left-0 w-full h-0.5 bg-gray-700 -translate-y-px"></span>
-                  <span className="absolute top-1/2 left-0 w-full h-0.5 bg-gray-700 translate-y-2"></span>
-                </div>
+              <div className="w-5 h-5 flex flex-col justify-center gap-1.5">
+                <span className="w-full h-0.5 bg-current rounded-full"></span>
+                <span className="w-3/4 h-0.5 bg-current rounded-full"></span>
+                <span className="w-full h-0.5 bg-current rounded-full"></span>
               </div>
             </button>
           )}
 
-          {/* BakiPay Logo - Mobile Only (with gradient underline) */}
-          <div className="relative md:hidden">
-            <h1 className="text-xl sm:text-2xl font-bold text-indigo-600 tracking-tight">BakiPay</h1>
-            <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-indigo-600 to-purple-400 rounded-full"></span>
+          {/* Page Title (Desktop) & Logo (Mobile) */}
+          <div className="relative md:hidden flex items-center">
+            <span className="text-[18px] font-semibold tracking-tight text-[#093C5D] select-none">UdharPay<span className="inline-block w-[5px] h-[5px] rounded-full bg-[#2ECC71] ml-[1px] mb-[2px] align-baseline"></span></span>
           </div>
         </div>
+
 
         {/* Right Side - Actions */}
         <div className="flex items-center gap-1.5 sm:gap-3 md:gap-4">
@@ -309,14 +300,14 @@ const MainLayout = () => {
           <div className="relative">
             <button
               onClick={handleNotificationClick}
-              className="cursor-pointer relative p-1.5 sm:p-2.5 text-gray-600 rounded-full transition-all duration-300 active:scale-90 flex items-center justify-center border border-transparent"
+              className="cursor-pointer relative p-2 sm:p-2.5 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-full transition-all duration-300 active:scale-95 flex items-center justify-center"
               aria-label="Notifications"
             >
-              <Bell className="w-5 sm:w-[22px] h-5 sm:h-[22px]" strokeWidth={2} />
+              <Bell className="w-5 h-5" strokeWidth={2} />
               {notificationCount > 0 && (
-                <span className="absolute top-1 right-1 sm:top-2 sm:right-2.5 flex h-2 sm:h-2.5 w-2 sm:w-2.5">
+                <span className="absolute top-0 right-0 flex h-2.5 w-2.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 sm:h-2.5 w-2 sm:w-2.5 bg-red-500 border border-white"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border-2 border-white"></span>
                 </span>
               )}
             </button>
@@ -433,17 +424,15 @@ const MainLayout = () => {
 
             {/* Avatar */}
             {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
-              <div className="w-8 h-8 sm:w-10 h-10 rounded-full p-[1.5px] sm:p-[2px] bg-gradient-to-tr from-indigo-500 via-purple-500 to-indigo-600 active:scale-95 flex items-center justify-center cursor-pointer">
-                <div className="w-full h-full rounded-full overflow-hidden border border-white bg-white">
-                  <img
-                    src={`${BASE_URL}${user.profileImage}`}
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden active:scale-95 cursor-pointer ring-1 ring-gray-200">
+                <img
+                  src={`${BASE_URL}${user.profileImage}`}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
               </div>
             ) : (
-              <div className="w-8 h-8 sm:w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-500 text-white flex items-center justify-center font-semibold text-xs sm:text-xl border-2 border-white">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center font-semibold text-sm sm:text-base ring-1 ring-[#093C5D]/20">
                 {getInitials(user?.name)}
               </div>
             )}

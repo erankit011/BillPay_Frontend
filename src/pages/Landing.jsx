@@ -77,7 +77,7 @@ const Landing = () => {
           <div className="flex items-center justify-between h-14 sm:h-16 w-full">
             {/* Logo */}
             <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-              <img src="/logo.svg" alt="UdharPay Logo" className="h-10 sm:h-12 md:h-14 object-contain scale-[1.5] sm:scale-[1.7] md:scale-[2] origin-left ml-2 sm:ml-4" />
+              <span className="text-[22px] sm:text-[24px] md:text-[28px] font-semibold tracking-tight text-[#093C5D] select-none">UdharPay<span className="inline-block w-[6px] h-[6px] sm:w-[7px] sm:h-[7px] md:w-2 md:h-2 rounded-full bg-[#2ECC71] ml-[2px] mb-[2px] align-baseline"></span></span>
             </div>
 
             {/* Right Side */}
@@ -323,7 +323,7 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-5 md:gap-6">
             <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-              <img src="/logo.svg" alt="UdharPay Logo" className="h-10 sm:h-12 md:h-14 object-contain scale-[1.5] sm:scale-[1.7] md:scale-[2] origin-left ml-2 sm:ml-4" />
+              <span className="text-[22px] sm:text-[24px] md:text-[28px] font-semibold tracking-tight text-[#093C5D] select-none">UdharPay<span className="inline-block w-[6px] h-[6px] sm:w-[7px] sm:h-[7px] md:w-2 md:h-2 rounded-full bg-[#2ECC71] ml-[2px] mb-[2px] align-baseline"></span></span>
             </div>
 
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 md:gap-10 text-sm text-gray-600 font-medium">
