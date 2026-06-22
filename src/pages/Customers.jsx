@@ -89,7 +89,7 @@ const CustomerLedger = ({ customer, onClose }) => {
                   {transactions.map((tx, index) => (
                     <div 
                       key={tx._id} 
-                      className="bg-white p-4 rounded-xl border border-gray-200 flex justify-between items-center animate-fade-in"
+                      className="bg-white p-4 rounded-xl border border-gray-200 hover:border-gray-300 transition-all flex justify-between items-center animate-fade-in"
                       style={{ animationDelay: `${index * 30}ms` }}
                     >
                       <div className="flex items-center gap-3">
@@ -112,27 +112,27 @@ const CustomerLedger = ({ customer, onClose }) => {
 
             {/* Quick Action Pane */}
             <div className="w-full md:w-80 bg-white p-5 md:p-6 border-t md:border-t-0 md:border-l border-gray-200">
-              <div className="mb-6 bg-gray-50 rounded-xl p-4 text-center border border-gray-200">
-                <p className="text-sm text-gray-500 mb-1 font-semibold">{t('Current Pending Balance')}</p>
-                <p className={`text-2xl font-semibold ${customer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
+              <div className="mb-6 bg-white rounded-xl p-4 text-center border border-gray-200 hover:border-gray-300 transition-all">
+                <p className="text-[10px] md:text-xs text-gray-600 mb-1 font-semibold uppercase tracking-wide">{t('Current Pending Balance')}</p>
+                <p className={`text-2xl md:text-3xl font-semibold ${customer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
                   {formatCurrency(customer.balance)}
                 </p>
               </div>
 
               <h4 className="font-semibold text-gray-700 mb-4">{t('Add Entry')}</h4>
               <form onSubmit={handleTransaction} className="space-y-4">
-                <div className="flex rounded-xl p-1 bg-gray-100">
+                <div className="flex rounded-xl p-1 bg-gray-100 border border-gray-200">
                   <button 
                     type="button" 
                     onClick={() => setTxType('PAYMENT')} 
-                    className={`cursor-pointer flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${txType === 'PAYMENT' ? 'bg-white shadow text-green-600' : 'text-gray-500 hover:text-gray-700'}`}
+                    className={`cursor-pointer flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${txType === 'PAYMENT' ? 'bg-white border border-gray-200 text-green-600' : 'text-gray-500 hover:text-gray-700'}`}
                   >
                     {t('Received')}
                   </button>
                   <button 
                     type="button" 
                     onClick={() => setTxType('UDHAR')} 
-                    className={`cursor-pointer flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${txType === 'UDHAR' ? 'bg-white shadow text-red-600' : 'text-gray-500 hover:text-gray-700'}`}
+                    className={`cursor-pointer flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${txType === 'UDHAR' ? 'bg-white border border-gray-200 text-red-600' : 'text-gray-500 hover:text-gray-700'}`}
                   >
                     {t('Gave Udhar')}
                   </button>
@@ -171,7 +171,7 @@ const CustomerLedger = ({ customer, onClose }) => {
                 <button 
                   type="submit" 
                   disabled={mutation.isPending} 
-                  className={`cursor-pointer w-full text-white rounded-full py-2.5 md:py-3 font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 active:scale-95 transition-all ${txType === 'PAYMENT' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`}
+                  className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-full py-2.5 md:py-3 text-sm md:text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 active:scale-95 transition-all"
                 >
                   {mutation.isPending ? t('Saving...') : txType === 'PAYMENT' ? t('Save Payment') : t('Add Udhar')}
                 </button>

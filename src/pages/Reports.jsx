@@ -250,15 +250,20 @@ const Reports = () => {
                     contentStyle={{ 
                       backgroundColor: '#ffffff',
                       border: '1px solid #e5e7eb',
-                      borderRadius: '12px',
-                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                      padding: '8px 12px',
+                      borderRadius: '8px',
+                      boxShadow: 'none',
+                      padding: '6px 10px',
                       fontSize: '12px',
-                      fontWeight: '600'
+                      fontWeight: '500'
                     }}
                     labelStyle={{
-                      fontWeight: '700',
-                      marginBottom: '4px'
+                      color: '#111827',
+                      fontWeight: '600',
+                      marginBottom: '2px'
+                    }}
+                    itemStyle={{
+                      padding: '0',
+                      fontWeight: '500'
                     }}
                     formatter={(value) => [`₹${value}`, t('Sales')]}
                   />
@@ -311,15 +316,20 @@ const Reports = () => {
                     contentStyle={{ 
                       backgroundColor: '#ffffff',
                       border: '1px solid #e5e7eb',
-                      borderRadius: '12px',
-                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                      padding: '8px 12px',
+                      borderRadius: '8px',
+                      boxShadow: 'none',
+                      padding: '6px 10px',
                       fontSize: '12px',
-                      fontWeight: '600'
+                      fontWeight: '500'
                     }}
                     labelStyle={{
-                      fontWeight: '700',
-                      marginBottom: '4px'
+                      color: '#111827',
+                      fontWeight: '600',
+                      marginBottom: '2px'
+                    }}
+                    itemStyle={{
+                      padding: '0',
+                      fontWeight: '500'
                     }}
                     formatter={(value) => [`₹${value}`, t('Collections')]}
                   />

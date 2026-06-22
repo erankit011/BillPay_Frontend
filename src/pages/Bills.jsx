@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
 import { Plus, Search, FileText, Send, X, Loader2, Wallet, CreditCard, Users, Mail, MessageSquare, MoreVertical } from 'lucide-react';
@@ -125,6 +125,29 @@ const Bills = () => {
     (b.customerId && b.customerId.name.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
+  const revenueGrowth = useMemo(() => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    const previousMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+    const previousYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+
+    let thisMonthRevenue = 0;
+    let lastMonthRevenue = 0;
+
+    bills.forEach(b => {
+      const bDate = new Date(b.createdAt);
+      if (bDate.getMonth() === currentMonth && bDate.getFullYear() === currentYear) {
+        thisMonthRevenue += b.grandTotal;
+      } else if (bDate.getMonth() === previousMonth && bDate.getFullYear() === previousYear) {
+        lastMonthRevenue += b.grandTotal;
+      }
+    });
+
+    if (lastMonthRevenue === 0) return thisMonthRevenue > 0 ? 100 : 0;
+    return ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100;
+  }, [bills]);
+
   return (
     <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
       {/* Header Section */}
@@ -159,7 +182,9 @@ const Bills = () => {
             <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
               {formatCurrency(bills.reduce((sum, b) => sum + b.grandTotal, 0))}
             </p>
-            <p className="text-[10px] md:text-xs text-green-600 font-medium truncate mt-0.5">+12.5% {t('this month')}</p>
+            <p className={`text-[10px] md:text-xs font-medium truncate mt-0.5 ${revenueGrowth >= 0 ? 'text-green-600' : 'text-red-500'}`}>
+              {revenueGrowth >= 0 ? '+' : ''}{revenueGrowth.toFixed(1)}% {t('this month')}
+            </p>
           </div>
         </div>
 
@@ -173,14 +198,10 @@ const Bills = () => {
           <div className="mt-auto pt-2 min-w-0">
             <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Pending Udhar')}</p>
             <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
-              {formatCurrency(
-                bills
-                  .filter(b => b.paymentStatus === 'UNPAID' || b.paymentStatus === 'PARTIAL')
-                  .reduce((sum, b) => sum + (b.grandTotal - (b.amountPaid || 0)), 0)
-              )}
+              {formatCurrency(customers.reduce((sum, c) => sum + (c.balance > 0 ? c.balance : 0), 0))}
             </p>
             <p className="text-[10px] md:text-xs text-red-500 font-medium truncate mt-0.5">
-              {bills.filter(b => b.paymentStatus === 'UNPAID' || b.paymentStatus === 'PARTIAL').length} {t('Unpaid Invoices')}
+              {customers.filter(c => c.balance > 0).length} {t('customers with udhar')}
             </p>
           </div>
         </div>
@@ -463,9 +484,9 @@ const Bills = () => {
                 <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">{t('Select Customer')}</label>
                 <select 
                   {...register('customerId')} 
-                  className="cursor-pointer w-full rounded-xl border border-gray-300 px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm focus:ring-2 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all"
+                  className="cursor-pointer w-full font-medium rounded-lg border border-gray-300 px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all"
                 >
-                  <option value="">-- {t('Choose Customer')} --</option>
+                  <option value="">-- {t('Select Customer')} --</option>
                   {customers.map(c => <option key={c._id} value={c._id}>{c.name} ({c.phone})</option>)}
                 </select>
                 {errors.customerId && <p className="text-red-500 text-xs mt-1.5 font-semibold">{errors.customerId.message}</p>}
@@ -478,16 +499,16 @@ const Bills = () => {
                   <div key={field.id} className="flex gap-2 items-start">
                     <select 
                       {...register(`products.${index}.productId`)} 
-                      className="cursor-pointer flex-1 rounded-xl border border-gray-300 px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm focus:ring-2 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all"
+                      className="cursor-pointer flex-1 font-medium rounded-lg border border-gray-300 px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all"
                     >
-                      <option value="">-- {t('Product')} --</option>
+                      <option value="">-- {t('Select Product')} --</option>
                       {products.map(p => <option key={p._id} value={p._id}>{p.name} - ₹{p.price}</option>)}
                     </select>
                     <input 
                       type="number" 
                       {...register(`products.${index}.quantity`)} 
                       placeholder="Qty" 
-                      className="w-16 sm:w-20 rounded-xl sm:rounded-2xl border border-gray-300 px-2 sm:px-3 py-2.5 sm:py-3 text-xs sm:text-sm focus:ring-2 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all" 
+                      className="w-25 sm:w-20 font-medium rounded-lg sm:rounded-lg border border-gray-300 px-2 sm:px-3 py-2.5 sm:py-3 text-xs sm:text-sm focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all" 
                     />
                     {fields.length > 1 && (
                       <button 
@@ -515,7 +536,7 @@ const Bills = () => {
                 <input 
                   type="number" 
                   {...register('amountPaid')} 
-                  className="w-full rounded-xl sm:rounded-2xl border border-gray-300 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm focus:ring-2 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all" 
+                  className="w-full rounded-lg font-medium sm:rounded-lg border border-gray-300 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all" 
                   placeholder="0"
                 />
               </div>

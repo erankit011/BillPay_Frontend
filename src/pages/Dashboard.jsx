@@ -20,18 +20,8 @@ const Dashboard = () => {
     }
   });
 
-  // Generate chart data with proper structure - same as Reports page
-  const salesData = data?.chartData && data.chartData.length > 0
-    ? data.chartData
-    : [
-      { name: 'Sun', sales: 800, collections: 600 },
-      { name: 'Mon', sales: 1200, collections: 900 },
-      { name: 'Tue', sales: 1500, collections: 1100 },
-      { name: 'Wed', sales: 1800, collections: 1400 },
-      { name: 'Thu', sales: 2200, collections: 1600 },
-      { name: 'Fri', sales: 2800, collections: 2000 },
-      { name: 'Sat', sales: 3200, collections: 2500 },
-    ];
+  // Use actual chart data, default to empty array if none
+  const salesData = data?.chartData || [];
 
   // Use for bar chart (convert name to date for backward compatibility)
   const chartData = salesData.map(item => ({
@@ -76,13 +66,10 @@ const Dashboard = () => {
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <ChartNoAxesCombined className="w-4 h-4 md:w-5 md:h-5" />
             </div>
-            <span className="bg-blue-50 text-[#093C5D] text-[10px] md:text-xs font-semibold px-1.5 md:px-2 py-0.5 md:py-1 rounded-lg flex items-center gap-0.5 border border-blue-100 whitespace-nowrap shrink-0">
-              <TrendingUp className="w-3 h-3" /> +12%
-            </span>
           </div>
           <div className="mt-auto pt-2 min-w-0">
             <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t("Today's Sales")}</p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(data?.todaySales || 0)}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(data?.todaySales ?? 0)}</p>
           </div>
         </motion.div>
 
@@ -97,13 +84,10 @@ const Dashboard = () => {
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <Wallet className="w-4 h-4 md:w-5 md:h-5" />
             </div>
-            <span className="bg-green-50 text-green-600 text-[10px] md:text-xs font-semibold px-1.5 md:px-2 py-0.5 md:py-1 rounded-lg flex items-center gap-0.5 border border-green-100 whitespace-nowrap shrink-0">
-              <TrendingUp className="w-3 h-3" /> +5%
-            </span>
           </div>
           <div className="mt-auto pt-2 min-w-0">
             <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t("Today's Collections")}</p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(data?.todayCollections || 0)}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(data?.todayCollection ?? 0)}</p>
           </div>
         </motion.div>
 
@@ -118,14 +102,11 @@ const Dashboard = () => {
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <AlertTriangle className="w-4 h-4 md:w-5 md:h-5" />
             </div>
-            <span className="bg-green-50 text-green-600 text-[10px] md:text-xs font-semibold px-1.5 md:px-2 py-0.5 md:py-1 rounded-lg flex items-center gap-0.5 border border-green-100 whitespace-nowrap shrink-0">
-              <TrendingDown className="w-3 h-3" /> -2%
-            </span>
           </div>
           <div className="mt-auto pt-2 min-w-0">
             <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Pending Udhar')}</p>
             <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
-              {formatCurrency(data?.pendingAmount || 71000)}
+              {formatCurrency(data?.pendingAmount ?? 0)}
             </p>
           </div>
         </motion.div>
@@ -144,7 +125,7 @@ const Dashboard = () => {
           </div>
           <div className="mt-auto pt-2 min-w-0">
             <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Customers')}</p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{data?.totalCustomers || 2}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{data?.totalCustomers ?? 0}</p>
           </div>
         </motion.div>
       </div>
@@ -162,19 +143,19 @@ const Dashboard = () => {
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 md:gap-4">
           <div className="bg-white rounded-xl p-3 md:p-4 border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
             <p className="text-[10px] md:text-xs text-gray-600 mb-1 font-semibold uppercase tracking-wide truncate">{t('Yesterday')}</p>
-            <p className="font-semibold text-base md:text-lg xl:text-xl text-gray-900 truncate">{formatCurrency(data?.yesterdaySales || 0)}</p>
+            <p className="font-semibold text-base md:text-lg xl:text-xl text-gray-900 truncate">{formatCurrency(data?.yesterdaySales ?? 0)}</p>
           </div>
           <div className="bg-white rounded-xl p-3 md:p-4 border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
             <p className="text-[10px] md:text-xs text-gray-600 mb-1 font-semibold uppercase tracking-wide truncate">{t('This Week')}</p>
-            <p className="font-semibold text-base md:text-lg xl:text-xl text-gray-900 truncate">{formatCurrency(data?.weeklySales || 0)}</p>
+            <p className="font-semibold text-base md:text-lg xl:text-xl text-gray-900 truncate">{formatCurrency(data?.weeklySales ?? 0)}</p>
           </div>
           <div className="bg-white rounded-xl p-3 md:p-4 border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
             <p className="text-[10px] md:text-xs text-gray-600 mb-1 font-semibold uppercase tracking-wide truncate">{t('This Month')}</p>
-            <p className="font-semibold text-base md:text-lg xl:text-xl text-gray-900 truncate">{formatCurrency(data?.monthlySales || 0)}</p>
+            <p className="font-semibold text-base md:text-lg xl:text-xl text-gray-900 truncate">{formatCurrency(data?.monthlySales ?? 0)}</p>
           </div>
           <div className="bg-[#093C5D]/5 rounded-xl p-3 md:p-4 border border-[#093C5D]/20 hover:border-[#093C5D]/40 transition-all duration-200 overflow-hidden">
             <p className="text-[10px] md:text-xs text-[#093C5D] mb-1 font-semibold uppercase tracking-wide truncate">{t('Lifetime')}</p>
-            <p className="font-semibold text-base md:text-lg xl:text-xl text-[#093C5D] truncate">{formatCurrency(data?.lifetimeSales || 0)}</p>
+            <p className="font-semibold text-base md:text-lg xl:text-xl text-[#093C5D] truncate">{formatCurrency(data?.lifetimeSales ?? 0)}</p>
           </div>
         </div>
       </motion.div>
@@ -228,22 +209,21 @@ const Dashboard = () => {
                   contentStyle={{
                     backgroundColor: '#ffffff',
                     border: '1px solid #e5e7eb',
-                    borderRadius: '12px',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                    padding: '12px 14px',
-                    fontSize: '13px',
-                    fontWeight: '600'
+                    borderRadius: '8px',
+                    boxShadow: 'none',
+                    padding: '8px 12px',
+                    fontSize: '12px',
+                    fontWeight: '500'
                   }}
                   labelStyle={{
                     color: '#111827',
-                    fontWeight: '700',
-                    marginBottom: '8px',
-                    fontSize: '14px'
+                    fontWeight: '600',
+                    marginBottom: '2px',
+                    fontSize: '13px'
                   }}
                   itemStyle={{
-                    color: '#374151',
-                    padding: '4px 0',
-                    fontWeight: '600'
+                    padding: '0',
+                    fontWeight: '500'
                   }}
                   formatter={(value, name) => {
                     const label = name === 'Collections' ? t('Collections') : t('Sales');
@@ -325,22 +305,21 @@ const Dashboard = () => {
                   contentStyle={{
                     backgroundColor: '#ffffff',
                     border: '1px solid #e5e7eb',
-                    borderRadius: '12px',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                    padding: '10px 14px',
-                    fontSize: '13px',
-                    fontWeight: '600'
+                    borderRadius: '8px',
+                    boxShadow: 'none',
+                    padding: '6px 10px',
+                    fontSize: '12px',
+                    fontWeight: '500'
                   }}
                   labelStyle={{
                     color: '#111827',
-                    fontWeight: '700',
-                    marginBottom: '6px',
-                    fontSize: '14px'
+                    fontWeight: '600',
+                    marginBottom: '2px',
+                    fontSize: '13px'
                   }}
                   itemStyle={{
-                    color: '#4b5563',
-                    padding: '2px 0',
-                    fontWeight: '600'
+                    padding: '0',
+                    fontWeight: '500'
                   }}
                   formatter={(value) => [`₹${value.toLocaleString('en-IN')}`, t('Sales')]}
                 />
@@ -399,22 +378,21 @@ const Dashboard = () => {
                   contentStyle={{
                     backgroundColor: '#ffffff',
                     border: '1px solid #e5e7eb',
-                    borderRadius: '12px',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                    padding: '10px 14px',
-                    fontSize: '13px',
-                    fontWeight: '600'
+                    borderRadius: '8px',
+                    boxShadow: 'none',
+                    padding: '6px 10px',
+                    fontSize: '12px',
+                    fontWeight: '500'
                   }}
                   labelStyle={{
                     color: '#111827',
-                    fontWeight: '700',
-                    marginBottom: '6px',
-                    fontSize: '14px'
+                    fontWeight: '600',
+                    marginBottom: '2px',
+                    fontSize: '13px'
                   }}
                   itemStyle={{
-                    color: '#10b981',
-                    padding: '2px 0',
-                    fontWeight: '600'
+                    padding: '0',
+                    fontWeight: '500'
                   }}
                   formatter={(value) => [`₹${value.toLocaleString('en-IN')}`, t('Collections')]}
                 />
