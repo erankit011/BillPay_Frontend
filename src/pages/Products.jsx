@@ -57,6 +57,7 @@ const Products = () => {
   const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterStock, setFilterStock] = useState('All');
   const [editingProduct, setEditingProduct] = useState(null);
   const queryClient = useQueryClient();
 
@@ -117,9 +118,15 @@ const Products = () => {
     reset();
   };
 
-  const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = products.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+    let matchesStock = true;
+    if (filterStock === 'In Stock') matchesStock = p.stock >= 20;
+    else if (filterStock === 'Low Stock') matchesStock = p.stock > 0 && p.stock < 20;
+    else if (filterStock === 'Out of Stock') matchesStock = p.stock === 0;
+    
+    return matchesSearch && matchesStock;
+  });
 
   // Calculate stats
   const stats = useMemo(() => {
@@ -186,18 +193,33 @@ const Products = () => {
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="relative w-full">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400" />
+      {/* Search + Filter Row */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        {/* Search Bar */}
+        <div className="relative flex-1 min-w-0">
+          <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+            <Search className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            placeholder={t("Search products...")}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="block w-full pl-9 sm:pl-12 pr-3 sm:pr-4 py-2.5 md:py-3 bg-white border border-gray-200 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-xs md:text-sm font-medium transition-colors duration-200"
+          />
         </div>
-        <input
-          type="text"
-          placeholder={t("Search products...")}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-12 pr-4 py-2.5 md:py-3 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-sm md:text-base font-medium transition-colors duration-200"
-        />
+
+        {/* Filter Dropdown */}
+        <select
+          value={filterStock}
+          onChange={(e) => setFilterStock(e.target.value)}
+          className="cursor-pointer w-auto bg-white border border-gray-200 rounded-lg px-2 sm:px-3 py-2.5 md:py-3 text-xs md:text-sm font-semibold text-gray-700 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-colors duration-200 flex-shrink-0 appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg%20xmlns%3d%22http%3a%2f%2fwww.w3.org%2f2000%2fsvg%22%20width%3d%2212%22%20height%3d%2212%22%20viewBox%3d%220%200%2012%2012%22%3e%3cpath%20fill%3d%22%236b7280%22%20d%3d%22M2%204l4%204%204-4%22%2f%3e%3c%2fsvg%3e')] bg-no-repeat bg-[right_8px_center] pr-7 sm:pr-8"
+        >
+          <option value="All">{t('All')}</option>
+          <option value="In Stock">{t('In Stock')}</option>
+          <option value="Low Stock">{t('Low Stock')}</option>
+          <option value="Out of Stock">{t('Out of Stock')}</option>
+        </select>
       </div>
 
       {/* Products Grid */}

@@ -214,7 +214,7 @@ const Bills = () => {
           placeholder={t("Search by invoice number or customer...")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 sm:pl-11 pr-3 sm:pr-4 py-2.5 sm:py-3 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-xs sm:text-sm transition-all"
+          className="block w-full pl-10 sm:pl-11 pr-3 sm:pr-4 py-2.5 sm:py-3 bg-white border border-gray-200 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-xs sm:text-sm transition-all"
         />
       </div>
 
