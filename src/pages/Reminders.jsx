@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Bell, Clock, User, X, MessageSquare, Mail, Edit, Trash2, TrendingUp, Lightbulb, Activity } from 'lucide-react';
+import { Plus, Bell, Clock, User, X, MessageSquare, Mail, Edit, Trash2, TrendingUp, Lightbulb, Activity, Send } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -62,6 +62,23 @@ const Reminders = () => {
     }
   });
 
+  const sendMutation = useMutation({
+    mutationFn: (reminderId) => api.post(`/reminders/${reminderId}/send`),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['reminders']);
+      alert(t('Reminder sent successfully!'));
+    },
+    onError: (err) => {
+      alert(t('Failed to send reminder: ') + (err.response?.data?.message || err.message));
+    }
+  });
+
+  const handleSendNow = (reminder) => {
+    if (window.confirm(t('Are you sure you want to send this reminder now?'))) {
+      sendMutation.mutate(reminder._id);
+    }
+  };
+
   const handleEdit = (reminder) => {
     setEditingReminder(reminder);
     setIsEditMode(true);
@@ -107,12 +124,24 @@ const Reminders = () => {
     return matchesStatus && matchesSearch;
   });
 
-  // Calculate stats
+  // Calculate stats using actual customer data for realistic analytics
   const pendingCount = reminders.filter(r => r.status === 'PENDING').length;
   const sentCount = reminders.filter(r => r.status === 'SENT').length;
-  const totalPending = reminders.reduce((sum, r) => r.status === 'PENDING' ? sum + (r.amount || 0) : sum, 0);
-  const recovered = reminders.reduce((sum, r) => r.status === 'SENT' ? sum + (r.amount || 0) : sum, 0);
-  const recoveryRate = reminders.length > 0 ? Math.round((sentCount / reminders.length) * 100) : 84;
+  
+  const totalPending = customers.reduce((sum, c) => sum + (c.balance || 0), 0);
+  const recovered = customers.reduce((sum, c) => sum + (c.totalPaid || 0), 0);
+  const totalUdhar = customers.reduce((sum, c) => sum + (c.totalUdhar || 0), 0);
+  const recoveryRate = totalUdhar > 0 ? Math.round((recovered / totalUdhar) * 100) : 0;
+
+  // Dynamic Smart Tip logic
+  const customersWithDues = customers.filter(c => c.balance > 0);
+  let smartTip = t('Sending reminders on Saturday mornings between 9-11 AM increases payment recovery by 22% for retail customers.');
+  if (customersWithDues.length > 0) {
+    const topDefaulter = [...customersWithDues].sort((a, b) => b.balance - a.balance)[0];
+    smartTip = t(`You have ${customersWithDues.length} customer(s) with pending dues. Consider sending a reminder to ${topDefaulter.name} who owes ₹${topDefaulter.balance.toLocaleString()} to improve your cash flow.`);
+  } else if (customers.length > 0) {
+    smartTip = t('Great job! You have zero pending payments. Your cash flow is healthy and well maintained.');
+  }
 
   return (
     <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
@@ -175,7 +204,7 @@ const Reminders = () => {
             ) : filteredReminders.length === 0 ? (
               <div className="bg-white border border-gray-200 rounded-xl p-8 md:p-10 lg:p-12 text-center text-gray-500">
                 <Bell className="w-12 h-12 md:w-16 md:h-16 text-gray-300 mx-auto mb-3 md:mb-4" />
-                <p className="font-semibold text-xs md:text-sm">{t('No reminders found. Set your first reminder!')}</p>
+                <p className="font-medium text-xs md:text-sm">{t('No reminders found. Set your first reminder!')}</p>
               </div>
             ) : (
               filteredReminders.map((reminder, index) => (
@@ -236,6 +265,16 @@ const Reminders = () => {
                         </div>
 
                         <div className="flex items-center gap-2">
+                          {reminder.status !== 'SENT' && (
+                            <button
+                              onClick={() => handleSendNow(reminder)}
+                              className="cursor-pointer p-2 hover:bg-green-50 rounded-xl transition-colors active:scale-90"
+                              title={t('Send Now')}
+                              disabled={sendMutation.isPending}
+                            >
+                              <Send className="w-4 h-4 text-green-600" />
+                            </button>
+                          )}
                           <button
                             onClick={() => handleEdit(reminder)}
                             className="cursor-pointer p-2 hover:bg-[#F5F5F5] rounded-xl transition-colors active:scale-90"
@@ -291,7 +330,7 @@ const Reminders = () => {
                 <span className="font-semibold text-gray-900">₹{totalPending.toLocaleString()}</span>
               </div>
               <div className="flex items-center justify-between text-base">
-                <span className="text-gray-600 font-medium">{t('Recovered (MTD)')}</span>
+                <span className="text-gray-600 font-medium">{t('Total Recovered')}</span>
                 <span className="font-semibold text-green-600">₹{recovered.toLocaleString()}</span>
               </div>
             </div>
@@ -303,8 +342,8 @@ const Reminders = () => {
               <Lightbulb className="w-4 h-4 md:w-5 md:h-5 text-[#093C5D] flex-shrink-0" />
               <h3 className="text-base font-semibold text-[#04101a]">{t('Smart Tip')}</h3>
             </div>
-            <p className="text-base text-[#061d2e] leading-relaxed font-medium">
-              {t('Sending reminders on Saturday mornings between 9-11 AM increases payment recovery by 22% for retail customers.')}
+            <p className="text-sm text-[#061d2e] leading-relaxed font-medium">
+              {smartTip}
             </p>
           </div>
 

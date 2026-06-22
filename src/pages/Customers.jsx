@@ -58,7 +58,7 @@ const CustomerLedger = ({ customer, onClose }) => {
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen px-4 py-6 md:py-8">
         <div className="fixed inset-0 bg-black/30 animate-modal-overlay" onClick={onClose} />
-        <div className="relative bg-white rounded-xl border border-gray-200 max-w-4xl w-full max-h-[85vh] flex flex-col animate-modal-content">
+        <div className="relative bg-white rounded-xl border border-gray-200 max-w-4xl w-full max-h-[90vh] md:max-h-[85vh] flex flex-col animate-modal-content">
           
           <div className="flex items-center justify-between p-5 md:p-6 border-b border-gray-200">
             <div>
@@ -72,9 +72,9 @@ const CustomerLedger = ({ customer, onClose }) => {
             </button>
           </div>
           
-          <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+          <div className="flex flex-col-reverse md:flex-row flex-1 overflow-y-auto md:overflow-hidden">
             {/* Ledger List */}
-            <div className="flex-1 overflow-y-auto p-5 md:p-6 bg-gray-50">
+            <div className="flex-1 md:overflow-y-auto p-4 md:p-6 bg-gray-50">
               <h4 className="font-semibold text-gray-700 mb-4 flex items-center">
                 <History className="w-4 h-4 mr-2"/> {t('Transaction History')}
               </h4>
@@ -111,7 +111,7 @@ const CustomerLedger = ({ customer, onClose }) => {
             </div>
 
             {/* Quick Action Pane */}
-            <div className="w-full md:w-80 bg-white p-5 md:p-6 border-t md:border-t-0 md:border-l border-gray-200">
+            <div className="w-full md:w-80 bg-white p-4 md:p-6 border-b md:border-b-0 md:border-l border-gray-200 flex-shrink-0">
               <div className="mb-6 bg-white rounded-xl p-4 text-center border border-gray-200 hover:border-gray-300 transition-all">
                 <p className="text-[10px] md:text-xs text-gray-600 mb-1 font-semibold uppercase tracking-wide">{t('Current Pending Balance')}</p>
                 <p className={`text-2xl md:text-3xl font-semibold ${customer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
@@ -264,9 +264,10 @@ const Customers = () => {
   );
 
   const getInitials = (name) => {
-    const names = name.split(' ');
-    if (names.length >= 2) {
-      return (names[0][0] + names[1][0]).toUpperCase();
+    if (!name) return 'UN';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length > 1) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
     }
     return name.substring(0, 2).toUpperCase();
   };
@@ -389,7 +390,7 @@ const Customers = () => {
               {/* Desktop Layout: Single row */}
               <div className="hidden md:flex items-center gap-5">
                 {/* Avatar */}
-                <div className={`w-12 h-12 lg:w-14 lg:h-14 rounded-full ${getAvatarColor(index)} flex items-center justify-center font-semibold text-base lg:text-lg flex-shrink-0`}>
+                <div className={`w-12 h-12 lg:w-14 lg:h-14 rounded-lg border border-gray-200 ${getAvatarColor(index)} flex items-center justify-center font-semibold text-base lg:text-lg flex-shrink-0`}>
                   {getInitials(customer.name)}
                 </div>
 
