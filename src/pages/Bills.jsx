@@ -233,56 +233,56 @@ const Bills = () => {
           <div>
             {/* Desktop Table */}
             <div className="hidden md:block overflow-x-auto">
-              <table className="min-w-full">
-                <thead className="bg-gray-50/50">
+              <table className="w-full table-fixed">
+                <thead className="bg-gray-50/80 border-b border-gray-200">
                   <tr>
-                    <th className="px-4 lg:px-6 py-3 lg:py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Invoice')}</th>
-                    <th className="px-4 lg:px-6 py-3 lg:py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Customer')}</th>
-                    <th className="px-4 lg:px-6 py-3 lg:py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Date')}</th>
-                    <th className="px-4 lg:px-6 py-3 lg:py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Amount')}</th>
-                    <th className="px-4 lg:px-6 py-3 lg:py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Status')}</th>
-                    <th className="px-4 lg:px-6 py-3 lg:py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">{t('Actions')}</th>
+                    <th className="w-[22%] px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Invoice')}</th>
+                    <th className="w-[22%] px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Customer')}</th>
+                    <th className="w-[15%] px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Date')}</th>
+                    <th className="w-[15%] px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Amount')}</th>
+                    <th className="w-[12%] px-4 lg:px-6 py-3.5 lg:py-4 text-center text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Status')}</th>
+                    <th className="w-[14%] px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Actions')}</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white/50 divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-100">
                   {filteredBills.map((bill, index) => (
                     <tr 
                       key={bill._id} 
-                      className={`hover:bg-[#F5F5F5] transition-all duration-200 animate-fade-in relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
+                      className={`hover:bg-[#F5F5F5]/60 transition-all duration-200 animate-fade-in relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
                       style={{ animationDelay: `${index * 50}ms` }}
                     >
-                      <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-[#F5F5F5] flex items-center justify-center flex-shrink-0">
-                            <span className="text-xs font-semibold text-[#093C5D]">
+                      <td className="px-4 lg:px-6 py-3.5 lg:py-4">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-lg bg-[#F5F5F5] flex items-center justify-center flex-shrink-0 border border-gray-200">
+                            <span className="text-[10px] lg:text-xs font-semibold text-[#093C5D]">
                               {bill.customerId?.name?.substring(0, 2).toUpperCase() || 'WI'}
                             </span>
                           </div>
-                          <span className="text-xs lg:text-sm font-semibold text-[#093C5D]">{bill.invoiceNumber}</span>
+                          <span className="text-xs lg:text-sm font-semibold text-[#093C5D] truncate">{bill.invoiceNumber}</span>
                         </div>
                       </td>
-                      <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap">
-                        <div className="text-xs lg:text-sm font-semibold text-gray-900">{bill.customerId?.name || t('Walk-in Customer')}</div>
+                      <td className="px-4 lg:px-6 py-3.5 lg:py-4">
+                        <span className="text-xs lg:text-sm font-semibold text-gray-900 truncate block">{bill.customerId?.name || t('Walk-in Customer')}</span>
                       </td>
-                      <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap text-xs lg:text-sm text-gray-600">
-                        {new Date(bill.createdAt).toLocaleDateString('en-GB')}
+                      <td className="px-4 lg:px-6 py-3.5 lg:py-4">
+                        <span className="text-xs lg:text-sm text-gray-600 font-medium">{new Date(bill.createdAt).toLocaleDateString('en-GB')}</span>
                       </td>
-                      <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap text-xs lg:text-sm font-semibold text-gray-900">
-                        {formatCurrency(bill.grandTotal)}
+                      <td className="px-4 lg:px-6 py-3.5 lg:py-4 text-right">
+                        <span className="text-xs lg:text-sm font-semibold text-gray-900">{formatCurrency(bill.grandTotal)}</span>
                       </td>
-                      <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap">
-                        <span className={`px-2.5 lg:px-3 py-1 lg:py-1.5 text-xs font-semibold rounded-full uppercase
+                      <td className="px-4 lg:px-6 py-3.5 lg:py-4 text-center">
+                        <span className={`inline-block px-2.5 lg:px-3 py-1 lg:py-1.5 text-[10px] lg:text-xs font-semibold rounded-full uppercase tracking-wide
                           ${bill.paymentStatus === 'PAID' ? 'bg-green-100 text-green-700' : 
                             bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-100 text-yellow-700' : 
                             'bg-red-100 text-red-700'}`}>
                           {bill.paymentStatus}
                         </span>
                       </td>
-                      <td className="px-4 lg:px-6 py-3 lg:py-4 whitespace-nowrap text-right">
+                      <td className="px-4 lg:px-6 py-3.5 lg:py-4 text-right">
                         <div className="relative inline-block" onClick={(e) => e.stopPropagation()}>
                           <button 
                             onClick={() => setOpenDropdown(openDropdown === bill._id ? null : bill._id)}
-                            className="cursor-pointer text-[#093C5D] font-semibold bg-[#093C5D]/5 hover:bg-[#F5F5F5] px-3 lg:px-4 py-1.5 lg:py-2 rounded-full flex items-center justify-center ml-auto transition-all text-xs lg:text-sm active:scale-95"
+                            className="cursor-pointer text-[#093C5D] font-semibold bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 lg:px-4 py-1.5 lg:py-2 rounded-lg flex items-center justify-center ml-auto transition-all text-xs lg:text-sm active:scale-95"
                           >
                             <Send className="w-3.5 h-3.5 lg:w-4 lg:h-4 mr-1 lg:mr-1.5" /> {t('Send')}
                             <MoreVertical className="w-3.5 h-3.5 ml-1" />

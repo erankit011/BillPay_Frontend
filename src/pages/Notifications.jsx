@@ -83,29 +83,29 @@ const Notifications = () => {
   }
 
   return (
-    <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
+    <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
-          <h1 className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900 flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 flex items-center gap-2">
             {t('All Notifications')}
             {unreadCount > 0 && (
-              <span className="bg-[#E5E7EB] text-[#093C5D] text-sm font-semibold px-3 py-1 rounded-full">
+              <span className="bg-[#093C5D]/10 text-[#093C5D] text-xs sm:text-sm font-semibold px-2.5 py-0.5 rounded-lg">
                 {unreadCount}
               </span>
             )}
           </h1>
-          <p className="text-gray-600 mt-1 text-sm md:text-base font-medium">
-            {notifications.length} total notifications
+          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 font-medium">
+            {notifications.length} {t('total notifications')}
           </p>
         </div>
         {unreadCount > 0 && (
           <button
             onClick={markAllAsRead}
-            className="cursor-pointer flex items-center gap-2 w-full md:w-auto px-5 md:px-6 lg:px-7 py-2.5 md:py-3 lg:py-3.5 bg-[#093C5D] text-white rounded-full font-semibold hover:bg-[#082a42] transition-colors active:scale-95"
+            className="cursor-pointer flex items-center justify-center gap-2 w-full sm:w-auto bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg font-semibold text-xs md:text-sm active:scale-95 transition-all"
           >
-            <CheckCheck className="w-5 h-5" />
-            Mark all as read
+            <CheckCheck className="w-4 h-4 sm:w-5 sm:h-5" />
+            {t('Mark all as read')}
           </button>
         )}
       </div>
@@ -113,51 +113,54 @@ const Notifications = () => {
       {/* Notifications List */}
       {notifications.length === 0 ? (
         <div className="bg-white rounded-xl p-8 md:p-10 lg:p-12 text-center border border-gray-200">
-          <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 rounded-full bg-gray-50 flex items-center justify-center">
-            <Bell className="w-8 h-8 md:w-10 md:h-10 text-gray-400" strokeWidth={2} />
+          <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-4 rounded-xl bg-[#F5F5F5] flex items-center justify-center border border-gray-200">
+            <Bell className="w-7 h-7 md:w-8 md:h-8 text-gray-400" strokeWidth={2} />
           </div>
-          <p className="text-base md:text-lg text-gray-700 font-semibold mb-1">No notifications</p>
-          <p className="text-gray-500 text-sm md:text-base font-medium">You're all caught up!</p>
+          <p className="text-base md:text-lg text-gray-900 font-semibold mb-1">{t('No notifications')}</p>
+          <p className="text-gray-500 text-sm md:text-base font-medium">{t("You're all caught up!")}</p>
         </div>
       ) : (
-        <div className="space-y-3 md:gap-4 lg:gap-5">
-          {notifications.map((notification) => (
+        <div className="space-y-3 md:space-y-4">
+          {notifications.map((notification, index) => (
             <div
               key={notification._id}
               onClick={() => !notification.read && markAsRead(notification._id)}
-              className={`cursor-pointer bg-white rounded-xl p-4 md:p-5 border transition-all hover:shadow-md active:scale-[0.99] ${
+              className={`bg-white rounded-xl p-4 md:p-5 border transition-all duration-200 animate-fade-in ${
                 !notification.read 
-                  ? 'border-[#D1D5DB] bg-[#F5F5F5]/30' 
-                  : 'border-gray-200'
+                  ? 'cursor-pointer border-[#093C5D]/20 hover:border-[#093C5D]/40 bg-[#093C5D]/[0.02]' 
+                  : 'border-gray-200 hover:border-gray-300'
               }`}
+              style={{ animationDelay: `${index * 40}ms` }}
             >
               <div className="flex items-start gap-3 md:gap-4">
                 {/* Icon */}
-                <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-[#E5E7EB] to-[#F5F5F5] flex items-center justify-center text-xl md:text-2xl shadow-sm">
+                <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-lg md:text-xl border border-gray-200">
                   {getNotificationIcon(notification.type)}
                 </div>
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className={`text-sm md:text-base font-semibold ${
+                  <div className="flex items-start justify-between gap-2 mb-1 md:mb-1.5">
+                    <h3 className={`text-sm md:text-base font-semibold leading-snug ${
                       !notification.read ? 'text-gray-900' : 'text-gray-700'
                     }`}>
                       {notification.title}
                     </h3>
-                    {!notification.read ? (
-                      <span className="w-2.5 h-2.5 bg-[#093C5D] rounded-full flex-shrink-0 mt-1.5"></span>
-                    ) : (
-                      <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
-                    )}
+                    <div className="flex-shrink-0 mt-0.5">
+                      {!notification.read ? (
+                        <span className="w-2 h-2 md:w-2.5 md:h-2.5 bg-[#093C5D] rounded-full block"></span>
+                      ) : (
+                        <Check className="w-4 h-4 md:w-5 md:h-5 text-green-500" />
+                      )}
+                    </div>
                   </div>
-                  <p className="text-sm md:text-base text-gray-600 mb-2 leading-relaxed font-medium">
+                  <p className="text-xs sm:text-sm md:text-base text-gray-600 mb-2 leading-relaxed font-medium line-clamp-2">
                     {notification.message}
                   </p>
-                  <div className="flex items-center gap-3 text-xs text-gray-400 font-medium">
+                  <div className="flex items-center gap-2 md:gap-3 text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wide">
                     <span>{getTimeAgo(notification.createdAt)}</span>
-                    <span>•</span>
-                    <span className="capitalize">{notification.type}</span>
+                    <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                    <span>{notification.type}</span>
                   </div>
                 </div>
               </div>
