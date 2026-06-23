@@ -4,8 +4,10 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import api from '../api/axios';
-import { Plus, Search, X, Edit2, Trash2, Download, PlusCircle, Wallet, Box, AlertTriangle } from 'lucide-react';
+import { Plus, Search, X, Edit, Trash2, Download, PlusCircle, Wallet, Box, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const productSchema = yup.object({
   name: yup.string().required('Name is required'),
@@ -116,6 +118,48 @@ const Products = () => {
     setIsModalOpen(false);
     setEditingProduct(null);
     reset();
+  };
+
+  const handleDownloadReport = () => {
+    if (!products || products.length === 0) return;
+    
+    const doc = new jsPDF();
+    
+    doc.setFontSize(18);
+    doc.setTextColor(9, 60, 93);
+    doc.text(t('Inventory Report'), 14, 22);
+    
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text(`${t('Generated on')}: ${new Date().toLocaleString()}`, 14, 30);
+    
+    const tableColumn = [t('Product Name'), t('Price (INR)'), t('Stock Qty'), t('Status'), t('Last Updated')];
+    const tableRows = [];
+    
+    products.forEach(p => {
+      const status = p.stock === 0 ? t('Out of Stock') : p.stock < 20 ? t('Low Stock') : t('In Stock');
+      const date = new Date(p.updatedAt || p.createdAt).toLocaleDateString();
+      const productData = [
+        p.name,
+        p.price.toString(),
+        p.stock.toString(),
+        status,
+        date
+      ];
+      tableRows.push(productData);
+    });
+    
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 35,
+      theme: 'grid',
+      styles: { fontSize: 10, cellPadding: 3 },
+      headStyles: { fillColor: [9, 60, 93], textColor: 255 },
+      alternateRowStyles: { fillColor: [245, 245, 245] }
+    });
+    
+    doc.save(`Inventory_Report_${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
   const filteredProducts = products.filter(p => {
@@ -237,40 +281,43 @@ const Products = () => {
             {filteredProducts.map((product, index) => (
               <div 
                 key={product._id} 
-                className="bg-white rounded-xl border border-gray-200 p-4 md:p-5 relative animate-fade-in"
+                className="bg-white rounded-xl border border-gray-200 p-4 md:p-5 flex flex-col justify-between h-full animate-fade-in"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                {/* Action Buttons */}
-                <div className="absolute top-3 md:top-4 right-3 md:right-4 flex gap-2">
-                  <button 
-                    onClick={() => openEditModal(product)}
-                    className="cursor-pointer text-gray-600 bg-gray-100 hover:bg-gray-200 p-2 md:p-2.5 rounded-lg active:scale-90 transition-all"
-                    title={t("Edit")}
-                  >
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  <button 
-                    onClick={() => {
-                      if(window.confirm(t('Are you sure you want to delete this product?'))) {
-                        deleteMutation.mutate(product._id);
-                      }
-                    }}
-                    className="cursor-pointer text-gray-600 bg-gray-100 hover:bg-gray-200 p-2 md:p-2.5 rounded-lg active:scale-90 transition-all"
-                    title={t("Delete")}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
+                <div>
+                  <div className="flex justify-between items-center mb-3 md:mb-4">
+                    {/* Product Icon */}
+                    <div className="text-3xl md:text-4xl">
+                      {getProductIcon(product.name)}
+                    </div>
+                    {/* Action Buttons */}
+                    <div className="flex items-center gap-1.5 md:gap-2 flex-shrink-0">
+                      <button 
+                        onClick={() => openEditModal(product)}
+                        className="cursor-pointer text-gray-500 hover:text-[#093C5D] bg-transparent hover:bg-[#093C5D]/10 w-9 h-9 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0 active:scale-90 transition-colors"
+                        title={t("Edit")}
+                      >
+                        <Edit className="w-4 h-4 md:w-4.5 md:h-4.5" />
+                      </button>
+                      <button 
+                        onClick={() => {
+                          if(window.confirm(t('Are you sure you want to delete this product?'))) {
+                            deleteMutation.mutate(product._id);
+                          }
+                        }}
+                        className="cursor-pointer text-gray-500 hover:text-red-600 bg-transparent hover:bg-red-50 w-9 h-9 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0 active:scale-90 transition-colors"
+                        title={t("Delete")}
+                      >
+                        <Trash2 className="w-4 h-4 md:w-4.5 md:h-4.5" />
+                      </button>
+                    </div>
+                  </div>
 
-                {/* Product Icon */}
-                <div className="text-3xl md:text-4xl mb-2 md:mb-3">
-                  {getProductIcon(product.name)}
+                  {/* Product Name */}
+                  <h3 className="text-sm md:text-base font-semibold text-gray-900 mb-2 truncate">
+                    {product.name}
+                  </h3>
                 </div>
-
-                {/* Product Name */}
-                <h3 className="text-sm md:text-base font-semibold text-gray-900 mb-2 truncate pr-20">
-                  {product.name}
-                </h3>
 
                 {/* Price */}
                 <p className="text-xl md:text-2xl font-semibold text-[#093C5D] mb-2 md:mb-3">
@@ -329,10 +376,15 @@ const Products = () => {
       </div>
 
       {/* Download Report Button */}
-      <button className="cursor-pointer flex items-center gap-2 text-[#093C5D] font-semibold text-sm md:text-base active:scale-95 transition-transform">
-        <Download className="w-4 h-4 md:w-5 md:h-5" />
-        Download Inventory Report
-      </button>
+      <div className="flex justify-center md:justify-start mt-6 md:mt-8">
+        <button 
+          onClick={handleDownloadReport}
+          className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg flex items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
+        >
+          <Download className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
+          {t('Download Inventory Report (PDF)')}
+        </button>
+      </div>
 
       {/* Add/Edit Product Modal */}
       {isModalOpen && (
