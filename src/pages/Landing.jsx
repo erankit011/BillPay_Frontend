@@ -141,7 +141,7 @@ const Landing = () => {
               {t('Get a complete overview of your sales, outstanding balances, and recent activities without the clutter. Visualizing your business has never been this easy.')}
             </p>
 
-            <div className="rounded-2xl border border-gray-100 bg-white p-6 sm:p-10 mb-[-1px] sm:mb-0 relative overflow-hidden ring-1 ring-gray-900/5">
+            <div className="rounded-2xl bg-white p-6 sm:p-10 mb-[-1px] sm:mb-0 relative overflow-hidden border border-gray-200 hover:border-[#093C5D]/30">
               
               {/* Background ambient glow inside the container */}
               <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-blue-50 blur-3xl opacity-50 pointer-events-none"></div>
@@ -156,7 +156,7 @@ const Landing = () => {
               </div>
 
               {/* Layout Wrapper */}
-              <div className="relative z-10 flex gap-6 sm:gap-8 pt-2">
+              <div className="relative z-10 flex gap-6 sm:gap-8 pt-2 ">
                 {/* Abstract Sidebar */}
                 <div className="hidden sm:flex flex-col gap-6 w-40 shrink-0 border-r border-gray-50 pr-6">
                   {/* Logo Skeleton */}
@@ -250,7 +250,7 @@ const Landing = () => {
 
         {/* FEATURES GRID */}
         <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-          <div className="bg-[#F5F5F5] rounded-2xl sm:rounded-3xl py-12 sm:py-16 px-4 sm:px-8">
+          <div className="bg-[#F5F5F5] rounded-2xl border border-gray-200 hover:border-[#093C5D]/30 sm:rounded-3xl py-12 sm:py-16 px-4 sm:px-8">
             <div className="text-center mb-10 sm:mb-12">
               <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 tracking-tight mb-2 sm:mb-3">
                 {t('Everything you need to grow')}
@@ -282,8 +282,8 @@ const Landing = () => {
         </section>
 
         {/* STATS SECTION */}
-        <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center max-w-4xl mx-auto border-y border-gray-200 sm:border sm:border-gray-200 bg-white sm:rounded-2xl py-8 sm:py-10">
+        <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full ">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center max-w-4xl mx-auto border-y border-gray-200 border hover:border-[#093C5D]/30 sm:border sm:border-gray-200 bg-white sm:rounded-2xl rounded-2xl py-8 sm:py-10">
             <div className="p-2 sm:p-4">
               <h3 className="text-3xl sm:text-4xl font-bold text-[#093C5D] mb-1">10K+</h3>
               <p className="text-sm text-gray-600 font-medium">{t('Active Shops')}</p>

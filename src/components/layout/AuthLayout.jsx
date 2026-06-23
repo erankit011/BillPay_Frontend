@@ -45,9 +45,9 @@ const AuthLayout = () => {
           <div className="mt-12 space-y-5">
             <div className="flex items-center gap-4 text-blue-50">
               <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md border border-white/10">
-                 <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                 </svg>
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
               </div>
               <div>
                 <p className="font-semibold text-white text-base">Track Every Rupee</p>
@@ -56,9 +56,9 @@ const AuthLayout = () => {
             </div>
             <div className="flex items-center gap-4 text-blue-50">
               <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md border border-white/10">
-                 <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                 </svg>
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
               </div>
               <div>
                 <p className="font-semibold text-white text-base">Save Time</p>
@@ -75,17 +75,23 @@ const AuthLayout = () => {
 
       {/* Right Panel - Form Container */}
       <div className="w-full lg:w-7/12 xl:w-1/2 flex flex-col relative bg-white min-h-[100dvh]">
-        {/* Mobile Header */}
-        <div className="lg:hidden w-full px-5 py-4 flex items-center justify-between border-b border-gray-100 flex-shrink-0 sticky top-0 bg-white/90 backdrop-blur-md z-50">
-          <div className="cursor-pointer block" onClick={() => navigate('/')}>
-             <span className="text-[20px] sm:text-[22px] font-semibold tracking-tight text-[#093C5D] select-none cursor-pointer" onClick={() => navigate('/')}>UdharPay<span className="inline-block w-[6px] h-[6px] sm:w-[7px] sm:h-[7px] rounded-full bg-[#2ECC71] ml-[2px] mb-[2px] align-baseline"></span></span>
-          </div>
-        </div>
 
         {/* Desktop Top Right Action removed */}
 
-        <div className="flex-1 flex flex-col justify-center px-5 sm:px-10 lg:px-16 xl:px-24 py-8 sm:py-12 md:py-20 mt-0">
-          <div className="w-full max-w-[420px] mx-auto">
+        <div className="flex-1 flex flex-col justify-center items-center px-5 sm:px-10 lg:px-16 xl:px-24 py-8 sm:py-12 md:py-20">
+
+          {/* Mobile App Branding */}
+          <div className="lg:hidden w-full max-w-[420px] text-center mb-8 animate-fade-in">
+            <div className="cursor-pointer inline-block" onClick={() => navigate('/')}>
+              <span className="text-3xl font-bold tracking-tight text-[#093C5D] select-none">
+                UdharPay<span className="inline-block w-2.5 h-2.5 rounded-full bg-[#2ECC71] ml-1 mb-1 align-baseline"></span>
+              </span>
+            </div>
+            <p className="text-gray-500 font-medium text-sm mt-1.5">Manage your shop's
+              Khata digitally.</p>
+          </div>
+
+          <div className="w-full max-w-[420px]">
             <Outlet />
           </div>
         </div>

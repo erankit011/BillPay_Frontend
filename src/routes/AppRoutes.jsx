@@ -23,7 +23,7 @@ const Profile = lazy(() => import('../pages/Profile'));
 const Notifications = lazy(() => import('../pages/Notifications'));
 
 // Static pages
-const PrivacyPolicy = lazy(() => import('../pages/PrivacyPolicy'));
+const PrivacyPolicy = lazy(() => import('../pages/PrivacyPage'));
 const TermsOfService = lazy(() => import('../pages/TermsOfService'));
 const ContactSupport = lazy(() => import('../pages/ContactSupport'));
 

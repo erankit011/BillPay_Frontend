@@ -1364,3 +1364,10 @@ a,
 .btn-hover-lift:hover {
   transform: translateY(-1px);
 }
+
+/* Hide default browser password reveal icons */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  display: none !important;
+}
