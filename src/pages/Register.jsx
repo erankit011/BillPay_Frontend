@@ -139,7 +139,7 @@ const Register = () => {
                 <input 
                   {...register('name')}
                   className={`w-full rounded-full border bg-white pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none ${errors.name ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' : 'border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]'}`}
-                  placeholder="Jane Doe"
+                  placeholder="Enter Your Name"
                   autoFocus
                 />
               </div>
@@ -156,7 +156,7 @@ const Register = () => {
                   type="email"
                   {...register('email')}
                   className={`w-full rounded-full border bg-white pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' : 'border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]'}`}
-                  placeholder="jane.doe@example.com"
+                  placeholder="Enter Your Email"
                 />
               </div>
               {errors.email && <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium text-left">{errors.email.message}</p>}
@@ -185,7 +185,7 @@ const Register = () => {
                 <input 
                   {...register('shopName')}
                   className={`w-full rounded-full border bg-white pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none ${errors.shopName ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' : 'border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]'}`}
-                  placeholder="Enter your shop name"
+                  placeholder="Shop Name"
                   autoFocus
                 />
               </div>
@@ -201,7 +201,7 @@ const Register = () => {
                 <input 
                   {...register('phone')}
                   className={`w-full rounded-full border bg-white pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none ${errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' : 'border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]'}`}
-                  placeholder="10-digit mobile number"
+                  placeholder="Mobile Number"
                   maxLength={10}
                 />
               </div>
@@ -241,7 +241,7 @@ const Register = () => {
                   type={showPassword ? "text" : "password"}
                   {...register('password')}
                   className={`w-full rounded-full border bg-white pl-10 sm:pl-11 pr-10 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none ${errors.password ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' : 'border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]'}`}
-                  placeholder="Create a strong password"
+                  placeholder="••••••••"
                   autoFocus
                 />
                 <button

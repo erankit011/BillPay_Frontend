@@ -77,7 +77,7 @@ const Login = () => {
               type="email"
               {...register('email')}
               className={`w-full rounded-full border bg-white pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' : 'border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]'}`}
-              placeholder="Enter your email"
+              placeholder="Enter Your Email"
               autoFocus
             />
           </div>

@@ -81,7 +81,7 @@ const ForgotPassword = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-full border bg-white pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]"
-              placeholder="Enter your email"
+              placeholder="Enter Your Email"
               required
             />
           </div>
@@ -101,7 +101,7 @@ const ForgotPassword = () => {
       </form>
 
       <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm">
-        <span className="text-gray-500 font-medium">{t('Remember your password?')} <a href="/login" className="text-[#093C5D] font-bold cursor-pointer ml-1 hover:underline">{t('Log in')}</a></span>
+        <span className="text-gray-500 font-medium">{t('Remember your password?')} <a href="/login" className="text-[#093C5D] font-semibold cursor-pointer ml-1 hover:underline">{t('Login Here')}</a></span>
       </div>
     </div>
   );
