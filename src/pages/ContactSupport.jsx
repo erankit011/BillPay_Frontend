@@ -19,7 +19,7 @@ const ContactSupport = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans flex flex-col">
+    <div className="min-h-screen bg-[#F5F5F5] font-sans flex flex-col">
       {/* Header */}
       <header className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
         <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -160,7 +160,7 @@ const ContactSupport = () => {
 
                 <button
                   type="submit"
-                  className="w-full h-12 bg-[#093C5D] text-white rounded-lg font-semibold text-base hover:bg-[#072C44] transition-colors flex items-center justify-center gap-2 mt-2"
+                  className="w-full cursor-pointer h-12 bg-[#093C5D] text-white rounded-lg font-semibold text-base hover:bg-[#072C44] transition-colors flex items-center justify-center gap-2 mt-2"
                 >
                   <Send className="w-4 h-4" />
                   {t('Send Message')}
