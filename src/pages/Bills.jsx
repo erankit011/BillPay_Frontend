@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Search, FileText, Send, X, Loader2, Wallet, CreditCard, Users, Mail, MessageSquare, MoreVertical } from 'lucide-react';
+import { Plus, Search, FileText, Send, X, Loader2, Wallet, Users, Mail, MessageSquare, MoreVertical, IndianRupee } from 'lucide-react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -281,7 +281,7 @@ const Bills = () => {
         <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden">
           <div className="flex justify-between items-start gap-1">
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
-              <CreditCard className="w-4 h-4 md:w-5 md:h-5" />
+              <IndianRupee className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">

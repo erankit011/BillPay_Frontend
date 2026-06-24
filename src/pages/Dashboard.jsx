@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import api from '../api/axios';
 import { BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Wallet, TrendingUp, TrendingDown, AlertTriangle, Users, ChartNoAxesCombined } from 'lucide-react';
+import { Wallet, Users, ChartNoAxesCombined, IndianRupee } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const formatCurrency = (amount) => {
@@ -100,7 +100,7 @@ const Dashboard = () => {
         >
           <div className="flex justify-between items-start gap-1">
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
-              <AlertTriangle className="w-4 h-4 md:w-5 md:h-5" />
+              <IndianRupee className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">

@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import api from '../api/axios';
-import { Plus, Search, Phone, User, X, IndianRupee, History, ArrowDownRight, ArrowUpRight, Loader2, Edit, Trash2 } from 'lucide-react';
+import { Plus, Search, Phone, X, IndianRupee, History, ArrowDownRight, ArrowUpRight, Loader2, Edit, Trash2, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const customerSchema = yup.object({
@@ -307,7 +307,7 @@ const Customers = () => {
         <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
           <div className="flex justify-between items-start gap-1">
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
-              <User className="w-4 h-4 md:w-5 md:h-5" />
+              <Users className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">

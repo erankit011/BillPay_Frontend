@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../api/axios';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Download, Calendar, Wallet, CreditCard, AlertCircle } from 'lucide-react';
+import { Download, Wallet, IndianRupee, ChartNoAxesCombined } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { useTranslation } from 'react-i18next';
@@ -123,17 +123,7 @@ const Reports = () => {
     doc.save(`Store_Statement_${statementPeriod}.pdf`);
   };
 
-  const salesData = analytics?.chartData && analytics.chartData.length > 0
-    ? analytics.chartData
-    : [
-      { name: 'Sat', sales: 800, collections: 600 },
-      { name: 'Sun', sales: 1200, collections: 900 },
-      { name: 'Mon', sales: 1500, collections: 1100 },
-      { name: 'Tue', sales: 1800, collections: 1400 },
-      { name: 'Wed', sales: 2200, collections: 1600 },
-      { name: 'Thu', sales: 2800, collections: 2000 },
-      { name: 'Fri', sales: 3200, collections: 2500 },
-    ];
+  const salesData = analytics?.chartData || [];
 
   if (analyticsLoading) return (
     <div className="flex items-center justify-center min-h-screen">
@@ -177,12 +167,12 @@ const Reports = () => {
           <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden animate-fade-in">
             <div className="flex justify-between items-start gap-1">
               <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
-                <Calendar className="w-4 h-4 md:w-5 md:h-5" />
+                <ChartNoAxesCombined className="w-4 h-4 md:w-5 md:h-5" />
               </div>
             </div>
             <div className="mt-auto pt-2 min-w-0">
               <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Monthly Sales')}</p>
-              <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(analytics?.monthlySales || 1200)}</p>
+              <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(analytics?.monthlySales || 0)}</p>
             </div>
           </div>
 
@@ -194,19 +184,19 @@ const Reports = () => {
             </div>
             <div className="mt-auto pt-2 min-w-0">
               <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Monthly Collections')}</p>
-              <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(analytics?.monthlyCollection || 2500)}</p>
+              <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(analytics?.monthlyCollection || 0)}</p>
             </div>
           </div>
 
           <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden animate-fade-in " style={{ animationDelay: '200ms' }}>
             <div className="flex justify-between items-start gap-1">
               <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
-                <AlertCircle className="w-4 h-4 md:w-5 md:h-5" />
+                <IndianRupee className="w-4 h-4 md:w-5 md:h-5" />
               </div>
             </div>
             <div className="mt-auto pt-2 min-w-0">
               <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Pending')}</p>
-              <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(analytics?.pendingAmount || 69700)}</p>
+              <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(analytics?.pendingAmount || 0)}</p>
             </div>
           </div>
         </div>
