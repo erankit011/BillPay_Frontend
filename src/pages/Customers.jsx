@@ -89,7 +89,7 @@ const CustomerLedger = ({ customer, onClose }) => {
                   {transactions.map((tx, index) => (
                     <div
                       key={tx._id}
-                      className="bg-white p-4 rounded-xl border border-gray-200 hover:border-gray-300 transition-all flex justify-between items-center animate-fade-in"
+                      className="bg-white p-4 rounded-lg border border-gray-200 hover:border-gray-300 transition-all flex justify-between items-center animate-fade-in"
                       style={{ animationDelay: `${index * 30}ms` }}
                     >
                       <div className="flex items-center gap-3">
@@ -117,7 +117,7 @@ const CustomerLedger = ({ customer, onClose }) => {
 
             {/* Quick Action Pane */}
             <div className="w-full md:w-80 bg-white p-4 md:p-6 border-b md:border-b-0 md:border-l border-gray-200 flex-shrink-0">
-              <div className="mb-6 bg-white rounded-xl p-4 text-center border border-gray-200 hover:border-gray-300 transition-all">
+              <div className="mb-6 bg-white rounded-lg p-4 text-center border border-gray-200 hover:border-gray-300 transition-all">
                 <p className="text-[10px] md:text-xs text-gray-600 mb-1 font-semibold uppercase tracking-wide">{t('Current Pending Balance')}</p>
                 <p className={`text-2xl md:text-3xl font-semibold ${customer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
                   {formatCurrency(customer.balance)}
@@ -126,7 +126,7 @@ const CustomerLedger = ({ customer, onClose }) => {
 
               <h4 className="font-semibold text-gray-700 mb-4">{t('Add Entry')}</h4>
               <form onSubmit={handleTransaction} className="space-y-4">
-                <div className="flex rounded-xl p-1 bg-gray-100 border border-gray-200">
+                <div className="flex rounded-lg p-1 bg-gray-100 border border-gray-200">
                   <button
                     type="button"
                     onClick={() => setTxType('PAYMENT')}
@@ -153,7 +153,7 @@ const CustomerLedger = ({ customer, onClose }) => {
                       type="number"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
-                      className="block w-full pl-9 pr-3 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] font-medium transition-colors duration-200"
+                      className="block w-full pl-9 pr-3 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] font-medium transition-colors duration-200"
                       placeholder="0.00"
                       required
                     />
@@ -168,7 +168,7 @@ const CustomerLedger = ({ customer, onClose }) => {
                     type="text"
                     value={remarks}
                     onChange={(e) => setRemarks(e.target.value)}
-                    className="block w-full px-3 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] font-medium transition-colors duration-200"
+                    className="block w-full px-3 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] font-medium transition-colors duration-200"
                     placeholder={t("e.g. Paid in cash")}
                   />
                 </div>
@@ -176,7 +176,7 @@ const CustomerLedger = ({ customer, onClose }) => {
                 <button
                   type="submit"
                   disabled={mutation.isPending}
-                  className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-full py-2.5 md:py-3 text-sm md:text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 active:scale-95 transition-all"
+                  className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-lg py-2.5 md:py-3 text-sm md:text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 active:scale-95 transition-all"
                 >
                   {mutation.isPending ? t('Saving...') : txType === 'PAYMENT' ? t('Save Payment') : t('Add Udhar')}
                 </button>

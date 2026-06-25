@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Search, FileText, Send, X, Loader2, Wallet, Users, Mail, MessageSquare, MoreVertical, IndianRupee, Eye } from 'lucide-react';
+import { Plus, Search, FileText, Send, X, Loader2, Wallet, Users, Mail, MessageSquare, MoreVertical, IndianRupee, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -34,6 +34,8 @@ const createBillSchema = yup.object({
 const Bills = () => {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null); // For send invoice dropdown
   const [viewBill, setViewBill] = useState(null); // For view bill modal
@@ -215,6 +217,13 @@ const Bills = () => {
     (b.customerId && b.customerId.name.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
+  const totalPages = Math.ceil(filteredBills.length / ITEMS_PER_PAGE);
+  const paginatedBills = filteredBills.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   const revenueGrowth = useMemo(() => {
     const now = new Date();
     const currentMonth = now.getMonth();
@@ -236,6 +245,38 @@ const Bills = () => {
 
     if (lastMonthRevenue === 0) return thisMonthRevenue > 0 ? 100 : 0;
     return ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100;
+  }, [bills]);
+
+  const billCounts = useMemo(() => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    // Start of week (Sunday)
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
+    
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    
+    let counts = {
+      today: 0,
+      yesterday: 0,
+      week: 0,
+      month: 0,
+      lifetime: bills.length
+    };
+
+    bills.forEach(b => {
+      const bDate = new Date(b.createdAt);
+      if (bDate >= today) counts.today++;
+      else if (bDate >= yesterday && bDate < today) counts.yesterday++;
+      
+      if (bDate >= startOfWeek) counts.week++;
+      if (bDate >= startOfMonth) counts.month++;
+    });
+
+    return counts;
   }, [bills]);
 
   return (
@@ -315,6 +356,40 @@ const Bills = () => {
         </div>
       </div>
 
+      {/* Bill Count Stats */}
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div className="bg-gradient-to-r from-[#093C5D] to-[#125887] px-3 py-2.5 sm:px-4 sm:py-3 md:px-5 md:py-3.5 flex items-center justify-between">
+          <div className="flex items-center">
+            <FileText className="w-4 h-4 md:w-5 md:h-5 mr-2 text-white/90" />
+            <h3 className="text-xs md:text-sm font-semibold text-white tracking-wide uppercase">{t('Bills Generated Overview')}</h3>
+          </div>
+        </div>
+        <div className="p-2 sm:p-4 md:p-5 bg-gray-50/30">
+          <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 md:gap-4 lg:gap-5">
+            <div className="bg-white rounded-lg sm:rounded-xl p-2.5 px-3 sm:p-3 md:p-4 flex flex-row sm:flex-col items-center justify-between sm:justify-center text-left sm:text-center border border-gray-100 hover:bg-gray-50 hover:border-[#093C5D]/40 transition-all duration-300 cursor-default">
+              <p className="text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-wider mb-0 sm:mb-1.5">{t('Today')}</p>
+              <p className="text-sm sm:text-xl md:text-2xl lg:text-3xl font-semibold text-gray-800">{billCounts.today}</p>
+            </div>
+            <div className="bg-white rounded-lg sm:rounded-xl p-2.5 px-3 sm:p-3 md:p-4 flex flex-row sm:flex-col items-center justify-between sm:justify-center text-left sm:text-center border border-gray-100 hover:bg-gray-50 hover:border-[#093C5D]/40 transition-all duration-300 cursor-default">
+              <p className="text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-wider mb-0 sm:mb-1.5">{t('Yesterday')}</p>
+              <p className="text-sm sm:text-xl md:text-2xl lg:text-3xl font-semibold text-gray-800">{billCounts.yesterday}</p>
+            </div>
+            <div className="bg-white rounded-lg sm:rounded-xl p-2.5 px-3 sm:p-3 md:p-4 flex flex-row sm:flex-col items-center justify-between sm:justify-center text-left sm:text-center border border-gray-100 hover:bg-gray-50 hover:border-[#093C5D]/40 transition-all duration-300 cursor-default">
+              <p className="text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-wider mb-0 sm:mb-1.5">{t('This Week')}</p>
+              <p className="text-sm sm:text-xl md:text-2xl lg:text-3xl font-semibold text-gray-800">{billCounts.week}</p>
+            </div>
+            <div className="bg-white rounded-lg sm:rounded-xl p-2.5 px-3 sm:p-3 md:p-4 flex flex-row sm:flex-col items-center justify-between sm:justify-center text-left sm:text-center border border-gray-100 hover:bg-gray-50 hover:border-[#093C5D]/40 transition-all duration-300 cursor-default">
+              <p className="text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-wider mb-0 sm:mb-1.5">{t('This Month')}</p>
+              <p className="text-sm sm:text-xl md:text-2xl lg:text-3xl font-semibold text-gray-800">{billCounts.month}</p>
+            </div>
+            <div className="bg-white rounded-lg sm:rounded-xl p-2.5 px-3 sm:p-3 md:p-4 flex flex-row sm:flex-col items-center justify-between sm:justify-center text-left sm:text-center border border-gray-100 hover:bg-gray-50 hover:border-[#093C5D]/40 transition-all duration-300 cursor-default sm:col-span-3 md:col-span-1">
+              <p className="text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-wider mb-0 sm:mb-1.5">{t('Lifetime')}</p>
+              <p className="text-sm sm:text-xl md:text-2xl lg:text-3xl font-semibold text-gray-800">{billCounts.lifetime}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Search Bar */}
       <div className="relative w-full md:max-w-md">
         <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
@@ -356,7 +431,7 @@ const Bills = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {filteredBills.map((bill, index) => (
+                  {paginatedBills.map((bill, index) => (
                     <tr
                       key={bill._id}
                       className={`hover:bg-[#F5F5F5]/60 transition-all duration-200 animate-fade-in relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
@@ -398,7 +473,7 @@ const Bills = () => {
                       </td>
                       <td className="px-4 lg:px-6 py-3.5 lg:py-4 text-center">
                         <span className={`inline-block px-2.5 lg:px-3 py-1 lg:py-1.5 text-[10px] lg:text-xs font-semibold rounded-full uppercase tracking-wide
-                          ${bill.paymentStatus === 'PAID' ? 'bg-green-100 text-green-700' :
+                          ${(bill.paymentStatus === 'PAID' || bill.paymentStatus === 'ADVANCE') ? 'bg-green-100 text-green-700' :
                             bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-100 text-yellow-700' :
                               'bg-red-100 text-red-700'}`}>
                           {bill.paymentStatus}
@@ -482,7 +557,7 @@ const Bills = () => {
 
             {/* Mobile Cards */}
             <div className="md:hidden divide-y divide-gray-100">
-              {filteredBills.map((bill, index) => (
+              {paginatedBills.map((bill, index) => (
                 <div
                   key={bill._id}
                   className={`p-4 animate-fade-in hover:bg-[#F5F5F5] transition-colors relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
@@ -521,7 +596,7 @@ const Bills = () => {
                   </div>
                   <div className="flex justify-between items-center mt-3 gap-2">
                     <span className={`px-2.5 py-1.5 text-xs font-semibold rounded-full uppercase
-                          ${bill.paymentStatus === 'PAID' ? 'bg-green-100 text-green-700' :
+                          ${(bill.paymentStatus === 'PAID' || bill.paymentStatus === 'ADVANCE') ? 'bg-green-100 text-green-700' :
                         bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-100 text-yellow-700' :
                           'bg-red-100 text-red-700'}`}>
                       {bill.paymentStatus}
@@ -600,10 +675,49 @@ const Bills = () => {
             </div>
 
             {/* Pagination Info */}
-            <div className="px-4 md:px-6 py-3 md:py-4 bg-gray-50/50 border-t border-gray-100">
-              <p className="text-xs text-gray-600">
-                {t('Showing')} 1 {t('to')} {filteredBills.length} {t('of')} {bills.length} {t('invoices')}
+            <div className="px-4 md:px-6 py-3 md:py-4 bg-gray-50/50 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <p className="text-xs text-gray-600 font-medium">
+                {t('Showing')} {filteredBills.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1} {t('to')} {Math.min(currentPage * ITEMS_PER_PAGE, filteredBills.length)} {t('of')} {filteredBills.length} {t('invoices')}
               </p>
+              
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="flex items-center bg-white border border-gray-200 rounded-lg p-1 hover:border-[#093C5D]/40 hover:bg-gray-50 transition-all duration-300">
+                  <button
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="cursor-pointer px-2 sm:px-3 py-1.5 rounded-md text-xs font-semibold text-gray-600 hover:text-gray-900 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-all active:scale-95 flex items-center gap-1"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">{t('Prev')}</span>
+                  </button>
+                  
+                  <div className="flex items-center px-1 sm:px-2 gap-1 border-x border-gray-100 mx-1 sm:mx-2">
+                    {[...Array(totalPages)].map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setCurrentPage(i + 1)}
+                        className={`cursor-pointer min-w-[28px] h-7 px-2 rounded-md text-xs font-semibold flex items-center justify-center transition-all ${
+                          currentPage === i + 1 
+                            ? 'bg-[#093C5D] text-white' 
+                            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                        }`}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    className="cursor-pointer px-2 sm:px-3 py-1.5 rounded-md text-xs font-semibold text-gray-600 hover:bg-gray-100 hover:text-gray-900 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-all active:scale-95 flex items-center gap-1"
+                  >
+                    <span className="hidden sm:inline">{t('Next')}</span>
+                    <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -633,7 +747,7 @@ const Bills = () => {
                    </div>
                    <div className="md:text-right">
                      <p className="text-sm font-semibold text-gray-800">{t('Date')}: {new Date(viewBill.createdAt).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}</p>
-                     <p className="text-sm font-semibold text-gray-800 mt-1 flex items-center md:justify-end gap-2">{t('Status')}: <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider ${viewBill.paymentStatus === 'PAID' ? 'bg-green-100 text-green-700' : viewBill.paymentStatus === 'PARTIAL' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>{viewBill.paymentStatus}</span></p>
+                     <p className="text-sm font-semibold text-gray-800 mt-1 flex items-center md:justify-end gap-2">{t('Status')}: <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider ${(viewBill.paymentStatus === 'PAID' || viewBill.paymentStatus === 'ADVANCE') ? 'bg-green-100 text-green-700' : viewBill.paymentStatus === 'PARTIAL' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>{viewBill.paymentStatus}</span></p>
                    </div>
                  </div>
                  
