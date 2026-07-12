@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 const customerSchema = yup.object({
   name: yup.string().required('Name is required'),
   phone: yup.string().matches(/^[0-9]{10}$/, 'Must be a 10-digit number').required('Phone is required'),
-  email: yup.string().email('Invalid email').nullable(),
+  email: yup.string().email('Invalid email').required('Email is required'),
   address: yup.string().nullable(),
 });
 
@@ -553,7 +553,7 @@ const Customers = () => {
 
                 <div>
                   <label className="block text-sm md:text-base font-semibold text-gray-800 mb-2">
-                    {t('Email')} <span className="text-gray-500 font-medium">({t('Optional')})</span>
+                    {t('Email')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     {...register('email')}

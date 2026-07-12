@@ -472,7 +472,7 @@ const Bills = () => {
                         ) : null}
                       </td>
                       <td className="px-4 lg:px-6 py-3.5 lg:py-4 text-center">
-                        <span className={`inline-block px-2.5 lg:px-3 py-1 lg:py-1.5 text-[10px] lg:text-xs font-semibold rounded-full uppercase tracking-wide
+                        <span className={`inline-block px-2.5 lg:px-3 py-1 lg:py-1 text-[10px] lg:text-xs font-semibold rounded-full uppercase tracking-wide
                           ${(bill.paymentStatus === 'PAID' || bill.paymentStatus === 'ADVANCE') ? 'bg-green-100 text-green-700' :
                             bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-100 text-yellow-700' :
                               'bg-red-100 text-red-700'}`}>
@@ -686,7 +686,7 @@ const Bills = () => {
                   <button
                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="cursor-pointer px-2 sm:px-3 py-1.5 rounded-md text-xs font-semibold text-gray-600 hover:text-gray-900 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-all active:scale-95 flex items-center gap-1"
+                    className="cursor-pointer px-2 sm:px-3 py-1.5 rounded-md text-xs font-semibold text-gray-600  disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-all active:scale-95 flex items-center gap-1"
                   >
                     <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     <span className="hidden sm:inline">{t('Prev')}</span>
@@ -871,7 +871,7 @@ const Bills = () => {
                         />
                         <input
                           type="email"
-                          placeholder={t('Email (Optional)')}
+                          placeholder={t('Email *')}
                           value={newCustomer.email}
                           onChange={e => setNewCustomer({...newCustomer, email: e.target.value})}
                           className="w-full rounded-md border border-gray-300 px-3 py-2 text-xs focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D]"

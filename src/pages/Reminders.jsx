@@ -230,7 +230,7 @@ const Reminders = () => {
                             Bill #{reminder.billId?.invoiceNumber || 'N/A'} • ₹{reminder.amount || 0}
                           </p>
                         </div>
-                        <span className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap flex-shrink-0 ${reminder.status === 'PENDING'
+                        <span className={`px-3 py-1  rounded-full text-xs font-semibold whitespace-nowrap flex-shrink-0 ${reminder.status === 'PENDING'
                           ? 'bg-[#E5E7EB] text-[#093C5D]'
                           : reminder.status === 'SENT'
                             ? 'bg-green-100 text-green-700'
