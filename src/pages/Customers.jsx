@@ -43,6 +43,8 @@ const Customers = () => {
       return res.data.data;
     },
     getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
+    staleTime: 1 * 60 * 1000, // Data is fresh for 1 min
+    gcTime: 5 * 60 * 1000,   // Garbage collect (delete from memory) if unused for 5 mins
   });
 
   const mutation = useMutation({
