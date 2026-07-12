@@ -92,9 +92,7 @@ const VerifyOTP = ({ type = 'registration' }) => {
     try {
       const res = await api.post(currentConfig.verifyEndpoint, { email, otp: otpValue });
       if (res.data.success) {
-        localStorage.setItem('accessToken', res.data.data.accessToken);
-        localStorage.setItem('token', res.data.data.accessToken);
-        dispatch(loginSuccess({ user: res.data.data, token: res.data.data.accessToken }));
+        dispatch(loginSuccess({ user: res.data.data }));
         navigate('/dashboard');
       }
     } catch (err) {
