@@ -55,9 +55,9 @@ const MainLayout = () => {
   // Fetch notification list when panel opens
   const fetchNotificationList = async () => {
     try {
-      const res = await api.get('/notifications');
-      // Backend sends: { success: true, data: [...], message: '...' }
-      const notificationsData = res.data?.data || [];
+      const res = await api.get('/notifications?limit=5');
+      // Backend now sends: { success: true, data: { data: [...], totalCount: ... }, message: '...' }
+      const notificationsData = res.data?.data?.data || [];
 
       // Map backend isRead to frontend read
       const mappedNotifications = notificationsData.map(notif => ({

@@ -17,7 +17,9 @@ const Dashboard = () => {
     queryFn: async () => {
       const res = await api.get('/reports/dashboard');
       return res.data.data;
-    }
+    },
+    staleTime: 1 * 60 * 1000, // Data is fresh for 1 min
+    gcTime: 5 * 60 * 1000,   // Garbage collect (delete from memory) if unused for 5 mins
   });
 
   // Use actual chart data, default to empty array if none

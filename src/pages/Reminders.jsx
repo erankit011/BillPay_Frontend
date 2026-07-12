@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
+import { useInfiniteQuery, useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Bell, Clock, User, X, MessageSquare, Mail, Edit, Trash2, TrendingUp, Lightbulb, Activity, Send } from 'lucide-react';
+import { Plus, Bell, Clock, User, X, MessageSquare, Mail, Edit, Trash2, TrendingUp, Lightbulb, Activity, Send, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
 
 const Reminders = () => {
   const { t } = useTranslation();
@@ -12,26 +13,46 @@ const Reminders = () => {
   const [editingReminder, setEditingReminder] = useState(null);
   const [filterStatus, setFilterStatus] = useState('All');
   const [searchName, setSearchName] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const queryClient = useQueryClient();
 
-  const { data: reminders = [], isLoading } = useQuery({
-    queryKey: ['reminders'],
-    queryFn: async () => {
-      const res = await api.get('/reminders');
+  // Debounce search
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchName);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchName]);
+
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery({
+    queryKey: ['reminders', debouncedSearch, filterStatus],
+    queryFn: async ({ pageParam = 1 }) => {
+      const res = await api.get(`/reminders?page=${pageParam}&limit=15&search=${encodeURIComponent(debouncedSearch)}&filterStatus=${encodeURIComponent(filterStatus)}`);
       return res.data.data;
-    }
+    },
+    getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
+    staleTime: 1 * 60 * 1000, // Data is fresh for 1 min
+    gcTime: 5 * 60 * 1000,   // Garbage collect (delete from memory) if unused for 5 mins
   });
 
   const { data: customers = [] } = useQuery({
-    queryKey: ['customers'],
+    queryKey: ['customers', 'all'],
     queryFn: async () => {
-      const res = await api.get('/customers');
+      const res = await api.get('/customers?limit=1000');
       return res.data.data;
     }
   });
 
-  const { register, handleSubmit, reset, watch } = useForm();
+  const reminders = data?.pages?.flatMap(page => page.data || []) || [];
 
+  const { register, handleSubmit, reset, watch } = useForm();
   const selectedCustomerId = watch('customerId');
   const selectedType = watch('type');
 
@@ -50,7 +71,6 @@ const Reminders = () => {
       reset();
     },
     onError: (error) => {
-      // Handle error - will be displayed in the form
       console.error('Reminder creation failed:', error);
     }
   });
@@ -105,7 +125,6 @@ const Reminders = () => {
   };
 
   const onSubmit = (data) => {
-    // Check if EMAIL type is selected and customer has no email
     if (data.type === 'EMAIL') {
       const selectedCustomer = customers.find(c => c._id === data.customerId);
       if (!selectedCustomer?.email) {
@@ -116,30 +135,17 @@ const Reminders = () => {
     mutation.mutate(data);
   };
 
-  // Filter reminders based on status and search query
-  const filteredReminders = reminders.filter(r => {
-    const matchesStatus = filterStatus === 'All' || r.status === filterStatus.toUpperCase();
-    const customerName = r.customerId?.name || '';
-    const matchesSearch = customerName.toLowerCase().includes(searchName.toLowerCase());
-    return matchesStatus && matchesSearch;
-  });
+  const firstPage = data?.pages?.[0];
+  const stats = firstPage?.stats || {
+    pendingCount: 0, sentCount: 0, totalPending: 0, recovered: 0, totalUdhar: 0, customersWithDuesCount: 0, topDefaulter: null
+  };
 
-  // Calculate stats using actual customer data for realistic analytics
-  const pendingCount = reminders.filter(r => r.status === 'PENDING').length;
-  const sentCount = reminders.filter(r => r.status === 'SENT').length;
-  
-  const totalPending = customers.reduce((sum, c) => sum + (c.balance || 0), 0);
-  const recovered = customers.reduce((sum, c) => sum + (c.totalPaid || 0), 0);
-  const totalUdhar = customers.reduce((sum, c) => sum + (c.totalUdhar || 0), 0);
-  const recoveryRate = totalUdhar > 0 ? Math.round((recovered / totalUdhar) * 100) : 0;
+  const recoveryRate = stats.totalUdhar > 0 ? Math.round((stats.recovered / stats.totalUdhar) * 100) : 0;
 
-  // Dynamic Smart Tip logic
-  const customersWithDues = customers.filter(c => c.balance > 0);
   let smartTip = t('Sending reminders on Saturday mornings between 9-11 AM increases payment recovery by 22% for retail customers.');
-  if (customersWithDues.length > 0) {
-    const topDefaulter = [...customersWithDues].sort((a, b) => b.balance - a.balance)[0];
-    smartTip = t(`You have ${customersWithDues.length} customer(s) with pending dues. Consider sending a reminder to ${topDefaulter.name} who owes ₹${topDefaulter.balance.toLocaleString()} to improve your cash flow.`);
-  } else if (customers.length > 0) {
+  if (stats.customersWithDuesCount > 0 && stats.topDefaulter) {
+    smartTip = t(`You have ${stats.customersWithDuesCount} customer(s) with pending dues. Consider sending a reminder to ${stats.topDefaulter.name} who owes ₹${stats.topDefaulter.balance.toLocaleString()} to improve your cash flow.`);
+  } else if (stats.totalUdhar > 0 && stats.totalPending === 0) {
     smartTip = t('Great job! You have zero pending payments. Your cash flow is healthy and well maintained.');
   }
 
@@ -198,104 +204,117 @@ const Reminders = () => {
           {/* Reminders List */}
           <div className="space-y-3 md:space-y-4">
             {isLoading ? (
-              <div className="bg-white border border-gray-200 rounded-xl p-8 md:p-10 lg:p-12 text-center text-gray-500">
-                <div className="animate-spin rounded-full h-8 w-8 border-4 border-gray-200 border-t-[#093C5D] mx-auto"></div>
+              <div className="bg-white border border-gray-200 rounded-xl p-8 md:p-10 lg:p-12 text-center text-gray-500 flex justify-center">
+                <Loader2 className="w-8 h-8 md:w-10 md:h-10 animate-spin text-[#093C5D]" />
               </div>
-            ) : filteredReminders.length === 0 ? (
+            ) : isError ? (
+               <div className="bg-white border border-gray-200 rounded-xl p-8 md:p-10 lg:p-12 text-center text-red-500">
+                <p className="font-medium text-xs md:text-sm">{t('Failed to load reminders.')}</p>
+              </div>
+            ) : reminders.length === 0 ? (
               <div className="bg-white border border-gray-200 rounded-xl p-8 md:p-10 lg:p-12 text-center text-gray-500">
                 <Bell className="w-12 h-12 md:w-16 md:h-16 text-gray-300 mx-auto mb-3 md:mb-4" />
-                <p className="font-medium text-xs md:text-sm">{t('No reminders found. Set your first reminder!')}</p>
+                <p className="font-medium text-xs md:text-sm">{t('No reminders found.')}</p>
               </div>
             ) : (
-              filteredReminders.map((reminder, index) => (
-                <div
-                  key={reminder._id}
-                  className="bg-white border border-gray-200 rounded-xl p-4 md:p-5 animate-fade-in hover:border-[#D1D5DB] transition-all"
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
-                  <div className="flex items-start gap-3 md:gap-4">
-                    {/* Avatar */}
-                    <div className="w-11 h-11 md:w-12 md:h-12 rounded-full bg-[#E5E7EB] flex items-center justify-center flex-shrink-0">
-                      <User className="w-5 h-5 md:w-6 md:h-6 text-[#093C5D]" />
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2 mb-2">
-                        <div className="min-w-0 flex-1">
-                          <h3 className="text-xs md:text-sm font-semibold text-gray-900 truncate">
-                            {reminder.customerId?.name || t('Deleted Customer')}
-                          </h3>
-                          <p className="text-sm text-gray-600 mt-0.5 font-medium">
-                            Bill #{reminder.billId?.invoiceNumber || 'N/A'} • ₹{reminder.amount || 0}
-                          </p>
-                        </div>
-                        <span className={`px-3 py-1  rounded-full text-xs font-semibold whitespace-nowrap flex-shrink-0 ${reminder.status === 'PENDING'
-                          ? 'bg-[#E5E7EB] text-[#093C5D]'
-                          : reminder.status === 'SENT'
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-red-100 text-red-700'
-                          }`}>
-                          {reminder.status}
-                        </span>
+              <div>
+                {reminders.map((reminder, index) => (
+                  <div
+                    key={reminder._id}
+                    className="bg-white border border-gray-200 rounded-xl p-4 md:p-5 animate-fade-in hover:border-[#D1D5DB] transition-all mb-3 md:mb-4"
+                    style={{ animationDelay: `${index * 50}ms` }}
+                  >
+                    <div className="flex items-start gap-3 md:gap-4">
+                      {/* Avatar */}
+                      <div className="w-11 h-11 md:w-12 md:h-12 rounded-full bg-[#E5E7EB] flex items-center justify-center flex-shrink-0">
+                        <User className="w-5 h-5 md:w-6 md:h-6 text-[#093C5D]" />
                       </div>
 
-                      {/* Message */}
-                      <p className="text-sm text-gray-700 font-medium mb-3 italic bg-gray-50 p-3 rounded-xl border border-gray-100 line-clamp-2">
-                        "{reminder.message}"
-                      </p>
-
-                      {/* Footer */}
-                      <div className="flex items-center justify-between flex-wrap gap-2">
-                        <div className="flex flex-col md:flex-row items-start md:items-center gap-2 text-sm text-gray-600">
-                          <div className="flex items-center gap-1.5">
-                            <Clock className="w-4 h-4 flex-shrink-0" />
-                            <span className="font-medium">{new Date(reminder.scheduledDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}</span>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            {reminder.type === 'WHATSAPP' ? (
-                              <MessageSquare className="w-4 h-4 text-green-600 flex-shrink-0" />
-                            ) : (
-                              <Mail className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
+                      {/* Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2 mb-2">
+                          <div className="min-w-0 flex-1">
+                            <h3 className="text-xs md:text-sm font-semibold text-gray-900 truncate">
+                              {reminder.customerId?.name || t('Deleted Customer')}
+                            </h3>
+                            {reminder.customerId?.balance > 0 && (
+                               <p className="text-xs text-red-500 mt-0.5 font-medium">
+                                 {t('Total Due')}: ₹{reminder.customerId.balance}
+                               </p>
                             )}
-                            <span className={`font-semibold ${reminder.type === 'WHATSAPP' ? 'text-green-600' : 'text-[#093C5D]'}`}>
-                              {reminder.type}
-                            </span>
                           </div>
+                          <span className={`px-3 py-1  rounded-full text-xs font-semibold whitespace-nowrap flex-shrink-0 ${reminder.status === 'PENDING'
+                            ? 'bg-[#E5E7EB] text-[#093C5D]'
+                            : reminder.status === 'SENT'
+                              ? 'bg-green-100 text-green-700'
+                              : 'bg-red-100 text-red-700'
+                            }`}>
+                            {reminder.status}
+                          </span>
                         </div>
 
-                        <div className="flex items-center gap-2">
-                          {reminder.status !== 'SENT' && (
+                        {/* Message */}
+                        <p className="text-sm text-gray-700 font-medium mb-3 italic bg-gray-50 p-3 rounded-xl border border-gray-100 line-clamp-2">
+                          "{reminder.message}"
+                        </p>
+
+                        {/* Footer */}
+                        <div className="flex items-center justify-between flex-wrap gap-2">
+                          <div className="flex flex-col md:flex-row items-start md:items-center gap-2 text-sm text-gray-600">
+                            <div className="flex items-center gap-1.5">
+                              <Clock className="w-4 h-4 flex-shrink-0" />
+                              <span className="font-medium">{new Date(reminder.scheduledDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })} • {new Date(reminder.scheduledDate).toLocaleDateString()}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              {reminder.type === 'WHATSAPP' ? (
+                                <MessageSquare className="w-4 h-4 text-green-600 flex-shrink-0" />
+                              ) : (
+                                <Mail className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
+                              )}
+                              <span className={`font-semibold ${reminder.type === 'WHATSAPP' ? 'text-green-600' : 'text-[#093C5D]'}`}>
+                                {reminder.type}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            {reminder.status !== 'SENT' && (
+                              <button
+                                onClick={() => handleSendNow(reminder)}
+                                className="cursor-pointer p-2 hover:bg-green-50 rounded-xl transition-colors active:scale-90"
+                                title={t('Send Now')}
+                                disabled={sendMutation.isPending}
+                              >
+                                <Send className="w-4 h-4 text-green-600" />
+                              </button>
+                            )}
                             <button
-                              onClick={() => handleSendNow(reminder)}
-                              className="cursor-pointer p-2 hover:bg-green-50 rounded-xl transition-colors active:scale-90"
-                              title={t('Send Now')}
-                              disabled={sendMutation.isPending}
+                              onClick={() => handleEdit(reminder)}
+                              className="cursor-pointer p-2 hover:bg-[#F5F5F5] rounded-xl transition-colors active:scale-90"
+                              title={t('Edit Reminder')}
                             >
-                              <Send className="w-4 h-4 text-green-600" />
+                              <Edit className="w-4 h-4 text-[#093C5D]" />
                             </button>
-                          )}
-                          <button
-                            onClick={() => handleEdit(reminder)}
-                            className="cursor-pointer p-2 hover:bg-[#F5F5F5] rounded-xl transition-colors active:scale-90"
-                            title={t('Edit Reminder')}
-                          >
-                            <Edit className="w-4 h-4 text-[#093C5D]" />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(reminder)}
-                            className="cursor-pointer p-2 hover:bg-red-50 rounded-xl transition-colors active:scale-90"
-                            title={t('Delete Reminder')}
-                            disabled={deleteMutation.isPending}
-                          >
-                            <Trash2 className="w-4 h-4 text-red-600" />
-                          </button>
+                            <button
+                              onClick={() => handleDelete(reminder)}
+                              className="cursor-pointer p-2 hover:bg-red-50 rounded-xl transition-colors active:scale-90"
+                              title={t('Delete Reminder')}
+                              disabled={deleteMutation.isPending}
+                            >
+                              <Trash2 className="w-4 h-4 text-red-600" />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))
+                ))}
+                <InfiniteScrollObserver 
+                   hasNextPage={hasNextPage} 
+                   isFetchingNextPage={isFetchingNextPage} 
+                   fetchNextPage={fetchNextPage} 
+                 />
+              </div>
             )}
           </div>
         </div>
@@ -327,11 +346,11 @@ const Reminders = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between text-base">
                 <span className="text-gray-600 font-medium">{t('Total Pending')}</span>
-                <span className="font-semibold text-gray-900">₹{totalPending.toLocaleString()}</span>
+                <span className="font-semibold text-gray-900">₹{stats.totalPending.toLocaleString()}</span>
               </div>
               <div className="flex items-center justify-between text-base">
                 <span className="text-gray-600 font-medium">{t('Total Recovered')}</span>
-                <span className="font-semibold text-green-600">₹{recovered.toLocaleString()}</span>
+                <span className="font-semibold text-green-600">₹{stats.recovered.toLocaleString()}</span>
               </div>
             </div>
           </div>
@@ -361,8 +380,8 @@ const Reminders = () => {
                   <p className="text-gray-700 leading-relaxed font-medium">
                     <span className="font-semibold">{reminder.customerId?.name || 'Customer'}</span>{' '}
                     {reminder.status === 'SENT' ? t('paid') : t('Reminder sent to')}{' '}
-                    <span className="font-semibold">₹{reminder.amount || 0}</span>{' '}
-                    {reminder.type === 'WHATSAPP' ? t('via WhatsApp link') : t('via Email')}.
+                    <span className="font-semibold">₹{reminder.customerId?.balance || 0}</span>{' '}
+                    {reminder.type === 'WHATSAPP' ? t('via WhatsApp') : t('via Email')}.
                   </p>
                 </div>
               ))}
@@ -464,7 +483,11 @@ const Reminders = () => {
                   disabled={mutation.isPending}
                   className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-full px-5 md:px-6 lg:px-7 py-2.5 md:py-3 lg:py-3.5 font-semibold text-xs md:text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 active:scale-95 transition-all"
                 >
-                  {mutation.isPending ? t('Saving...') : isEditMode ? t('Update Reminder') : t('Save Reminder')}
+                  {mutation.isPending ? (
+                    <span className="flex items-center justify-center">
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" /> {t('Saving...')}
+                    </span>
+                  ) : isEditMode ? t('Update Reminder') : t('Save Reminder')}
                 </button>
               </form>
             </div>

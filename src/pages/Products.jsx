@@ -1,19 +1,12 @@
-import { useState, useMemo } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import { useState, useEffect } from 'react';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Search, X, Edit, Trash2, Download, PlusCircle, Wallet, Box, AlertTriangle } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Download, PlusCircle, Wallet, Box, AlertTriangle, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-
-const productSchema = yup.object({
-  name: yup.string().required('Name is required'),
-  price: yup.number().min(0, 'Price cannot be negative').required('Price is required'),
-  stock: yup.number().min(0, 'Stock cannot be negative').required('Stock is required'),
-});
+import ProductFormModal from '../components/products/ProductFormModal';
+import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
 
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(amount);
@@ -59,20 +52,34 @@ const Products = () => {
   const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [filterStock, setFilterStock] = useState('All');
   const [editingProduct, setEditingProduct] = useState(null);
   const queryClient = useQueryClient();
 
-  const { data: products = [], isLoading } = useQuery({
-    queryKey: ['products'],
-    queryFn: async () => {
-      const res = await api.get('/products');
-      return res.data.data;
-    }
-  });
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
 
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm({
-    resolver: yupResolver(productSchema)
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery({
+    queryKey: ['products', debouncedSearch, filterStock],
+    queryFn: async ({ pageParam = 1 }) => {
+      const res = await api.get(`/products?page=${pageParam}&limit=15&search=${encodeURIComponent(debouncedSearch)}&filterStock=${encodeURIComponent(filterStock)}`);
+      return res.data.data;
+    },
+    getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
+    staleTime: 1 * 60 * 1000, // Data is fresh for 1 min
+    gcTime: 5 * 60 * 1000,   // Garbage collect (delete from memory) if unused for 5 mins
   });
 
   const createMutation = useMutation({
@@ -98,28 +105,26 @@ const Products = () => {
     }
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = (formData) => {
     if (editingProduct) {
-      updateMutation.mutate({ id: editingProduct._id, data });
+      updateMutation.mutate({ id: editingProduct._id, data: formData });
     } else {
-      createMutation.mutate(data);
+      createMutation.mutate(formData);
     }
   };
 
   const openEditModal = (product) => {
     setEditingProduct(product);
-    setValue('name', product.name);
-    setValue('price', product.price);
-    setValue('stock', product.stock);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingProduct(null);
-    reset();
   };
 
+  const products = data?.pages?.flatMap(page => page.data || []) || [];
+  
   const handleDownloadReport = () => {
     if (!products || products.length === 0) return;
     
@@ -162,23 +167,13 @@ const Products = () => {
     doc.save(`Inventory_Report_${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
-  const filteredProducts = products.filter(p => {
-    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
-    let matchesStock = true;
-    if (filterStock === 'In Stock') matchesStock = p.stock >= 20;
-    else if (filterStock === 'Low Stock') matchesStock = p.stock > 0 && p.stock < 20;
-    else if (filterStock === 'Out of Stock') matchesStock = p.stock === 0;
-    
-    return matchesSearch && matchesStock;
-  });
-
-  // Calculate stats
-  const stats = useMemo(() => {
-    const totalValue = products.reduce((sum, p) => sum + (p.price * p.stock), 0);
-    const activeItems = products.length;
-    const lowStockItems = products.filter(p => p.stock < 20).length;
-    return { totalValue, activeItems, lowStockItems };
-  }, [products]);
+  // Get EXACT stats from the first page backend response
+  const firstPage = data?.pages?.[0];
+  const stats = {
+    totalValue: firstPage?.totalValue || 0,
+    activeItems: firstPage?.activeItems || 0,
+    lowStockItems: firstPage?.lowStockItems || 0,
+  };
 
   return (
     <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
@@ -272,13 +267,17 @@ const Products = () => {
           <div className="col-span-full flex justify-center items-center py-12">
             <div className="animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-[#093C5D]"></div>
           </div>
-        ) : filteredProducts.length === 0 ? (
+        ) : isError ? (
+          <div className="col-span-full bg-white rounded-xl border border-red-200 p-8 md:p-10 lg:p-12 text-center">
+            <p className="text-red-500 text-sm md:text-base font-medium">{t('Failed to load products.')}</p>
+          </div>
+        ) : products.length === 0 ? (
           <div className="col-span-full bg-white rounded-xl border border-gray-200 p-8 md:p-10 lg:p-12 text-center">
             <p className="text-gray-500 text-sm md:text-base font-medium">{t('No products found.')}</p>
           </div>
         ) : (
           <>
-            {filteredProducts.map((product, index) => (
+            {products.map((product, index) => (
               <div 
                 key={product._id} 
                 className="bg-white rounded-xl border border-gray-200 p-4 md:p-5 flex flex-col justify-between h-full animate-fade-in"
@@ -342,6 +341,15 @@ const Products = () => {
               </div>
             ))}
 
+            {/* Infinite Scroll trigger */}
+            <div className="col-span-full">
+              <InfiniteScrollObserver 
+                hasNextPage={hasNextPage} 
+                isFetchingNextPage={isFetchingNextPage} 
+                fetchNextPage={fetchNextPage} 
+              />
+            </div>
+
             {/* New Inventory Card */}
             <button
               onClick={() => setIsModalOpen(true)}
@@ -359,7 +367,7 @@ const Products = () => {
         )}
       </div>
 
-      {/* Stats Section */}
+      {/* Second Stats Section (EXACT COPY OF ORIGINAL) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 lg:gap-5 bg-white rounded-xl border border-gray-200 p-4 md:p-5 lg:p-6">
         <div>
           <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">INVENTORY VALUE</p>
@@ -387,67 +395,13 @@ const Products = () => {
       </div>
 
       {/* Add/Edit Product Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen px-4 py-8">
-            <div className="fixed inset-0 bg-black/30 animate-modal-overlay" onClick={closeModal} />
-            <div className="relative bg-white rounded-xl border border-gray-200 max-w-md w-full p-5 md:p-6 animate-modal-content">
-              <div className="flex items-center justify-between mb-4 md:mb-5 pb-4 border-b border-gray-200">
-                <h3 className="text-lg md:text-xl font-semibold text-gray-900">
-                  {editingProduct ? t('Edit Product') : t('Add New Product')}
-                </h3>
-                <button onClick={closeModal} className="cursor-pointer text-gray-400 hover:text-gray-600 active:scale-90 transition-all">
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-              
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <div>
-                  <label className="block text-sm md:text-base font-semibold text-gray-700 mb-1.5">{t('Product Name')}</label>
-                  <input 
-                    {...register('name')}
-                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
-                    placeholder="e.g. Atta 5kg"
-                  />
-                  {errors.name && <p className="text-red-500 text-xs mt-1.5 font-semibold">{errors.name.message}</p>}
-                </div>
-                
-                <div className="grid grid-cols-2 gap-3 md:gap-4">
-                  <div>
-                    <label className="block text-sm md:text-base font-semibold text-gray-700 mb-1.5">{t('Price (₹)')}</label>
-                    <input 
-                      type="number"
-                      step="0.01"
-                      {...register('price')}
-                      className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
-                      placeholder="0.00"
-                    />
-                    {errors.price && <p className="text-red-500 text-xs mt-1.5 font-semibold">{errors.price.message}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-sm md:text-base font-semibold text-gray-700 mb-1.5">{t('Stock Qty')}</label>
-                    <input 
-                      type="number"
-                      {...register('stock')}
-                      className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
-                      placeholder="0"
-                    />
-                    {errors.stock && <p className="text-red-500 text-xs mt-1.5 font-semibold">{errors.stock.message}</p>}
-                  </div>
-                </div>
-                
-                <button
-                  type="submit"
-                  disabled={createMutation.isPending || updateMutation.isPending}
-                  className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-full px-5 md:px-6 py-2.5 md:py-3 font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 active:scale-95 transition-all text-sm md:text-base"
-                >
-                  {createMutation.isPending || updateMutation.isPending ? t('Saving...') : t('Save Product')}
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
+      <ProductFormModal 
+        isOpen={isModalOpen}
+        editingProduct={editingProduct}
+        onClose={closeModal}
+        onSubmit={onSubmit}
+        isPending={createMutation.isPending || updateMutation.isPending}
+      />
     </div>
   );
 };

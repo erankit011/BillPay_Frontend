@@ -20,7 +20,9 @@ const Reports = () => {
     queryFn: async () => {
       const res = await api.get('/reports/dashboard');
       return res.data.data;
-    }
+    },
+    staleTime: 1 * 60 * 1000, // Data is fresh for 1 min
+    gcTime: 5 * 60 * 1000,   // Garbage collect if unused for 5 mins
   });
 
   const { data: bills = [], isLoading: billsLoading } = useQuery({
@@ -28,7 +30,9 @@ const Reports = () => {
     queryFn: async () => {
       const res = await api.get('/bills');
       return res.data.data;
-    }
+    },
+    staleTime: 1 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
   });
 
   const { data: transactions = [] } = useQuery({
@@ -36,7 +40,9 @@ const Reports = () => {
     queryFn: async () => {
       const res = await api.get('/transactions');
       return res.data.data;
-    }
+    },
+    staleTime: 1 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
   });
 
   const downloadStatement = () => {

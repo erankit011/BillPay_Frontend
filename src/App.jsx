@@ -12,7 +12,10 @@ const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false,
       retry: 1,
-      staleTime: 5 * 60 * 1000,
+      // Caching time: 1 minute (Data refresh background me tabhi hoga jab 1 min ho chuka ho)
+      staleTime: 1 * 60 * 1000,
+      // Garbage Collection Time: 5 minutes (Memory se data tab hatega jab 5 min tak page use na ho)
+      gcTime: 5 * 60 * 1000, 
     },
   },
 });
