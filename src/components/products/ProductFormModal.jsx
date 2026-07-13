@@ -57,11 +57,11 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
               <X className="w-6 h-6" />
             </button>
           </div>
-          
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <label className="block text-sm md:text-base font-semibold text-gray-700 mb-1.5">{t('Product Name')}</label>
-              <input 
+              <input
                 {...register('name')}
                 className={`w-full rounded-xl border px-4 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.name ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'}`}
                 placeholder="e.g. Atta 5kg"
@@ -73,11 +73,11 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
                 </p>
               )}
             </div>
-            
+
             <div className="grid grid-cols-2 gap-3 md:gap-4">
               <div>
                 <label className="block text-sm md:text-base font-semibold text-gray-700 mb-1.5">{t('Price (₹)')}</label>
-                <input 
+                <input
                   type="number"
                   step="0.01"
                   {...register('price')}
@@ -93,7 +93,7 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
               </div>
               <div>
                 <label className="block text-sm md:text-base font-semibold text-gray-700 mb-1.5">{t('Stock Qty')}</label>
-                <input 
+                <input
                   type="number"
                   {...register('stock')}
                   className={`w-full rounded-xl border px-4 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.stock ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'}`}
@@ -107,7 +107,7 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
                 )}
               </div>
             </div>
-            
+
             <button
               type="submit"
               disabled={isPending}

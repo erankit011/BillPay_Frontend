@@ -14,7 +14,7 @@ const customerSchema = yup.object({
 
 const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSubmit, isPending }) => {
   const { t } = useTranslation();
-  
+
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     resolver: yupResolver(customerSchema),
     defaultValues: isEditMode && editingCustomer ? {

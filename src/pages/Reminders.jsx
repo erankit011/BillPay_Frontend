@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import api from '../api/axios';
 import { Plus, Bell, Clock, User, X, MessageSquare, Mail, Edit, Trash2, TrendingUp, Lightbulb, Activity, Send, Loader2 } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
+import SearchableSelect from '../components/common/SearchableSelect';
 
 const Reminders = () => {
   const { t } = useTranslation();
@@ -46,13 +47,13 @@ const Reminders = () => {
     queryKey: ['customers', 'all'],
     queryFn: async () => {
       const res = await api.get('/customers?limit=1000');
-      return res.data.data;
+      return res.data.data?.data || res.data.data || [];
     }
   });
 
   const reminders = data?.pages?.flatMap(page => page.data || []) || [];
 
-  const { register, handleSubmit, reset, watch } = useForm();
+  const { register, handleSubmit, reset, watch, control } = useForm();
   const selectedCustomerId = watch('customerId');
   const selectedType = watch('type');
 
@@ -171,35 +172,35 @@ const Reminders = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-6">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-4 md:space-y-5">
-            {/* Search + Filter Row */}
-            <div className="flex items-center gap-2 sm:gap-3">
-              {/* Search Bar */}
-              <div className="relative flex-1 min-w-0">
-                <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </div>
-                <input
-                  type="text"
-                  placeholder={t('Search customer...')}
-                  value={searchName}
-                  onChange={(e) => setSearchName(e.target.value)}
-                  className="block w-full pl-9 sm:pl-12 pr-3 sm:pr-4 py-2.5 md:py-3 bg-white border border-gray-200 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-xs md:text-sm font-medium transition-colors duration-200"
-                />
+          {/* Search + Filter Row */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Search Bar */}
+            <div className="relative flex-1 min-w-0">
+              <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
               </div>
-
-              {/* Filter Dropdown */}
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                className="cursor-pointer w-auto bg-white border border-gray-200 rounded-lg px-2 sm:px-3 py-2.5 md:py-3 text-xs md:text-sm font-semibold text-gray-700 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-colors duration-200 flex-shrink-0 bg-no-repeat bg-[right_8px_center] pr-7 sm:pr-8"
-              >
-                <option value="All">{t('All')}</option>
-                <option value="Pending">{t('Pending')}</option>
-                <option value="Sent">{t('Sent')}</option>
-              </select>
+              <input
+                type="text"
+                placeholder={t('Search customer...')}
+                value={searchName}
+                onChange={(e) => setSearchName(e.target.value)}
+                className="block w-full pl-9 sm:pl-12 pr-3 sm:pr-4 py-2.5 md:py-3 bg-white border border-gray-200 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-xs md:text-sm font-medium transition-colors duration-200"
+              />
             </div>
+
+            {/* Filter Dropdown */}
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="cursor-pointer w-auto bg-white border border-gray-200 rounded-lg px-2 sm:px-3 py-2.5 md:py-3 text-xs md:text-sm font-semibold text-gray-700 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-colors duration-200 flex-shrink-0 bg-no-repeat bg-[right_8px_center] pr-7 sm:pr-8"
+            >
+              <option value="All">{t('All')}</option>
+              <option value="Pending">{t('Pending')}</option>
+              <option value="Sent">{t('Sent')}</option>
+            </select>
+          </div>
 
           {/* Reminders List */}
           <div className="space-y-3 md:space-y-4">
@@ -208,7 +209,7 @@ const Reminders = () => {
                 <Loader2 className="w-8 h-8 md:w-10 md:h-10 animate-spin text-[#093C5D]" />
               </div>
             ) : isError ? (
-               <div className="bg-white border border-gray-200 rounded-xl p-8 md:p-10 lg:p-12 text-center text-red-500">
+              <div className="bg-white border border-gray-200 rounded-xl p-8 md:p-10 lg:p-12 text-center text-red-500">
                 <p className="font-medium text-xs md:text-sm">{t('Failed to load reminders.')}</p>
               </div>
             ) : reminders.length === 0 ? (
@@ -238,9 +239,9 @@ const Reminders = () => {
                               {reminder.customerId?.name || t('Deleted Customer')}
                             </h3>
                             {reminder.customerId?.balance > 0 && (
-                               <p className="text-xs text-red-500 mt-0.5 font-medium">
-                                 {t('Total Due')}: ₹{reminder.customerId.balance}
-                               </p>
+                              <p className="text-xs text-red-500 mt-0.5 font-medium">
+                                {t('Total Due')}: ₹{reminder.customerId.balance}
+                              </p>
                             )}
                           </div>
                           <span className={`px-3 py-1  rounded-full text-xs font-semibold whitespace-nowrap flex-shrink-0 ${reminder.status === 'PENDING'
@@ -309,11 +310,11 @@ const Reminders = () => {
                     </div>
                   </div>
                 ))}
-                <InfiniteScrollObserver 
-                   hasNextPage={hasNextPage} 
-                   isFetchingNextPage={isFetchingNextPage} 
-                   fetchNextPage={fetchNextPage} 
-                 />
+                <InfiniteScrollObserver
+                  hasNextPage={hasNextPage}
+                  isFetchingNextPage={isFetchingNextPage}
+                  fetchNextPage={fetchNextPage}
+                />
               </div>
             )}
           </div>
@@ -415,23 +416,30 @@ const Reminders = () => {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:space-y-5">
                 {/* Customer */}
                 <div>
-                  <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">{t('Customer')}</label>
-                  <select
-                    {...register('customerId')}
-                    className="cursor-pointer w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
-                    required
-                  >
-                    <option value="" disabled selected>{t('Select a customer')}</option>
-                    {customers.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
-                  </select>
+                  <label className="block text-sm md:text-base font-semibold text-gray-700 mb-1.5">{t('Customer')}</label>
+                  <Controller
+                    name="customerId"
+                    control={control}
+                    rules={{ required: 'Customer is required' }}
+                    render={({ field }) => (
+                      <SearchableSelect
+                        options={customers.map(c => ({ value: c._id, label: `${c.name} - ${c.phone}` }))}
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder={`-- ${t('Select Customer')} --`}
+                        searchPlaceholder={t('Search by name or phone...')}
+                        error={false}
+                      />
+                    )}
+                  />
                 </div>
 
                 {/* Message */}
                 <div>
-                  <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">{t('Message')}</label>
+                  <label className="block text-sm md:text-base font-semibold text-gray-700 mb-1.5">{t('Message')}</label>
                   <textarea
                     {...register('message')}
-                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 resize-none"
+                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 resize-none"
                     rows="4"
                     required
                     placeholder={t("Dear customer, your payment of ₹...")}
@@ -440,21 +448,21 @@ const Reminders = () => {
 
                 {/* Scheduled Date */}
                 <div>
-                  <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">{t('Scheduled Date')}</label>
+                  <label className="block text-sm md:text-base font-semibold text-gray-700 mb-1.5">{t('Scheduled Date')}</label>
                   <input
                     type="date"
                     {...register('scheduledDate')}
-                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
+                    className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
                     required
                   />
                 </div>
 
                 {/* Channel */}
                 <div>
-                  <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">{t('Channel')}</label>
+                  <label className="block text-sm md:text-base font-semibold text-gray-700 mb-1.5">{t('Channel')}</label>
                   <select
                     {...register('type')}
-                    className="cursor-pointer w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
+                    className="cursor-pointer w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
                   >
                     <option value="WHATSAPP">WhatsApp</option>
                     <option value="EMAIL">Email</option>
@@ -481,7 +489,7 @@ const Reminders = () => {
                 <button
                   type="submit"
                   disabled={mutation.isPending}
-                  className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-full px-5 md:px-6 lg:px-7 py-2.5 md:py-3 lg:py-3.5 font-semibold text-xs md:text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 active:scale-95 transition-all"
+                  className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-xl py-2.5 md:py-3.5 font-semibold text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg active:scale-95 transition-all"
                 >
                   {mutation.isPending ? (
                     <span className="flex items-center justify-center">
