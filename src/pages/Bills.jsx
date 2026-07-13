@@ -24,6 +24,7 @@ const Bills = () => {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [filterStatus, setFilterStatus] = useState('All');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [viewBill, setViewBill] = useState(null);
@@ -50,9 +51,9 @@ const Bills = () => {
     hasNextPage,
     isFetchingNextPage
   } = useInfiniteQuery({
-    queryKey: ['bills', debouncedSearch],
+    queryKey: ['bills', debouncedSearch, filterStatus],
     queryFn: async ({ pageParam = 1 }) => {
-      const res = await api.get(`/bills?page=${pageParam}&limit=15&search=${encodeURIComponent(debouncedSearch)}`);
+      const res = await api.get(`/bills?page=${pageParam}&limit=15&search=${encodeURIComponent(debouncedSearch)}&status=${encodeURIComponent(filterStatus)}`);
       return res.data.data; // Return the entire paginated object
     },
     getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
@@ -103,7 +104,8 @@ const Bills = () => {
 
   const firstPage = data?.pages?.[0];
   const stats = firstPage?.stats || {
-    totalRevenue: 0, revenueGrowth: 0, pendingUdharTotal: 0, customersWithUdhar: 0, activeCustomers: 0, newCustomersThisWeek: 0,
+    totalRevenue: 0, revenueGrowth: 0, pendingUdharTotal: 0, customersWithUdhar: 0, 
+    advanceTotal: 0, customersWithAdvance: 0, activeCustomers: 0, newCustomersThisWeek: 0,
     billCounts: { today: 0, yesterday: 0, week: 0, month: 0, lifetime: 0 }
   };
 
@@ -127,7 +129,7 @@ const Bills = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
           <div className="flex justify-between items-start gap-1">
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
@@ -158,6 +160,23 @@ const Bills = () => {
             </p>
             <p className="text-[10px] md:text-xs text-red-500 font-medium truncate mt-0.5">
               {stats.customersWithUdhar} {t('customers with udhar')}
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-green-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+              <Wallet className="w-4 h-4 md:w-5 md:h-5" />
+            </div>
+          </div>
+          <div className="mt-auto pt-2 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Advance')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
+              {formatCurrency(stats.advanceTotal)}
+            </p>
+            <p className="text-[10px] md:text-xs text-green-600 font-medium truncate mt-0.5">
+              {stats.customersWithAdvance} {t('with advance balance')}
             </p>
           </div>
         </div>
@@ -214,18 +233,33 @@ const Bills = () => {
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="relative w-full md:max-w-md">
-        <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-          <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+      {/* Search Bar + Filter */}
+      <div className="flex items-center gap-2 sm:gap-3 w-full">
+        <div className="relative flex-1">
+          <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            placeholder={t("Search by invoice number or customer...")}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="block w-full pl-10 sm:pl-11 pr-3 sm:pr-4 py-2.5 sm:py-3 bg-white border border-gray-200 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-xs sm:text-sm transition-all"
+          />
         </div>
-        <input
-          type="text"
-          placeholder={t("Search by invoice number or customer...")}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 sm:pl-11 pr-3 sm:pr-4 py-2.5 sm:py-3 bg-white border border-gray-200 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-xs sm:text-sm transition-all"
-        />
+        
+        {/* Filter Dropdown */}
+        <select
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+          className="cursor-pointer w-auto bg-white border border-gray-200 rounded-lg px-2 sm:px-3 py-2.5 md:py-3 text-xs md:text-sm font-semibold text-gray-700 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-colors duration-200 flex-shrink-0 bg-no-repeat bg-[right_8px_center] pr-7 sm:pr-8"
+        >
+          <option value="All">{t('All Bills')}</option>
+          <option value="PAID">{t('Paid')}</option>
+          <option value="UNPAID">{t('Unpaid')}</option>
+          <option value="PARTIAL">{t('Partial')}</option>
+          <option value="ADVANCE">{t('Advance')}</option>
+        </select>
       </div>
 
       {/* Bills Table */}
