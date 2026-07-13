@@ -29,22 +29,22 @@ const getProductIcon = (name) => {
 
 const getTimeAgo = (date) => {
   const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-  
+
   let interval = seconds / 31536000;
   if (interval > 1) return Math.floor(interval) + ' year' + (Math.floor(interval) > 1 ? 's' : '') + ' ago';
-  
+
   interval = seconds / 2592000;
   if (interval > 1) return Math.floor(interval) + ' month' + (Math.floor(interval) > 1 ? 's' : '') + ' ago';
-  
+
   interval = seconds / 86400;
   if (interval > 1) return Math.floor(interval) + ' day' + (Math.floor(interval) > 1 ? 's' : '') + ' ago';
-  
+
   interval = seconds / 3600;
   if (interval > 1) return Math.floor(interval) + ' hour' + (Math.floor(interval) > 1 ? 's' : '') + ' ago';
-  
+
   interval = seconds / 60;
   if (interval > 1) return Math.floor(interval) + ' min' + (Math.floor(interval) > 1 ? 's' : '') + ' ago';
-  
+
   return 'Just now';
 };
 
@@ -124,23 +124,23 @@ const Products = () => {
   };
 
   const products = data?.pages?.flatMap(page => page.data || []) || [];
-  
+
   const handleDownloadReport = () => {
     if (!products || products.length === 0) return;
-    
+
     const doc = new jsPDF();
-    
+
     doc.setFontSize(18);
     doc.setTextColor(9, 60, 93);
     doc.text(t('Inventory Report'), 14, 22);
-    
+
     doc.setFontSize(11);
     doc.setTextColor(100);
     doc.text(`${t('Generated on')}: ${new Date().toLocaleString()}`, 14, 30);
-    
+
     const tableColumn = [t('Product Name'), t('Price (INR)'), t('Stock Qty'), t('Status'), t('Last Updated')];
     const tableRows = [];
-    
+
     products.forEach(p => {
       const status = p.stock === 0 ? t('Out of Stock') : p.stock < 20 ? t('Low Stock') : t('In Stock');
       const date = new Date(p.updatedAt || p.createdAt).toLocaleDateString();
@@ -153,7 +153,7 @@ const Products = () => {
       ];
       tableRows.push(productData);
     });
-    
+
     autoTable(doc, {
       head: [tableColumn],
       body: tableRows,
@@ -163,7 +163,7 @@ const Products = () => {
       headStyles: { fillColor: [9, 60, 93], textColor: 255 },
       alternateRowStyles: { fillColor: [245, 245, 245] }
     });
-    
+
     doc.save(`Inventory_Report_${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
@@ -183,7 +183,7 @@ const Products = () => {
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Inventory & Products')}</h1>
           <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5">{t('Manage your shop items, stock levels, and daily pricing.')}</p>
         </div>
-        <button 
+        <button
           onClick={() => setIsModalOpen(true)}
           className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg flex items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
         >
@@ -278,8 +278,8 @@ const Products = () => {
         ) : (
           <>
             {products.map((product, index) => (
-              <div 
-                key={product._id} 
+              <div
+                key={product._id}
                 className="bg-white rounded-xl border border-gray-200 p-4 md:p-5 flex flex-col justify-between h-full animate-fade-in"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
@@ -291,16 +291,16 @@ const Products = () => {
                     </div>
                     {/* Action Buttons */}
                     <div className="flex items-center gap-1.5 md:gap-2 flex-shrink-0">
-                      <button 
+                      <button
                         onClick={() => openEditModal(product)}
                         className="cursor-pointer text-gray-500 hover:text-[#093C5D] bg-transparent hover:bg-[#093C5D]/10 w-9 h-9 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0 active:scale-90 transition-colors"
                         title={t("Edit")}
                       >
                         <Edit className="w-4 h-4 md:w-4.5 md:h-4.5" />
                       </button>
-                      <button 
+                      <button
                         onClick={() => {
-                          if(window.confirm(t('Are you sure you want to delete this product?'))) {
+                          if (window.confirm(t('Are you sure you want to delete this product?'))) {
                             deleteMutation.mutate(product._id);
                           }
                         }}
@@ -325,13 +325,12 @@ const Products = () => {
 
                 {/* Stock Badge and Time */}
                 <div className="flex flex-col gap-2">
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold inline-block w-fit ${
-                    product.stock === 0 
-                      ? 'bg-red-100 text-red-700' 
-                      : product.stock < 20 
-                        ? 'bg-yellow-100 text-yellow-700' 
-                        : 'bg-green-100 text-green-700'
-                  }`}>
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold inline-block w-fit ${product.stock === 0
+                    ? 'bg-red-100 text-red-700'
+                    : product.stock < 20
+                      ? 'bg-yellow-100 text-yellow-700'
+                      : 'bg-green-100 text-green-700'
+                    }`}>
                     {product.stock === 0 ? 'Out of Stock' : `${product.stock} in stock`}
                   </span>
                   <span className="text-xs text-gray-400 line-clamp-1 font-medium">
@@ -343,10 +342,10 @@ const Products = () => {
 
             {/* Infinite Scroll trigger */}
             <div className="col-span-full">
-              <InfiniteScrollObserver 
-                hasNextPage={hasNextPage} 
-                isFetchingNextPage={isFetchingNextPage} 
-                fetchNextPage={fetchNextPage} 
+              <InfiniteScrollObserver
+                hasNextPage={hasNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+                fetchNextPage={fetchNextPage}
               />
             </div>
 
@@ -385,7 +384,7 @@ const Products = () => {
 
       {/* Download Report Button */}
       <div className="flex justify-center md:justify-start mt-6 md:mt-8">
-        <button 
+        <button
           onClick={handleDownloadReport}
           className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg flex items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
         >
@@ -395,7 +394,7 @@ const Products = () => {
       </div>
 
       {/* Add/Edit Product Modal */}
-      <ProductFormModal 
+      <ProductFormModal
         isOpen={isModalOpen}
         editingProduct={editingProduct}
         onClose={closeModal}

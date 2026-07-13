@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
-import { X, Plus, Loader2 } from 'lucide-react';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { X, Plus, Loader2, AlertCircle } from 'lucide-react';
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/axios';
+import SearchableSelect from '../common/SearchableSelect';
 
 const createBillSchema = yup.object({
   customerId: yup.string().required('Customer is required'),
   products: yup.array().of(
     yup.object({
       productId: yup.string().required('Product is required'),
-      quantity: yup.number().min(1, 'Min quantity 1').required(),
+      quantity: yup.number().transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value).min(1, 'Min quantity 1').required(),
     })
   ).min(1, 'Add at least one product'),
-  amountPaid: yup.number().min(0, 'Cannot be negative').default(0),
+  amountPaid: yup.number().transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value).min(0, 'Cannot be negative').default(0),
 });
 
 const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) => {
@@ -147,8 +148,8 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
           <form onSubmit={handleSubmit(handleCreateBill)} className="space-y-4 md:space-y-5">
             {/* Customer Select */}
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="block text-xs md:text-sm font-semibold text-gray-800">{t('Select Customer')}</label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-sm md:text-base font-semibold text-gray-700">{t('Select Customer')}</label>
                 <button
                   type="button"
                   onClick={() => setIsAddCustomerOpen(!isAddCustomerOpen)}
@@ -167,31 +168,36 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
                       placeholder={t('Full Name *')}
                       value={newCustomer.name}
                       onChange={e => setNewCustomer({...newCustomer, name: e.target.value})}
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-xs focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors"
                     />
                     <input
                       type="text"
                       placeholder={t('Phone Number *')}
                       value={newCustomer.phone}
                       onChange={e => setNewCustomer({...newCustomer, phone: e.target.value})}
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-xs focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors"
                     />
                     <input
                       type="email"
                       placeholder={t('Email *')}
                       value={newCustomer.email}
                       onChange={e => setNewCustomer({...newCustomer, email: e.target.value})}
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-xs focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors"
                     />
                     <input
                       type="text"
                       placeholder={t('Address (Optional)')}
                       value={newCustomer.address}
                       onChange={e => setNewCustomer({...newCustomer, address: e.target.value})}
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-xs focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors"
                     />
                   </div>
-                  {customerError && <p className="text-red-500 text-xs font-semibold mt-2">{customerError}</p>}
+                  {customerError && (
+                    <p className="text-red-500 text-[11px] sm:text-xs mt-2 font-medium flex items-start gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                      <span className="leading-snug">{customerError}</span>
+                    </p>
+                  )}
                   <div className="flex justify-end gap-2 mt-3">
                     <button
                       type="button"
@@ -215,20 +221,31 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
                 </div>
               )}
 
-              <select
-                {...register('customerId')}
-                className="cursor-pointer w-full font-medium rounded-lg border border-gray-300 px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all"
-              >
-                <option value="">-- {t('Select Customer')} --</option>
-                {customers.map(c => <option key={c._id} value={c._id}>{c.name} ({c.phone})</option>)}
-              </select>
-              {errors.customerId && <p className="text-red-500 text-xs mt-1.5 font-semibold">{errors.customerId.message}</p>}
+              <Controller
+                name="customerId"
+                control={control}
+                render={({ field }) => (
+                  <SearchableSelect
+                    options={customers.map(c => ({ value: c._id, label: `${c.name} (${c.phone})` }))}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder={`-- ${t('Select Customer')} --`}
+                    searchPlaceholder={t('Search by name or phone...')}
+                  />
+                )}
+              />
+              {errors.customerId && (
+                <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                  <span className="leading-snug">{errors.customerId.message}</span>
+                </p>
+              )}
             </div>
 
             {/* Products */}
             <div className="space-y-2.5 md:space-y-3">
-              <div className="flex items-center justify-between mb-2">
-                <label className="block text-xs md:text-sm font-semibold text-gray-800">{t('Products')}</label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-sm md:text-base font-semibold text-gray-700">{t('Products')}</label>
                 <button
                   type="button"
                   onClick={() => setIsAddProductOpen(!isAddProductOpen)}
@@ -247,24 +264,29 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
                       placeholder={t('Product Name')}
                       value={newProduct.name}
                       onChange={e => setNewProduct({...newProduct, name: e.target.value})}
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-xs focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors"
                     />
                     <input
                       type="number"
                       placeholder={t('Price')}
                       value={newProduct.price}
                       onChange={e => setNewProduct({...newProduct, price: e.target.value})}
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-xs focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors"
                     />
                     <input
                       type="number"
                       placeholder={t('Stock')}
                       value={newProduct.stock}
                       onChange={e => setNewProduct({...newProduct, stock: e.target.value})}
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-xs focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors"
                     />
                   </div>
-                  {productError && <p className="text-red-500 text-xs font-semibold mt-2">{productError}</p>}
+                  {productError && (
+                    <p className="text-red-500 text-[11px] sm:text-xs mt-2 font-medium flex items-start gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                      <span className="leading-snug">{productError}</span>
+                    </p>
+                  )}
                   <div className="flex justify-end gap-2 mt-3">
                     <button
                       type="button"
@@ -289,18 +311,26 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
               )}
               {fields.map((field, index) => (
                 <div key={field.id} className="flex gap-2 items-start">
-                  <select
-                    {...register(`products.${index}.productId`)}
-                    className="cursor-pointer flex-1 font-medium rounded-lg border border-gray-300 px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all"
-                  >
-                    <option value="">-- {t('Select Product')} --</option>
-                    {products.map(p => <option key={p._id} value={p._id}>{p.name} - ₹{p.price}</option>)}
-                  </select>
+                  <div className="flex-1 min-w-0">
+                    <Controller
+                      name={`products.${index}.productId`}
+                      control={control}
+                      render={({ field }) => (
+                        <SearchableSelect
+                          options={products.map(p => ({ value: p._id, label: `${p.name} - ₹${p.price}` }))}
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder={`-- ${t('Select Product')} --`}
+                          searchPlaceholder={t('Search by product name...')}
+                        />
+                      )}
+                    />
+                  </div>
                   <input
                     type="number"
                     {...register(`products.${index}.quantity`)}
                     placeholder="Qty"
-                    className="w-25 sm:w-20 font-medium rounded-lg sm:rounded-lg border border-gray-300 px-2 sm:px-3 py-2.5 sm:py-3 text-xs sm:text-sm focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all"
+                    className="w-20 md:w-24 font-medium rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors"
                   />
                   {fields.length > 1 && (
                     <button
@@ -316,19 +346,19 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
               <button
                 type="button"
                 onClick={() => append({ productId: '', quantity: 1 })}
-                className="cursor-pointer text-[#093C5D] text-xs hover:underline sm:text-sm font-semibold hover:text-[#082a42] flex items-center gap-1 transition-colors"
+                className="cursor-pointer w-full sm:w-auto mt-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-sm font-semibold text-[#093C5D] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 rounded-xl transition-all active:scale-95 border border-[#093C5D]/20 border-dashed"
               >
-                <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> {t('Add Another product')}
+                <Plus className="w-4 h-4" /> {t('Add Another product')}
               </button>
             </div>
 
             {/* Amount Paid */}
             <div>
-              <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-2">{t('Amount Paid (Advance)')}</label>
+              <label className="block text-sm md:text-base font-semibold text-gray-700 mb-1.5">{t('Amount Paid (Advance)')}</label>
               <input
                 type="number"
                 {...register('amountPaid')}
-                className="w-full rounded-lg font-medium sm:rounded-lg border border-gray-300 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all"
+                className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors"
                 placeholder="0"
               />
             </div>
@@ -337,7 +367,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-lg py-2.5 sm:py-3 md:py-3.5 font-semibold text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-lg active:scale-[0.98] transition-all"
+              className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-xl py-2.5 md:py-3.5 font-semibold text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg active:scale-95 transition-all"
             >
               {mutation.isPending ? (
                 <span className="flex items-center justify-center">

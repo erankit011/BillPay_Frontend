@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { X } from 'lucide-react';
+import { X, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const customerSchema = yup.object({
@@ -14,7 +14,7 @@ const customerSchema = yup.object({
 
 const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSubmit, isPending }) => {
   const { t } = useTranslation();
-  
+
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     resolver: yupResolver(customerSchema),
     defaultValues: isEditMode && editingCustomer ? {
@@ -66,21 +66,31 @@ const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSub
               <label className="block text-sm md:text-base font-semibold text-gray-800 mb-2">{t('Full Name')}</label>
               <input
                 {...register('name')}
-                className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
+                className={`w-full rounded-xl border px-4 py-2.5 md:py-3 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.name ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'}`}
                 placeholder={t("Enter customer name")}
               />
-              {errors.name && <p className="text-red-500 text-xs mt-1.5 font-semibold">{errors.name.message}</p>}
+              {errors.name && (
+                <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                  <span className="leading-snug">{errors.name.message}</span>
+                </p>
+              )}
             </div>
 
             <div>
               <label className="block text-sm md:text-base font-semibold text-gray-800 mb-2">{t('Phone Number')}</label>
               <input
                 {...register('phone')}
-                className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 disabled:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                className={`w-full rounded-xl border px-4 py-2.5 md:py-3 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none disabled:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 ${errors.phone ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'}`}
                 placeholder="10-digit number"
                 disabled={isEditMode}
               />
-              {errors.phone && <p className="text-red-500 text-xs mt-1.5 font-semibold">{errors.phone.message}</p>}
+              {errors.phone && (
+                <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                  <span className="leading-snug">{errors.phone.message}</span>
+                </p>
+              )}
               {isEditMode && <p className="text-xs text-gray-500 mt-1.5 font-medium">{t('Phone number cannot be changed')}</p>}
             </div>
 
@@ -90,10 +100,15 @@ const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSub
               </label>
               <input
                 {...register('email')}
-                className="w-full rounded-xl border border-gray-300 px-4 py-2.5 md:py-3 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
+                className={`w-full rounded-xl border px-4 py-2.5 md:py-3 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.email ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'}`}
                 placeholder="customer@example.com"
               />
-              {errors.email && <p className="text-red-500 text-xs mt-1.5 font-semibold">{errors.email.message}</p>}
+              {errors.email && (
+                <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                  <span className="leading-snug">{errors.email.message}</span>
+                </p>
+              )}
             </div>
 
             <div>

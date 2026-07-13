@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Search, Phone, IndianRupee, History, Loader2, Edit, Trash2, Users } from 'lucide-react';
+import { Plus, Search, Phone, IndianRupee, History, Loader2, Edit, Trash2, Users, Wallet } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import CustomerLedger from '../components/customers/CustomerLedger';
 import CustomerFormModal from '../components/customers/CustomerFormModal';
@@ -19,6 +19,7 @@ const Customers = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [filterBalance, setFilterBalance] = useState('All');
   const queryClient = useQueryClient();
 
   // Debounce search term
@@ -37,9 +38,9 @@ const Customers = () => {
     hasNextPage,
     isFetchingNextPage
   } = useInfiniteQuery({
-    queryKey: ['customers', debouncedSearch],
+    queryKey: ['customers', debouncedSearch, filterBalance],
     queryFn: async ({ pageParam = 1 }) => {
-      const res = await api.get(`/customers?page=${pageParam}&limit=15&search=${encodeURIComponent(debouncedSearch)}`);
+      const res = await api.get(`/customers?page=${pageParam}&limit=15&search=${encodeURIComponent(debouncedSearch)}&filterBalance=${encodeURIComponent(filterBalance)}`);
       return res.data.data;
     },
     getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
@@ -119,6 +120,8 @@ const Customers = () => {
   const totalCount = firstPage?.totalCount || 0;
   const totalPendingBalance = firstPage?.totalPendingBalance || 0;
   const customersWithPendingCount = firstPage?.customersWithPendingCount || 0;
+  const totalAdvanceBalance = firstPage?.totalAdvanceBalance || 0;
+  const customersWithAdvanceCount = firstPage?.customersWithAdvanceCount || 0;
   const thisMonthCustomersCount = firstPage?.thisMonthCustomersCount || 0;
 
   return (
@@ -138,8 +141,8 @@ const Customers = () => {
         </button>
       </div>
 
-      {/* Stats Cards (EXACTLY AS ORIGINAL) */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         {/* Total Customers */}
         <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
           <div className="flex justify-between items-start gap-1">
@@ -172,6 +175,24 @@ const Customers = () => {
           </div>
         </div>
 
+        {/* Total Advance */}
+        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-green-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+              <Wallet className="w-4 h-4 md:w-5 md:h-5" />
+            </div>
+          </div>
+          <div className="mt-auto pt-2 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Advance')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
+              {formatCurrency(totalAdvanceBalance)}
+            </p>
+            <p className="text-[10px] md:text-xs text-green-600 font-medium truncate mt-0.5">
+              {customersWithAdvanceCount} {t('with advance balance')}
+            </p>
+          </div>
+        </div>
+
         {/* This Month */}
         <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
           <div className="flex justify-between items-start gap-1">
@@ -189,18 +210,32 @@ const Customers = () => {
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="relative w-full">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400" />
+      {/* Search Bar + Filter */}
+      <div className="flex items-center gap-2 sm:gap-3 w-full">
+        <div className="relative flex-1">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            placeholder={t("Search by invoice number or customer...")}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="block w-full pl-12 pr-4 py-2.5 md:py-3 bg-white border border-gray-200 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-sm md:text-base font-medium transition-colors duration-200"
+          />
         </div>
-        <input
-          type="text"
-          placeholder={t("Search by invoice number or customer...")}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-12 pr-4 py-2.5 md:py-3 bg-white border border-gray-200 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-sm md:text-base font-medium transition-colors duration-200"
-        />
+        
+        {/* Filter Dropdown */}
+        <select
+          value={filterBalance}
+          onChange={(e) => setFilterBalance(e.target.value)}
+          className="cursor-pointer w-auto bg-white border border-gray-200 rounded-lg px-2 sm:px-3 py-2.5 md:py-3 text-xs md:text-sm font-semibold text-gray-700 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-colors duration-200 flex-shrink-0 bg-no-repeat bg-[right_8px_center] pr-7 sm:pr-8"
+        >
+          <option value="All">{t('All Customers')}</option>
+          <option value="Pending">{t('Pending Udhar')}</option>
+          <option value="Advance">{t('Advance Given')}</option>
+          <option value="Settled">{t('Settled')}</option>
+        </select>
       </div>
 
       {/* Customer Cards */}
