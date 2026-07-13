@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { X, Plus, Loader2 } from 'lucide-react';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/axios';
+import SearchableSelect from '../common/SearchableSelect';
 
 const createBillSchema = yup.object({
   customerId: yup.string().required('Customer is required'),
@@ -215,13 +216,19 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
                 </div>
               )}
 
-              <select
-                {...register('customerId')}
-                className="cursor-pointer w-full font-medium rounded-lg border border-gray-300 px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all"
-              >
-                <option value="">-- {t('Select Customer')} --</option>
-                {customers.map(c => <option key={c._id} value={c._id}>{c.name} ({c.phone})</option>)}
-              </select>
+              <Controller
+                name="customerId"
+                control={control}
+                render={({ field }) => (
+                  <SearchableSelect
+                    options={customers.map(c => ({ value: c._id, label: `${c.name} (${c.phone})` }))}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder={`-- ${t('Select Customer')} --`}
+                    searchPlaceholder={t('Search by name or phone...')}
+                  />
+                )}
+              />
               {errors.customerId && <p className="text-red-500 text-xs mt-1.5 font-semibold">{errors.customerId.message}</p>}
             </div>
 
@@ -289,13 +296,21 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
               )}
               {fields.map((field, index) => (
                 <div key={field.id} className="flex gap-2 items-start">
-                  <select
-                    {...register(`products.${index}.productId`)}
-                    className="cursor-pointer flex-1 font-medium rounded-lg border border-gray-300 px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-all"
-                  >
-                    <option value="">-- {t('Select Product')} --</option>
-                    {products.map(p => <option key={p._id} value={p._id}>{p.name} - ₹{p.price}</option>)}
-                  </select>
+                  <div className="flex-1 min-w-0">
+                    <Controller
+                      name={`products.${index}.productId`}
+                      control={control}
+                      render={({ field }) => (
+                        <SearchableSelect
+                          options={products.map(p => ({ value: p._id, label: `${p.name} - ₹${p.price}` }))}
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder={`-- ${t('Select Product')} --`}
+                          searchPlaceholder={t('Search by product name...')}
+                        />
+                      )}
+                    />
+                  </div>
                   <input
                     type="number"
                     {...register(`products.${index}.quantity`)}
