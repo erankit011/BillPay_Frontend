@@ -369,17 +369,17 @@ const Products = () => {
 
       {/* Second Stats Section (EXACT COPY OF ORIGINAL) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 lg:gap-5 bg-white rounded-xl border border-gray-200 p-4 md:p-5 lg:p-6">
-        <div>
-          <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">INVENTORY VALUE</p>
-          <p className="text-2xl md:text-3xl font-semibold text-gray-900">{formatCurrency(stats.totalValue)}</p>
+        <div className="min-w-0">
+          <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1 truncate">INVENTORY VALUE</p>
+          <p className="text-2xl md:text-3xl font-semibold text-gray-900 truncate" title={formatCurrency(stats.totalValue)}>{formatCurrency(stats.totalValue)}</p>
         </div>
-        <div>
-          <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">ACTIVE ITEMS</p>
-          <p className="text-2xl md:text-3xl font-semibold text-gray-900">{stats.activeItems}</p>
+        <div className="min-w-0">
+          <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1 truncate">ACTIVE ITEMS</p>
+          <p className="text-2xl md:text-3xl font-semibold text-gray-900 truncate">{stats.activeItems}</p>
         </div>
-        <div>
-          <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">LOW STOCK ALERT</p>
-          <p className="text-2xl md:text-3xl font-semibold text-red-600">{stats.lowStockItems}</p>
+        <div className="min-w-0">
+          <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1 truncate">LOW STOCK ALERT</p>
+          <p className="text-2xl md:text-3xl font-semibold text-red-600 truncate">{stats.lowStockItems}</p>
         </div>
       </div>
 

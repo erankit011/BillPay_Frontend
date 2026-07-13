@@ -64,7 +64,7 @@ const Bills = () => {
     queryKey: ['customers', 'all'],
     queryFn: async () => {
       const res = await api.get('/customers?limit=1000');
-      return res.data.data;
+      return res.data.data.data || res.data.data || [];
     }
   });
 
@@ -72,7 +72,7 @@ const Bills = () => {
     queryKey: ['products', 'all'],
     queryFn: async () => {
       const res = await api.get('/products?limit=1000');
-      return res.data.data;
+      return res.data.data.data || res.data.data || [];
     }
   });
 
