@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Plus, Loader2 } from 'lucide-react';
+import { X, Plus, Loader2, AlertCircle } from 'lucide-react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -13,10 +13,10 @@ const createBillSchema = yup.object({
   products: yup.array().of(
     yup.object({
       productId: yup.string().required('Product is required'),
-      quantity: yup.number().min(1, 'Min quantity 1').required(),
+      quantity: yup.number().transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value).min(1, 'Min quantity 1').required(),
     })
   ).min(1, 'Add at least one product'),
-  amountPaid: yup.number().min(0, 'Cannot be negative').default(0),
+  amountPaid: yup.number().transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value).min(0, 'Cannot be negative').default(0),
 });
 
 const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) => {
@@ -192,7 +192,12 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
                       className="w-full rounded-md border border-gray-300 px-3 py-2 text-xs focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D]"
                     />
                   </div>
-                  {customerError && <p className="text-red-500 text-xs font-semibold mt-2">{customerError}</p>}
+                  {customerError && (
+                    <p className="text-red-500 text-[11px] sm:text-xs mt-2 font-medium flex items-start gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                      <span className="leading-snug">{customerError}</span>
+                    </p>
+                  )}
                   <div className="flex justify-end gap-2 mt-3">
                     <button
                       type="button"
@@ -229,7 +234,12 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
                   />
                 )}
               />
-              {errors.customerId && <p className="text-red-500 text-xs mt-1.5 font-semibold">{errors.customerId.message}</p>}
+              {errors.customerId && (
+                <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                  <span className="leading-snug">{errors.customerId.message}</span>
+                </p>
+              )}
             </div>
 
             {/* Products */}
@@ -271,7 +281,12 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
                       className="w-full rounded-md border border-gray-300 px-3 py-2 text-xs focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D]"
                     />
                   </div>
-                  {productError && <p className="text-red-500 text-xs font-semibold mt-2">{productError}</p>}
+                  {productError && (
+                    <p className="text-red-500 text-[11px] sm:text-xs mt-2 font-medium flex items-start gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                      <span className="leading-snug">{productError}</span>
+                    </p>
+                  )}
                   <div className="flex justify-end gap-2 mt-3">
                     <button
                       type="button"

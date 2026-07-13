@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
-import { Loader2, Mail, Lock, Eye, EyeOff, LogIn } from 'lucide-react';
+import { Loader2, Mail, Lock, Eye, EyeOff, LogIn, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const loginSchema = yup.object({
@@ -81,7 +81,12 @@ const Login = () => {
               autoFocus
             />
           </div>
-          {errors.email && <p className="text-red-500 text-sm mt-2 font-medium">{errors.email.message}</p>}
+          {errors.email && (
+            <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+              <span className="leading-snug">{errors.email.message}</span>
+            </p>
+          )}
         </div>
 
         {/* Password */}
@@ -111,7 +116,10 @@ const Login = () => {
           </div>
           <div className="flex items-start justify-between mt-1.5">
             {errors.password ? (
-              <p className="text-red-500 text-xs sm:text-sm font-medium">{errors.password.message}</p>
+              <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                <span className="leading-snug">{errors.password.message}</span>
+              </p>
             ) : (
               <div></div>
             )}

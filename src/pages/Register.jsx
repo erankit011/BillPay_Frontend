@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
-import { Loader2, User, Mail, Phone, Store, Lock, ArrowRight, Eye, EyeOff, Camera, UserPlus } from 'lucide-react';
+import { Loader2, User, Mail, Phone, Store, Lock, ArrowRight, Eye, EyeOff, Camera, UserPlus, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const registerSchema = yup.object({
@@ -143,7 +143,12 @@ const Register = () => {
                   autoFocus
                 />
               </div>
-              {errors.name && <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium text-left">{errors.name.message}</p>}
+              {errors.name && (
+                <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1 text-left">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                  <span className="leading-snug">{errors.name.message}</span>
+                </p>
+              )}
             </div>
 
             <div>
@@ -159,7 +164,12 @@ const Register = () => {
                   placeholder="Enter Your Email"
                 />
               </div>
-              {errors.email && <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium text-left">{errors.email.message}</p>}
+              {errors.email && (
+                <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1 text-left">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                  <span className="leading-snug">{errors.email.message}</span>
+                </p>
+              )}
             </div>
 
             <button 
@@ -189,7 +199,12 @@ const Register = () => {
                   autoFocus
                 />
               </div>
-              {errors.shopName && <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium text-left">{errors.shopName.message}</p>}
+              {errors.shopName && (
+                <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1 text-left">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                  <span className="leading-snug">{errors.shopName.message}</span>
+                </p>
+              )}
             </div>
 
             <div>
@@ -205,7 +220,12 @@ const Register = () => {
                   maxLength={10}
                 />
               </div>
-              {errors.phone && <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium text-left">{errors.phone.message}</p>}
+              {errors.phone && (
+                <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1 text-left">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                  <span className="leading-snug">{errors.phone.message}</span>
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col-reverse sm:flex-row gap-2.5 sm:gap-4 mt-6">
@@ -256,7 +276,12 @@ const Register = () => {
                   )}
                 </button>
               </div>
-              {errors.password && <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium text-left">{errors.password.message}</p>}
+              {errors.password && (
+                <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1 text-left">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                  <span className="leading-snug">{errors.password.message}</span>
+                </p>
+              )}
               <p className="text-[11px] sm:text-xs text-gray-500 mt-1.5 font-medium text-left">At least 6 characters</p>
             </div>
 
