@@ -208,33 +208,33 @@ const Bills = () => {
           </div>
         </div>
         <div className="p-2 sm:p-4 md:p-5 bg-gray-50/30">
-          <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 md:gap-4 lg:gap-5">
-            <div className="bg-white rounded-lg sm:rounded-xl p-2.5 px-3 sm:p-3 md:p-4 flex flex-row sm:flex-col items-center justify-between sm:justify-center text-left sm:text-center border border-gray-100 hover:bg-gray-50 hover:border-[#093C5D]/40 transition-all duration-300 cursor-default">
-              <p className="text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-wider mb-0 sm:mb-1.5">{t('Today')}</p>
-              <p className="text-sm sm:text-xl md:text-2xl lg:text-3xl font-semibold text-gray-800">{stats.billCounts.today}</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 md:gap-4 lg:gap-5">
+            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-100 hover:bg-gray-50 transition-all duration-300 cursor-default">
+              <p className="text-[10px] sm:text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">{t('Today')}</p>
+              <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{stats.billCounts.today}</p>
             </div>
-            <div className="bg-white rounded-lg sm:rounded-xl p-2.5 px-3 sm:p-3 md:p-4 flex flex-row sm:flex-col items-center justify-between sm:justify-center text-left sm:text-center border border-gray-100 hover:bg-gray-50 hover:border-[#093C5D]/40 transition-all duration-300 cursor-default">
-              <p className="text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-wider mb-0 sm:mb-1.5">{t('Yesterday')}</p>
-              <p className="text-sm sm:text-xl md:text-2xl lg:text-3xl font-semibold text-gray-800">{stats.billCounts.yesterday}</p>
+            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-100 hover:bg-gray-50 transition-all duration-300 cursor-default">
+              <p className="text-[10px] sm:text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">{t('Yesterday')}</p>
+              <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{stats.billCounts.yesterday}</p>
             </div>
-            <div className="bg-white rounded-lg sm:rounded-xl p-2.5 px-3 sm:p-3 md:p-4 flex flex-row sm:flex-col items-center justify-between sm:justify-center text-left sm:text-center border border-gray-100 hover:bg-gray-50 hover:border-[#093C5D]/40 transition-all duration-300 cursor-default">
-              <p className="text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-wider mb-0 sm:mb-1.5">{t('This Week')}</p>
-              <p className="text-sm sm:text-xl md:text-2xl lg:text-3xl font-semibold text-gray-800">{stats.billCounts.week}</p>
+            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-100 hover:bg-gray-50 transition-all duration-300 cursor-default">
+              <p className="text-[10px] sm:text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">{t('This Week')}</p>
+              <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{stats.billCounts.week}</p>
             </div>
-            <div className="bg-white rounded-lg sm:rounded-xl p-2.5 px-3 sm:p-3 md:p-4 flex flex-row sm:flex-col items-center justify-between sm:justify-center text-left sm:text-center border border-gray-100 hover:bg-gray-50 hover:border-[#093C5D]/40 transition-all duration-300 cursor-default">
-              <p className="text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-wider mb-0 sm:mb-1.5">{t('This Month')}</p>
-              <p className="text-sm sm:text-xl md:text-2xl lg:text-3xl font-semibold text-gray-800">{stats.billCounts.month}</p>
+            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-100 hover:bg-gray-50 transition-all duration-300 cursor-default">
+              <p className="text-[10px] sm:text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">{t('This Month')}</p>
+              <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{stats.billCounts.month}</p>
             </div>
-            <div className="bg-white rounded-lg sm:rounded-xl p-2.5 px-3 sm:p-3 md:p-4 flex flex-row sm:flex-col items-center justify-between sm:justify-center text-left sm:text-center border border-gray-100 hover:bg-gray-50 hover:border-[#093C5D]/40 transition-all duration-300 cursor-default sm:col-span-3 md:col-span-1">
-              <p className="text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-wider mb-0 sm:mb-1.5">{t('Lifetime')}</p>
-              <p className="text-sm sm:text-xl md:text-2xl lg:text-3xl font-semibold text-gray-800">{stats.billCounts.lifetime}</p>
+            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-100 hover:bg-gray-50 transition-all duration-300 cursor-default col-span-2 sm:col-span-3 md:col-span-1">
+              <p className="text-[10px] sm:text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">{t('Lifetime')}</p>
+              <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{stats.billCounts.lifetime}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Search Bar + Filter */}
-      <div className="flex items-center gap-2 sm:gap-3 w-full">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full">
         <div className="relative flex-1">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
             <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
@@ -252,7 +252,7 @@ const Bills = () => {
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="cursor-pointer w-auto bg-white border border-gray-200 rounded-lg px-2 sm:px-3 py-2.5 md:py-3 text-xs md:text-sm font-semibold text-gray-700 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-colors duration-200 flex-shrink-0 bg-no-repeat bg-[right_8px_center] pr-7 sm:pr-8"
+          className="cursor-pointer w-full sm:w-auto bg-white border border-gray-200 rounded-lg px-2 sm:px-3 py-2.5 md:py-3 text-xs md:text-sm font-medium text-gray-700 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-colors duration-200 flex-shrink-0 bg-no-repeat bg-[right_8px_center] pr-7 sm:pr-8"
         >
           <option value="All">{t('All Bills')}</option>
           <option value="PAID">{t('Paid')}</option>
@@ -280,16 +280,16 @@ const Bills = () => {
         ) : (
           <div>
             {/* Desktop Table */}
-            <div className="hidden md:block overflow-x-auto">
-              <table className="w-full table-fixed">
+            <div className="hidden md:block overflow-x-auto pb-4">
+              <table className="w-full min-w-[900px] whitespace-nowrap">
                 <thead className="bg-gray-50/80 border-b border-gray-200">
                   <tr>
-                    <th className="w-[22%] px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Invoice')}</th>
-                    <th className="w-[22%] px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Customer')}</th>
-                    <th className="w-[15%] px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Date')}</th>
-                    <th className="w-[15%] px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Amount')}</th>
-                    <th className="w-[12%] px-4 lg:px-6 py-3.5 lg:py-4 text-center text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Status')}</th>
-                    <th className="w-[14%] px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Actions')}</th>
+                    <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Invoice')}</th>
+                    <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Customer')}</th>
+                    <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Date')}</th>
+                    <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Amount')}</th>
+                    <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-center text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Status')}</th>
+                    <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Actions')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -418,50 +418,55 @@ const Bills = () => {
             </div>
 
             {/* Mobile Cards */}
-            <div className="md:hidden divide-y divide-gray-100">
+            <div className="md:hidden flex flex-col gap-2.5">
               {bills.map((bill, index) => (
                 <div
                   key={bill._id}
-                  className={`p-4 animate-fade-in hover:bg-[#F5F5F5] transition-colors relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
+                  className={`bg-white border border-gray-200 rounded-xl p-3 sm:p-4 animate-fade-in transition-colors relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-full bg-[#F5F5F5] flex items-center justify-center flex-shrink-0">
+                  <div className="flex items-start gap-2.5 sm:gap-3">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#F5F5F5] flex items-center justify-center flex-shrink-0">
                       <span className="text-xs font-semibold text-[#093C5D]">
                         {getInitials(bill.customerId?.name)}
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-sm font-semibold text-gray-900 truncate block">{bill.customerId?.name || t('Walk-in Customer')}</h4>
-                      {bill.customerId?.balance > 0 && (
-                        <p className="text-[10px] text-red-500 font-medium mb-1">
-                          {t('Total Due')}: {formatCurrency(bill.customerId.balance)}
-                        </p>
-                      )}
-                      <p className="text-xs font-semibold text-[#093C5D] mt-0.5">{bill.invoiceNumber}</p>
-                      <p className="text-xs text-gray-500 mt-1 whitespace-nowrap">
+                      <div className="flex justify-between items-start">
+                        <h4 className="text-[13px] sm:text-sm font-semibold text-gray-900 truncate pr-2 leading-tight">{bill.customerId?.name || t('Walk-in Customer')}</h4>
+                        <p className="text-[13px] sm:text-sm font-semibold text-gray-900 flex-shrink-0 leading-tight">{formatCurrency(bill.grandTotal)}</p>
+                      </div>
+                      
+                      <div className="flex justify-between items-start mt-0.5">
+                        <p className="text-[11px] sm:text-xs font-semibold text-[#093C5D] leading-tight">{bill.invoiceNumber}</p>
+                        <div className="text-right">
+                          {bill.grandTotal > (bill.amountPaid || 0) ? (
+                            <p className="text-[10px] text-red-500 font-medium leading-tight">
+                              {t('Pend')}: {formatCurrency(bill.grandTotal - (bill.amountPaid || 0))}
+                            </p>
+                          ) : (bill.amountPaid || 0) > bill.grandTotal ? (
+                            <p className="text-[10px] text-green-500 font-medium leading-tight">
+                              {t('Adv')}: {formatCurrency((bill.amountPaid || 0) - bill.grandTotal)}
+                            </p>
+                          ) : null}
+                        </div>
+                      </div>
+                      
+                      <p className="text-[10px] sm:text-xs text-gray-500 mt-1 whitespace-nowrap leading-tight">
                         {new Date(bill.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })} • {new Date(bill.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })}
                       </p>
                     </div>
-                    <div className="text-right flex-shrink-0">
-                      <p className="text-sm font-semibold text-gray-900">{formatCurrency(bill.grandTotal)}</p>
-                      {bill.grandTotal > (bill.amountPaid || 0) ? (
-                        <p className="text-[10px] text-red-500 font-medium mt-1">
-                          {t('Pend')}: {formatCurrency(bill.grandTotal - (bill.amountPaid || 0))}
-                        </p>
-                      ) : (bill.amountPaid || 0) > bill.grandTotal ? (
-                        <p className="text-[10px] text-green-500 font-medium mt-1">
-                          {t('Adv')}: {formatCurrency((bill.amountPaid || 0) - bill.grandTotal)}
-                        </p>
-                      ) : null}
-                    </div>
                   </div>
-                  <div className="flex justify-between items-center mt-3 gap-2">
-                    <span className={`px-2.5 py-1.5 text-xs font-semibold rounded-full uppercase
+
+                  {/* Divider inside card */}
+                  <div className="border-t border-gray-100 my-2.5 sm:my-3"></div>
+
+                  <div className="flex justify-between items-center gap-2">
+                    <span className={`px-2 py-1 sm:px-2.5 sm:py-1.5 text-[10px] sm:text-xs font-semibold rounded-full uppercase
                           ${(bill.paymentStatus === 'PAID' || bill.paymentStatus === 'ADVANCE') ? 'bg-green-100 text-green-700' :
                         bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-100 text-yellow-700' :
                           'bg-red-100 text-red-700'}`}>
-                      {bill.paymentStatus}
+                      {bill.paymentStatus === 'PAID' ? t('Paid') : bill.paymentStatus === 'UNPAID' ? t('Unpaid') : bill.paymentStatus === 'PARTIAL' ? t('Partial') : bill.paymentStatus === 'ADVANCE' ? t('Advance') : bill.paymentStatus}
                     </span>
 
                     <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
@@ -470,17 +475,17 @@ const Bills = () => {
                           e.stopPropagation();
                           setViewBill(bill);
                         }}
-                        className="cursor-pointer text-[#093C5D] font-semibold bg-[#093C5D]/5 hover:bg-[#F5F5F5] w-8 h-8 rounded-full flex items-center justify-center transition-all active:scale-95"
+                        className="cursor-pointer text-[#093C5D] font-semibold bg-[#093C5D]/5 hover:bg-[#F5F5F5] w-8 h-8 rounded-full flex items-center justify-center transition-all active:scale-95 !min-h-[32px] !min-w-[32px]"
                       >
-                        <Eye className="w-4 h-4" />
+                        <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </button>
 
                       <div className="relative">
                         <button
                           onClick={() => setOpenDropdown(openDropdown === bill._id ? null : bill._id)}
-                          className="cursor-pointer text-[#093C5D] font-semibold bg-[#093C5D]/5 hover:bg-[#F5F5F5] px-3 py-1.5 rounded-full flex items-center text-xs transition-all active:scale-95 whitespace-nowrap"
+                          className="cursor-pointer text-[#093C5D] font-semibold bg-[#093C5D]/5 hover:bg-[#F5F5F5] px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full flex items-center text-[11px] sm:text-xs transition-all active:scale-95 whitespace-nowrap !min-h-[32px]"
                         >
-                          <Send className="w-3.5 h-3.5 mr-1" /> {t('Send')}
+                          <Send className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1" /> {t('Send')}
                           <MoreVertical className="w-3 h-3 ml-0.5" />
                         </button>
 

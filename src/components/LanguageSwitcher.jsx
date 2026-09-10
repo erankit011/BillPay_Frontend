@@ -45,10 +45,10 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold text-[#093C5D] hover:text-[#072C44] bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-full transition-all active:scale-95 cursor-pointer"
+          className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 h-9 sm:h-10 text-xs sm:text-sm font-semibold text-[#093C5D] hover:text-[#072C44] bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-full transition-all active:scale-95 cursor-pointer flex-shrink-0"
           aria-label="Change language"
         >
-          <Languages className="w-3.5 h-3.5 text-[#093C5D]" />
+          <Languages className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-[#093C5D]" />
           <span className="uppercase tracking-wider">EN/HI</span>
         </button>
 
