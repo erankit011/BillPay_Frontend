@@ -36,22 +36,22 @@ const ViewBillModal = ({ viewBill, setViewBill }) => {
              {/* Customer & Date Info - Clean Receipt Style */}
              <div className="flex flex-row items-start justify-between border-b border-dashed border-gray-200 pb-3 sm:pb-4 mb-2 flex-shrink-0">
                <div className="flex-1 pr-2">
-                 <p className="text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">{t('Billed To')}</p>
+                 <p className="text-[10px] sm:text-xs font-medium text-gray-400 mb-1">{t('Billed To')}</p>
                  <p className="text-[13px] sm:text-sm font-semibold text-gray-900 leading-tight">{viewBill.customerId?.name || t('Walk-in Customer')}</p>
-                 {viewBill.customerId?.phone && <p className="text-[11px] sm:text-xs text-gray-500 mt-0.5">{viewBill.customerId.phone}</p>}
-                 {viewBill.customerId?.email && <p className="text-[11px] sm:text-xs text-gray-500">{viewBill.customerId.email}</p>}
+                 {viewBill.customerId?.phone && <p className="text-[12px] sm:text-xs text-gray-500 mt-1">{viewBill.customerId.phone}</p>}
+                 {viewBill.customerId?.email && <p className="text-[12px] sm:text-xs text-gray-500 mt-0.5">{viewBill.customerId.email}</p>}
                </div>
                
                <div className="text-left pl-3 border-l border-gray-100 w-[45%] sm:min-w-[140px]">
-                 <p className="text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">{t('Date')}</p>
-                 <p className="text-[11px] sm:text-xs font-medium text-gray-800 leading-tight">
+                 <p className="text-[10px] sm:text-xs font-medium text-gray-400 mb-1">{t('Date & Status')}</p>
+                 <p className="text-[13px] sm:text-sm font-semibold text-gray-900 leading-tight">
                    {new Date(viewBill.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                  </p>
-                 <p className="text-[10px] sm:text-[11px] text-gray-500 mt-0.5">
+                 <p className="text-[12px] sm:text-xs text-gray-500 mt-1">
                    {new Date(viewBill.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })}
                  </p>
-                 <div className="mt-2 flex justify-start">
-                    <span className={`px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-semibold uppercase ${(viewBill.paymentStatus === 'PAID' || viewBill.paymentStatus === 'ADVANCE') ? 'bg-green-50 text-green-700 border border-green-200' : viewBill.paymentStatus === 'PARTIAL' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                 <div className="mt-0.5 flex justify-start">
+                    <span className={`px-2 py-0.5 rounded text-[9px] uppercase sm:text-[10px] font-medium ${(viewBill.paymentStatus === 'PAID' || viewBill.paymentStatus === 'ADVANCE') ? 'bg-green-50 text-green-700 border border-green-200' : viewBill.paymentStatus === 'PARTIAL' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
                       {viewBill.paymentStatus === 'PAID' ? t('Paid') : viewBill.paymentStatus === 'UNPAID' ? t('Unpaid') : viewBill.paymentStatus === 'PARTIAL' ? t('Partial') : viewBill.paymentStatus === 'ADVANCE' ? t('Advance') : viewBill.paymentStatus}
                     </span>
                  </div>
@@ -64,10 +64,10 @@ const ViewBillModal = ({ viewBill, setViewBill }) => {
                  <table className="w-full text-left min-w-[260px] sm:min-w-[400px]">
                    <thead className="sticky top-0 z-10 bg-white">
                    <tr>
-                     <th className="py-2 text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-widest border-b-2 border-gray-100">{t('Item')}</th>
-                     <th className="py-2 text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-widest text-center border-b-2 border-gray-100">{t('Qty')}</th>
-                     <th className="py-2 text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-widest text-right border-b-2 border-gray-100">{t('Price')}</th>
-                     <th className="py-2 text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-widest text-right border-b-2 border-gray-100">{t('Total')}</th>
+                     <th className="py-2 text-[10px] sm:text-xs font-medium text-gray-400 text-center border-b-2 border-gray-100">{t('Qty')}</th>
+                     <th className="py-2 text-[10px] sm:text-xs font-medium text-gray-400 border-b-2 border-gray-100">{t('Item')}</th>
+                     <th className="py-2 text-[10px] sm:text-xs font-medium text-gray-400 text-right border-b-2 border-gray-100">{t('Price')}</th>
+                     <th className="py-2 text-[10px] sm:text-xs font-medium text-gray-400 text-right border-b-2 border-gray-100">{t('Total')}</th>
                    </tr>
                  </thead>
                  <tbody className="divide-y divide-gray-50">
@@ -105,7 +105,7 @@ const ViewBillModal = ({ viewBill, setViewBill }) => {
                  )}
                  
                  <div className="flex justify-between items-center pt-2 sm:pt-3 mt-1 sm:mt-2 border-t border-gray-100">
-                   <span className="text-sm sm:text-base font-semibold text-gray-900 uppercase tracking-wide">{t('Grand Total')}</span>
+                   <span className="text-sm sm:text-base font-semibold text-gray-900">{t('Grand Total')}</span>
                    <span className="text-base sm:text-lg font-bold text-[#093C5D]">{formatCurrency(viewBill.grandTotal)}</span>
                  </div>
                  
