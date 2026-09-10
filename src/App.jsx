@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider, useDispatch } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { store } from './redux/store';
 import AppRoutes from './routes/AppRoutes';
 import { setLoading, setUser } from './redux/slices/authSlice';

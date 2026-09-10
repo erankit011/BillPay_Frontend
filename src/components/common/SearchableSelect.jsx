@@ -1,7 +1,9 @@
+import { useTranslation } from 'react-i18next';
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, ChevronDown } from 'lucide-react';
 
 const SearchableSelect = ({ options, value, onChange, placeholder, searchPlaceholder = "Search..." }) => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const wrapperRef = useRef(null);
@@ -52,7 +54,7 @@ const SearchableSelect = ({ options, value, onChange, placeholder, searchPlaceho
           </div>
           <div className="overflow-y-auto flex-1 max-h-48">
             {filteredOptions.length === 0 ? (
-              <div className="p-4 text-sm text-center text-gray-500 font-medium">No results found</div>
+              <div className="p-4 text-sm text-center text-gray-500 font-medium">{t("No results found")}</div>
             ) : (
               filteredOptions.map(opt => (
                 <div 

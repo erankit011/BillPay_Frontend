@@ -252,9 +252,9 @@ const Products = () => {
         <select
           value={filterStock}
           onChange={(e) => setFilterStock(e.target.value)}
-          className="cursor-pointer w-auto bg-white border border-gray-200 rounded-lg px-2 sm:px-3 py-2.5 md:py-3 text-xs md:text-sm font-semibold text-gray-700 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-colors duration-200 flex-shrink-0 bg-no-repeat bg-[right_8px_center] pr-7 sm:pr-8"
+          className="cursor-pointer w-auto bg-white border border-gray-200 rounded-lg px-2 sm:px-3 py-2.5 md:py-3 text-xs md:text-sm font-medium text-gray-700 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-colors duration-200 flex-shrink-0 bg-no-repeat bg-[right_8px_center] pr-7 sm:pr-8"
         >
-          <option value="All">{t('All')}</option>
+          <option value="All">{t('All Stocks')}</option>
           <option value="In Stock">{t('In Stock')}</option>
           <option value="Low Stock">{t('Low Stock')}</option>
           <option value="Out of Stock">{t('Out of Stock')}</option>
@@ -357,9 +357,9 @@ const Products = () => {
               <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#F5F5F5] flex items-center justify-center mb-2 md:mb-3">
                 <PlusCircle className="w-5 h-5 md:w-6 md:h-6" />
               </div>
-              <h3 className="font-semibold text-sm md:text-base mb-1">New Inventory</h3>
+              <h3 className="font-semibold text-sm md:text-base mb-1">{t('New Inventory')}</h3>
               <p className="text-xs md:text-sm text-gray-600 text-center px-2 font-medium">
-                Quickly add new products to your digital catalog.
+                {t('Quickly add new products to your digital catalog.')}
               </p>
             </button>
           </>
@@ -369,15 +369,15 @@ const Products = () => {
       {/* Second Stats Section (EXACT COPY OF ORIGINAL) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 lg:gap-5 bg-white rounded-xl border border-gray-200 p-4 md:p-5 lg:p-6">
         <div className="min-w-0">
-          <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1 truncate">INVENTORY VALUE</p>
+          <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1 truncate">{t('INVENTORY VALUE')}</p>
           <p className="text-2xl md:text-3xl font-semibold text-gray-900 truncate" title={formatCurrency(stats.totalValue)}>{formatCurrency(stats.totalValue)}</p>
         </div>
         <div className="min-w-0">
-          <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1 truncate">ACTIVE ITEMS</p>
+          <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1 truncate">{t('ACTIVE ITEMS')}</p>
           <p className="text-2xl md:text-3xl font-semibold text-gray-900 truncate">{stats.activeItems}</p>
         </div>
         <div className="min-w-0">
-          <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1 truncate">LOW STOCK ALERT</p>
+          <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1 truncate">{t('LOW STOCK ALERT')}</p>
           <p className="text-2xl md:text-3xl font-semibold text-red-600 truncate">{stats.lowStockItems}</p>
         </div>
       </div>

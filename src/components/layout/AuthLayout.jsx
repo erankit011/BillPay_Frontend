@@ -1,7 +1,9 @@
+import { useTranslation } from 'react-i18next';
 import { Outlet, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const AuthLayout = () => {
+  const { t } = useTranslation();
   const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const location = useLocation();
@@ -35,10 +37,10 @@ const AuthLayout = () => {
 
         <div className="relative z-10 my-auto">
           <h1 className="text-4xl xl:text-5xl font-bold leading-[1.15] mb-6 tracking-tight">
-            Manage your shop&apos;s <br /> Khata digitally.
+            {t("Manage your shop's")} <br /> {t("Khata digitally.")}
           </h1>
           <p className="text-lg xl:text-xl text-blue-100 max-w-md leading-relaxed font-medium">
-            Join thousands of Indian shopkeepers growing their business with UdharPay&apos;s smart ledger system.
+            {t("Join thousands of Indian shopkeepers growing their business with UdharPay's smart ledger system.")}
           </p>
 
           {/* Testimonial / Features */}
@@ -50,8 +52,8 @@ const AuthLayout = () => {
                 </svg>
               </div>
               <div>
-                <p className="font-semibold text-white text-base">Track Every Rupee</p>
-                <p className="text-sm opacity-80 mt-0.5">Stop losing money to forgotten udhar.</p>
+                <p className="font-semibold text-white text-base">{t("Track Every Rupee")}</p>
+                <p className="text-sm opacity-80 mt-0.5">{t("Stop losing money to forgotten udhar.")}</p>
               </div>
             </div>
             <div className="flex items-center gap-4 text-blue-50">
@@ -61,8 +63,8 @@ const AuthLayout = () => {
                 </svg>
               </div>
               <div>
-                <p className="font-semibold text-white text-base">Save Time</p>
-                <p className="text-sm opacity-80 mt-0.5">Automatic daily, weekly, and monthly reports.</p>
+                <p className="font-semibold text-white text-base">{t("Save Time")}</p>
+                <p className="text-sm opacity-80 mt-0.5">{t("Automatic daily, weekly, and monthly reports.")}</p>
               </div>
             </div>
           </div>
@@ -87,8 +89,7 @@ const AuthLayout = () => {
                 UdharPay<span className="inline-block w-2.5 h-2.5 rounded-full bg-[#2ECC71] ml-1 mb-1 align-baseline"></span>
               </span>
             </div>
-            <p className="text-gray-500 font-medium text-sm mt-1.5">Manage your shop's
-              Khata digitally.</p>
+            <p className="text-gray-500 font-medium text-sm mt-1.5">{t("Manage your shop's")} {t("Khata digitally.")}</p>
           </div>
 
           <div className="w-full max-w-[420px]">

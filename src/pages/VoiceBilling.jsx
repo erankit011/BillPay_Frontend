@@ -338,12 +338,12 @@ const VoiceBilling = () => {
                 />
                 <div className="mt-3 text-sm font-medium text-gray-600 space-y-2 bg-gray-50 p-4 rounded-xl border border-gray-200">
                   <p className="font-semibold text-gray-800">📝 {t('Format:')}</p>
-                  <p>• [Customer Name] ko [Amount] rupya udhar diya</p>
-                  <p>• [Customer Name] se [Amount] rupya liya</p>
+                  <p>{t("• [Customer Name] ko [Amount] rupya udhar diya")}</p>
+                  <p>{t("• [Customer Name] se [Amount] rupya liya")}</p>
                   <p className="font-semibold text-gray-800 mt-2">✅ {t('Examples:')}</p>
-                  <p>• Rahul ko 500 rupya udhar diya</p>
-                  <p>• Priya se 200 rupya liya</p>
-                  <p>• Ankit Singh ko 1000 rupya udhar diya</p>
+                  <p>{t("• Rahul ko 500 rupya udhar diya")}</p>
+                  <p>{t("• Priya se 200 rupya liya")}</p>
+                  <p>{t("• Ankit Singh ko 1000 rupya udhar diya")}</p>
                 </div>
               </div>
               

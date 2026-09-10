@@ -211,7 +211,7 @@ const Customers = () => {
       </div>
 
       {/* Search Bar + Filter */}
-      <div className="flex items-center gap-2 sm:gap-3 w-full">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
         <div className="relative flex-1">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
             <Search className="h-5 w-5 text-gray-400" />
@@ -229,7 +229,7 @@ const Customers = () => {
         <select
           value={filterBalance}
           onChange={(e) => setFilterBalance(e.target.value)}
-          className="cursor-pointer w-auto bg-white border border-gray-200 rounded-lg px-2 sm:px-3 py-2.5 md:py-3 text-xs md:text-sm font-semibold text-gray-700 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-colors duration-200 flex-shrink-0 bg-no-repeat bg-[right_8px_center] pr-7 sm:pr-8"
+          className="cursor-pointer w-full sm:w-auto bg-white border border-gray-200 rounded-lg px-3 py-2.5 md:py-3 text-sm md:text-base font-medium text-gray-700 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-colors duration-200 flex-shrink-0"
         >
           <option value="All">{t('All Customers')}</option>
           <option value="Pending">{t('Pending Udhar')}</option>
@@ -317,63 +317,64 @@ const Customers = () => {
                   </div>
                 </div>
   
-                {/* Mobile Layout: Compact stacked */}
+                {/* Mobile Layout: Responsive & Premium */}
                 <div className="md:hidden">
-                  <div className="flex items-start gap-3">
-                    {/* Avatar */}
-                    <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full ${getAvatarColor(index)} flex items-center justify-center font-semibold text-sm sm:text-base flex-shrink-0 mt-0.5`}>
-                      {getInitials(customer.name)}
-                    </div>
-  
-                    {/* Info */}
-                    <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      {/* Avatar */}
+                      <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full ${getAvatarColor(index)} flex items-center justify-center font-semibold text-sm sm:text-base flex-shrink-0`}>
+                        {getInitials(customer.name)}
+                      </div>
+                      
                       {/* Name + Phone */}
-                      <div className="flex items-center gap-2 flex-wrap">
+                      <div className="min-w-0">
                         <h3 className="text-sm sm:text-base font-semibold text-gray-900 truncate">{customer.name}</h3>
-                        <div className="flex items-center text-gray-400 text-xs font-medium">
-                          <Phone className="w-3 h-3 mr-0.5 flex-shrink-0" />
+                        <div className="flex items-center text-gray-500 text-xs font-medium mt-0.5">
+                          <Phone className="w-3 h-3 mr-1 flex-shrink-0" />
                           <span>{customer.phone}</span>
                         </div>
                       </div>
-  
-                      {/* Balance + Actions Row */}
-                      <div className="flex items-center justify-between mt-2">
-                        <div>
-                          <p className="text-[9px] sm:text-[10px] text-gray-500 font-semibold uppercase tracking-wider leading-none mb-0.5">
-                            {t('PENDING BALANCE')}
-                          </p>
-                          <p className={`text-base sm:text-lg font-semibold ${customer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                            {formatCurrency(customer.balance)}
-                          </p>
-                        </div>
-  
-                        <div className="flex items-center gap-0.5 sm:gap-1 flex-shrink-0">
-                          <button
-                            onClick={() => handleEdit(customer)}
-                            className="cursor-pointer p-1.5 sm:p-2 hover:bg-[#093C5D]/5 rounded-lg transition-colors active:scale-90 group"
-                            title={t('Edit Customer')}
-                          >
-                            <Edit className="w-4 h-4 text-[#093C5D]" />
-                          </button>
-  
-                          <button
-                            onClick={() => handleDelete(customer)}
-                            className="cursor-pointer p-1.5 sm:p-2 hover:bg-red-50 rounded-lg transition-colors active:scale-90 group"
-                            title={t('Delete Customer')}
-                            disabled={deleteMutation.isPending}
-                          >
-                            <Trash2 className="w-4 h-4 text-red-600" />
-                          </button>
-  
-                          <button
-                            onClick={() => setSelectedCustomer(customer)}
-                            className="cursor-pointer ml-0.5 text-[#093C5D] border-2 border-[#093C5D] hover:bg-[#093C5D] hover:text-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full font-semibold active:scale-95 transition-all whitespace-nowrap text-[11px] sm:text-xs"
-                          >
-                            {t('Ledger')}
-                          </button>
-                        </div>
-                      </div>
                     </div>
+                    
+                    {/* Top Right Actions (Edit/Delete) */}
+                    <div className="flex items-center gap-0.5 flex-shrink-0 -mt-1 -mr-1">
+                      <button
+                        onClick={() => handleEdit(customer)}
+                        className="cursor-pointer p-2 hover:bg-[#093C5D]/5 rounded-lg transition-colors active:scale-90 group"
+                        title={t('Edit Customer')}
+                      >
+                        <Edit className="w-4 h-4 text-[#093C5D]" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(customer)}
+                        className="cursor-pointer p-2 hover:bg-red-50 rounded-lg transition-colors active:scale-90 group"
+                        title={t('Delete Customer')}
+                        disabled={deleteMutation.isPending}
+                      >
+                        <Trash2 className="w-4 h-4 text-red-600" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="w-full h-px bg-gray-100 my-3"></div>
+
+                  {/* Balance & Ledger Row */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider mb-0.5">
+                        {t('PENDING BALANCE')}
+                      </p>
+                      <p className={`text-base sm:text-lg font-semibold ${customer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {formatCurrency(customer.balance)}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setSelectedCustomer(customer)}
+                      className="cursor-pointer text-[#093C5D] border-2 border-[#093C5D] hover:bg-[#093C5D] hover:text-white px-4 py-1.5 rounded-full font-semibold active:scale-95 transition-all text-xs"
+                    >
+                      {t('Ledger')}
+                    </button>
                   </div>
                 </div>
               </div>

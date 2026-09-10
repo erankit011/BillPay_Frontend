@@ -300,10 +300,10 @@ const MainLayout = () => {
           <div className="relative">
             <button
               onClick={handleNotificationClick}
-              className="cursor-pointer border border-gray-200 relative p-2 sm:p-2.5 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-full transition-all duration-300 active:scale-95 flex items-center justify-center"
+              className="cursor-pointer border border-gray-200 relative w-9 h-9 sm:w-10 sm:h-10 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-full transition-all duration-300 active:scale-95 flex items-center justify-center flex-shrink-0"
               aria-label="Notifications"
             >
-              <Bell className="w-5 h-5" strokeWidth={2} />
+              <Bell className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={2} />
               {notificationCount > 0 && (
                 <span className="absolute top-0 right-0 flex h-2.5 w-2.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -326,7 +326,7 @@ const MainLayout = () => {
                   {/* Header */}
                   <div className="p-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0 bg-white">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-semibold text-gray-900">Notifications</h3>
+                      <h3 className="text-lg font-semibold text-gray-900">{t("Notifications")}</h3>
                       {notificationCount > 0 && (
                         <span className="bg-[#E5E7EB] text-[#082a42] text-xs font-bold px-2 py-0.5 rounded-full">
                           {notificationCount}
@@ -350,8 +350,8 @@ const MainLayout = () => {
                         <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
                           <Bell className="w-8 h-8 text-gray-400" strokeWidth={2} />
                         </div>
-                        <p className="text-base text-gray-700 font-semibold mb-1">No notifications</p>
-                        <p className="text-sm text-gray-500">You're all caught up!</p>
+                        <p className="text-base text-gray-700 font-semibold mb-1">{t("No notifications")}</p>
+                        <p className="text-sm text-gray-500">{t("You're all caught up!")}</p>
                       </div>
                     ) : (
                       <div className="divide-y divide-gray-100">
@@ -395,13 +395,13 @@ const MainLayout = () => {
 
                   {/* Footer */}
                   {notifications.length > 0 && (
-                    <div className="p-3 border-t border-gray-200 flex-shrink-0 bg-gray-50">
+                    <div className="p-3 border-t border-gray-100">
                       <Link
                         to="/notifications"
-                        onClick={() => setNotificationOpen(false)}
-                        className="block text-center text-sm text-[#093C5D] font-semibold hover:text-[#082a42] active:scale-95 transition-all py-2 rounded-lg hover:bg-white"
+                        onClick={() => setShowNotifications(false)}
+                        className="block w-full text-center text-sm font-semibold text-[#093C5D] hover:text-[#082a42] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 py-2.5 rounded-xl transition-colors"
                       >
-                        View all notifications →
+                        {t('View all notifications →')}
                       </Link>
                     </div>
                   )}
@@ -424,7 +424,7 @@ const MainLayout = () => {
 
             {/* Avatar */}
             {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden active:scale-95 cursor-pointer ring-1 ring-gray-200">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden active:scale-95 cursor-pointer ring-1 ring-gray-200 flex-shrink-0">
                 <img
                   src={`${BASE_URL}${user.profileImage}`}
                   alt="Profile"
@@ -432,7 +432,7 @@ const MainLayout = () => {
                 />
               </div>
             ) : (
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center font-semibold text-sm sm:text-base ring-1 ring-[#093C5D]/20">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center font-semibold text-xs sm:text-sm ring-1 ring-[#093C5D]/20 flex-shrink-0">
                 {getInitials(user?.name)}
               </div>
             )}
