@@ -115,7 +115,7 @@ const Bills = () => {
                 <div>
                     <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Billing & Invoices')}</h1>
                     <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed">
-                        {t('Manage your shop\'s transactions, track pending payments,')}<br className="hidden sm:block" />
+                        {t('Manage your shop\'s transactions & Track pending payments & ')}<br className="hidden sm:block" />
                         {t('and send instant WhatsApp invoices to your customers.')}
                     </p>
                 </div>
@@ -162,7 +162,7 @@ const Bills = () => {
                             {formatCurrency(stats.pendingUdharTotal)}
                         </p>
                         <p className="text-[10px] md:text-xs text-red-700 font-medium truncate mt-0.5">
-                            {stats.customersWithUdhar} {t('customers with udhar')}
+                            {stats.customersWithUdhar} {t('Customers with udhar')}
                         </p>
                     </div>
                 </div>
@@ -180,7 +180,7 @@ const Bills = () => {
                             {formatCurrency(stats.advanceTotal)}
                         </p>
                         <p className="text-[10px] md:text-xs text-green-700 font-medium truncate mt-0.5">
-                            {stats.customersWithAdvance} {t('with advance balance')}
+                            {stats.customersWithAdvance} {t('With advance balance')}
                         </p>
                     </div>
                 </div>
@@ -198,7 +198,7 @@ const Bills = () => {
                             {stats.activeCustomers}
                         </p>
                         <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">
-                            {stats.newCustomersThisWeek} {t('new this week')}
+                            {stats.newCustomersThisWeek} {t('New this week')}
                         </p>
                     </div>
                 </div>
@@ -293,7 +293,7 @@ const Bills = () => {
                 ) : (
                     <div>
                         {/* Desktop Table */}
-                        <div className="hidden md:block overflow-x-auto pb-4">
+                        <div className="hidden md:block overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                             <table className="w-full min-w-[900px] whitespace-nowrap">
                                 <thead className="bg-gray-50/80 border-b border-gray-200">
                                     <tr>
@@ -305,12 +305,11 @@ const Bills = () => {
                                         <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Actions')}</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-100">
-                                    {bills.map((bill, index) => (
+                                <tbody>
+                                    {bills.map((bill) => (
                                         <tr
                                             key={bill._id}
-                                            className={`hover:bg-[#F5F5F5]/60 transition-all duration-200 animate-fade-in relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
-                                            style={{ animationDelay: `${index * 50}ms` }}
+                                            className={`bg-white border-b border-gray-100 last:border-b-0 hover:bg-[#F5F5F5]/60 transition-colors duration-150 relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
                                         >
                                             <td className="px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
                                                 <div className="flex items-center gap-2.5">
@@ -561,6 +560,21 @@ const Bills = () => {
                                 </div>
                             ))}
                         </div>
+
+                        {/* Loader + Intersection trigger */}
+                        {isFetchingNextPage && (
+                            <div className="flex justify-center items-center py-5">
+                                <div className="bg-white border border-gray-200 rounded-lg px-5 py-2.5 flex items-center gap-2.5">
+                                    <Loader2 className="w-4 h-4 animate-spin text-[#093C5D]" />
+                                    <span className="text-xs font-semibold text-gray-600 tracking-wide">{t('Loading more...')}</span>
+                                </div>
+                            </div>
+                        )}
+                        <InfiniteScrollObserver
+                            hasNextPage={hasNextPage}
+                            isFetchingNextPage={isFetchingNextPage}
+                            fetchNextPage={fetchNextPage}
+                        />
 
                     </div>
                 )}
