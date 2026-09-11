@@ -210,26 +210,26 @@ const Bills = () => {
           <FileText className="w-4 h-4 md:w-5 md:h-5 mr-2 text-[#093C5D]" />
           <h3 className="text-sm md:text-base font-semibold text-gray-900">{t('Bills Generated Overview')}</h3>
         </div>
-        <div className="grid grid-cols-3 md:grid-cols-5 gap-1.5 sm:gap-3 md:gap-4">
-          <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
-            <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Today')}</p>
-            <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.today}</p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 md:gap-4">
+          <div className="bg-[#093C5D]/[0.02] rounded-lg p-2 sm:p-4 flex flex-col items-center justify-center text-center border border-[#093C5D]/10 hover:border-[#093C5D]/20 hover:bg-[#093C5D]/[0.04] transition-all duration-300 cursor-default">
+            <p className="text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Today')}</p>
+            <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.today}</p>
           </div>
-          <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
-            <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Yesterday')}</p>
-            <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.yesterday}</p>
+          <div className="bg-[#093C5D]/[0.02] rounded-lg p-2 sm:p-4 flex flex-col items-center justify-center text-center border border-[#093C5D]/10 hover:border-[#093C5D]/20 hover:bg-[#093C5D]/[0.04] transition-all duration-300 cursor-default">
+            <p className="text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Yesterday')}</p>
+            <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.yesterday}</p>
           </div>
-          <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
-            <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('This Week')}</p>
-            <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.week}</p>
+          <div className="bg-[#093C5D]/[0.02] rounded-lg p-2 sm:p-4 flex flex-col items-center justify-center text-center border border-[#093C5D]/10 hover:border-[#093C5D]/20 hover:bg-[#093C5D]/[0.04] transition-all duration-300 cursor-default">
+            <p className="text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('This Week')}</p>
+            <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.week}</p>
           </div>
-          <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
-            <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('This Month')}</p>
-            <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.month}</p>
+          <div className="bg-[#093C5D]/[0.02] rounded-lg p-2 sm:p-4 flex flex-col items-center justify-center text-center border border-[#093C5D]/10 hover:border-[#093C5D]/20 hover:bg-[#093C5D]/[0.04] transition-all duration-300 cursor-default">
+            <p className="text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('This Month')}</p>
+            <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.month}</p>
           </div>
-          <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default col-span-2 sm:col-span-1">
-            <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Lifetime')}</p>
-            <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.lifetime}</p>
+          <div className="bg-[#093C5D]/[0.02] rounded-lg p-2 sm:p-4 flex flex-col items-center justify-center text-center border border-[#093C5D]/10 hover:border-[#093C5D]/20 hover:bg-[#093C5D]/[0.04] transition-all duration-300 cursor-default col-span-2 sm:col-span-1 lg:col-span-1">
+            <p className="text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Lifetime')}</p>
+            <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.lifetime}</p>
           </div>
         </div>
       </div>
@@ -276,6 +276,7 @@ const Bills = () => {
       </div>
 
       {/* Bills Table */}
+      {/* <div className="bg-white border border-gray-100 rounded-lg overflow-hidden"> */}
       <div className="bg-white border border-gray-100 rounded-lg overflow-hidden">
         {isLoading ? (
           <div className="p-8 md:p-12 text-center text-gray-500 flex justify-center">
