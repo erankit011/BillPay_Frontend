@@ -134,7 +134,7 @@ const Bills = () => {
         {/* Total Revenue */}
         <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#093C5D]/10 flex items-center justify-center text-[#093C5D] border border-[#093C5D]/20">
               <Wallet className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
@@ -152,7 +152,7 @@ const Bills = () => {
         {/* Pending Udhar */}
         <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-red-50 flex items-center justify-center text-red-600 border border-red-100">
               <IndianRupee className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
@@ -170,7 +170,7 @@ const Bills = () => {
         {/* Total Advance */}
         <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-green-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-green-50 flex items-center justify-center text-green-600 border border-green-100">
               <Wallet className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
@@ -188,7 +188,7 @@ const Bills = () => {
         {/* Active Customers */}
         <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#093C5D]/10 flex items-center justify-center text-[#093C5D] border border-[#093C5D]/20">
               <Users className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
@@ -296,7 +296,7 @@ const Bills = () => {
             {/* Desktop Table */}
             <div className="hidden md:block overflow-x-auto pb-4">
               <table className="w-full min-w-[900px] whitespace-nowrap">
-                <thead className="bg-gray-50/80 border-b border-gray-200">
+                <thead className="bg-[#093C5D]/[0.03] border-b border-[#093C5D]/10">
                   <tr>
                     <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Invoice')}</th>
                     <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Customer')}</th>
@@ -310,12 +310,12 @@ const Bills = () => {
                   {bills.map((bill, index) => (
                     <tr
                       key={bill._id}
-                      className={`hover:bg-[#F5F5F5]/60 transition-all duration-200 animate-fade-in relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
+                      className={`hover:bg-[#093C5D]/[0.02] transition-all duration-200 animate-fade-in relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
                       style={{ animationDelay: `${index * 50}ms` }}
                     >
                       <td className="px-4 lg:px-6 py-3.5 lg:py-4">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-lg bg-[#F5F5F5] flex items-center justify-center flex-shrink-0 border border-gray-200">
+                          <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-lg bg-[#093C5D]/[0.04] flex items-center justify-center flex-shrink-0 border border-[#093C5D]/10">
                             <span className="text-[10px] lg:text-xs font-semibold text-[#093C5D]">
                               {getInitials(bill.customerId?.name)}
                             </span>
@@ -440,7 +440,7 @@ const Bills = () => {
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <div className="flex items-center gap-2.5 sm:gap-3">
-                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center flex-shrink-0">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border border-[#093C5D]/10 bg-[#093C5D]/[0.04] flex items-center justify-center flex-shrink-0">
                       <span className="text-xs font-semibold text-[#093C5D]">
                         {getInitials(bill.customerId?.name)}
                       </span>
