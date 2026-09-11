@@ -438,7 +438,7 @@ const Bills = () => {
                   className={`bg-white border border-gray-200 rounded-xl p-3 sm:p-4 animate-fade-in transition-colors relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  <div className="flex items-start gap-2.5 sm:gap-3">
+                  <div className="flex items-center gap-2.5 sm:gap-3">
                     <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-gray-200 bg-[#F5F5F5] flex items-center justify-center flex-shrink-0">
                       <span className="text-xs font-semibold text-[#093C5D]">
                         {getInitials(bill.customerId?.name)}
