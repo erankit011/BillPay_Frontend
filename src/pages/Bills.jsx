@@ -143,7 +143,7 @@ const Bills = () => {
                         <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
                             {formatCurrency(stats.totalRevenue)}
                         </p>
-                        <p className={`text-[10px] md:text-xs font-medium truncate mt-0.5 ${stats.revenueGrowth >= 0 ? 'text-green-600' : 'text-red-500'}`}>
+                        <p className={`text-[10px] md:text-xs font-medium leading-tight mt-0.5 ${stats.revenueGrowth >= 0 ? 'text-green-700' : 'text-red-700'}`}>
                             {stats.revenueGrowth >= 0 ? '+' : ''}{stats.revenueGrowth.toFixed(1)}% {t('this month')}
                         </p>
                     </div>
@@ -152,7 +152,7 @@ const Bills = () => {
                 {/* Pending Udhar */}
                 <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
                     <div className="flex justify-between items-start gap-1">
-                        <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-red-50 flex items-center justify-center text-red-600 border border-red-100">
+                        <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-red-50 flex items-center justify-center text-red-700 border border-red-100">
                             <IndianRupee className="w-4 h-4 md:w-5 md:h-5" />
                         </div>
                     </div>
@@ -161,7 +161,7 @@ const Bills = () => {
                         <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
                             {formatCurrency(stats.pendingUdharTotal)}
                         </p>
-                        <p className="text-[10px] md:text-xs text-red-500 font-medium truncate mt-0.5">
+                        <p className="text-[10px] md:text-xs text-red-700 font-medium leading-tight mt-0.5">
                             {stats.customersWithUdhar} {t('customers with udhar')}
                         </p>
                     </div>
@@ -170,7 +170,7 @@ const Bills = () => {
                 {/* Total Advance */}
                 <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-green-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
                     <div className="flex justify-between items-start gap-1">
-                        <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-green-50 flex items-center justify-center text-green-600 border border-green-100">
+                        <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-green-50 flex items-center justify-center text-green-700 border border-green-100">
                             <Wallet className="w-4 h-4 md:w-5 md:h-5" />
                         </div>
                     </div>
@@ -179,7 +179,7 @@ const Bills = () => {
                         <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
                             {formatCurrency(stats.advanceTotal)}
                         </p>
-                        <p className="text-[10px] md:text-xs text-green-600 font-medium truncate mt-0.5">
+                        <p className="text-[10px] md:text-xs text-green-700 font-medium leading-tight mt-0.5">
                             {stats.customersWithAdvance} {t('with advance balance')}
                         </p>
                     </div>
@@ -197,7 +197,7 @@ const Bills = () => {
                         <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
                             {stats.activeCustomers}
                         </p>
-                        <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">
+                        <p className="text-[10px] md:text-xs text-gray-500 font-medium leading-tight mt-0.5">
                             {stats.newCustomersThisWeek} {t('new this week')}
                         </p>
                     </div>
@@ -294,7 +294,7 @@ const Bills = () => {
                 ) : (
                     <div>
                         {/* Desktop Table */}
-                        <div className="hidden md:block overflow-x-auto pb-4">
+                        <div className="hidden md:block overflow-x-auto pb-4 no-scrollbar relative">
                             <table className="w-full min-w-[900px] whitespace-nowrap">
                                 <thead className="bg-[#093C5D]/[0.03] border-b border-[#093C5D]/10">
                                     <tr>
@@ -326,7 +326,7 @@ const Bills = () => {
                                             <td className="px-4 lg:px-6 py-3.5 lg:py-4">
                                                 <span className="text-xs lg:text-sm font-semibold text-gray-900 truncate block">{bill.customerId?.name || t('Walk-in Customer')}</span>
                                                 {bill.customerId?.balance > 0 && (
-                                                    <span className="text-[10px] lg:text-xs text-red-500 font-medium block mt-0.5">
+                                                    <span className="text-[10px] lg:text-xs text-red-700 font-medium block mt-0.5">
                                                         {t('Total Due')}: {formatCurrency(bill.customerId.balance)}
                                                     </span>
                                                 )}
@@ -338,11 +338,11 @@ const Bills = () => {
                                             <td className="px-4 lg:px-6 py-3.5 lg:py-4 text-right">
                                                 <span className="text-xs lg:text-sm font-semibold text-gray-900 block">{formatCurrency(bill.grandTotal)}</span>
                                                 {bill.grandTotal > (bill.amountPaid || 0) ? (
-                                                    <span className="text-[10px] lg:text-xs text-red-500 font-medium block mt-0.5">
+                                                    <span className="text-[10px] lg:text-xs text-red-700 font-medium block mt-0.5">
                                                         {t('Pending')}: {formatCurrency(bill.grandTotal - (bill.amountPaid || 0))}
                                                     </span>
                                                 ) : (bill.amountPaid || 0) > bill.grandTotal ? (
-                                                    <span className="text-[10px] lg:text-xs text-green-500 font-medium block mt-0.5">
+                                                    <span className="text-[10px] lg:text-xs text-green-700 font-medium block mt-0.5">
                                                         {t('Advance')}: {formatCurrency((bill.amountPaid || 0) - bill.grandTotal)}
                                                     </span>
                                                 ) : null}
@@ -427,6 +427,20 @@ const Bills = () => {
                                             </td>
                                         </tr>
                                     ))}
+                                    {/* Loader inside table so it scrolls horizontally with it */}
+                                    {(hasNextPage || isFetchingNextPage) && (
+                                        <tr>
+                                            <td colSpan="6" className="p-0 border-none">
+                                                <div className="sticky left-1/2 -translate-x-1/2 w-max">
+                                                    <InfiniteScrollObserver
+                                                        hasNextPage={hasNextPage}
+                                                        isFetchingNextPage={isFetchingNextPage}
+                                                        fetchNextPage={fetchNextPage}
+                                                    />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
                                 </tbody>
                             </table>
                         </div>
@@ -455,11 +469,11 @@ const Bills = () => {
                                                 <p className="text-[11px] sm:text-xs font-semibold text-[#093C5D] leading-tight">{bill.invoiceNumber}</p>
                                                 <div className="text-right">
                                                     {bill.grandTotal > (bill.amountPaid || 0) ? (
-                                                        <p className="text-[10px] text-red-500 font-medium leading-tight">
-                                                            {t('Pend')}: {formatCurrency(bill.grandTotal - (bill.amountPaid || 0))}
+                                                        <p className="text-[10px] text-red-700 font-medium leading-tight">
+                                                            {t('Due')}: {formatCurrency(bill.grandTotal - (bill.amountPaid || 0))}
                                                         </p>
                                                     ) : (bill.amountPaid || 0) > bill.grandTotal ? (
-                                                        <p className="text-[10px] text-green-500 font-medium leading-tight">
+                                                        <p className="text-[10px] text-green-700 font-medium leading-tight">
                                                             {t('Adv')}: {formatCurrency((bill.amountPaid || 0) - bill.grandTotal)}
                                                         </p>
                                                     ) : null}
@@ -553,14 +567,14 @@ const Bills = () => {
                                     </div>
                                 </div>
                             ))}
+
+                            {/* Mobile Loader */}
+                            <InfiniteScrollObserver
+                                hasNextPage={hasNextPage}
+                                isFetchingNextPage={isFetchingNextPage}
+                                fetchNextPage={fetchNextPage}
+                            />
                         </div>
-
-                        <InfiniteScrollObserver
-                            hasNextPage={hasNextPage}
-                            isFetchingNextPage={isFetchingNextPage}
-                            fetchNextPage={fetchNextPage}
-                        />
-
                     </div>
                 )}
             </div>
@@ -577,7 +591,7 @@ const Bills = () => {
             {/* Mobile & Tablet Extended FAB (No Shadow) */}
             <button
                 onClick={() => setIsModalOpen(true)}
-                className="lg:hidden fixed bottom-6 sm:bottom-8 right-4 sm:right-6 z-50 bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 transition-all duration-200"
+                className="lg:hidden fixed bottom-6 sm:bottom-8 right-6 sm:right-8 z-50 bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 transition-all duration-200"
                 title={t('Create Bills')}
             >
                 <Plus className="w-5 h-5 mt-[1px]" />
