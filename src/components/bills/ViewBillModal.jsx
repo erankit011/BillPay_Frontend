@@ -24,7 +24,7 @@ const ViewBillModal = ({ viewBill, setViewBill }) => {
             </h3>
             <button
               onClick={() => setViewBill(null)}
-              className="cursor-pointer text-gray-400 hover:text-gray-600 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full hover:bg-gray-50 transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px]"
+              className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px]"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
@@ -64,8 +64,8 @@ const ViewBillModal = ({ viewBill, setViewBill }) => {
                  <table className="w-full text-left min-w-[260px] sm:min-w-[400px]">
                    <thead className="sticky top-0 z-10 bg-white">
                    <tr>
-                     <th className="py-2 text-[10px] sm:text-xs font-medium text-gray-400 text-center border-b-2 border-gray-100">{t('Qty')}</th>
                      <th className="py-2 text-[10px] sm:text-xs font-medium text-gray-400 border-b-2 border-gray-100">{t('Item')}</th>
+                     <th className="py-2 text-[10px] sm:text-xs font-medium text-gray-400 text-center border-b-2 border-gray-100">{t('Qty')}</th>
                      <th className="py-2 text-[10px] sm:text-xs font-medium text-gray-400 text-right border-b-2 border-gray-100">{t('Price')}</th>
                      <th className="py-2 text-[10px] sm:text-xs font-medium text-gray-400 text-right border-b-2 border-gray-100">{t('Total')}</th>
                    </tr>
@@ -104,22 +104,22 @@ const ViewBillModal = ({ viewBill, setViewBill }) => {
                    </div>
                  )}
                  
-                 <div className="flex justify-between items-center pt-2 sm:pt-3 mt-1 sm:mt-2 border-t border-gray-100">
+                 <div className="flex justify-between items-center pt-2 sm:pt-2.5 border-t border-gray-100">
                    <span className="text-sm sm:text-base font-semibold text-gray-900">{t('Grand Total')}</span>
-                   <span className="text-base sm:text-lg font-bold text-[#093C5D]">{formatCurrency(viewBill.grandTotal)}</span>
+                   <span className="text-base sm:text-lg font-semibold text-[#093C5D]">{formatCurrency(viewBill.grandTotal)}</span>
                  </div>
                  
-                 <div className="flex justify-between items-center text-[11px] sm:text-sm pt-1.5 sm:pt-2">
+                 <div className="flex justify-between items-center text-[11px] sm:text-sm">
                    <span className="text-gray-500 font-medium">{t('Amount Paid')}</span>
                    <span className="font-semibold text-green-600">{formatCurrency(viewBill.amountPaid)}</span>
                  </div>
                  {viewBill.grandTotal > (viewBill.amountPaid || 0) ? (
-                    <div className="flex justify-between items-center text-[11px] sm:text-sm pt-1">
+                    <div className="flex justify-between items-center text-[11px] sm:text-sm">
                       <span className="text-gray-500 font-medium">{t('Pending Amount')}</span>
                       <span className="font-semibold text-red-600">{formatCurrency(viewBill.grandTotal - (viewBill.amountPaid || 0))}</span>
                     </div>
                   ) : (viewBill.amountPaid || 0) > viewBill.grandTotal ? (
-                    <div className="flex justify-between items-center text-[11px] sm:text-sm pt-1">
+                    <div className="flex justify-between items-center text-[11px] sm:text-sm">
                       <span className="text-gray-500 font-medium">{t('Advance Amount')}</span>
                       <span className="font-semibold text-green-600">{formatCurrency((viewBill.amountPaid || 0) - viewBill.grandTotal)}</span>
                     </div>

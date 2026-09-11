@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Search, FileText, Send, Loader2, Wallet, Users, Mail, MessageSquare, MoreVertical, IndianRupee, Eye } from 'lucide-react';
+import { Plus, Search, FileText, Send, Loader2, Wallet, Users, Mail, MessageSquare, MoreVertical, IndianRupee, Eye, Filter } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
 import CreateBillModal from '../components/bills/CreateBillModal';
@@ -104,7 +104,7 @@ const Bills = () => {
 
   const firstPage = data?.pages?.[0];
   const stats = firstPage?.stats || {
-    totalRevenue: 0, revenueGrowth: 0, pendingUdharTotal: 0, customersWithUdhar: 0, 
+    totalRevenue: 0, revenueGrowth: 0, pendingUdharTotal: 0, customersWithUdhar: 0,
     advanceTotal: 0, customersWithAdvance: 0, activeCustomers: 0, newCustomersThisWeek: 0,
     billCounts: { today: 0, yesterday: 0, week: 0, month: 0, lifetime: 0 }
   };
@@ -130,7 +130,9 @@ const Bills = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
+
+        {/* Total Revenue */}
+        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <Wallet className="w-4 h-4 md:w-5 md:h-5" />
@@ -147,7 +149,8 @@ const Bills = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden">
+        {/* Pending Udhar */}
+        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <IndianRupee className="w-4 h-4 md:w-5 md:h-5" />
@@ -164,7 +167,8 @@ const Bills = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-green-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden">
+        {/* Total Advance */}
+        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-green-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <Wallet className="w-4 h-4 md:w-5 md:h-5" />
@@ -181,7 +185,8 @@ const Bills = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
+        {/* Active Customers */}
+        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <Users className="w-4 h-4 md:w-5 md:h-5" />
@@ -199,71 +204,79 @@ const Bills = () => {
         </div>
       </div>
 
-      {/* Bill Count Stats */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="bg-gradient-to-r from-[#093C5D] to-[#125887] px-3 py-2.5 sm:px-4 sm:py-3 md:px-5 md:py-3.5 flex items-center justify-between">
-          <div className="flex items-center">
-            <FileText className="w-4 h-4 md:w-5 md:h-5 mr-2 text-white/90" />
-            <h3 className="text-xs md:text-sm font-semibold text-white tracking-wide uppercase">{t('Bills Generated Overview')}</h3>
-          </div>
+      {/* Bill Count Stats - Clean Style */}
+      <div className="mb-4 sm:mb-6 mt-2">
+        <div className="flex items-center pb-2 sm:pb-3 mb-2 sm:mb-4 border-b border-dashed border-gray-200">
+          <FileText className="w-4 h-4 md:w-5 md:h-5 mr-2 text-[#093C5D]" />
+          <h3 className="text-sm md:text-base font-semibold text-gray-900">{t('Bills Generated Overview')}</h3>
         </div>
-        <div className="p-2 sm:p-4 md:p-5 bg-gray-50/30">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 md:gap-4 lg:gap-5">
-            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-100 hover:bg-gray-50 transition-all duration-300 cursor-default">
-              <p className="text-[10px] sm:text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">{t('Today')}</p>
-              <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{stats.billCounts.today}</p>
-            </div>
-            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-100 hover:bg-gray-50 transition-all duration-300 cursor-default">
-              <p className="text-[10px] sm:text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">{t('Yesterday')}</p>
-              <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{stats.billCounts.yesterday}</p>
-            </div>
-            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-100 hover:bg-gray-50 transition-all duration-300 cursor-default">
-              <p className="text-[10px] sm:text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">{t('This Week')}</p>
-              <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{stats.billCounts.week}</p>
-            </div>
-            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-100 hover:bg-gray-50 transition-all duration-300 cursor-default">
-              <p className="text-[10px] sm:text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">{t('This Month')}</p>
-              <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{stats.billCounts.month}</p>
-            </div>
-            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-100 hover:bg-gray-50 transition-all duration-300 cursor-default col-span-2 sm:col-span-3 md:col-span-1">
-              <p className="text-[10px] sm:text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">{t('Lifetime')}</p>
-              <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{stats.billCounts.lifetime}</p>
-            </div>
+        <div className="grid grid-cols-3 md:grid-cols-5 gap-1.5 sm:gap-3 md:gap-4">
+          <div className="bg-white rounded-xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
+            <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Today')}</p>
+            <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.today}</p>
+          </div>
+          <div className="bg-white rounded-xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
+            <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Yesterday')}</p>
+            <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.yesterday}</p>
+          </div>
+          <div className="bg-white rounded-xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
+            <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('This Week')}</p>
+            <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.week}</p>
+          </div>
+          <div className="bg-white rounded-xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
+            <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('This Month')}</p>
+            <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.month}</p>
+          </div>
+          <div className="bg-white rounded-xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default col-span-2 sm:col-span-1">
+            <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Lifetime')}</p>
+            <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.lifetime}</p>
           </div>
         </div>
       </div>
 
-      {/* Search Bar + Filter */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full">
+      {/* Search Bar + Filter - Clean Modern UI */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full mb-4 sm:mb-6">
+
+        {/* Search Input */}
         <div className="relative flex-1">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
             <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
           </div>
           <input
             type="text"
-            placeholder={t("Search by invoice number or customer...")}
+            placeholder={t("Search bills or customer...")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full pl-10 sm:pl-11 pr-3 sm:pr-4 py-2.5 sm:py-3 bg-white border border-gray-200 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-xs sm:text-sm transition-all"
+            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-white border border-gray-200 rounded-xl text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all shadow-none"
           />
         </div>
-        
+
         {/* Filter Dropdown */}
-        <select
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          className="cursor-pointer w-full sm:w-auto bg-white border border-gray-200 rounded-lg px-2 sm:px-3 py-2.5 md:py-3 text-xs md:text-sm font-medium text-gray-700 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-colors duration-200 flex-shrink-0 bg-no-repeat bg-[right_8px_center] pr-7 sm:pr-8"
-        >
-          <option value="All">{t('All Bills')}</option>
-          <option value="PAID">{t('Paid')}</option>
-          <option value="UNPAID">{t('Unpaid')}</option>
-          <option value="PARTIAL">{t('Partial')}</option>
-          <option value="ADVANCE">{t('Advance')}</option>
-        </select>
+        <div className="relative sm:flex-shrink-0">
+          <div className="absolute inset-y-0 left-0 pl-3 sm:pl-3 flex items-center pointer-events-none">
+            <Filter className="h-4 w-4 text-gray-400" />
+          </div>
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="block h-10 sm:h-12 w-full sm:w-auto sm:min-w-[130px] pl-9 sm:pl-9 pr-8 sm:pr-8 bg-white border border-gray-200 rounded-xl text-[13px] sm:text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all cursor-pointer appearance-none bg-no-repeat bg-[right_12px_center] shadow-none"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+              backgroundSize: '1.2em 1.2em'
+            }}
+          >
+            <option value="All">{t('All Bills')}</option>
+            <option value="PAID">{t('Paid')}</option>
+            <option value="UNPAID">{t('Unpaid')}</option>
+            <option value="PARTIAL">{t('Partial')}</option>
+            <option value="ADVANCE">{t('Advance')}</option>
+          </select>
+        </div>
+
       </div>
 
       {/* Bills Table */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
         {isLoading ? (
           <div className="p-8 md:p-12 text-center text-gray-500 flex justify-center">
             <Loader2 className="w-6 h-6 md:w-8 md:h-8 animate-spin text-[#093C5D]" />
@@ -301,7 +314,7 @@ const Bills = () => {
                     >
                       <td className="px-4 lg:px-6 py-3.5 lg:py-4">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-lg bg-[#F5F5F5] flex items-center justify-center flex-shrink-0 border border-gray-200">
+                          <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-xl bg-[#F5F5F5] flex items-center justify-center flex-shrink-0 border border-gray-200">
                             <span className="text-[10px] lg:text-xs font-semibold text-[#093C5D]">
                               {getInitials(bill.customerId?.name)}
                             </span>
@@ -334,10 +347,10 @@ const Bills = () => {
                         ) : null}
                       </td>
                       <td className="px-4 lg:px-6 py-3.5 lg:py-4 text-center">
-                        <span className={`inline-block px-2.5 lg:px-3 py-1 lg:py-1 text-[10px] lg:text-xs font-semibold rounded-full uppercase tracking-wide
-                          ${(bill.paymentStatus === 'PAID' || bill.paymentStatus === 'ADVANCE') ? 'bg-green-100 text-green-700' :
-                            bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-100 text-yellow-700' :
-                              'bg-red-100 text-red-700'}`}>
+                        <span className={`inline-block px-2 py-0.5 rounded text-[10px] lg:text-xs font-medium uppercase tracking-wide
+                          ${(bill.paymentStatus === 'PAID' || bill.paymentStatus === 'ADVANCE') ? 'bg-green-50 text-green-700 border border-green-200' :
+                            bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
+                              'bg-red-50 text-red-700 border border-red-200'}`}>
                           {bill.paymentStatus}
                         </span>
                       </td>
@@ -348,19 +361,19 @@ const Bills = () => {
                               e.stopPropagation();
                               setViewBill(bill);
                             }}
-                            className="cursor-pointer text-[#093C5D] font-semibold bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-2.5 lg:px-3 py-1.5 lg:py-2 rounded-lg flex items-center justify-center transition-all text-xs lg:text-sm active:scale-95"
+                            className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#093C5D]/10 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
                             title={t('View Bill')}
                           >
-                            <Eye className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                            <Eye className="w-3.5 h-3.5 mr-1.5" /> {t('View')}
                           </button>
 
                           <div className="relative inline-block">
                             <button
                               onClick={() => setOpenDropdown(openDropdown === bill._id ? null : bill._id)}
-                              className="cursor-pointer text-[#093C5D] font-semibold bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 lg:px-4 py-1.5 lg:py-2 rounded-lg flex items-center justify-center transition-all text-xs lg:text-sm active:scale-95"
+                              className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#093C5D]/10 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
                             >
-                              <Send className="w-3.5 h-3.5 lg:w-4 lg:h-4 mr-1 lg:mr-1.5" /> {t('Send')}
-                              <MoreVertical className="w-3.5 h-3.5 ml-1" />
+                              <Send className="w-3.5 h-3.5 mr-1.5" /> {t('Send')}
+                              <MoreVertical className="w-3.5 h-3.5 ml-0.5" />
                             </button>
 
                             {/* Dropdown Menu */}
@@ -369,44 +382,44 @@ const Bills = () => {
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                  handleSendInvoice(bill._id, 'whatsapp');
-                                  setOpenDropdown(null);
-                                }}
-                                className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95"
-                              >
-                                <MessageSquare className="w-4 h-4 text-green-600 flex-shrink-0" />
-                                <span>{t('Send via WhatsApp')}</span>
-                              </button>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleSendInvoice(bill._id, 'email');
-                                  setOpenDropdown(null);
-                                }}
-                                className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                                disabled={!bill.customerId?.email}
-                              >
-                                <Mail className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
-                                <span className={!bill.customerId?.email ? 'text-gray-400' : ''}>
-                                  {t('Send via Email')}
-                                  {!bill.customerId?.email && <span className="text-xs"> (No email)</span>}
-                                </span>
-                              </button>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleSendInvoice(bill._id, 'both');
-                                  setOpenDropdown(null);
-                                }}
-                                className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                                disabled={!bill.customerId?.email || !bill.customerId?.phone}
-                              >
-                                <Send className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
-                                <span className={(!bill.customerId?.email || !bill.customerId?.phone) ? 'text-gray-400' : ''}>
-                                  {t('Send Both')}
-                                </span>
-                              </button>
-                            </div>
+                                    handleSendInvoice(bill._id, 'whatsapp');
+                                    setOpenDropdown(null);
+                                  }}
+                                  className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95"
+                                >
+                                  <MessageSquare className="w-4 h-4 text-green-600 flex-shrink-0" />
+                                  <span>{t('Send via WhatsApp')}</span>
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSendInvoice(bill._id, 'email');
+                                    setOpenDropdown(null);
+                                  }}
+                                  className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                                  disabled={!bill.customerId?.email}
+                                >
+                                  <Mail className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
+                                  <span className={!bill.customerId?.email ? 'text-gray-400' : ''}>
+                                    {t('Send via Email')}
+                                    {!bill.customerId?.email && <span className="text-xs"> (No email)</span>}
+                                  </span>
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSendInvoice(bill._id, 'both');
+                                    setOpenDropdown(null);
+                                  }}
+                                  className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                                  disabled={!bill.customerId?.email || !bill.customerId?.phone}
+                                >
+                                  <Send className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
+                                  <span className={(!bill.customerId?.email || !bill.customerId?.phone) ? 'text-gray-400' : ''}>
+                                    {t('Send Both')}
+                                  </span>
+                                </button>
+                              </div>
                             )}
                           </div>
                         </div>
@@ -426,7 +439,7 @@ const Bills = () => {
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <div className="flex items-start gap-2.5 sm:gap-3">
-                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#F5F5F5] flex items-center justify-center flex-shrink-0">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-gray-200 bg-[#F5F5F5] flex items-center justify-center flex-shrink-0">
                       <span className="text-xs font-semibold text-[#093C5D]">
                         {getInitials(bill.customerId?.name)}
                       </span>
@@ -434,9 +447,9 @@ const Bills = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-start">
                         <h4 className="text-[13px] sm:text-sm font-semibold text-gray-900 truncate pr-2 leading-tight">{bill.customerId?.name || t('Walk-in Customer')}</h4>
-                        <p className="text-[13px] sm:text-sm font-semibold text-gray-900 flex-shrink-0 leading-tight">{formatCurrency(bill.grandTotal)}</p>
+                        <p className="text-[14px] sm:text-[15px] font-semibold text-gray-900 flex-shrink-0 leading-tight">{formatCurrency(bill.grandTotal)}</p>
                       </div>
-                      
+
                       <div className="flex justify-between items-start mt-0.5">
                         <p className="text-[11px] sm:text-xs font-semibold text-[#093C5D] leading-tight">{bill.invoiceNumber}</p>
                         <div className="text-right">
@@ -451,7 +464,7 @@ const Bills = () => {
                           ) : null}
                         </div>
                       </div>
-                      
+
                       <p className="text-[10px] sm:text-xs text-gray-500 mt-1 whitespace-nowrap leading-tight">
                         {new Date(bill.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })} • {new Date(bill.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })}
                       </p>
@@ -462,10 +475,10 @@ const Bills = () => {
                   <div className="border-t border-gray-100 my-2.5 sm:my-3"></div>
 
                   <div className="flex justify-between items-center gap-2">
-                    <span className={`px-2 py-1 sm:px-2.5 sm:py-1.5 text-[10px] sm:text-xs font-semibold rounded-full uppercase
-                          ${(bill.paymentStatus === 'PAID' || bill.paymentStatus === 'ADVANCE') ? 'bg-green-100 text-green-700' :
-                        bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-100 text-yellow-700' :
-                          'bg-red-100 text-red-700'}`}>
+                    <span className={`px-2 py-0.5 rounded text-[9px] uppercase sm:text-[10px] font-medium
+                          ${(bill.paymentStatus === 'PAID' || bill.paymentStatus === 'ADVANCE') ? 'bg-green-50 text-green-700 border border-green-200' :
+                        bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
+                          'bg-red-50 text-red-700 border border-red-200'}`}>
                       {bill.paymentStatus === 'PAID' ? t('Paid') : bill.paymentStatus === 'UNPAID' ? t('Unpaid') : bill.paymentStatus === 'PARTIAL' ? t('Partial') : bill.paymentStatus === 'ADVANCE' ? t('Advance') : bill.paymentStatus}
                     </span>
 
@@ -475,18 +488,18 @@ const Bills = () => {
                           e.stopPropagation();
                           setViewBill(bill);
                         }}
-                        className="cursor-pointer text-[#093C5D] font-semibold bg-[#093C5D]/5 hover:bg-[#F5F5F5] w-8 h-8 rounded-full flex items-center justify-center transition-all active:scale-95 !min-h-[32px] !min-w-[32px]"
+                        className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#F5F5F5] px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                       >
-                        <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        <Eye className="w-3.5 h-3.5 mr-1.5" /> {t('View')}
                       </button>
 
                       <div className="relative">
                         <button
                           onClick={() => setOpenDropdown(openDropdown === bill._id ? null : bill._id)}
-                          className="cursor-pointer text-[#093C5D] font-semibold bg-[#093C5D]/5 hover:bg-[#F5F5F5] px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full flex items-center text-[11px] sm:text-xs transition-all active:scale-95 whitespace-nowrap !min-h-[32px]"
+                          className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#F5F5F5] px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                         >
-                          <Send className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1" /> {t('Send')}
-                          <MoreVertical className="w-3 h-3 ml-0.5" />
+                          <Send className="w-3.5 h-3.5 mr-1.5" /> {t('Send')}
+                          <MoreVertical className="w-3.5 h-3.5 ml-0.5" />
                         </button>
 
                         {/* Dropdown Menu */}
@@ -495,45 +508,45 @@ const Bills = () => {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                              handleSendInvoice(bill._id, 'whatsapp');
-                              setOpenDropdown(null);
-                            }}
-                            className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95"
-                          >
-                            <MessageSquare className="w-4 h-4 text-green-600 flex-shrink-0" />
-                            <span>{t('Send via WhatsApp')}</span>
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleSendInvoice(bill._id, 'email');
-                              setOpenDropdown(null);
-                            }}
-                            className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={!bill.customerId?.email}
-                          >
-                            <Mail className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
-                            <span className={!bill.customerId?.email ? 'text-gray-400' : ''}>
-                              {t('Send via Email')}
-                              {!bill.customerId?.email && <span className="text-xs"> (No email)</span>}
-                            </span>
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleSendInvoice(bill._id, 'both');
-                              setOpenDropdown(null);
-                            }}
-                            className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={!bill.customerId?.email || !bill.customerId?.phone}
-                          >
-                            <Send className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
-                            <span className={(!bill.customerId?.email || !bill.customerId?.phone) ? 'text-gray-400' : ''}>
-                              {t('Send Both')}
-                            </span>
-                          </button>
-                        </div>
-                      )}
+                                handleSendInvoice(bill._id, 'whatsapp');
+                                setOpenDropdown(null);
+                              }}
+                              className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95"
+                            >
+                              <MessageSquare className="w-4 h-4 text-green-600 flex-shrink-0" />
+                              <span>{t('Send via WhatsApp')}</span>
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSendInvoice(bill._id, 'email');
+                                setOpenDropdown(null);
+                              }}
+                              className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                              disabled={!bill.customerId?.email}
+                            >
+                              <Mail className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
+                              <span className={!bill.customerId?.email ? 'text-gray-400' : ''}>
+                                {t('Send via Email')}
+                                {!bill.customerId?.email && <span className="text-xs"> (No email)</span>}
+                              </span>
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSendInvoice(bill._id, 'both');
+                                setOpenDropdown(null);
+                              }}
+                              className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                              disabled={!bill.customerId?.email || !bill.customerId?.phone}
+                            >
+                              <Send className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
+                              <span className={(!bill.customerId?.email || !bill.customerId?.phone) ? 'text-gray-400' : ''}>
+                                {t('Send Both')}
+                              </span>
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -541,10 +554,10 @@ const Bills = () => {
               ))}
             </div>
 
-            <InfiniteScrollObserver 
-              hasNextPage={hasNextPage} 
-              isFetchingNextPage={isFetchingNextPage} 
-              fetchNextPage={fetchNextPage} 
+            <InfiniteScrollObserver
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              fetchNextPage={fetchNextPage}
             />
 
           </div>
@@ -552,12 +565,12 @@ const Bills = () => {
       </div>
 
       <ViewBillModal viewBill={viewBill} setViewBill={setViewBill} />
-      
-      <CreateBillModal 
-        isModalOpen={isModalOpen} 
-        setIsModalOpen={setIsModalOpen} 
-        customers={customers} 
-        products={products} 
+
+      <CreateBillModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        customers={customers}
+        products={products}
       />
     </div>
   );
