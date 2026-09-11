@@ -1369,3 +1369,5 @@ input[type="password"]::-ms-clear,
 input[type="password"]::-webkit-credentials-auto-fill-button {
   display: none !important;
 }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
