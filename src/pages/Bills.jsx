@@ -132,9 +132,9 @@ const Bills = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
 
         {/* Total Revenue */}
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
+        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <Wallet className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
@@ -150,9 +150,9 @@ const Bills = () => {
         </div>
 
         {/* Pending Udhar */}
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
+        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <IndianRupee className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
@@ -168,9 +168,9 @@ const Bills = () => {
         </div>
 
         {/* Total Advance */}
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-green-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
+        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-green-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <Wallet className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
@@ -186,9 +186,9 @@ const Bills = () => {
         </div>
 
         {/* Active Customers */}
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
+        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <Users className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
@@ -211,23 +211,23 @@ const Bills = () => {
           <h3 className="text-sm md:text-base font-semibold text-gray-900">{t('Bills Generated Overview')}</h3>
         </div>
         <div className="grid grid-cols-3 md:grid-cols-5 gap-1.5 sm:gap-3 md:gap-4">
-          <div className="bg-white rounded-xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
+          <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
             <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Today')}</p>
             <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.today}</p>
           </div>
-          <div className="bg-white rounded-xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
+          <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
             <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Yesterday')}</p>
             <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.yesterday}</p>
           </div>
-          <div className="bg-white rounded-xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
+          <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
             <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('This Week')}</p>
             <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.week}</p>
           </div>
-          <div className="bg-white rounded-xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
+          <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
             <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('This Month')}</p>
             <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.month}</p>
           </div>
-          <div className="bg-white rounded-xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default col-span-2 sm:col-span-1">
+          <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default col-span-2 sm:col-span-1">
             <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Lifetime')}</p>
             <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.lifetime}</p>
           </div>
@@ -247,7 +247,7 @@ const Bills = () => {
             placeholder={t("Search bills or customer...")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-white border border-gray-200 rounded-xl text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all shadow-none"
+            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all shadow-none"
           />
         </div>
 
@@ -259,7 +259,7 @@ const Bills = () => {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="block h-10 sm:h-12 w-full sm:w-auto sm:min-w-[130px] pl-9 sm:pl-9 pr-8 sm:pr-8 bg-white border border-gray-200 rounded-xl text-[13px] sm:text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all cursor-pointer appearance-none bg-no-repeat bg-[right_12px_center] shadow-none"
+            className="block h-10 sm:h-12 w-full sm:w-auto sm:min-w-[130px] pl-9 sm:pl-9 pr-8 sm:pr-8 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all cursor-pointer appearance-none bg-no-repeat bg-[right_12px_center] shadow-none"
             style={{
               backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
               backgroundSize: '1.2em 1.2em'
@@ -276,7 +276,7 @@ const Bills = () => {
       </div>
 
       {/* Bills Table */}
-      <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
+      <div className="bg-white border border-gray-100 rounded-lg overflow-hidden">
         {isLoading ? (
           <div className="p-8 md:p-12 text-center text-gray-500 flex justify-center">
             <Loader2 className="w-6 h-6 md:w-8 md:h-8 animate-spin text-[#093C5D]" />
@@ -314,7 +314,7 @@ const Bills = () => {
                     >
                       <td className="px-4 lg:px-6 py-3.5 lg:py-4">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-xl bg-[#F5F5F5] flex items-center justify-center flex-shrink-0 border border-gray-200">
+                          <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-lg bg-[#F5F5F5] flex items-center justify-center flex-shrink-0 border border-gray-200">
                             <span className="text-[10px] lg:text-xs font-semibold text-[#093C5D]">
                               {getInitials(bill.customerId?.name)}
                             </span>
@@ -378,7 +378,7 @@ const Bills = () => {
 
                             {/* Dropdown Menu */}
                             {openDropdown === bill._id && (
-                              <div className="absolute right-0 mt-2 w-60 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
+                              <div className="absolute right-0 mt-2 w-60 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -435,11 +435,11 @@ const Bills = () => {
               {bills.map((bill, index) => (
                 <div
                   key={bill._id}
-                  className={`bg-white border border-gray-200 rounded-xl p-3 sm:p-4 animate-fade-in transition-colors relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
+                  className={`bg-white border border-gray-200 rounded-lg p-3 sm:p-4 animate-fade-in transition-colors relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <div className="flex items-center gap-2.5 sm:gap-3">
-                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-gray-200 bg-[#F5F5F5] flex items-center justify-center flex-shrink-0">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center flex-shrink-0">
                       <span className="text-xs font-semibold text-[#093C5D]">
                         {getInitials(bill.customerId?.name)}
                       </span>
@@ -488,23 +488,23 @@ const Bills = () => {
                           e.stopPropagation();
                           setViewBill(bill);
                         }}
-                        className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#F5F5F5] px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                        className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#F5F5F5] px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-8 !min-w-0 !h-fit"
                       >
-                        <Eye className="w-3.5 h-3.5 mr-1.5" /> {t('View')}
+                        <Eye className="w-3.5 h-3.5 mr-1" /> {t('View')}
                       </button>
 
                       <div className="relative">
                         <button
                           onClick={() => setOpenDropdown(openDropdown === bill._id ? null : bill._id)}
-                          className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#F5F5F5] px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                          className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#F5F5F5] px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-8 !min-w-0 !h-fit"
                         >
-                          <Send className="w-3.5 h-3.5 mr-1.5" /> {t('Send')}
+                          <Send className="w-3.5 h-3.5 mr-1" /> {t('Send')}
                           <MoreVertical className="w-3.5 h-3.5 ml-0.5" />
                         </button>
 
                         {/* Dropdown Menu */}
                         {openDropdown === bill._id && (
-                          <div className="absolute right-0 mt-2 w-60 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
+                          <div className="absolute right-0 mt-2 w-60 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
