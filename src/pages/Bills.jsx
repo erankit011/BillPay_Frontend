@@ -37,7 +37,7 @@ const Bills = () => {
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (openDropdown && !event.target.closest('.relative')) setOpenDropdown(null);
+            if (openDropdown && !event.target.closest('.action-dropdown')) setOpenDropdown(null);
         };
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -110,7 +110,7 @@ const Bills = () => {
     };
 
     return (
-        <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
+        <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
                 <div>
                     <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Billing & Invoices')}</h1>
@@ -368,7 +368,7 @@ const Bills = () => {
                                                         <Eye className="w-3.5 h-3.5 mr-1.5" /> {t('View')}
                                                     </button>
 
-                                                    <div className="relative inline-block">
+                                                    <div className="relative inline-block action-dropdown">
                                                         <button
                                                             onClick={() => setOpenDropdown(openDropdown === bill._id ? null : bill._id)}
                                                             className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#093C5D]/10 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
@@ -488,7 +488,7 @@ const Bills = () => {
                                     <div className="border-t border-gray-100 my-2.5 sm:my-3"></div>
 
                                     <div className="flex justify-between items-center gap-2">
-                                        <span className={`px-2 py-0.5 rounded text-[9px] uppercase sm:text-[10px] font-medium
+                                        <span className={`px-2 py-0.5 rounded text-[9px] uppercase sm:text-[10px] font-semibold
                           ${(bill.paymentStatus === 'PAID' || bill.paymentStatus === 'ADVANCE') ? 'bg-green-50 text-green-700 border border-green-200' :
                                                 bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
                                                     'bg-red-50 text-red-700 border border-red-200'}`}>
@@ -506,7 +506,7 @@ const Bills = () => {
                                                 <Eye className="w-3.5 h-3.5 mr-1.5" /> {t('View')}
                                             </button>
 
-                                            <div className="relative">
+                                            <div className="relative action-dropdown">
                                                 <button
                                                     onClick={() => setOpenDropdown(openDropdown === bill._id ? null : bill._id)}
                                                     className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#F5F5F5] px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
