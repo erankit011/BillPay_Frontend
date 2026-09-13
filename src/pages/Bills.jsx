@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import api from '../api/axios';
 import { Plus, Search, FileText, Send, Loader2, Wallet, Users, Mail, MessageSquare, MoreVertical, IndianRupee, Eye, Filter } from 'lucide-react';
@@ -36,18 +37,65 @@ const getAvatarStyle = (status) => {
 
 const Bills = () => {
     const { t } = useTranslation();
-    const [searchTerm, setSearchTerm] = useState('');
-    const [debouncedSearch, setDebouncedSearch] = useState('');
-    const [filterStatus, setFilterStatus] = useState('All');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const initialSearch = searchParams.get('search') || '';
+    const filterStatus = searchParams.get('filter') || 'All';
+
+    const [searchTerm, setSearchTerm] = useState(initialSearch);
+    const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
+    
+    const setFilterStatus = (value) => {
+        setSearchParams(prev => {
+            const next = new URLSearchParams(prev);
+            if (value === 'All') next.delete('filter');
+            else next.set('filter', value);
+            return next;
+        }, { replace: true });
+    };
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(null);
-    const [viewBill, setViewBill] = useState(null);
     const queryClient = useQueryClient();
 
+    // Debounce search term and sync URL
     useEffect(() => {
-        const handler = setTimeout(() => setDebouncedSearch(searchTerm), 500);
+        const handler = setTimeout(() => {
+            setDebouncedSearch(searchTerm);
+            setSearchParams(prev => {
+                const next = new URLSearchParams(prev);
+                if (searchTerm) next.set('search', searchTerm);
+                else next.delete('search');
+                return next;
+            }, { replace: true });
+        }, 500);
         return () => clearTimeout(handler);
-    }, [searchTerm]);
+    }, [searchTerm, setSearchParams]);
+
+    // Sync URL back to local state (for back/forward navigation)
+    useEffect(() => {
+        const urlSearch = searchParams.get('search') || '';
+        if (urlSearch !== debouncedSearch) {
+            setSearchTerm(urlSearch);
+            setDebouncedSearch(urlSearch);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchParams]);
+
+    const handleSetViewBill = (val) => {
+        if (!val) {
+            setSearchParams(prev => {
+                const next = new URLSearchParams(prev);
+                next.delete('viewBill');
+                return next;
+            });
+        } else {
+            setSearchParams(prev => {
+                const next = new URLSearchParams(prev);
+                next.set('viewBill', val._id);
+                return next;
+            });
+        }
+    };
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -75,6 +123,8 @@ const Bills = () => {
         gcTime: 5 * 60 * 1000,   // Garbage collect (delete from memory) if unused for 5 mins
     });
 
+
+
     const { data: customers = [] } = useQuery({
         queryKey: ['customers', 'all'],
         queryFn: async () => {
@@ -92,6 +142,8 @@ const Bills = () => {
     });
 
     const bills = data?.pages?.flatMap(page => page.data || []) || [];
+    const viewBillId = searchParams.get('viewBill');
+    const activeBill = viewBillId ? bills.find(b => b._id === viewBillId) : null;
 
     const handleSendInvoice = async (billId, sendVia = 'whatsapp') => {
         try {
@@ -374,7 +426,11 @@ const Bills = () => {
                                                     <button
                                                         onClick={(e) => {
                                                             e.stopPropagation();
-                                                            setViewBill(bill);
+                                                            setSearchParams(prev => {
+                                                                const next = new URLSearchParams(prev);
+                                                                next.set('viewBill', bill._id);
+                                                                return next;
+                                                            });
                                                         }}
                                                         className="cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
                                                         title={t('View Bill')}
@@ -513,7 +569,7 @@ const Bills = () => {
                                             <button
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    setViewBill(bill);
+                                                    handleSetViewBill(bill);
                                                 }}
                                                 className="cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                                             >
@@ -600,7 +656,7 @@ const Bills = () => {
                 )}
             </div>
 
-            <ViewBillModal viewBill={viewBill} setViewBill={setViewBill} />
+            <ViewBillModal viewBill={activeBill} setViewBill={handleSetViewBill} />
 
             <CreateBillModal
                 isModalOpen={isModalOpen}
@@ -610,7 +666,7 @@ const Bills = () => {
             />
 
             {/* Mobile & Tablet Extended FAB (No Shadow) - hidden when any modal is open */}
-            {!viewBill && !isModalOpen && (
+            {!activeBill && !isModalOpen && (
                 <button
                     onClick={() => setIsModalOpen(true)}
                     className="lg:hidden fixed bottom-6 sm:bottom-8 right-6 sm:right-8 z-50 bg-[#093C5D] hover:bg-[#082a42] text-white px-5 sm:px-6 py-3 rounded-lg cursor-pointer flex items-center justify-center gap-2 active:scale-95 transition-all duration-200"

@@ -109,84 +109,21 @@ const AppRoutes = () => {
         </Route>
 
         {/* Protected Dashboard Routes */}
-        <Route path="/dashboard" element={
+        <Route element={
           <ProtectedRoute>
             <MainLayout />
           </ProtectedRoute>
         }>
-          <Route index element={<Dashboard />} />
-        </Route>
-
-        <Route path="/customers" element={
-          <ProtectedRoute>
-            <MainLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<Customers />} />
-        </Route>
-
-        <Route path="/bills" element={
-          <ProtectedRoute>
-            <MainLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<Bills />} />
-        </Route>
-
-        <Route path="/products" element={
-          <ProtectedRoute>
-            <MainLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<Products />} />
-        </Route>
-
-        <Route path="/reminders" element={
-          <ProtectedRoute>
-            <MainLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<Reminders />} />
-        </Route>
-
-        <Route path="/voice" element={
-          <ProtectedRoute>
-            <MainLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<VoiceBilling />} />
-        </Route>
-
-        <Route path="/reports" element={
-          <ProtectedRoute>
-            <MainLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<Reports />} />
-        </Route>
-
-        <Route path="/settings" element={
-          <ProtectedRoute>
-            <MainLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<Settings />} />
-        </Route>
-
-        <Route path="/profile" element={
-          <ProtectedRoute>
-            <MainLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<Profile />} />
-        </Route>
-
-        <Route path="/notifications" element={
-          <ProtectedRoute>
-            <MainLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<Notifications />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/customers" element={<Customers />} />
+          <Route path="/bills" element={<Bills />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/reminders" element={<Reminders />} />
+          <Route path="/voice" element={<VoiceBilling />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/notifications" element={<Notifications />} />
         </Route>
 
         {/* Fallback */}
