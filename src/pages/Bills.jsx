@@ -337,7 +337,7 @@ const Bills = () => {
                                                 <span className="text-xs lg:text-sm font-semibold text-gray-900 block">{formatCurrency(bill.grandTotal)}</span>
                                                 {bill.grandTotal > (bill.amountPaid || 0) ? (
                                                     <span className="text-[10px] lg:text-xs text-red-700 font-medium block mt-0.5">
-                                                        {t('Pending')}: {formatCurrency(bill.grandTotal - (bill.amountPaid || 0))}
+                                                        {t('Bill Due')}: {formatCurrency(bill.grandTotal - (bill.amountPaid || 0))}
                                                     </span>
                                                 ) : (bill.amountPaid || 0) > bill.grandTotal ? (
                                                     <span className="text-[10px] lg:text-xs text-green-700 font-medium block mt-0.5">
@@ -454,27 +454,33 @@ const Bills = () => {
                                         <div className="flex-1 min-w-0">
                                             <div className="flex justify-between items-start">
                                                 <h4 className="text-[13px] sm:text-sm font-semibold text-gray-900 truncate pr-2 leading-tight">{bill.customerId?.name || t('Walk-in Customer')}</h4>
-                                                <p className="text-[14px] sm:text-[15px] font-semibold text-gray-900 flex-shrink-0 leading-tight">{formatCurrency(bill.grandTotal)}</p>
+                                                <p className="text-[14px] sm:text-[15px] font-semibold text-gray-900 flex-shrink-0 leading-tight text-right">{formatCurrency(bill.grandTotal)}</p>
                                             </div>
 
                                             <div className="flex justify-between items-start mt-0.5">
-                                                <p className="text-[11px] sm:text-xs font-semibold text-[#093C5D] leading-tight">{bill.invoiceNumber}</p>
-                                                <div className="text-right">
+                                                <div className="flex flex-col gap-1">
+                                                    <p className="text-[11px] sm:text-xs font-semibold text-[#093C5D] leading-tight mt-0.5">{bill.invoiceNumber}</p>
+                                                    <p className="text-[10px] sm:text-xs text-gray-500 whitespace-nowrap leading-tight">
+                                                        {new Date(bill.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })} • {new Date(bill.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })}
+                                                    </p>
+                                                </div>
+                                                <div className="text-right flex-shrink-0 flex flex-col items-end gap-0.5">
                                                     {bill.grandTotal > (bill.amountPaid || 0) ? (
                                                         <p className="text-[10px] text-red-700 font-medium leading-tight">
-                                                            {t('Pend')}: {formatCurrency(bill.grandTotal - (bill.amountPaid || 0))}
+                                                            {t('Bill Due')}: {formatCurrency(bill.grandTotal - (bill.amountPaid || 0))}
                                                         </p>
                                                     ) : (bill.amountPaid || 0) > bill.grandTotal ? (
                                                         <p className="text-[10px] text-green-700 font-medium leading-tight">
-                                                            {t('Adv')}: {formatCurrency((bill.amountPaid || 0) - bill.grandTotal)}
+                                                            {t('Advance')}: {formatCurrency((bill.amountPaid || 0) - bill.grandTotal)}
                                                         </p>
                                                     ) : null}
+                                                    {bill.customerId?.balance > 0 && (
+                                                        <p className="text-[10px] text-red-700 font-medium leading-tight">
+                                                            {t('Total Due')}: {formatCurrency(bill.customerId.balance)}
+                                                        </p>
+                                                    )}
                                                 </div>
                                             </div>
-
-                                            <p className="text-[10px] sm:text-xs text-gray-500 mt-1 whitespace-nowrap leading-tight">
-                                                {new Date(bill.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })} • {new Date(bill.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })}
-                                            </p>
                                         </div>
                                     </div>
 
@@ -589,15 +595,17 @@ const Bills = () => {
                 products={products}
             />
 
-            {/* Mobile & Tablet Extended FAB (No Shadow) */}
-            <button
-                onClick={() => setIsModalOpen(true)}
-                className="lg:hidden fixed bottom-6 sm:bottom-8 right-6 sm:right-8 z-50 bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 transition-all duration-200"
-                title={t('Create Bills')}
-            >
-                <Plus className="w-5 h-5 mt-[1.5px]" />
-                <span className="font-semibold text-sm leading-none mb-[1px]">{t('Create Bills')}</span>
-            </button>
+            {/* Mobile & Tablet Extended FAB (No Shadow) - hidden when any modal is open */}
+            {!viewBill && !isModalOpen && (
+                <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="lg:hidden fixed bottom-6 sm:bottom-8 right-6 sm:right-8 z-50 bg-[#093C5D] hover:bg-[#082a42] text-white px-5 sm:px-6 py-3 rounded-lg cursor-pointer flex items-center justify-center gap-2 active:scale-95 transition-all duration-200"
+                    title={t('Create Bills')}
+                >
+                    <Plus className="w-[18px] h-[18px] flex-shrink-0" />
+                    <span className="font-semibold text-sm">{t('Create Bills')}</span>
+                </button>
+            )}
         </div>
     );
 };
