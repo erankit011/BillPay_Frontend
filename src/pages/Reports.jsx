@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import api from '../api/axios';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -13,7 +14,17 @@ const formatCurrency = (amount) => {
 
 const Reports = () => {
   const { t } = useTranslation();
-  const [statementPeriod, setStatementPeriod] = useState('all');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const statementPeriod = searchParams.get('period') || 'all';
+
+  const setStatementPeriod = (value) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      if (value === 'all') next.delete('period');
+      else next.set('period', value);
+      return next;
+    }, { replace: true });
+  };
 
   const { data: analytics, isLoading: analyticsLoading } = useQuery({
     queryKey: ['dashboardAnalytics'],

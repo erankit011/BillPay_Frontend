@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
 import { Plus, Search, Edit, Trash2, Download, PlusCircle, Wallet, Box, AlertTriangle, Loader2 } from 'lucide-react';
@@ -50,19 +51,48 @@ const getTimeAgo = (date) => {
 
 const Products = () => {
   const { t } = useTranslation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialSearch = searchParams.get('search') || '';
+  const filterStock = searchParams.get('filter') || 'All';
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [filterStock, setFilterStock] = useState('All');
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
   const [editingProduct, setEditingProduct] = useState(null);
   const queryClient = useQueryClient();
 
+  const setFilterStock = (value) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      if (value === 'All') next.delete('filter');
+      else next.set('filter', value);
+      return next;
+    }, { replace: true });
+  };
+
+  // Debounce search term and sync URL
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchTerm);
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        if (searchTerm) next.set('search', searchTerm);
+        else next.delete('search');
+        return next;
+      }, { replace: true });
     }, 500);
     return () => clearTimeout(handler);
-  }, [searchTerm]);
+  }, [searchTerm, setSearchParams]);
+
+  // Sync URL back to local state (for back/forward navigation)
+  useEffect(() => {
+    const urlSearch = searchParams.get('search') || '';
+    if (urlSearch !== debouncedSearch) {
+      setSearchTerm(urlSearch);
+      setDebouncedSearch(urlSearch);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const {
     data,

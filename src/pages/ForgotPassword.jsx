@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Mail, Loader2, CheckCircle2, Key } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import api from '../api/axios';
 
 const ForgotPassword = () => {
@@ -48,7 +49,7 @@ const ForgotPassword = () => {
         </div>
 
         <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm">
-          <span className="text-gray-500 font-medium">{t('Remember your password?')} <a href="/login" className="text-[#093C5D] font-semibold cursor-pointer ml-1 hover:underline">{t('Login Here')}</a></span>
+          <span className="text-gray-500 font-medium">{t('Remember your password?')} <Link to="/login" className="text-[#093C5D] font-semibold cursor-pointer ml-1 hover:underline">{t('Login Here')}</Link></span>
         </div>
       </div>
     );
@@ -101,7 +102,7 @@ const ForgotPassword = () => {
       </form>
 
       <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm">
-        <span className="text-gray-500 font-medium">{t('Remember your password?')} <a href="/login" className="text-[#093C5D] font-semibold cursor-pointer ml-1 hover:underline">{t('Login Here')}</a></span>
+        <span className="text-gray-500 font-medium">{t('Remember your password?')} <Link to="/login" className="text-[#093C5D] font-semibold cursor-pointer ml-1 hover:underline">{t('Login Here')}</Link></span>
       </div>
     </div>
   );

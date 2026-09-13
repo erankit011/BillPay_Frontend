@@ -1,16 +1,28 @@
 import { useState, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Mic, Loader2, CheckCircle2, Keyboard } from 'lucide-react';
 import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
 
 const VoiceBilling = () => {
   const { t } = useTranslation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const inputMode = searchParams.get('mode') || 'manual'; // 'manual' or 'voice'
+
+  const setInputMode = (value) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      if (value === 'manual') next.delete('mode');
+      else next.set('mode', value);
+      return next;
+    }, { replace: true });
+  };
+
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [result, setResult] = useState(null);
   const [manualText, setManualText] = useState('');
-  const [inputMode, setInputMode] = useState('manual'); // 'manual' or 'voice'
   
   // Form data state for editing parsed data
   const [formData, setFormData] = useState({

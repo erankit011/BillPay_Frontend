@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import api from '../api/axios';
 import { Plus, Bell, Clock, User, X, MessageSquare, Mail, Edit, Trash2, TrendingUp, Lightbulb, Activity, Send, Loader2 } from 'lucide-react';
@@ -9,21 +10,49 @@ import SearchableSelect from '../components/common/SearchableSelect';
 
 const Reminders = () => {
   const { t } = useTranslation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialSearch = searchParams.get('search') || '';
+  const filterStatus = searchParams.get('filter') || 'All';
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingReminder, setEditingReminder] = useState(null);
-  const [filterStatus, setFilterStatus] = useState('All');
-  const [searchName, setSearchName] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [searchName, setSearchName] = useState(initialSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
   const queryClient = useQueryClient();
 
-  // Debounce search
+  const setFilterStatus = (value) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      if (value === 'All') next.delete('filter');
+      else next.set('filter', value);
+      return next;
+    }, { replace: true });
+  };
+
+  // Debounce search and sync URL
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchName);
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        if (searchName) next.set('search', searchName);
+        else next.delete('search');
+        return next;
+      }, { replace: true });
     }, 500);
     return () => clearTimeout(handler);
-  }, [searchName]);
+  }, [searchName, setSearchParams]);
+
+  // Sync URL back to local state (for back/forward navigation)
+  useEffect(() => {
+    const urlSearch = searchParams.get('search') || '';
+    if (urlSearch !== debouncedSearch) {
+      setSearchName(urlSearch);
+      setDebouncedSearch(urlSearch);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const {
     data,

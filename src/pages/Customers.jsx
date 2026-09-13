@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
 import { Plus, Search, Phone, IndianRupee, History, Loader2, Edit, Trash2, Users, Wallet, FileText, Mail, Calendar } from 'lucide-react';
@@ -13,24 +14,51 @@ const formatCurrency = (amount) => {
 
 const Customers = () => {
   const { t } = useTranslation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialSearch = searchParams.get('search') || '';
+  const filterBalance = searchParams.get('filter') || 'All';
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [filterBalance, setFilterBalance] = useState('All');
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
+  
+  const setFilterBalance = (value) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      if (value === 'All') next.delete('filter');
+      else next.set('filter', value);
+      return next;
+    }, { replace: true });
+  };
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [customerToDelete, setCustomerToDelete] = useState(null);
   const queryClient = useQueryClient();
 
-  // Debounce search term
+  // Debounce search term and sync URL
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchTerm);
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        if (searchTerm) next.set('search', searchTerm);
+        else next.delete('search');
+        return next;
+      }, { replace: true });
     }, 500);
     return () => clearTimeout(handler);
-  }, [searchTerm]);
+  }, [searchTerm, setSearchParams]);
+
+  // Sync URL back to local state (for back/forward navigation)
+  useEffect(() => {
+    const urlSearch = searchParams.get('search') || '';
+    if (urlSearch !== debouncedSearch) {
+      setSearchTerm(urlSearch);
+      setDebouncedSearch(urlSearch);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const {
     data,
@@ -50,20 +78,10 @@ const Customers = () => {
     gcTime: 5 * 60 * 1000,   // Garbage collect (delete from memory) if unused for 5 mins
   });
 
-  // Keep selectedCustomer in sync with fetched data
-  useEffect(() => {
-    if (selectedCustomer && data?.pages) {
-      for (const page of data.pages) {
-        if (page.data) {
-          const updatedCustomer = page.data.find(c => c._id === selectedCustomer._id);
-          if (updatedCustomer && updatedCustomer.balance !== selectedCustomer.balance) {
-            setSelectedCustomer(updatedCustomer);
-            break;
-          }
-        }
-      }
-    }
-  }, [data, selectedCustomer]);
+  const viewTransactionId = searchParams.get('viewTransaction');
+  const activeCustomer = viewTransactionId && data?.pages 
+    ? data.pages.flatMap(p => p.data || []).find(c => c._id === viewTransactionId) 
+    : null;
 
   // Handle body scroll for delete modal
   useEffect(() => {
@@ -340,7 +358,13 @@ const Customers = () => {
                       <td className="w-[25%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
                         <div className="flex items-center justify-end gap-2 lg:gap-3">
                           <button
-                            onClick={() => setSelectedCustomer(customer)}
+                            onClick={() => {
+                              setSearchParams(prev => {
+                                const next = new URLSearchParams(prev);
+                                next.set('viewTransaction', customer._id);
+                                return next;
+                              });
+                            }}
                             className="cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
                           >
                             <FileText className="w-3.5 h-3.5 mr-1.5" /> {t('Transactions')}
@@ -428,7 +452,11 @@ const Customers = () => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        setSelectedCustomer(customer);
+                        setSearchParams(prev => {
+                          const next = new URLSearchParams(prev);
+                          next.set('viewTransaction', customer._id);
+                          return next;
+                        });
                       }}
                       className="cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-1.5 sm:px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                     >
@@ -537,12 +565,21 @@ const Customers = () => {
         </div>
       )}
 
-      {selectedCustomer && (
-        <CustomerLedger customer={selectedCustomer} onClose={() => setSelectedCustomer(null)} />
+      {activeCustomer && (
+        <CustomerLedger 
+          customer={activeCustomer} 
+          onClose={() => {
+            setSearchParams(prev => {
+              const next = new URLSearchParams(prev);
+              next.delete('viewTransaction');
+              return next;
+            });
+          }} 
+        />
       )}
 
       {/* Mobile & Tablet Extended FAB (No Shadow) */}
-      {!selectedCustomer && !isModalOpen && (
+      {!activeCustomer && !isModalOpen && (
         <button
           onClick={() => setIsModalOpen(true)}
           className="lg:hidden fixed bottom-6 right-6 bg-[#093C5D] hover:bg-[#082a42] text-white px-5 py-3.5 rounded-lg flex items-center transition-all z-[40] active:scale-95 group font-semibold text-sm"
