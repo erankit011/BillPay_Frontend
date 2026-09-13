@@ -20,6 +20,20 @@ const getInitials = (name) => {
     return name.substring(0, 2).toUpperCase();
 };
 
+const getAvatarStyle = (status) => {
+    switch (status) {
+        case 'UNPAID':
+            return 'bg-red-50 text-red-700 border-red-200';
+        case 'PARTIAL':
+            return 'bg-yellow-50 text-yellow-700 border-yellow-200';
+        case 'PAID':
+        case 'ADVANCE':
+            return 'bg-green-50 text-green-700 border-green-200';
+        default:
+            return 'bg-gray-100 text-gray-700 border-gray-200';
+    }
+};
+
 const Bills = () => {
     const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
@@ -313,8 +327,8 @@ const Bills = () => {
                                         >
                                             <td className="px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
                                                 <div className="flex items-center gap-2.5">
-                                                    <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-lg bg-[#F5F5F5] flex items-center justify-center flex-shrink-0 border border-gray-200">
-                                                        <span className="text-[10px] lg:text-xs font-semibold text-[#093C5D]">
+                                                    <div className={`w-8 h-8 lg:w-9 lg:h-9 rounded-lg flex items-center justify-center flex-shrink-0 border ${getAvatarStyle(bill.paymentStatus)}`}>
+                                                        <span className="text-[10px] lg:text-xs font-semibold">
                                                             {getInitials(bill.customerId?.name)}
                                                         </span>
                                                     </div>
@@ -351,7 +365,7 @@ const Bills = () => {
                           ${(bill.paymentStatus === 'PAID' || bill.paymentStatus === 'ADVANCE') ? 'bg-green-50 text-green-700 border border-green-200' :
                                                             bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
                                                                 'bg-red-50 text-red-700 border border-red-200'}`}>
-                                                        {bill.paymentStatus}
+                                                        {bill.paymentStatus === 'PAID' ? t('Paid') : bill.paymentStatus === 'UNPAID' ? t('Unpaid') : bill.paymentStatus === 'PARTIAL' ? t('Partial') : bill.paymentStatus === 'ADVANCE' ? t('Advance') : bill.paymentStatus}
                                                     </span>
                                                 </div>
                                             </td>
@@ -362,7 +376,7 @@ const Bills = () => {
                                                             e.stopPropagation();
                                                             setViewBill(bill);
                                                         }}
-                                                        className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#093C5D]/10 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
+                                                        className="cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
                                                         title={t('View Bill')}
                                                     >
                                                         <Eye className="w-3.5 h-3.5 mr-1.5" /> {t('View')}
@@ -371,7 +385,7 @@ const Bills = () => {
                                                     <div className="relative inline-block action-dropdown">
                                                         <button
                                                             onClick={() => setOpenDropdown(openDropdown === bill._id ? null : bill._id)}
-                                                            className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#093C5D]/10 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
+                                                            className="cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
                                                         >
                                                             <Send className="w-3.5 h-3.5 mr-1.5" /> {t('Send')}
                                                             <MoreVertical className="w-3.5 h-3.5 ml-0.5" />
@@ -446,8 +460,8 @@ const Bills = () => {
                                     style={{ animationDelay: `${index * 50}ms` }}
                                 >
                                     <div className="flex items-start gap-2.5 sm:gap-3">
-                                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center flex-shrink-0">
-                                            <span className="text-xs font-semibold text-[#093C5D]">
+                                        <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg border flex items-center justify-center flex-shrink-0 ${getAvatarStyle(bill.paymentStatus)}`}>
+                                            <span className="text-xs font-semibold">
                                                 {getInitials(bill.customerId?.name)}
                                             </span>
                                         </div>
@@ -501,7 +515,7 @@ const Bills = () => {
                                                     e.stopPropagation();
                                                     setViewBill(bill);
                                                 }}
-                                                className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#F5F5F5] px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                                                className="cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                                             >
                                                 <Eye className="w-3.5 h-3.5 mr-1.5" /> {t('View')}
                                             </button>
@@ -509,7 +523,7 @@ const Bills = () => {
                                             <div className="relative action-dropdown">
                                                 <button
                                                     onClick={() => setOpenDropdown(openDropdown === bill._id ? null : bill._id)}
-                                                    className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#F5F5F5] px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                                                    className="cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                                                 >
                                                     <Send className="w-3.5 h-3.5 mr-1.5" /> {t('Send')}
                                                     <MoreVertical className="w-3.5 h-3.5 ml-0.5" />

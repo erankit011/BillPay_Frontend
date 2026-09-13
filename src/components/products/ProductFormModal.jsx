@@ -53,8 +53,8 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
             <h3 className="text-lg md:text-xl font-semibold text-gray-900">
               {editingProduct ? t('Edit Product') : t('Add New Product')}
             </h3>
-            <button onClick={handleClose} className="cursor-pointer text-gray-400 hover:text-gray-600 active:scale-90 transition-all">
-              <X className="w-6 h-6" />
+            <button onClick={handleClose} className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200">
+              <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
 
