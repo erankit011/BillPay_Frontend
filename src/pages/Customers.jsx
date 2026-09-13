@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Search, Phone, IndianRupee, History, Loader2, Edit, Trash2, Users, Wallet } from 'lucide-react';
+import { Plus, Search, Phone, IndianRupee, History, Loader2, Edit, Trash2, Users, Wallet, FileText, Mail, Calendar } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import CustomerLedger from '../components/customers/CustomerLedger';
 import CustomerFormModal from '../components/customers/CustomerFormModal';
@@ -20,6 +20,8 @@ const Customers = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [filterBalance, setFilterBalance] = useState('All');
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [customerToDelete, setCustomerToDelete] = useState(null);
   const queryClient = useQueryClient();
 
   // Debounce search term
@@ -48,6 +50,36 @@ const Customers = () => {
     gcTime: 5 * 60 * 1000,   // Garbage collect (delete from memory) if unused for 5 mins
   });
 
+  // Keep selectedCustomer in sync with fetched data
+  useEffect(() => {
+    if (selectedCustomer && data?.pages) {
+      for (const page of data.pages) {
+        if (page.data) {
+          const updatedCustomer = page.data.find(c => c._id === selectedCustomer._id);
+          if (updatedCustomer && updatedCustomer.balance !== selectedCustomer.balance) {
+            setSelectedCustomer(updatedCustomer);
+            break;
+          }
+        }
+      }
+    }
+  }, [data, selectedCustomer]);
+
+  // Handle body scroll for delete modal
+  useEffect(() => {
+    if (deleteModalOpen) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [deleteModalOpen]);
+
   const mutation = useMutation({
     mutationFn: (newCustomer) => {
       if (isEditMode) {
@@ -67,6 +99,8 @@ const Customers = () => {
     mutationFn: (customerId) => api.delete(`/customers/${customerId}`),
     onSuccess: () => {
       queryClient.invalidateQueries(['customers']);
+      setDeleteModalOpen(false);
+      setCustomerToDelete(null);
     }
   });
 
@@ -77,8 +111,13 @@ const Customers = () => {
   };
 
   const handleDelete = (customer) => {
-    if (window.confirm(t(`Are you sure you want to delete ${customer.name}? This action cannot be undone.`))) {
-      deleteMutation.mutate(customer._id);
+    setCustomerToDelete(customer);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (customerToDelete) {
+      deleteMutation.mutate(customerToDelete._id);
     }
   };
 
@@ -101,20 +140,14 @@ const Customers = () => {
     return name.substring(0, 2).toUpperCase();
   };
 
-  const getAvatarColor = (index) => {
-    const colors = [
-      'bg-[#F5F5F5] text-[#093C5D]',
-      'bg-purple-100 text-purple-600',
-      'bg-blue-100 text-[#093C5D]',
-      'bg-green-100 text-green-600',
-      'bg-yellow-100 text-yellow-600',
-      'bg-pink-100 text-pink-600',
-    ];
-    return colors[index % colors.length];
+  const getAvatarColor = (balance) => {
+    if (balance > 0) return 'bg-red-50 text-red-700 border border-red-200';
+    if (balance < 0) return 'bg-green-50 text-green-700 border border-green-200';
+    return 'bg-gray-50 text-gray-700 border border-gray-200';
   };
 
   const customers = data?.pages?.flatMap(page => page.data || []) || [];
-  
+
   // Get EXACT stats from the first page backend response
   const firstPage = data?.pages?.[0];
   const totalCount = firstPage?.totalCount || 0;
@@ -125,16 +158,18 @@ const Customers = () => {
   const thisMonthCustomersCount = firstPage?.thisMonthCustomersCount || 0;
 
   return (
-    <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
+    <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Customers')}</h1>
-          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5">{t('Manage your customers and their outstanding balances')}</p>
+          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed">
+            {t('Manage your customers and their outstanding balances')}
+          </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg flex items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
+          className="hidden lg:flex cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
         >
           <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
           {t('Add Customer')}
@@ -144,9 +179,9 @@ const Customers = () => {
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         {/* Total Customers */}
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
+        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <Users className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
@@ -158,45 +193,45 @@ const Customers = () => {
         </div>
 
         {/* Total Pending */}
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden">
+        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-700 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-red-50 flex items-center justify-center text-red-700 border border-red-100">
               <IndianRupee className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Pending')}</p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Pending Udhar')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-red-700 truncate">
               {formatCurrency(totalPendingBalance)}
             </p>
-            <p className="text-[10px] md:text-xs text-red-500 font-medium truncate mt-0.5">
-              {customersWithPendingCount} {t('with pending balance')}
+            <p className="text-[10px] md:text-xs text-red-700 font-medium truncate mt-0.5">
+              {customersWithPendingCount} {t('Customers')}
             </p>
           </div>
         </div>
 
-        {/* Total Advance */}
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-green-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden">
+        {/* Advance Balance */}
+        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-green-700 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-green-50 flex items-center justify-center text-green-700 border border-green-100">
               <Wallet className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Advance')}</p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
-              {formatCurrency(totalAdvanceBalance)}
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Advance Given')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-green-700 truncate">
+              {formatCurrency(Math.abs(totalAdvanceBalance))}
             </p>
-            <p className="text-[10px] md:text-xs text-green-600 font-medium truncate mt-0.5">
-              {customersWithAdvanceCount} {t('with advance balance')}
+            <p className="text-[10px] md:text-xs text-green-700 font-medium truncate mt-0.5">
+              {customersWithAdvanceCount} {t('Customers')}
             </p>
           </div>
         </div>
 
         {/* This Month */}
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
+        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <History className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
@@ -205,31 +240,32 @@ const Customers = () => {
             <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
               {thisMonthCustomersCount}
             </p>
-            <p className="text-[10px] md:text-xs text-green-600 font-medium truncate mt-0.5">{t('New customers')}</p>
+            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">{t('New customers')}</p>
           </div>
         </div>
       </div>
 
       {/* Search Bar + Filter */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
+        {/* Search Input */}
         <div className="relative flex-1">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-gray-400" />
+          <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
           </div>
           <input
             type="text"
-            placeholder={t("Search by invoice number or customer...")}
+            placeholder={t("Search by customer name...")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full pl-12 pr-4 py-2.5 md:py-3 bg-white border border-gray-200 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-sm md:text-base font-medium transition-colors duration-200"
+            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all shadow-none"
           />
         </div>
-        
+
         {/* Filter Dropdown */}
         <select
           value={filterBalance}
           onChange={(e) => setFilterBalance(e.target.value)}
-          className="cursor-pointer w-full sm:w-auto bg-white border border-gray-200 rounded-lg px-3 py-2.5 md:py-3 text-sm md:text-base font-medium text-gray-700 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-colors duration-200 flex-shrink-0"
+          className="block h-10 sm:h-12 w-full sm:w-auto sm:min-w-[150px] px-3 sm:px-4 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all cursor-pointer shadow-none"
         >
           <option value="All">{t('All Customers')}</option>
           <option value="Pending">{t('Pending Udhar')}</option>
@@ -238,158 +274,209 @@ const Customers = () => {
         </select>
       </div>
 
-      {/* Customer Cards */}
-      <div className="space-y-3 md:space-y-4">
+      {/* Customer List */}
+      <div className="bg-white md:border md:border-gray-100 md:rounded-lg overflow-hidden">
         {isLoading ? (
-          <div className="flex justify-center items-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-[#093C5D]" />
+          <div className="flex justify-center items-center py-12 border border-gray-100 rounded-lg md:border-none">
+            <Loader2 className="w-6 h-6 md:w-8 md:h-8 animate-spin text-[#093C5D]" />
           </div>
         ) : isError ? (
-          <div className="bg-white rounded-xl border border-red-200 p-8 md:p-10 lg:p-12 text-center">
-            <p className="text-red-500 text-sm md:text-base font-medium">{t('Failed to load customers.')}</p>
+          <div className="bg-white rounded-lg border border-red-200 md:border-none p-8 md:p-12 text-center text-red-700">
+            <p className="font-medium text-sm md:text-base">{t('Failed to load customers.')}</p>
           </div>
         ) : customers.length === 0 ? (
-          <div className="bg-white rounded-xl border border-gray-200 p-8 md:p-10 lg:p-12 text-center">
-            <p className="text-gray-500 text-sm md:text-base font-medium">{t('No customers found.')}</p>
+          <div className="bg-white rounded-lg border border-gray-200 md:border-none p-8 md:p-12 text-center text-gray-500">
+            <Users className="w-12 h-12 md:w-16 md:h-16 text-gray-300 mx-auto mb-3 md:mb-4" />
+            <p className="font-medium text-sm md:text-base">{t('No customers found.')}</p>
           </div>
         ) : (
-          <>
-            {customers.map((customer, index) => (
-              <div
-                key={customer._id}
-                className="bg-white rounded-xl border border-gray-200 hover:border-gray-300 p-4 md:p-5 animate-fade-in overflow-hidden transition-all duration-200"
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                {/* Desktop Layout: Single row */}
-                <div className="hidden md:flex items-center gap-5">
-                  {/* Avatar */}
-                  <div className={`w-12 h-12 lg:w-14 lg:h-14 rounded-lg border border-gray-200 ${getAvatarColor(index)} flex items-center justify-center font-semibold text-base lg:text-lg flex-shrink-0`}>
-                    {getInitials(customer.name)}
-                  </div>
-  
-                  {/* Name + Phone */}
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-base lg:text-lg font-semibold text-gray-900 truncate">{customer.name}</h3>
-                    <div className="flex items-center text-gray-500 text-sm font-medium mt-0.5">
-                      <Phone className="w-3.5 h-3.5 mr-1.5 flex-shrink-0" />
-                      <span>{customer.phone}</span>
-                    </div>
-                  </div>
-  
-                  {/* Pending Balance */}
-                  <div className="text-right flex-shrink-0 min-w-[120px] lg:min-w-[140px]">
-                    <p className="text-[10px] lg:text-xs text-gray-500 font-semibold uppercase tracking-wider mb-0.5">
-                      {t('PENDING BALANCE')}
-                    </p>
-                    <p className={`text-lg lg:text-xl font-semibold ${customer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                      {formatCurrency(customer.balance)}
-                    </p>
-                  </div>
-  
-                  {/* Separator */}
-                  <div className="w-px h-10 bg-gray-200 flex-shrink-0"></div>
-  
-                  {/* Actions */}
-                  <div className="flex items-center gap-1.5 flex-shrink-0">
-                    <button
-                      onClick={() => handleEdit(customer)}
-                      className="cursor-pointer p-2.5 hover:bg-[#093C5D]/5 rounded-xl transition-colors active:scale-90 group"
-                      title={t('Edit Customer')}
-                    >
-                      <Edit className="w-[18px] h-[18px] text-[#093C5D] group-hover:text-[#082a42]" />
-                    </button>
-  
-                    <button
-                      onClick={() => handleDelete(customer)}
-                      className="cursor-pointer p-2.5 hover:bg-red-50 rounded-xl transition-colors active:scale-90 group"
-                      title={t('Delete Customer')}
-                      disabled={deleteMutation.isPending}
-                    >
-                      <Trash2 className="w-[18px] h-[18px] text-red-600 group-hover:text-red-700" />
-                    </button>
-  
-                    <button
-                      onClick={() => setSelectedCustomer(customer)}
-                      className="cursor-pointer ml-1 text-[#093C5D] border-2 border-[#093C5D] hover:bg-[#093C5D] hover:text-white px-4 py-2 rounded-full font-semibold active:scale-95 transition-all whitespace-nowrap text-sm"
-                    >
-                      {t('Ledger')}
-                    </button>
-                  </div>
-                </div>
-  
-                {/* Mobile Layout: Responsive & Premium */}
-                <div className="md:hidden">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3 min-w-0">
-                      {/* Avatar */}
-                      <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full ${getAvatarColor(index)} flex items-center justify-center font-semibold text-sm sm:text-base flex-shrink-0`}>
+          <div>
+            {/* Desktop Table */}
+            <div className="hidden md:block overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+              <table className="w-full min-w-[900px] whitespace-nowrap">
+                <thead className="bg-gray-50/80 border-b border-gray-200">
+                  <tr>
+                    <th className="w-[35%] px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Customer Details')}</th>
+                    <th className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Balance')}</th>
+                    <th className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 text-center text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Status')}</th>
+                    <th className="w-[25%] px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Actions')}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {customers.map((customer, index) => (
+                    <tr key={customer._id} className="hover:bg-gray-50/50 transition-colors">
+                      <td className="w-[35%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
+                        <div className="flex items-center gap-3 lg:gap-4">
+                          <div className={`w-9 h-9 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center text-sm font-semibold flex-shrink-0 ${getAvatarColor(customer.balance)}`}>
+                            {getInitials(customer.name)}
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs lg:text-sm font-semibold text-gray-900 truncate block">{customer.name}</span>
+                              <span className="text-[9px] lg:text-[10px] text-gray-400 bg-gray-50 border border-gray-100 px-1.5 py-0.5 rounded flex items-center whitespace-nowrap">
+                                <Calendar className="w-2.5 h-2.5 mr-1" />
+                                {new Date(customer.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                              </span>
+                            </div>
+                            <div className="text-[10px] lg:text-xs text-gray-500 font-medium flex items-center gap-3 mt-1">
+                              <span className="flex items-center whitespace-nowrap"><Phone className="w-3 h-3 mr-1" /> {customer.phone}</span>
+                              {customer.email && <span className="flex items-center truncate"><Mail className="w-3 h-3 mr-1 shrink-0" /> <span className="truncate">{customer.email}</span></span>}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
+                        <span className={`text-xs lg:text-sm font-semibold block ${customer.balance > 0 ? 'text-red-700' : customer.balance < 0 ? 'text-green-700' : 'text-gray-900'}`}>
+                          {formatCurrency(Math.abs(customer.balance))}
+                        </span>
+                      </td>
+                      <td className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-center">
+                        <div className="flex items-center justify-center w-full h-full">
+                          <span className={`inline-block px-2.5 py-1 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide text-center ${customer.balance > 0 ? 'bg-red-50 text-red-700 border border-red-200' : customer.balance < 0 ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-gray-50 text-gray-700 border border-gray-200'}`}>
+                            {customer.balance > 0 ? t('Pending') : customer.balance < 0 ? t('Advance') : t('Settled')}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="w-[25%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
+                        <div className="flex items-center justify-end gap-2 lg:gap-3">
+                          <button
+                            onClick={() => setSelectedCustomer(customer)}
+                            className="cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
+                          >
+                            <FileText className="w-3.5 h-3.5 mr-1.5" /> {t('Transactions')}
+                          </button>
+                          <button
+                            onClick={() => handleEdit(customer)}
+                            className="cursor-pointer text-gray-700 font-medium bg-gray-50 border border-gray-200 hover:bg-gray-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
+                            title={t('Edit')}
+                          >
+                            <Edit className="w-3.5 h-3.5 mr-1.5" /> {t('Edit')}
+                          </button>
+                          <button
+                            onClick={() => handleDelete(customer)}
+                            disabled={deleteMutation.isPending}
+                            className="cursor-pointer text-red-700 font-medium bg-red-50 border border-red-200 hover:bg-red-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 disabled:opacity-50 whitespace-nowrap"
+                            title={t('Delete')}
+                          >
+                            <Trash2 className="w-3.5 h-3.5 mr-1.5" /> {t('Delete')}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="md:hidden flex flex-col gap-2.5">
+              {customers.map((customer, index) => (
+                <div
+                  key={customer._id}
+                  className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 active:bg-gray-50 transition-colors duration-200"
+                >
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-sm font-semibold flex-shrink-0 ${getAvatarColor(customer.balance)}`}>
                         {getInitials(customer.name)}
                       </div>
-                      
-                      {/* Name + Phone */}
                       <div className="min-w-0">
-                        <h3 className="text-sm sm:text-base font-semibold text-gray-900 truncate">{customer.name}</h3>
-                        <div className="flex items-center text-gray-500 text-xs font-medium mt-0.5">
-                          <Phone className="w-3 h-3 mr-1 flex-shrink-0" />
-                          <span>{customer.phone}</span>
+                        <div className="flex items-center gap-1.5">
+                          <h3 className="text-[13px] sm:text-sm font-semibold text-gray-900 truncate leading-tight">{customer.name}</h3>
+                          <span className="text-[9px] text-gray-500 bg-gray-50 border border-gray-200 px-1.5 py-0.5 rounded-md whitespace-nowrap flex items-center gap-1">
+                            <Calendar className="w-2.5 h-2.5 shrink-0" />
+                            {new Date(customer.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                          </span>
+                        </div>
+                        <div className="flex items-center text-gray-500 text-[10px] sm:text-xs font-medium mt-1 gap-2.5">
+                          <div className="flex items-center whitespace-nowrap">
+                            <Phone className="w-3 h-3 mr-1 flex-shrink-0" />
+                            <span>{customer.phone}</span>
+                          </div>
+                          {customer.email && (
+                            <div className="flex items-center min-w-0">
+                              <Mail className="w-3 h-3 mr-1 flex-shrink-0" />
+                              <span className="truncate">{customer.email}</span>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
-                    
-                    {/* Top Right Actions (Edit/Delete) */}
-                    <div className="flex items-center gap-0.5 flex-shrink-0 -mt-1 -mr-1">
-                      <button
-                        onClick={() => handleEdit(customer)}
-                        className="cursor-pointer p-2 hover:bg-[#093C5D]/5 rounded-lg transition-colors active:scale-90 group"
-                        title={t('Edit Customer')}
-                      >
-                        <Edit className="w-4 h-4 text-[#093C5D]" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(customer)}
-                        className="cursor-pointer p-2 hover:bg-red-50 rounded-lg transition-colors active:scale-90 group"
-                        title={t('Delete Customer')}
-                        disabled={deleteMutation.isPending}
-                      >
-                        <Trash2 className="w-4 h-4 text-red-600" />
-                      </button>
+
+                    <div className="text-right flex-shrink-0 flex flex-col items-end gap-0.5">
+                      <p className={`text-[13px] sm:text-[14px] font-semibold leading-tight ${customer.balance > 0 ? 'text-red-700' : customer.balance < 0 ? 'text-green-700' : 'text-gray-900'}`}>
+                        {formatCurrency(Math.abs(customer.balance))}
+                      </p>
+                      <span className={`px-2 py-0.5 rounded text-[9px] uppercase sm:text-[10px] font-semibold ${customer.balance > 0 ? 'bg-red-50 text-red-700 border border-red-200' : customer.balance < 0 ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-gray-50 text-gray-700 border border-gray-200'}`}>
+                        {customer.balance > 0 ? t('Pending') : customer.balance < 0 ? t('Advance') : t('Settled')}
+                      </span>
                     </div>
                   </div>
 
                   {/* Divider */}
-                  <div className="w-full h-px bg-gray-100 my-3"></div>
+                  <div className="border-t border-gray-100 my-2.5 sm:my-3"></div>
 
-                  {/* Balance & Ledger Row */}
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider mb-0.5">
-                        {t('PENDING BALANCE')}
-                      </p>
-                      <p className={`text-base sm:text-lg font-semibold ${customer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                        {formatCurrency(customer.balance)}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => setSelectedCustomer(customer)}
-                      className="cursor-pointer text-[#093C5D] border-2 border-[#093C5D] hover:bg-[#093C5D] hover:text-white px-4 py-1.5 rounded-full font-semibold active:scale-95 transition-all text-xs"
+                  {/* Actions */}
+                  <div className="grid grid-cols-4 gap-1 sm:gap-1.5 w-full mt-1.5">
+                    <a
+                      href={`tel:${customer.phone}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-1.5 sm:px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                     >
-                      {t('Ledger')}
+                      <Phone className="w-3.5 h-3.5 mr-0.5 sm:mr-1.5 shrink-0" /> <span className="truncate">{t('Call')}</span>
+                    </a>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedCustomer(customer);
+                      }}
+                      className="cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-1.5 sm:px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                    >
+                      <FileText className="w-3.5 h-3.5 mr-0.5 sm:mr-1.5 shrink-0" /> <span className="truncate">{t('Transactions')}</span>
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(customer);
+                      }}
+                      className="cursor-pointer text-gray-700 font-medium bg-gray-50 border border-gray-200 hover:bg-gray-100 px-1.5 sm:px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                    >
+                      <Edit className="w-3.5 h-3.5 mr-0.5 sm:mr-1.5 shrink-0" /> <span className="truncate">{t('Edit')}</span>
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(customer);
+                      }}
+                      disabled={deleteMutation.isPending}
+                      className="cursor-pointer text-red-700 font-medium bg-red-50 border border-red-200 hover:bg-red-100 px-1.5 sm:px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 disabled:opacity-50 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                    >
+                      <Trash2 className="w-3.5 h-3.5 mr-0.5 sm:mr-1.5 shrink-0" /> <span className="truncate">{t('Delete')}</span>
                     </button>
                   </div>
                 </div>
+              ))}
+            </div>
+
+            {/* Loader + Intersection trigger */}
+            {isFetchingNextPage && (
+              <div className="flex justify-center items-center py-5">
+                <div className="bg-white border border-gray-200 rounded-lg px-5 py-2.5 flex items-center gap-2.5">
+                  <Loader2 className="w-4 h-4 animate-spin text-[#093C5D]" />
+                  <span className="text-xs font-semibold text-gray-600 tracking-wide">{t('Loading more...')}</span>
+                </div>
               </div>
-            ))}
-            
-            <InfiniteScrollObserver 
-              hasNextPage={hasNextPage} 
-              isFetchingNextPage={isFetchingNextPage} 
-              fetchNextPage={fetchNextPage} 
+            )}
+            <InfiniteScrollObserver
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              fetchNextPage={fetchNextPage}
             />
-          </>
+          </div>
         )}
       </div>
 
-      <CustomerFormModal 
+      <CustomerFormModal
         isOpen={isModalOpen}
         isEditMode={isEditMode}
         editingCustomer={editingCustomer}
@@ -398,8 +485,71 @@ const Customers = () => {
         isPending={mutation.isPending}
       />
 
+      {/* Delete Confirmation Modal */}
+      {deleteModalOpen && customerToDelete && (
+        <div className="fixed inset-0 z-[100]">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" 
+            onClick={() => {
+              setDeleteModalOpen(false);
+              setCustomerToDelete(null);
+            }} 
+          />
+          
+          {/* Modal Content */}
+          <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
+            <div 
+              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100" 
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-5 sm:p-6 text-center">
+              <div className="w-12 h-12 rounded-full bg-red-50 mx-auto flex items-center justify-center mb-4 border border-red-100">
+                <Trash2 className="w-6 h-6 text-red-600" />
+              </div>
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{t('Delete Customer')}</h3>
+              <p className="text-gray-500 text-sm mb-6 font-medium">
+                {t('Are you sure you want to delete')} <span className="font-semibold text-gray-800">{customerToDelete.name}</span>? {t('This action cannot be undone.')}
+              </p>
+              
+              <div className="flex gap-2 sm:gap-3 justify-center">
+                <button
+                  onClick={() => {
+                    setDeleteModalOpen(false);
+                    setCustomerToDelete(null);
+                  }}
+                  className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-sm transition-colors active:scale-95"
+                >
+                  {t('Cancel')}
+                </button>
+                <button
+                  onClick={confirmDelete}
+                  disabled={deleteMutation.isPending}
+                  className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 sm:gap-2"
+                >
+                  {deleteMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
+                  {t('Yes, Delete')}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      )}
+
       {selectedCustomer && (
         <CustomerLedger customer={selectedCustomer} onClose={() => setSelectedCustomer(null)} />
+      )}
+
+      {/* Mobile & Tablet Extended FAB (No Shadow) */}
+      {!selectedCustomer && !isModalOpen && (
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="lg:hidden fixed bottom-6 right-6 bg-[#093C5D] hover:bg-[#082a42] text-white px-5 py-3.5 rounded-lg flex items-center transition-all z-[40] active:scale-95 group font-semibold text-sm"
+        >
+          <Plus className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
+          {t('Add Customer')}
+        </button>
       )}
     </div>
   );

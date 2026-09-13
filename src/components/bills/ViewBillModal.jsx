@@ -6,6 +6,18 @@ const formatCurrency = (amount) => {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(amount);
 };
 
+const formatPaymentMode = (mode) => {
+  if (!mode) return '';
+  switch (mode) {
+    case 'CASH': return 'Cash';
+    case 'UPI': return 'UPI';
+    case 'BANK_TRANSFER': return 'Bank Transfer';
+    case 'CHEQUE': return 'Cheque';
+    case 'CREDIT': return 'Credit';
+    default: return mode;
+  }
+};
+
 const ViewBillModal = ({ viewBill, setViewBill }) => {
   const { t } = useTranslation();
 
@@ -38,7 +50,7 @@ const ViewBillModal = ({ viewBill, setViewBill }) => {
             </h3>
             <button
               onClick={() => setViewBill(null)}
-              className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px]"
+              className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
@@ -123,10 +135,17 @@ const ViewBillModal = ({ viewBill, setViewBill }) => {
                    <span className="text-base sm:text-lg font-semibold text-[#093C5D]">{formatCurrency(viewBill.grandTotal)}</span>
                  </div>
 
-                 <div className="flex justify-between items-center text-[11px] sm:text-sm">
-                   <span className="text-gray-500 font-medium">{t('Amount Paid')}</span>
-                   <span className="font-semibold text-green-600">{formatCurrency(viewBill.amountPaid)}</span>
-                 </div>
+                  <div className="flex justify-between items-center text-[11px] sm:text-sm">
+                    <span className="text-gray-500 font-medium">
+                      {t('Amount Paid')}
+                      {viewBill.amountPaid > 0 && viewBill.paymentMode && (
+                        <span className="ml-1 text-[10px] sm:text-xs text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded-md border border-gray-100">
+                          {formatPaymentMode(viewBill.paymentMode)}
+                        </span>
+                      )}
+                    </span>
+                    <span className="font-semibold text-green-600">{formatCurrency(viewBill.amountPaid)}</span>
+                  </div>
                  {viewBill.grandTotal > (viewBill.amountPaid || 0) ? (
                    <div className="flex justify-between items-center text-[11px] sm:text-sm">
                      <span className="text-gray-500 font-medium">{t('Pending Amount')}</span>
