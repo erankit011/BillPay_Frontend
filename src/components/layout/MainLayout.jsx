@@ -148,7 +148,7 @@ const MainLayout = () => {
   return (
     <div className="min-h-screen bg-[#F5F5F5]">
       {/* Sidebar Desktop */}
-      <aside className="hidden md:flex flex-col h-screen bg-white md:w-[220px] min-[1440px]:w-[240px] fixed left-0 top-0 border-r border-gray-100 z-50">
+      <aside className="hidden lg:flex flex-col h-screen bg-white lg:w-[220px] min-[1440px]:w-[240px] fixed left-0 top-0 border-r border-gray-100 z-50">
         {/* Brand - same height as header h-16, aligned */}
         <div className="h-[64px] min-[1440px]:h-[72px] flex items-center px-5 min-[1440px]:px-7 border-b border-gray-100 flex-shrink-0">
           <span className="text-[22px] min-[1440px]:text-[24px] font-semibold tracking-tight text-[#093C5D] select-none cursor-default">UdharPay<span className="inline-block w-[7px] h-[7px] min-[1440px]:w-2 min-[1440px]:h-2 rounded-full bg-[#2ECC71] ml-[2px] mb-[2px] align-baseline"></span></span>
@@ -193,7 +193,7 @@ const MainLayout = () => {
       </aside>
 
       {/* Mobile Sidebar */}
-      <div className="md:hidden">
+      <div className="lg:hidden">
         {/* Overlay */}
         {sidebarOpen && (
           <div
@@ -266,14 +266,14 @@ const MainLayout = () => {
         </aside>
       </div>
 
-      <header className="fixed top-0 right-0 left-0 md:left-[220px] min-[1440px]:left-[240px] h-[64px] min-[1440px]:h-[72px] bg-white border-b border-gray-100 z-40 flex items-center justify-between px-4 md:px-6 lg:px-8 min-[1440px]:px-12">
+      <header className="fixed top-0 right-0 left-0 lg:left-[220px] min-[1440px]:left-[240px] h-[64px] min-[1440px]:h-[72px] bg-white border-b border-gray-100 z-40 flex items-center justify-between px-4 md:px-6 lg:px-8 min-[1440px]:px-12">
         {/* Left Side - Hamburger & Page Title */}
         <div className="flex items-center gap-4">
           {/* Hamburger Menu Button (Mobile Only) */}
           {!sidebarOpen && (
             <button
               onClick={() => setSidebarOpen(true)}
-              className="md:hidden p-2 rounded-full transition-all active:scale-90 hover:bg-gray-50 flex items-center justify-center text-gray-700"
+              className="lg:hidden p-2 rounded-full transition-all active:scale-90 hover:bg-gray-50 flex items-center justify-center text-gray-700"
               aria-label="Open menu"
             >
               <div className="w-5 h-5 flex flex-col justify-center gap-1.5">
@@ -285,7 +285,7 @@ const MainLayout = () => {
           )}
 
           {/* Page Title (Desktop) & Logo (Mobile) */}
-          <div className="relative md:hidden flex items-center">
+          <div className="relative lg:hidden flex items-center">
             <span className="text-[18px] font-semibold tracking-tight text-[#093C5D] select-none">UdharPay<span className="inline-block w-[5px] h-[5px] rounded-full bg-[#2ECC71] ml-[1px] mb-[2px] align-baseline"></span></span>
           </div>
         </div>
@@ -441,7 +441,7 @@ const MainLayout = () => {
       </header>
 
       {/* Main Content */}
-      <main className="md:ml-[220px] min-[1440px]:ml-[240px] pt-[88px] md:pt-[96px] lg:pt-[104px] min-[1440px]:pt-[120px] px-4 md:px-6 lg:px-8 min-[1440px]:px-12 pb-6 md:pb-8 lg:pb-10 min-[1440px]:pb-12 min-h-screen overflow-x-hidden">
+      <main className="lg:ml-[220px] min-[1440px]:ml-[240px] pt-[88px] md:pt-[96px] lg:pt-[104px] min-[1440px]:pt-[120px] px-4 md:px-6 lg:px-8 min-[1440px]:px-12 pb-6 md:pb-8 lg:pb-10 min-[1440px]:pb-12 min-h-screen overflow-x-hidden">
         <div className="max-w-[1440px] mx-auto w-full">
           <Outlet />
         </div>

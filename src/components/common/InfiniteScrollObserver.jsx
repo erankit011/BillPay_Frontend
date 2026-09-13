@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { Loader2 } from 'lucide-react';
 
 const InfiniteScrollObserver = ({ hasNextPage, fetchNextPage, isFetchingNextPage }) => {
   const { ref, inView } = useInView({
@@ -15,17 +14,8 @@ const InfiniteScrollObserver = ({ hasNextPage, fetchNextPage, isFetchingNextPage
 
   if (!hasNextPage) return null;
 
-  return (
-    <div ref={ref} className="w-full">
-      {isFetchingNextPage ? (
-        <div className="flex justify-center items-center py-6">
-          <Loader2 className="w-6 h-6 animate-spin text-[#093C5D]" />
-        </div>
-      ) : (
-        <div className="h-1" />
-      )}
-    </div>
-  );
+  // Only an invisible trigger div - no spinner rendered here
+  return <div ref={ref} className="h-4 w-full" />;
 };
 
 export default InfiniteScrollObserver;

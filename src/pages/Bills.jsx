@@ -115,16 +115,16 @@ const Bills = () => {
                 <div>
                     <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Billing & Invoices')}</h1>
                     <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed">
-                        {t('Manage your shop\'s transactions, track pending payments,')}<br className="hidden sm:block" />
+                        {t('Manage your shop\'s transactions & Track pending payments & ')}<br className="hidden sm:block" />
                         {t('and send instant WhatsApp invoices to your customers.')}
                     </p>
                 </div>
                 <button
                     onClick={() => setIsModalOpen(true)}
-                    className="hidden lg:flex cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-6 py-2.5 rounded-lg items-center justify-center gap-2 whitespace-nowrap shrink-0 font-semibold text-sm active:scale-95 transition-all shadow-sm"
+                    className="hidden lg:flex cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
                 >
-                    <Plus className="w-5 h-5 mt-[1px]" />
-                    <span className="leading-none mb-[1px]">{t('Create Bills')}</span>
+                    <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
+                    {t('Create New Bill')}
                 </button>
             </div>
 
@@ -134,7 +134,7 @@ const Bills = () => {
                 {/* Total Revenue */}
                 <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
                     <div className="flex justify-between items-start gap-1">
-                        <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#093C5D]/10 flex items-center justify-center text-[#093C5D] border border-[#093C5D]/20">
+                        <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
                             <Wallet className="w-4 h-4 md:w-5 md:h-5" />
                         </div>
                     </div>
@@ -143,14 +143,14 @@ const Bills = () => {
                         <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
                             {formatCurrency(stats.totalRevenue)}
                         </p>
-                        <p className={`text-[10px] md:text-xs font-medium leading-tight mt-0.5 ${stats.revenueGrowth >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+                        <p className={`text-[10px] md:text-xs font-medium truncate mt-0.5 ${stats.revenueGrowth >= 0 ? 'text-green-700' : 'text-red-700'}`}>
                             {stats.revenueGrowth >= 0 ? '+' : ''}{stats.revenueGrowth.toFixed(1)}% {t('this month')}
                         </p>
                     </div>
                 </div>
 
                 {/* Pending Udhar */}
-                <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
+                <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-700 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
                     <div className="flex justify-between items-start gap-1">
                         <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-red-50 flex items-center justify-center text-red-700 border border-red-100">
                             <IndianRupee className="w-4 h-4 md:w-5 md:h-5" />
@@ -161,14 +161,14 @@ const Bills = () => {
                         <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
                             {formatCurrency(stats.pendingUdharTotal)}
                         </p>
-                        <p className="text-[10px] md:text-xs text-red-700 font-medium leading-tight mt-0.5">
-                            {stats.customersWithUdhar} {t('customers with udhar')}
+                        <p className="text-[10px] md:text-xs text-red-700 font-medium truncate mt-0.5">
+                            {stats.customersWithUdhar} {t('Customers with udhar')}
                         </p>
                     </div>
                 </div>
 
                 {/* Total Advance */}
-                <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-green-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
+                <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-green-700 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
                     <div className="flex justify-between items-start gap-1">
                         <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-green-50 flex items-center justify-center text-green-700 border border-green-100">
                             <Wallet className="w-4 h-4 md:w-5 md:h-5" />
@@ -179,8 +179,8 @@ const Bills = () => {
                         <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
                             {formatCurrency(stats.advanceTotal)}
                         </p>
-                        <p className="text-[10px] md:text-xs text-green-700 font-medium leading-tight mt-0.5">
-                            {stats.customersWithAdvance} {t('with advance balance')}
+                        <p className="text-[10px] md:text-xs text-green-700 font-medium truncate mt-0.5">
+                            {stats.customersWithAdvance} {t('With advance balance')}
                         </p>
                     </div>
                 </div>
@@ -188,7 +188,7 @@ const Bills = () => {
                 {/* Active Customers */}
                 <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
                     <div className="flex justify-between items-start gap-1">
-                        <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#093C5D]/10 flex items-center justify-center text-[#093C5D] border border-[#093C5D]/20">
+                        <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
                             <Users className="w-4 h-4 md:w-5 md:h-5" />
                         </div>
                     </div>
@@ -197,8 +197,8 @@ const Bills = () => {
                         <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
                             {stats.activeCustomers}
                         </p>
-                        <p className="text-[10px] md:text-xs text-gray-500 font-medium leading-tight mt-0.5">
-                            {stats.newCustomersThisWeek} {t('new this week')}
+                        <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">
+                            {stats.newCustomersThisWeek} {t('New this week')}
                         </p>
                     </div>
                 </div>
@@ -210,26 +210,26 @@ const Bills = () => {
                     <FileText className="w-4 h-4 md:w-5 md:h-5 mr-2 text-[#093C5D]" />
                     <h3 className="text-sm md:text-base font-semibold text-gray-900">{t('Bills Generated Overview')}</h3>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 md:gap-4">
-                    <div className="bg-[#093C5D]/[0.02] rounded-lg p-2 sm:p-4 flex flex-col items-center justify-center text-center border border-[#093C5D]/10 hover:border-[#093C5D]/20 hover:bg-[#093C5D]/[0.04] transition-all duration-300 cursor-default">
-                        <p className="text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Today')}</p>
-                        <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.today}</p>
+                <div className="grid grid-cols-3 md:grid-cols-5 gap-1.5 sm:gap-3 md:gap-4">
+                    <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
+                        <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Today')}</p>
+                        <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.today}</p>
                     </div>
-                    <div className="bg-[#093C5D]/[0.02] rounded-lg p-2 sm:p-4 flex flex-col items-center justify-center text-center border border-[#093C5D]/10 hover:border-[#093C5D]/20 hover:bg-[#093C5D]/[0.04] transition-all duration-300 cursor-default">
-                        <p className="text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Yesterday')}</p>
-                        <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.yesterday}</p>
+                    <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
+                        <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Yesterday')}</p>
+                        <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.yesterday}</p>
                     </div>
-                    <div className="bg-[#093C5D]/[0.02] rounded-lg p-2 sm:p-4 flex flex-col items-center justify-center text-center border border-[#093C5D]/10 hover:border-[#093C5D]/20 hover:bg-[#093C5D]/[0.04] transition-all duration-300 cursor-default">
-                        <p className="text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('This Week')}</p>
-                        <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.week}</p>
+                    <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
+                        <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('This Week')}</p>
+                        <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.week}</p>
                     </div>
-                    <div className="bg-[#093C5D]/[0.02] rounded-lg p-2 sm:p-4 flex flex-col items-center justify-center text-center border border-[#093C5D]/10 hover:border-[#093C5D]/20 hover:bg-[#093C5D]/[0.04] transition-all duration-300 cursor-default">
-                        <p className="text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('This Month')}</p>
-                        <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.month}</p>
+                    <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
+                        <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('This Month')}</p>
+                        <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.month}</p>
                     </div>
-                    <div className="bg-[#093C5D]/[0.02] rounded-lg p-2 sm:p-4 flex flex-col items-center justify-center text-center border border-[#093C5D]/10 hover:border-[#093C5D]/20 hover:bg-[#093C5D]/[0.04] transition-all duration-300 cursor-default col-span-2 sm:col-span-1 lg:col-span-1">
-                        <p className="text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Lifetime')}</p>
-                        <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.lifetime}</p>
+                    <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default col-span-2 sm:col-span-1">
+                        <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Lifetime')}</p>
+                        <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.lifetime}</p>
                     </div>
                 </div>
             </div>
@@ -276,14 +276,13 @@ const Bills = () => {
             </div>
 
             {/* Bills Table */}
-            {/* <div className="bg-white border border-gray-100 rounded-lg overflow-hidden"> */}
             <div className="bg-white border border-gray-100 rounded-lg overflow-hidden">
                 {isLoading ? (
                     <div className="p-8 md:p-12 text-center text-gray-500 flex justify-center">
                         <Loader2 className="w-6 h-6 md:w-8 md:h-8 animate-spin text-[#093C5D]" />
                     </div>
                 ) : isError ? (
-                    <div className="p-8 md:p-12 text-center text-red-500">
+                    <div className="p-8 md:p-12 text-center text-red-700">
                         <p className="font-medium text-sm md:text-base">{t('Failed to load bills.')}</p>
                     </div>
                 ) : bills.length === 0 ? (
@@ -294,9 +293,9 @@ const Bills = () => {
                 ) : (
                     <div>
                         {/* Desktop Table */}
-                        <div className="hidden md:block overflow-x-auto pb-4 no-scrollbar relative">
+                        <div className="hidden md:block overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                             <table className="w-full min-w-[900px] whitespace-nowrap">
-                                <thead className="bg-[#093C5D]/[0.03] border-b border-[#093C5D]/10">
+                                <thead className="bg-gray-50/80 border-b border-gray-200">
                                     <tr>
                                         <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Invoice')}</th>
                                         <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Customer')}</th>
@@ -306,16 +305,15 @@ const Bills = () => {
                                         <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Actions')}</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-100">
-                                    {bills.map((bill, index) => (
+                                <tbody>
+                                    {bills.map((bill) => (
                                         <tr
                                             key={bill._id}
-                                            className={`hover:bg-[#093C5D]/[0.02] transition-all duration-200 animate-fade-in relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
-                                            style={{ animationDelay: `${index * 50}ms` }}
+                                            className={`bg-white border-b border-gray-100 last:border-b-0 hover:bg-[#F5F5F5]/60 transition-colors duration-150 relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
                                         >
-                                            <td className="px-4 lg:px-6 py-3.5 lg:py-4">
+                                            <td className="px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
                                                 <div className="flex items-center gap-2.5">
-                                                    <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-lg bg-[#093C5D]/[0.04] flex items-center justify-center flex-shrink-0 border border-[#093C5D]/10">
+                                                    <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-lg bg-[#F5F5F5] flex items-center justify-center flex-shrink-0 border border-gray-200">
                                                         <span className="text-[10px] lg:text-xs font-semibold text-[#093C5D]">
                                                             {getInitials(bill.customerId?.name)}
                                                         </span>
@@ -323,7 +321,7 @@ const Bills = () => {
                                                     <span className="text-xs lg:text-sm font-semibold text-[#093C5D] truncate">{bill.invoiceNumber}</span>
                                                 </div>
                                             </td>
-                                            <td className="px-4 lg:px-6 py-3.5 lg:py-4">
+                                            <td className="px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
                                                 <span className="text-xs lg:text-sm font-semibold text-gray-900 truncate block">{bill.customerId?.name || t('Walk-in Customer')}</span>
                                                 {bill.customerId?.balance > 0 && (
                                                     <span className="text-[10px] lg:text-xs text-red-700 font-medium block mt-0.5">
@@ -331,11 +329,11 @@ const Bills = () => {
                                                     </span>
                                                 )}
                                             </td>
-                                            <td className="px-4 lg:px-6 py-3.5 lg:py-4">
+                                            <td className="px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
                                                 <span className="text-xs lg:text-sm text-gray-900 font-medium block whitespace-nowrap">{new Date(bill.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
                                                 <span className="text-[10px] lg:text-xs text-gray-500 font-medium block mt-0.5 whitespace-nowrap uppercase tracking-wider">{new Date(bill.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })}</span>
                                             </td>
-                                            <td className="px-4 lg:px-6 py-3.5 lg:py-4 text-right">
+                                            <td className="px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
                                                 <span className="text-xs lg:text-sm font-semibold text-gray-900 block">{formatCurrency(bill.grandTotal)}</span>
                                                 {bill.grandTotal > (bill.amountPaid || 0) ? (
                                                     <span className="text-[10px] lg:text-xs text-red-700 font-medium block mt-0.5">
@@ -347,15 +345,17 @@ const Bills = () => {
                                                     </span>
                                                 ) : null}
                                             </td>
-                                            <td className="px-4 lg:px-6 py-3.5 lg:py-4 text-center">
-                                                <span className={`inline-block px-2 py-0.5 rounded text-[10px] lg:text-xs font-medium uppercase tracking-wide
+                                            <td className="px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
+                                                <div className="flex items-center justify-center w-full h-full">
+                                                    <span className={`inline-block px-2.5 py-1 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide text-center
                           ${(bill.paymentStatus === 'PAID' || bill.paymentStatus === 'ADVANCE') ? 'bg-green-50 text-green-700 border border-green-200' :
-                                                        bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
-                                                            'bg-red-50 text-red-700 border border-red-200'}`}>
-                                                    {bill.paymentStatus}
-                                                </span>
+                                                            bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
+                                                                'bg-red-50 text-red-700 border border-red-200'}`}>
+                                                        {bill.paymentStatus}
+                                                    </span>
+                                                </div>
                                             </td>
-                                            <td className="px-4 lg:px-6 py-3.5 lg:py-4 text-right">
+                                            <td className="px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
                                                 <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
                                                     <button
                                                         onClick={(e) => {
@@ -388,7 +388,7 @@ const Bills = () => {
                                                                     }}
                                                                     className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95"
                                                                 >
-                                                                    <MessageSquare className="w-4 h-4 text-green-600 flex-shrink-0" />
+                                                                    <MessageSquare className="w-4 h-4 text-green-700 flex-shrink-0" />
                                                                     <span>{t('Send via WhatsApp')}</span>
                                                                 </button>
                                                                 <button
@@ -427,22 +427,14 @@ const Bills = () => {
                                             </td>
                                         </tr>
                                     ))}
-                                    {/* Loader inside table so it scrolls horizontally with it */}
-                                    {(hasNextPage || isFetchingNextPage) && (
-                                        <tr>
-                                            <td colSpan="6" className="p-0 border-none">
-                                                <div className="sticky left-1/2 -translate-x-1/2 w-max">
-                                                    <InfiniteScrollObserver
-                                                        hasNextPage={hasNextPage}
-                                                        isFetchingNextPage={isFetchingNextPage}
-                                                        fetchNextPage={fetchNextPage}
-                                                    />
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    )}
                                 </tbody>
                             </table>
+
+                            <InfiniteScrollObserver
+                                hasNextPage={hasNextPage}
+                                isFetchingNextPage={isFetchingNextPage}
+                                fetchNextPage={fetchNextPage}
+                            />
                         </div>
 
                         {/* Mobile Cards */}
@@ -453,8 +445,8 @@ const Bills = () => {
                                     className={`bg-white border border-gray-200 rounded-lg p-3 sm:p-4 animate-fade-in transition-colors relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
                                     style={{ animationDelay: `${index * 50}ms` }}
                                 >
-                                    <div className="flex items-center gap-2.5 sm:gap-3">
-                                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border border-[#093C5D]/10 bg-[#093C5D]/[0.04] flex items-center justify-center flex-shrink-0">
+                                    <div className="flex items-start gap-2.5 sm:gap-3">
+                                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center flex-shrink-0">
                                             <span className="text-xs font-semibold text-[#093C5D]">
                                                 {getInitials(bill.customerId?.name)}
                                             </span>
@@ -470,7 +462,7 @@ const Bills = () => {
                                                 <div className="text-right">
                                                     {bill.grandTotal > (bill.amountPaid || 0) ? (
                                                         <p className="text-[10px] text-red-700 font-medium leading-tight">
-                                                            {t('Due')}: {formatCurrency(bill.grandTotal - (bill.amountPaid || 0))}
+                                                            {t('Pend')}: {formatCurrency(bill.grandTotal - (bill.amountPaid || 0))}
                                                         </p>
                                                     ) : (bill.amountPaid || 0) > bill.grandTotal ? (
                                                         <p className="text-[10px] text-green-700 font-medium leading-tight">
@@ -503,17 +495,17 @@ const Bills = () => {
                                                     e.stopPropagation();
                                                     setViewBill(bill);
                                                 }}
-                                                className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#F5F5F5] px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-8 !min-w-0 !h-fit"
+                                                className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#F5F5F5] px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                                             >
-                                                <Eye className="w-3.5 h-3.5 mr-1" /> {t('View')}
+                                                <Eye className="w-3.5 h-3.5 mr-1.5" /> {t('View')}
                                             </button>
 
                                             <div className="relative">
                                                 <button
                                                     onClick={() => setOpenDropdown(openDropdown === bill._id ? null : bill._id)}
-                                                    className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#F5F5F5] px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-8 !min-w-0 !h-fit"
+                                                    className="cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/20 hover:bg-[#F5F5F5] px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                                                 >
-                                                    <Send className="w-3.5 h-3.5 mr-1" /> {t('Send')}
+                                                    <Send className="w-3.5 h-3.5 mr-1.5" /> {t('Send')}
                                                     <MoreVertical className="w-3.5 h-3.5 ml-0.5" />
                                                 </button>
 
@@ -528,7 +520,7 @@ const Bills = () => {
                                                             }}
                                                             className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95"
                                                         >
-                                                            <MessageSquare className="w-4 h-4 text-green-600 flex-shrink-0" />
+                                                            <MessageSquare className="w-4 h-4 text-green-700 flex-shrink-0" />
                                                             <span>{t('Send via WhatsApp')}</span>
                                                         </button>
                                                         <button
@@ -567,14 +559,23 @@ const Bills = () => {
                                     </div>
                                 </div>
                             ))}
-
-                            {/* Mobile Loader */}
-                            <InfiniteScrollObserver
-                                hasNextPage={hasNextPage}
-                                isFetchingNextPage={isFetchingNextPage}
-                                fetchNextPage={fetchNextPage}
-                            />
                         </div>
+
+                        {/* Loader + Intersection trigger */}
+                        {isFetchingNextPage && (
+                            <div className="flex justify-center items-center py-5">
+                                <div className="bg-white border border-gray-200 rounded-lg px-5 py-2.5 flex items-center gap-2.5">
+                                    <Loader2 className="w-4 h-4 animate-spin text-[#093C5D]" />
+                                    <span className="text-xs font-semibold text-gray-600 tracking-wide">{t('Loading more...')}</span>
+                                </div>
+                            </div>
+                        )}
+                        <InfiniteScrollObserver
+                            hasNextPage={hasNextPage}
+                            isFetchingNextPage={isFetchingNextPage}
+                            fetchNextPage={fetchNextPage}
+                        />
+
                     </div>
                 )}
             </div>
@@ -594,7 +595,7 @@ const Bills = () => {
                 className="lg:hidden fixed bottom-6 sm:bottom-8 right-6 sm:right-8 z-50 bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 transition-all duration-200"
                 title={t('Create Bills')}
             >
-                <Plus className="w-5 h-5 mt-[1px]" />
+                <Plus className="w-5 h-5 mt-[1.5px]" />
                 <span className="font-semibold text-sm leading-none mb-[1px]">{t('Create Bills')}</span>
             </button>
         </div>
