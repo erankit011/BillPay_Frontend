@@ -45,11 +45,20 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex items-center justify-center min-h-screen px-4 py-8">
-        <div className="fixed inset-0 bg-black/30 animate-modal-overlay" onClick={handleClose} />
-        <div className="relative bg-white rounded-xl border border-gray-200 max-w-md w-full p-5 md:p-6 animate-modal-content">
-          <div className="flex items-center justify-between mb-4 md:mb-5 pb-4 border-b border-gray-200">
+    <div className="fixed inset-0 z-50">
+      {/* Backdrop */}
+      <div className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" onClick={handleClose} />
+      
+      {/* Mobile: bottom sheet | sm+: centered modal */}
+      <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
+        <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-lg flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-none">
+          
+          {/* Drag handle — mobile only */}
+          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
+            <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
+          </div>
+
+          <div className="flex items-center justify-between px-5 md:px-6 py-4 md:py-5 border-b border-gray-100 flex-shrink-0">
             <h3 className="text-lg md:text-xl font-semibold text-gray-900">
               {editingProduct ? t('Edit Product') : t('Add New Product')}
             </h3>
@@ -58,64 +67,74 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
             </button>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <label className="block text-sm md:text-base font-semibold text-gray-700 mb-1.5">{t('Product Name')}</label>
-              <input
-                {...register('name')}
-                className={`w-full rounded-xl border px-4 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.name ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'}`}
-                placeholder="e.g. Atta 5kg"
-              />
-              {errors.name && (
-                <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                  <span className="leading-snug">{errors.name.message}</span>
-                </p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 md:gap-4">
+          <div className="p-5 md:p-6 overflow-y-auto">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
-                <label className="block text-sm md:text-base font-semibold text-gray-700 mb-1.5">{t('Price (₹)')}</label>
+                <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
+                  {t('Product Name')} <span className="text-red-500">*</span>
+                </label>
                 <input
-                  type="number"
-                  step="0.01"
-                  {...register('price')}
-                  className={`w-full rounded-xl border px-4 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.price ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'}`}
-                  placeholder="0.00"
+                  {...register('name')}
+                  className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.name ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'}`}
+                  placeholder="e.g. Atta 5kg"
                 />
-                {errors.price && (
+                {errors.name && (
                   <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                    <span className="leading-snug">{errors.price.message}</span>
+                    <span className="leading-snug">{t(errors.name.message)}</span>
                   </p>
                 )}
               </div>
-              <div>
-                <label className="block text-sm md:text-base font-semibold text-gray-700 mb-1.5">{t('Stock Qty')}</label>
-                <input
-                  type="number"
-                  {...register('stock')}
-                  className={`w-full rounded-xl border px-4 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.stock ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'}`}
-                  placeholder="0"
-                />
-                {errors.stock && (
-                  <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                    <span className="leading-snug">{errors.stock.message}</span>
-                  </p>
-                )}
-              </div>
-            </div>
 
-            <button
-              type="submit"
-              disabled={isPending}
-              className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-full px-5 md:px-6 py-2.5 md:py-3 font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 active:scale-95 transition-all text-sm md:text-base"
-            >
-              {isPending ? t('Saving...') : t('Save Product')}
-            </button>
-          </form>
+              <div className="grid grid-cols-2 gap-3 md:gap-4">
+                <div>
+                  <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
+                    {t('Price (₹)')} <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    {...register('price')}
+                    className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.price ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'}`}
+                    placeholder="0.00"
+                  />
+                  {errors.price && (
+                    <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                      <span className="leading-snug">{t(errors.price.message)}</span>
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
+                    {t('Stock Qty')} <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    {...register('stock')}
+                    className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.stock ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'}`}
+                    placeholder="0"
+                  />
+                  {errors.stock && (
+                    <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                      <span className="leading-snug">{t(errors.stock.message)}</span>
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="pt-2 md:pt-3">
+                <button
+                  type="submit"
+                  disabled={isPending}
+                  className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-lg px-4 md:px-5 py-2.5 md:py-3 font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 active:scale-95 transition-all text-[13px] sm:text-sm"
+                >
+                  {isPending ? t('Saving...') : t('Save Product')}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

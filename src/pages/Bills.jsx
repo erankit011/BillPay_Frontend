@@ -367,7 +367,7 @@ const Bills = () => {
                                         <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Customer')}</th>
                                         <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Date')}</th>
                                         <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Amount')}</th>
-                                        <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-center text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Status')}</th>
+                                        <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Status')}</th>
                                         <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Actions')}</th>
                                     </tr>
                                 </thead>
@@ -411,8 +411,8 @@ const Bills = () => {
                                                     </span>
                                                 ) : null}
                                             </td>
-                                            <td className="px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
-                                                <div className="flex items-center justify-center w-full h-full">
+                                            <td className="px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
+                                                <div className="flex items-center justify-end w-full h-full">
                                                     <span className={`inline-block px-2.5 py-1 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide text-center
                           ${(bill.paymentStatus === 'PAID' || bill.paymentStatus === 'ADVANCE') ? 'bg-green-50 text-green-700 border border-green-200' :
                                                             bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :

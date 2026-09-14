@@ -215,7 +215,7 @@ const Products = () => {
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg flex items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
+          className="hidden lg:flex cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
         >
           <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
           {t('Add Product')}
@@ -224,9 +224,9 @@ const Products = () => {
 
       {/* Stats Section */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
+        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <Wallet className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
@@ -236,9 +236,9 @@ const Products = () => {
             <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">{t('Total stock value')}</p>
           </div>
         </div>
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden">
+        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <Box className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
@@ -248,151 +248,213 @@ const Products = () => {
             <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">{t('Products in catalog')}</p>
           </div>
         </div>
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-500 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden">
+        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-700 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-red-50 flex items-center justify-center text-red-700 border border-red-100">
               <AlertTriangle className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">
             <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('LOW STOCK ALERT')}</p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-red-600 truncate">{stats.lowStockItems}</p>
-            <p className="text-[10px] md:text-xs text-red-500 font-medium truncate mt-0.5">{t('Items need restock')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-red-700 truncate">{stats.lowStockItems}</p>
+            <p className="text-[10px] md:text-xs text-red-700 font-medium truncate mt-0.5">{t('Items need restock')}</p>
           </div>
         </div>
       </div>
 
       {/* Search + Filter Row */}
-      <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4">
         {/* Search Bar */}
-        <div className="relative flex-1 min-w-0">
+        <div className="relative flex-1 min-w-0 group">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-            <Search className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+            <Search className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-focus-within:text-[#093C5D] transition-colors" />
           </div>
           <input
             type="text"
             placeholder={t("Search products...")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full pl-9 sm:pl-12 pr-3 sm:pr-4 py-2.5 md:py-3 bg-white border border-gray-200 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] text-xs md:text-sm font-medium transition-colors duration-200"
+            className="block h-10 sm:h-12 w-full pl-9 sm:pl-11 pr-3 sm:pr-4 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm font-medium text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all shadow-none"
           />
         </div>
 
         {/* Filter Dropdown */}
-        <select
-          value={filterStock}
-          onChange={(e) => setFilterStock(e.target.value)}
-          className="cursor-pointer w-auto bg-white border border-gray-200 rounded-lg px-2 sm:px-3 py-2.5 md:py-3 text-xs md:text-sm font-medium text-gray-700 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-colors duration-200 flex-shrink-0 bg-no-repeat bg-[right_8px_center] pr-7 sm:pr-8"
-        >
-          <option value="All">{t('All Stocks')}</option>
-          <option value="In Stock">{t('In Stock')}</option>
-          <option value="Low Stock">{t('Low Stock')}</option>
-          <option value="Out of Stock">{t('Out of Stock')}</option>
-        </select>
+        <div className="relative sm:flex-shrink-0">
+            <select
+              value={filterStock}
+              onChange={(e) => setFilterStock(e.target.value)}
+              className="block h-10 sm:h-12 w-full sm:w-auto sm:min-w-[150px] px-3 sm:px-4 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all cursor-pointer shadow-none"
+            >
+              <option value="All">{t('All Stocks')}</option>
+              <option value="In Stock">{t('In Stock')}</option>
+              <option value="Low Stock">{t('Low Stock')}</option>
+              <option value="Out of Stock">{t('Out of Stock')}</option>
+            </select>
+        </div>
       </div>
 
-      {/* Products Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-6">
+      {/* Products List View */}
+      <div className="bg-white md:border md:border-gray-100 md:rounded-lg overflow-hidden">
         {isLoading ? (
-          <div className="col-span-full flex justify-center items-center py-12">
+          <div className="flex justify-center items-center py-12">
             <div className="animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-[#093C5D]"></div>
           </div>
         ) : isError ? (
-          <div className="col-span-full bg-white rounded-xl border border-red-200 p-8 md:p-10 lg:p-12 text-center">
-            <p className="text-red-500 text-sm md:text-base font-medium">{t('Failed to load products.')}</p>
+          <div className="bg-white rounded-lg border border-red-200 md:border-none p-8 md:p-12 text-center text-red-700">
+            <p className="font-medium text-sm md:text-base">{t('Failed to load products.')}</p>
           </div>
         ) : products.length === 0 ? (
-          <div className="col-span-full bg-white rounded-xl border border-gray-200 p-8 md:p-10 lg:p-12 text-center">
-            <p className="text-gray-500 text-sm md:text-base font-medium">{t('No products found.')}</p>
+          <div className="bg-white rounded-lg border border-gray-200 md:border-none p-8 md:p-12 text-center text-gray-500">
+            <Box className="w-12 h-12 md:w-16 md:h-16 text-gray-300 mx-auto mb-3 md:mb-4" />
+            <p className="font-medium text-sm md:text-base">{t('No products found.')}</p>
           </div>
         ) : (
-          <>
-            {products.map((product, index) => (
-              <div
-                key={product._id}
-                className="bg-white rounded-xl border border-gray-200 p-4 md:p-5 flex flex-col justify-between h-full animate-fade-in"
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                <div>
-                  <div className="flex justify-between items-center mb-3 md:mb-4">
-                    {/* Product Icon */}
-                    <div className="text-3xl md:text-4xl">
-                      {getProductIcon(product.name)}
+          <div>
+            {/* Desktop Table */}
+            <div className="hidden md:block overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+              <table className="w-full min-w-[900px] whitespace-nowrap">
+                <thead className="bg-gray-50/80 border-b border-gray-200">
+                  <tr>
+                    <th className="w-[35%] px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Product Details')}</th>
+                    <th className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Price')}</th>
+                    <th className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Stock Status')}</th>
+                    <th className="w-[25%] px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Actions')}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {products.map((product, index) => (
+                    <tr key={product._id} className="hover:bg-gray-50/50 transition-colors">
+                      <td className="w-[35%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
+                        <div className="flex items-center gap-3 lg:gap-4">
+                          <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-lg bg-gray-50 flex items-center justify-center text-xl lg:text-2xl flex-shrink-0 border border-gray-200">
+                            {getProductIcon(product.name)}
+                          </div>
+                          <div className="min-w-0">
+                            <span className="text-xs lg:text-sm font-semibold text-gray-900 truncate block">{product.name}</span>
+                            <span className="text-[9px] lg:text-[10px] text-gray-400 font-medium truncate mt-0.5 block">
+                                {t('Last updated')} {getTimeAgo(product.updatedAt || product.createdAt)}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
+                        <span className="text-sm lg:text-base font-semibold text-[#093C5D]">
+                          {formatCurrency(product.price)}
+                        </span>
+                      </td>
+                      <td className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
+                        <span className={`inline-block px-2.5 py-1 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide text-center ${
+                          product.stock === 0 
+                            ? 'bg-red-50 text-red-700 border border-red-200' 
+                            : product.stock < 20 
+                              ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' 
+                              : 'bg-green-50 text-green-700 border border-green-200'
+                        }`}>
+                          {product.stock === 0 ? t('Out of Stock') : `${product.stock} ${t('in stock')}`}
+                        </span>
+                      </td>
+                      <td className="w-[25%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
+                        <div className="flex items-center justify-end gap-2 lg:gap-3">
+                          <button
+                            onClick={() => openEditModal(product)}
+                            className="cursor-pointer text-gray-700 font-medium bg-gray-50 border border-gray-200 hover:bg-gray-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-[11px] lg:text-xs active:scale-95 whitespace-nowrap"
+                            title={t('Edit')}
+                          >
+                            <Edit className="w-3.5 h-3.5 mr-1.5" /> {t('Edit')}
+                          </button>
+                          <button
+                            onClick={() => {
+                              if (window.confirm(t('Are you sure you want to delete this product?'))) {
+                                deleteMutation.mutate(product._id);
+                              }
+                            }}
+                            disabled={deleteMutation.isPending}
+                            className="cursor-pointer text-red-700 font-medium bg-red-50 border border-red-200 hover:bg-red-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-[11px] lg:text-xs active:scale-95 disabled:opacity-50 whitespace-nowrap"
+                            title={t('Delete')}
+                          >
+                            <Trash2 className="w-3.5 h-3.5 mr-1.5" /> {t('Delete')}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="md:hidden flex flex-col gap-2.5">
+              {products.map((product, index) => (
+                <div
+                  key={product._id}
+                  className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 active:bg-gray-50 transition-colors duration-200"
+                >
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-gray-50 flex items-center justify-center text-xl sm:text-2xl flex-shrink-0 border border-gray-200">
+                        {getProductIcon(product.name)}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <h3 className="text-[13px] sm:text-sm font-semibold text-gray-900 truncate leading-tight">{product.name}</h3>
+                        </div>
+                        <div className="flex items-center text-gray-500 text-[10px] sm:text-xs font-medium mt-1 gap-2.5">
+                          <span className="truncate">{t('Last updated')} {getTimeAgo(product.updatedAt || product.createdAt)}</span>
+                        </div>
+                      </div>
                     </div>
-                    {/* Action Buttons */}
-                    <div className="flex items-center gap-1.5 md:gap-2 flex-shrink-0">
-                      <button
-                        onClick={() => openEditModal(product)}
-                        className="cursor-pointer text-gray-500 hover:text-[#093C5D] bg-transparent hover:bg-[#093C5D]/10 w-9 h-9 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0 active:scale-90 transition-colors"
-                        title={t("Edit")}
-                      >
-                        <Edit className="w-4 h-4 md:w-4.5 md:h-4.5" />
-                      </button>
-                      <button
-                        onClick={() => {
-                          if (window.confirm(t('Are you sure you want to delete this product?'))) {
-                            deleteMutation.mutate(product._id);
-                          }
-                        }}
-                        className="cursor-pointer text-gray-500 hover:text-red-600 bg-transparent hover:bg-red-50 w-9 h-9 md:w-10 md:h-10 rounded-lg flex items-center justify-center flex-shrink-0 active:scale-90 transition-colors"
-                        title={t("Delete")}
-                      >
-                        <Trash2 className="w-4 h-4 md:w-4.5 md:h-4.5" />
-                      </button>
+
+                    <div className="text-right flex-shrink-0 flex flex-col items-end gap-0.5">
+                      <p className="text-[13px] sm:text-[14px] font-semibold leading-tight text-[#093C5D]">
+                        {formatCurrency(product.price)}
+                      </p>
+                      <span className={`px-2 py-0.5 rounded text-[9px] uppercase sm:text-[10px] font-semibold ${
+                          product.stock === 0 
+                            ? 'bg-red-50 text-red-700 border border-red-200' 
+                            : product.stock < 20 
+                              ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' 
+                              : 'bg-green-50 text-green-700 border border-green-200'
+                      }`}>
+                        {product.stock === 0 ? t('Out of Stock') : `${product.stock} ${t('in stock')}`}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Product Name */}
-                  <h3 className="text-sm md:text-base font-semibold text-gray-900 mb-2 truncate">
-                    {product.name}
-                  </h3>
-                </div>
+                  {/* Divider */}
+                  <div className="border-t border-gray-100 my-2.5 sm:my-3"></div>
 
-                {/* Price */}
-                <p className="text-xl md:text-2xl font-semibold text-[#093C5D] mb-2 md:mb-3">
-                  {formatCurrency(product.price)}
-                </p>
-
-                {/* Stock Badge and Time */}
-                <div className="flex flex-col gap-2">
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold inline-block w-fit ${product.stock === 0
-                    ? 'bg-red-100 text-red-700'
-                    : product.stock < 20
-                      ? 'bg-yellow-100 text-yellow-700'
-                      : 'bg-green-100 text-green-700'
-                    }`}>
-                    {product.stock === 0 ? 'Out of Stock' : `${product.stock} in stock`}
-                  </span>
-                  <span className="text-xs text-gray-400 line-clamp-1 font-medium">
-                    Last updated {getTimeAgo(product.updatedAt || product.createdAt)}
-                  </span>
+                  {/* Actions */}
+                  <div className="grid grid-cols-2 gap-2 w-full mt-1.5">
+                    <button
+                      onClick={() => openEditModal(product)}
+                      className="cursor-pointer text-gray-700 font-medium bg-gray-50 border border-gray-200 hover:bg-gray-100 px-1.5 sm:px-2.5 py-1.5 rounded-md flex items-center justify-center gap-1.5 transition-all text-[11px] sm:text-xs active:scale-95 whitespace-nowrap leading-none !min-h-0 !min-w-0 !h-fit"
+                    >
+                      <Edit className="w-3.5 h-3.5 shrink-0" /> <span className="pt-[1px]">{t('Edit')}</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (window.confirm(t('Are you sure you want to delete this product?'))) {
+                          deleteMutation.mutate(product._id);
+                        }
+                      }}
+                      className="cursor-pointer text-red-700 font-medium bg-red-50 border border-red-200 hover:bg-red-100 px-1.5 sm:px-2.5 py-1.5 rounded-md flex items-center justify-center gap-1.5 transition-all text-[11px] sm:text-xs active:scale-95 whitespace-nowrap leading-none !min-h-0 !min-w-0 !h-fit"
+                    >
+                      <Trash2 className="w-3.5 h-3.5 shrink-0" /> <span className="pt-[1px]">{t('Delete')}</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
 
             {/* Infinite Scroll trigger */}
-            <div className="col-span-full">
+            <div className="mt-4">
               <InfiniteScrollObserver
                 hasNextPage={hasNextPage}
                 isFetchingNextPage={isFetchingNextPage}
                 fetchNextPage={fetchNextPage}
               />
             </div>
-
-            {/* New Inventory Card */}
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="cursor-pointer bg-white rounded-xl border-2 border-dashed border-[#093C5D]/30 hover:border-[#093C5D]/50 p-4 md:p-5 flex flex-col items-center justify-center min-h-[200px] md:min-h-[220px] active:scale-95 transition-all text-[#093C5D]"
-            >
-              <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#F5F5F5] flex items-center justify-center mb-2 md:mb-3">
-                <PlusCircle className="w-5 h-5 md:w-6 md:h-6" />
-              </div>
-              <h3 className="font-semibold text-sm md:text-base mb-1">{t('New Inventory')}</h3>
-              <p className="text-xs md:text-sm text-gray-600 text-center px-2 font-medium">
-                {t('Quickly add new products to your digital catalog.')}
-              </p>
-            </button>
-          </>
+          </div>
         )}
       </div>
 
@@ -424,13 +486,26 @@ const Products = () => {
       </div>
 
       {/* Add/Edit Product Modal */}
-      <ProductFormModal
-        isOpen={isModalOpen}
-        editingProduct={editingProduct}
-        onClose={closeModal}
-        onSubmit={onSubmit}
-        isPending={createMutation.isPending || updateMutation.isPending}
-      />
+      {isModalOpen && (
+        <ProductFormModal
+          isOpen={isModalOpen}
+          editingProduct={editingProduct}
+          onClose={closeModal}
+          onSubmit={onSubmit}
+          isPending={createMutation.isPending || updateMutation.isPending}
+        />
+      )}
+
+      {/* Mobile & Tablet Extended FAB (No Shadow) */}
+      {!isModalOpen && (
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="lg:hidden fixed bottom-6 sm:bottom-8 right-6 sm:right-8 bg-[#093C5D] hover:bg-[#082a42] text-white px-5 sm:px-6 py-3.5 rounded-lg flex items-center transition-all z-[40] active:scale-95 group font-semibold text-sm"
+        >
+          <Plus className="w-5 h-5 mr-2" />
+          {t('Add Product')}
+        </button>
+      )}
     </div>
   );
 };
