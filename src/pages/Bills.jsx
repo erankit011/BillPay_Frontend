@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Search, FileText, Send, Loader2, Wallet, Users, Mail, MessageSquare, MoreVertical, IndianRupee, Eye, Filter } from 'lucide-react';
+import { Plus, Search, FileText, Send, Loader2, Wallet, Users, Mail, MessageSquare, MoreVertical, IndianRupee, Eye, Filter, Download, Printer } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { generateInvoicePDF } from '../utils/generateInvoicePDF';
 import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
 import CreateBillModal from '../components/bills/CreateBillModal';
 import ViewBillModal from '../components/bills/ViewBillModal';
@@ -37,6 +39,7 @@ const getAvatarStyle = (status) => {
 
 const Bills = () => {
     const { t } = useTranslation();
+    const { user: shopDetails } = useSelector(state => state.auth);
     const [searchParams, setSearchParams] = useSearchParams();
     const initialSearch = searchParams.get('search') || '';
     const filterStatus = searchParams.get('filter') || 'All';
@@ -490,6 +493,28 @@ const Bills = () => {
                                                                         {t('Send Both')}
                                                                     </span>
                                                                 </button>
+                                                                <button
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        generateInvoicePDF(bill, shopDetails, 'download', t);
+                                                                        setOpenDropdown(null);
+                                                                    }}
+                                                                    className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100"
+                                                                >
+                                                                    <Download className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
+                                                                    <span>{t('Download PDF')}</span>
+                                                                </button>
+                                                                <button
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        generateInvoicePDF(bill, shopDetails, 'print', t);
+                                                                        setOpenDropdown(null);
+                                                                    }}
+                                                                    className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100"
+                                                                >
+                                                                    <Printer className="w-4 h-4 text-blue-700 flex-shrink-0" />
+                                                                    <span>{t('Print Invoice')}</span>
+                                                                </button>
                                                             </div>
                                                         )}
                                                     </div>
@@ -627,6 +652,28 @@ const Bills = () => {
                                                             <span className={(!bill.customerId?.email || !bill.customerId?.phone) ? 'text-gray-400' : ''}>
                                                                 {t('Send Both')}
                                                             </span>
+                                                        </button>
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                generateInvoicePDF(bill, shopDetails, 'download', t);
+                                                                setOpenDropdown(null);
+                                                            }}
+                                                            className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100"
+                                                        >
+                                                            <Download className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
+                                                            <span>{t('Download PDF')}</span>
+                                                        </button>
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                generateInvoicePDF(bill, shopDetails, 'print', t);
+                                                                setOpenDropdown(null);
+                                                            }}
+                                                            className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100"
+                                                        >
+                                                            <Printer className="w-4 h-4 text-blue-700 flex-shrink-0" />
+                                                            <span>{t('Print Invoice')}</span>
                                                         </button>
                                                     </div>
                                                 )}
