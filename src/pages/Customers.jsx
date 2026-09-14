@@ -316,7 +316,7 @@ const Customers = () => {
                   <tr>
                     <th className="w-[35%] px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Customer Details')}</th>
                     <th className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Balance')}</th>
-                    <th className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 text-center text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Status')}</th>
+                    <th className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Status')}</th>
                     <th className="w-[25%] px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Actions')}</th>
                   </tr>
                 </thead>
@@ -348,8 +348,8 @@ const Customers = () => {
                           {formatCurrency(Math.abs(customer.balance))}
                         </span>
                       </td>
-                      <td className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-center">
-                        <div className="flex items-center justify-center w-full h-full">
+                      <td className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
+                        <div className="flex items-center justify-end w-full h-full">
                           <span className={`inline-block px-2.5 py-1 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide text-center ${customer.balance > 0 ? 'bg-red-50 text-red-700 border border-red-200' : customer.balance < 0 ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-gray-50 text-gray-700 border border-gray-200'}`}>
                             {customer.balance > 0 ? t('Pending') : customer.balance < 0 ? t('Advance') : t('Settled')}
                           </span>
