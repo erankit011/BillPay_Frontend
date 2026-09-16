@@ -14,7 +14,7 @@ const productSchema = yup.object({
 const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending }) => {
   const { t } = useTranslation();
 
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm({
+  const { register, handleSubmit, reset, setValue, formState: { errors, isDirty } } = useForm({
     resolver: yupResolver(productSchema),
     defaultValues: editingProduct ? {
       name: editingProduct.name,
@@ -48,11 +48,11 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
     <div className="fixed inset-0 z-50">
       {/* Backdrop */}
       <div className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" onClick={handleClose} />
-      
+
       {/* Mobile: bottom sheet | sm+: centered modal */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-lg flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-none">
-          
+
           {/* Drag handle — mobile only */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
@@ -79,9 +79,9 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
                   placeholder="e.g. Atta 5kg"
                 />
                 {errors.name && (
-                  <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                    <span className="leading-snug">{t(errors.name.message)}</span>
+                  <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <span className="leading-none pt-[1px]">{t(errors.name.message)}</span>
                   </p>
                 )}
               </div>
@@ -99,9 +99,9 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
                     placeholder="0.00"
                   />
                   {errors.price && (
-                    <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                      <span className="leading-snug">{t(errors.price.message)}</span>
+                    <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span className="leading-none pt-[1px]">{t(errors.price.message)}</span>
                     </p>
                   )}
                 </div>
@@ -116,9 +116,9 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
                     placeholder="0"
                   />
                   {errors.stock && (
-                    <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                      <span className="leading-snug">{t(errors.stock.message)}</span>
+                    <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span className="leading-none pt-[1px]">{t(errors.stock.message)}</span>
                     </p>
                   )}
                 </div>
@@ -127,10 +127,10 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
               <div className="pt-2 md:pt-3">
                 <button
                   type="submit"
-                  disabled={isPending}
+                  disabled={isPending || (editingProduct && !isDirty)}
                   className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-lg px-4 md:px-5 py-2.5 md:py-3 font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 active:scale-95 transition-all text-[13px] sm:text-sm"
                 >
-                  {isPending ? t('Saving...') : t('Save Product')}
+                  {isPending ? t('Saving...') : (editingProduct ? t('Update Product') : t('Save Product'))}
                 </button>
               </div>
             </form>

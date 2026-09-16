@@ -71,11 +71,11 @@ const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSub
     <div className="fixed inset-0 z-50">
       {/* Backdrop */}
       <div className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" onClick={handleClose} />
-      
+
       {/* Mobile: bottom sheet | sm+: centered modal */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
-          
+
           {/* Drag handle — mobile only */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
@@ -102,9 +102,9 @@ const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSub
                   placeholder={t("Enter Full Name")}
                 />
                 {errors.name && (
-                  <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                    <span className="leading-snug">{t(errors.name.message)}</span>
+                  <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <span className="leading-none pt-[1px]">{t(errors.name.message)}</span>
                   </p>
                 )}
               </div>
@@ -120,9 +120,9 @@ const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSub
                   disabled={isEditMode}
                 />
                 {errors.phone && (
-                  <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                    <span className="leading-snug">{t(errors.phone.message)}</span>
+                  <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <span className="leading-none pt-[1px]">{t(errors.phone.message)}</span>
                   </p>
                 )}
                 {isEditMode && <p className="text-[11px] sm:text-xs text-red-500 mt-1 font-medium">{t('Phone number cannot be changed')}</p>}
@@ -138,9 +138,9 @@ const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSub
                   placeholder={t("Enter Email Address")}
                 />
                 {errors.email && (
-                  <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                    <span className="leading-snug">{t(errors.email.message)}</span>
+                  <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <span className="leading-none pt-[1px]">{t(errors.email.message)}</span>
                   </p>
                 )}
               </div>

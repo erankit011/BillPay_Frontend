@@ -182,9 +182,9 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
                       <input type="text" placeholder={t('Address')} value={newCustomer.address} onChange={e => setNewCustomer({ ...newCustomer, address: e.target.value })} className={inputCls} />
                     </div>
                     {customerError && (
-                      <p className="text-red-500 text-[11px] sm:text-xs mt-2 font-medium flex items-start gap-1">
-                        <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                        <span className="leading-snug">{t(customerError)}</span>
+                      <p className="text-red-500 text-[11px] sm:text-xs mt-2 font-medium flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                        <span className="leading-none pt-[1px]">{t(customerError)}</span>
                       </p>
                     )}
                     <div className="flex justify-end gap-2 mt-3">
@@ -198,9 +198,9 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
                   <SearchableSelect options={customers.map(c => ({ value: c._id, label: `${c.name} +91 ${c.phone}` }))} value={field.value} onChange={field.onChange} placeholder={`${t('Select Customer')}`} searchPlaceholder={t('Search by name or phone...')} />
                 )} />
                 {errors.customerId && (
-                  <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                    <span className="leading-snug">{t(errors.customerId.message)}</span>
+                  <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <span className="leading-none pt-[1px]">{t(errors.customerId.message)}</span>
                   </p>
                 )}
               </div>
@@ -226,9 +226,9 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
                       <input type="number" placeholder={t('Stock')} value={newProduct.stock} onChange={e => setNewProduct({ ...newProduct, stock: e.target.value })} className={inputCls} />
                     </div>
                     {productError && (
-                      <p className="text-red-500 text-[11px] sm:text-xs mt-2 font-medium flex items-start gap-1">
-                        <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                        <span className="leading-snug">{t(productError)}</span>
+                      <p className="text-red-500 text-[11px] sm:text-xs mt-2 font-medium flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                        <span className="leading-none pt-[1px]">{t(productError)}</span>
                       </p>
                     )}
                     <div className="flex justify-end gap-2 mt-3">
@@ -245,9 +245,9 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
                         <SearchableSelect options={products.map(p => ({ value: p._id, label: `${p.name} - ₹${p.price}` }))} value={field.value} onChange={field.onChange} placeholder={`${t('Select Product')}`} searchPlaceholder={t('Search by product name...')} />
                       )} />
                       {errors.products?.[index]?.productId && (
-                        <p className="text-red-500 text-[11px] sm:text-xs mt-1 font-medium flex items-start gap-1">
-                          <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                          <span className="leading-snug">{t(errors.products[index].productId.message)}</span>
+                        <p className="text-red-500 text-[11px] sm:text-xs mt-1 font-medium flex items-center gap-1">
+                          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                          <span className="leading-none pt-[1px]">{t(errors.products[index].productId.message)}</span>
                         </p>
                       )}
                     </div>
@@ -296,9 +296,9 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
                     <option value="CREDIT">{t('Credit')}</option>
                   </select>
                   {errors.paymentMode && (
-                    <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                      <span className="leading-snug">{t(errors.paymentMode.message)}</span>
+                    <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span className="leading-none pt-[1px]">{t(errors.paymentMode.message)}</span>
                     </p>
                   )}
                 </div>
@@ -308,9 +308,9 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
                   </label>
                   <input type="number" {...register('amountPaid')} className={inputCls} placeholder="0.00" />
                   {errors.amountPaid && (
-                    <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                      <span className="leading-snug">{t(errors.amountPaid.message)}</span>
+                    <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span className="leading-none pt-[1px]">{t(errors.amountPaid.message)}</span>
                     </p>
                   )}
                 </div>
