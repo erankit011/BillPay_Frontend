@@ -59,7 +59,26 @@ const Products = () => {
   const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
   const [editingProduct, setEditingProduct] = useState(null);
+  
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
+  
   const queryClient = useQueryClient();
+
+  // Handle body scroll for modals
+  useEffect(() => {
+    if (isModalOpen || deleteModalOpen) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [isModalOpen, deleteModalOpen]);
 
   const setFilterStock = (value) => {
     setSearchParams(prev => {
@@ -132,8 +151,21 @@ const Products = () => {
     mutationFn: (id) => api.delete(`/products/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries(['products']);
+      setDeleteModalOpen(false);
+      setProductToDelete(null);
     }
   });
+
+  const handleDelete = (product) => {
+    setProductToDelete(product);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (productToDelete) {
+      deleteMutation.mutate(productToDelete._id);
+    }
+  };
 
   const onSubmit = (formData) => {
     if (editingProduct) {
@@ -363,13 +395,8 @@ const Products = () => {
                             <Edit className="w-3.5 h-3.5 mr-1.5" /> {t('Edit')}
                           </button>
                           <button
-                            onClick={() => {
-                              if (window.confirm(t('Are you sure you want to delete this product?'))) {
-                                deleteMutation.mutate(product._id);
-                              }
-                            }}
-                            disabled={deleteMutation.isPending}
-                            className="cursor-pointer text-red-700 font-medium bg-red-50 border border-red-200 hover:bg-red-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-[11px] lg:text-xs active:scale-95 disabled:opacity-50 whitespace-nowrap"
+                            onClick={() => handleDelete(product)}
+                            className="cursor-pointer text-red-700 font-medium bg-red-50 border border-red-200 hover:bg-red-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-[11px] lg:text-xs active:scale-95 whitespace-nowrap"
                             title={t('Delete')}
                           >
                             <Trash2 className="w-3.5 h-3.5 mr-1.5" /> {t('Delete')}
@@ -432,11 +459,7 @@ const Products = () => {
                       <Edit className="w-3.5 h-3.5 shrink-0" /> <span className="pt-[1px]">{t('Edit')}</span>
                     </button>
                     <button
-                      onClick={() => {
-                        if (window.confirm(t('Are you sure you want to delete this product?'))) {
-                          deleteMutation.mutate(product._id);
-                        }
-                      }}
+                      onClick={() => handleDelete(product)}
                       className="cursor-pointer text-red-700 font-medium bg-red-50 border border-red-200 hover:bg-red-100 px-1.5 sm:px-2.5 py-1.5 rounded-md flex items-center justify-center gap-1.5 transition-all text-[11px] sm:text-xs active:scale-95 whitespace-nowrap leading-none !min-h-0 !min-w-0 !h-fit"
                     >
                       <Trash2 className="w-3.5 h-3.5 shrink-0" /> <span className="pt-[1px]">{t('Delete')}</span>
@@ -494,6 +517,58 @@ const Products = () => {
           onSubmit={onSubmit}
           isPending={createMutation.isPending || updateMutation.isPending}
         />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteModalOpen && productToDelete && (
+        <div className="fixed inset-0 z-[100]">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" 
+            onClick={() => {
+              setDeleteModalOpen(false);
+              setProductToDelete(null);
+            }} 
+          />
+          
+          {/* Modal Content */}
+          <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
+            <div 
+              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100" 
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-5 sm:p-6 text-center">
+                <div className="w-12 h-12 rounded-full bg-red-50 mx-auto flex items-center justify-center mb-4 border border-red-100">
+                  <Trash2 className="w-6 h-6 text-red-600" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{t('Delete Product')}</h3>
+                <p className="text-gray-500 text-sm mb-6 font-medium">
+                  {t('Are you sure you want to delete')} <span className="font-semibold text-gray-800">{productToDelete.name}</span>? {t('This action cannot be undone.')}
+                </p>
+                
+                <div className="flex gap-2 sm:gap-3 justify-center">
+                  <button
+                    onClick={() => {
+                      setDeleteModalOpen(false);
+                      setProductToDelete(null);
+                    }}
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-sm transition-colors active:scale-95"
+                  >
+                    {t('Cancel')}
+                  </button>
+                  <button
+                    onClick={confirmDelete}
+                    disabled={deleteMutation.isPending}
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 sm:gap-2"
+                  >
+                    {deleteMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
+                    {t('Yes, Delete')}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Mobile & Tablet Extended FAB (No Shadow) */}
