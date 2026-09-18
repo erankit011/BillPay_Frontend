@@ -145,6 +145,12 @@ const MainLayout = () => {
 
   const closeSidebar = () => setSidebarOpen(false);
 
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith('http')) return imagePath;
+    return `${BASE_URL}${imagePath}`;
+  };
+
   return (
     <div className="min-h-screen bg-[#F5F5F5]">
       {/* Sidebar Desktop */}
@@ -426,9 +432,10 @@ const MainLayout = () => {
             {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden active:scale-95 cursor-pointer ring-1 ring-gray-200 flex-shrink-0">
                 <img
-                  src={`${BASE_URL}${user.profileImage}`}
+                  src={getImageUrl(user.profileImage)}
                   alt="Profile"
                   className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
                 />
               </div>
             ) : (

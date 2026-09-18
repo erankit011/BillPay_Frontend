@@ -78,6 +78,12 @@ const Profile = () => {
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
   const BASE_URL = API_URL.replace('/api/v1', '');
 
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith('http')) return imagePath;
+    return `${BASE_URL}${imagePath}`;
+  };
+
   return (
     <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
       <div className="animate-fade-in">
@@ -92,7 +98,7 @@ const Profile = () => {
               <div className="relative animate-scale-in" style={{ animationDelay: '200ms' }}>
                 <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full bg-[#E5E7EB] text-[#093C5D] flex items-center justify-center text-2xl md:text-3xl lg:text-4xl font-semibold border-4 border-white shadow-lg overflow-hidden transition-transform hover:scale-105">
                   {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
-                    <img src={`${BASE_URL}${user.profileImage}`} alt="Profile" className="w-full h-full object-cover" />
+                    <img src={getImageUrl(user.profileImage)} alt="Profile" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                   ) : (
                     user?.name?.charAt(0).toUpperCase() || 'U'
                   )}
