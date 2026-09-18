@@ -59,10 +59,10 @@ const Products = () => {
   const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
   const [editingProduct, setEditingProduct] = useState(null);
-  
+
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
-  
+
   const queryClient = useQueryClient();
 
   // Handle body scroll for modals
@@ -312,16 +312,16 @@ const Products = () => {
 
         {/* Filter Dropdown */}
         <div className="relative sm:flex-shrink-0">
-            <select
-              value={filterStock}
-              onChange={(e) => setFilterStock(e.target.value)}
-              className="block h-10 sm:h-12 w-full sm:w-auto sm:min-w-[150px] px-3 sm:px-4 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all cursor-pointer shadow-none"
-            >
-              <option value="All">{t('All Stocks')}</option>
-              <option value="In Stock">{t('In Stock')}</option>
-              <option value="Low Stock">{t('Low Stock')}</option>
-              <option value="Out of Stock">{t('Out of Stock')}</option>
-            </select>
+          <select
+            value={filterStock}
+            onChange={(e) => setFilterStock(e.target.value)}
+            className="block h-10 sm:h-12 w-full sm:w-auto sm:min-w-[150px] px-3 sm:px-4 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all cursor-pointer shadow-none"
+          >
+            <option value="All">{t('All Stocks')}</option>
+            <option value="In Stock">{t('In Stock')}</option>
+            <option value="Low Stock">{t('Low Stock')}</option>
+            <option value="Out of Stock">{t('Out of Stock')}</option>
+          </select>
         </div>
       </div>
 
@@ -364,7 +364,7 @@ const Products = () => {
                           <div className="min-w-0">
                             <span className="text-xs lg:text-sm font-semibold text-gray-900 truncate block">{product.name}</span>
                             <span className="text-[9px] lg:text-[10px] text-gray-400 font-medium truncate mt-0.5 block">
-                                {t('Last updated')} {getTimeAgo(product.updatedAt || product.createdAt)}
+                              {t('Last updated')} {getTimeAgo(product.updatedAt || product.createdAt)}
                             </span>
                           </div>
                         </div>
@@ -375,13 +375,12 @@ const Products = () => {
                         </span>
                       </td>
                       <td className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
-                        <span className={`inline-block px-2.5 py-1 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide text-center ${
-                          product.stock === 0 
-                            ? 'bg-red-50 text-red-700 border border-red-200' 
-                            : product.stock < 20 
-                              ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' 
+                        <span className={`inline-block px-2.5 py-1 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide text-center ${product.stock === 0
+                            ? 'bg-red-50 text-red-700 border border-red-200'
+                            : product.stock < 20
+                              ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
                               : 'bg-green-50 text-green-700 border border-green-200'
-                        }`}>
+                          }`}>
                           {product.stock === 0 ? t('Out of Stock') : `${product.stock} ${t('in stock')}`}
                         </span>
                       </td>
@@ -435,13 +434,12 @@ const Products = () => {
                       <p className="text-[13px] sm:text-[14px] font-semibold leading-tight text-[#093C5D]">
                         {formatCurrency(product.price)}
                       </p>
-                      <span className={`px-2 py-0.5 rounded text-[9px] uppercase sm:text-[10px] font-semibold ${
-                          product.stock === 0 
-                            ? 'bg-red-50 text-red-700 border border-red-200' 
-                            : product.stock < 20 
-                              ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' 
-                              : 'bg-green-50 text-green-700 border border-green-200'
-                      }`}>
+                      <span className={`px-2 py-0.5 rounded text-[9px] uppercase sm:text-[10px] font-semibold ${product.stock === 0
+                          ? 'bg-red-50 text-red-700 border border-red-200'
+                          : product.stock < 20
+                            ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+                            : 'bg-green-50 text-green-700 border border-green-200'
+                        }`}>
                         {product.stock === 0 ? t('Out of Stock') : `${product.stock} ${t('in stock')}`}
                       </span>
                     </div>
@@ -469,7 +467,15 @@ const Products = () => {
               ))}
             </div>
 
-            {/* Infinite Scroll trigger */}
+            {/* Loader + Intersection trigger */}
+            {isFetchingNextPage && (
+              <div className="flex justify-center items-center py-5">
+                <div className="bg-white border border-gray-200 rounded-lg px-5 py-2.5 flex items-center gap-2.5">
+                  <Loader2 className="w-4 h-4 animate-spin text-[#093C5D]" />
+                  <span className="text-xs font-semibold text-gray-600 tracking-wide">{t('Loading more...')}</span>
+                </div>
+              </div>
+            )}
             <div className="mt-4">
               <InfiniteScrollObserver
                 hasNextPage={hasNextPage}
@@ -523,18 +529,18 @@ const Products = () => {
       {deleteModalOpen && productToDelete && (
         <div className="fixed inset-0 z-[100]">
           {/* Backdrop */}
-          <div 
-            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" 
+          <div
+            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
             onClick={() => {
               setDeleteModalOpen(false);
               setProductToDelete(null);
-            }} 
+            }}
           />
-          
+
           {/* Modal Content */}
           <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
-            <div 
-              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100" 
+            <div
+              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-5 sm:p-6 text-center">
@@ -545,7 +551,7 @@ const Products = () => {
                 <p className="text-gray-500 text-sm mb-6 font-medium">
                   {t('Are you sure you want to delete')} <span className="font-semibold text-gray-800">{productToDelete.name}</span>? {t('This action cannot be undone.')}
                 </p>
-                
+
                 <div className="flex gap-2 sm:gap-3 justify-center">
                   <button
                     onClick={() => {

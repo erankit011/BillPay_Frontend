@@ -312,7 +312,7 @@ const Reminders = () => {
             className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all shadow-none"
           />
         </div>
-        
+
         {/* Filter Dropdown */}
         <select
           value={filterStatus}
@@ -373,7 +373,7 @@ const Reminders = () => {
                 <tbody>
                   {reminders.map((reminder) => (
                     <tr key={reminder._id} className="bg-white border-b border-gray-100 last:border-b-0 hover:bg-[#F5F5F5]/60 transition-colors duration-150 relative">
-                      
+
                       {/* Customer */}
                       <td className="w-[30%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
                         <div className="flex items-center gap-3 lg:gap-4">
@@ -416,11 +416,10 @@ const Reminders = () => {
                       {/* Status */}
                       <td className="w-[10%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
                         <div className="flex items-center justify-end w-full h-full">
-                          <span className={`inline-block px-2.5 py-1 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide text-center ${
-                            reminder.status === 'PENDING' ? 'bg-red-50 text-red-700 border border-red-200' :
-                            reminder.status === 'SENT' ? 'bg-green-50 text-green-700 border border-green-200' :
-                            'bg-red-50 text-red-700 border border-red-200'
-                          }`}>
+                          <span className={`inline-block px-2.5 py-1 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide text-center ${reminder.status === 'PENDING' ? 'bg-red-50 text-red-700 border border-red-200' :
+                              reminder.status === 'SENT' ? 'bg-green-50 text-green-700 border border-green-200' :
+                                'bg-red-50 text-red-700 border border-red-200'
+                            }`}>
                             {t(reminder.status)}
                           </span>
                         </div>
@@ -474,89 +473,98 @@ const Reminders = () => {
             </div>
 
             {/* Mobile Cards View */}
-          <div className="md:hidden flex flex-col gap-2.5">
-            {reminders.map((reminder) => (
-              <div
-                key={reminder._id}
-                className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 active:bg-gray-50 transition-colors duration-200"
-              >
-                <div className="flex justify-between items-start gap-2">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-sm font-semibold flex-shrink-0 bg-gray-50 text-[#093C5D] border border-gray-200">
-                      {reminder.customerId?.name ? reminder.customerId.name.substring(0, 2).toUpperCase() : 'UN'}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <h3 className="text-[13px] sm:text-sm font-semibold text-gray-900 truncate leading-tight">
-                          {reminder.customerId?.name || t('Deleted Customer')}
-                        </h3>
+            <div className="md:hidden flex flex-col gap-2.5">
+              {reminders.map((reminder) => (
+                <div
+                  key={reminder._id}
+                  className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 active:bg-gray-50 transition-colors duration-200"
+                >
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-sm font-semibold flex-shrink-0 bg-gray-50 text-[#093C5D] border border-gray-200">
+                        {reminder.customerId?.name ? reminder.customerId.name.substring(0, 2).toUpperCase() : 'UN'}
                       </div>
-                      <div className="flex items-center text-gray-500 text-[11px] sm:text-xs font-medium mt-1">
-                        <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1 flex-shrink-0" />
-                        <span className="leading-none pt-[1.5px]">{new Date(reminder.scheduledDate).toLocaleDateString()}</span>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <h3 className="text-[13px] sm:text-sm font-semibold text-gray-900 truncate leading-tight">
+                            {reminder.customerId?.name || t('Deleted Customer')}
+                          </h3>
+                        </div>
+                        <div className="flex items-center text-gray-500 text-[11px] sm:text-xs font-medium mt-1">
+                          <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1 flex-shrink-0" />
+                          <span className="leading-none pt-[1.5px]">{new Date(reminder.scheduledDate).toLocaleDateString()}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="text-right flex-shrink-0 flex flex-col items-end gap-0.5">
-                    <p className={`text-[13px] sm:text-[14px] font-semibold leading-tight ${reminder.customerId?.balance > 0 ? 'text-red-700' : 'text-gray-900'}`}>
-                      {reminder.customerId?.balance > 0 ? `₹${reminder.customerId.balance.toLocaleString('en-IN')}` : ''}
-                    </p>
-                    <span className={`px-2 py-0.5 rounded text-[9px] uppercase sm:text-[10px] font-semibold ${reminder.status === 'PENDING'
+                    <div className="text-right flex-shrink-0 flex flex-col items-end gap-0.5">
+                      <p className={`text-[13px] sm:text-[14px] font-semibold leading-tight ${reminder.customerId?.balance > 0 ? 'text-red-700' : 'text-gray-900'}`}>
+                        {reminder.customerId?.balance > 0 ? `₹${reminder.customerId.balance.toLocaleString('en-IN')}` : ''}
+                      </p>
+                      <span className={`px-2 py-0.5 rounded text-[9px] uppercase sm:text-[10px] font-semibold ${reminder.status === 'PENDING'
                         ? 'bg-red-50 text-red-700 border border-red-200'
                         : reminder.status === 'SENT'
                           ? 'bg-green-50 text-green-700 border border-green-200'
                           : 'bg-red-50 text-red-700 border border-red-200'
-                      }`}>
-                      {t(reminder.status)}
-                    </span>
+                        }`}>
+                        {t(reminder.status)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Actions (Aligned like Bills.jsx) */}
+                  <div className="flex justify-end gap-2 w-full mt-3 pt-3 border-t border-gray-100">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setReminderToView(reminder); }}
+                      className="cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                    >
+                      <Eye className="w-3.5 h-3.5 mr-1.5 shrink-0" /> {t('Message')}
+                    </button>
+                    {reminder.status !== 'SENT' && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleSendNow(reminder); }}
+                        className="cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                      >
+                        <Send className="w-3.5 h-3.5 mr-1.5 shrink-0" /> {t('Send')}
+                      </button>
+                    )}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleEdit(reminder); }}
+                      className="cursor-pointer text-gray-700 font-medium bg-gray-50 border border-gray-200 hover:bg-gray-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                    >
+                      <Edit className="w-3.5 h-3.5 mr-1.5 shrink-0" /> {t('Edit')}
+                    </button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleDelete(reminder); }}
+                      className="cursor-pointer text-red-700 font-medium bg-red-50 border border-red-200 hover:bg-red-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                    >
+                      <Trash2 className="w-3.5 h-3.5 mr-1.5 shrink-0" /> {t('Delete')}
+                    </button>
                   </div>
                 </div>
+              ))}
+            </div>
 
-                {/* Actions (Aligned like Bills.jsx) */}
-                <div className="flex justify-end gap-2 w-full mt-3 pt-3 border-t border-gray-100">
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setReminderToView(reminder); }}
-                    className="cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
-                  >
-                    <Eye className="w-3.5 h-3.5 mr-1.5 shrink-0" /> {t('Message')}
-                  </button>
-                  {reminder.status !== 'SENT' && (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); handleSendNow(reminder); }}
-                      className="cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
-                    >
-                      <Send className="w-3.5 h-3.5 mr-1.5 shrink-0" /> {t('Send')}
-                    </button>
-                  )}
-                  <button
-                    onClick={(e) => { e.stopPropagation(); handleEdit(reminder); }}
-                    className="cursor-pointer text-gray-700 font-medium bg-gray-50 border border-gray-200 hover:bg-gray-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
-                  >
-                    <Edit className="w-3.5 h-3.5 mr-1.5 shrink-0" /> {t('Edit')}
-                  </button>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); handleDelete(reminder); }}
-                    className="cursor-pointer text-red-700 font-medium bg-red-50 border border-red-200 hover:bg-red-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
-                  >
-                    <Trash2 className="w-3.5 h-3.5 mr-1.5 shrink-0" /> {t('Delete')}
-                  </button>
-                </div>
+            {/* Loader + Intersection trigger */}
+          {isFetchingNextPage && (
+            <div className="flex justify-center items-center py-5">
+              <div className="bg-white border border-gray-200 rounded-lg px-5 py-2.5 flex items-center gap-2.5">
+                <Loader2 className="w-4 h-4 animate-spin text-[#093C5D]" />
+                <span className="text-xs font-semibold text-gray-600 tracking-wide">{t('Loading more...')}</span>
               </div>
-            ))}
-          </div>
-
-          {hasNextPage && (
-            <div className="py-2">
-              <InfiniteScrollObserver
-                hasNextPage={hasNextPage}
-                isFetchingNextPage={isFetchingNextPage}
-                fetchNextPage={fetchNextPage}
-              />
             </div>
           )}
-        </>
-      )}
+          {hasNextPage && (
+              <div className="py-2">
+                <InfiniteScrollObserver
+                  hasNextPage={hasNextPage}
+                  isFetchingNextPage={isFetchingNextPage}
+                  fetchNextPage={fetchNextPage}
+                />
+              </div>
+            )}
+          </>
+        )}
       </div>
 
       {/* Mobile & Tablet Extended FAB (No Shadow) */}
@@ -579,7 +587,7 @@ const Reminders = () => {
           {/* Mobile: bottom sheet | sm+: centered modal */}
           <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
             <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
-              
+
               {/* Drag handle — mobile only */}
               <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
                 <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
@@ -712,15 +720,15 @@ const Reminders = () => {
       {reminderToDelete && (
         <div className="fixed inset-0 z-[100]">
           {/* Backdrop */}
-          <div 
-            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" 
-            onClick={() => setReminderToDelete(null)} 
+          <div
+            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+            onClick={() => setReminderToDelete(null)}
           />
-          
+
           {/* Modal Content */}
           <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
-            <div 
-              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100" 
+            <div
+              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-5 sm:p-6 text-center">
@@ -731,7 +739,7 @@ const Reminders = () => {
                 <p className="text-gray-500 text-sm mb-6 font-medium">
                   {t('Are you sure you want to delete this reminder for')} <span className="font-semibold text-gray-800">{reminderToDelete.customerId?.name || t('Unknown Customer')}</span>? {t('This action cannot be undone.')}
                 </p>
-                
+
                 <div className="flex gap-2 sm:gap-3 justify-center">
                   <button
                     onClick={() => setReminderToDelete(null)}
@@ -758,15 +766,15 @@ const Reminders = () => {
       {reminderToSend && (
         <div className="fixed inset-0 z-[100]">
           {/* Backdrop */}
-          <div 
-            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" 
-            onClick={() => setReminderToSend(null)} 
+          <div
+            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+            onClick={() => setReminderToSend(null)}
           />
-          
+
           {/* Modal Content */}
           <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
-            <div 
-              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100" 
+            <div
+              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-5 sm:p-6 text-center">
@@ -777,7 +785,7 @@ const Reminders = () => {
                 <p className="text-gray-500 text-sm mb-6 font-medium">
                   {t('Are you sure you want to send this reminder to')} <span className="font-semibold text-gray-800">{reminderToSend.customerId?.name || t('Unknown Customer')}</span> {t('now?')}
                 </p>
-                
+
                 <div className="flex gap-2 sm:gap-3 justify-center">
                   <button
                     onClick={() => setReminderToSend(null)}
