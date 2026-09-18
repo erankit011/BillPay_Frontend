@@ -24,6 +24,21 @@ const MainLayout = () => {
   const [notificationCount, setNotificationCount] = useState(0);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (logoutModalOpen || sidebarOpen || notificationOpen) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [logoutModalOpen, sidebarOpen, notificationOpen]);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { t } = useTranslation();
@@ -123,7 +138,11 @@ const MainLayout = () => {
     return `${days}d ago`;
   };
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
+    setLogoutModalOpen(true);
+  };
+
+  const executeLogout = async () => {
     try {
       await api.post('/auth/logout');
     } catch (error) {
@@ -132,6 +151,7 @@ const MainLayout = () => {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('token');
       dispatch(logout());
+      setLogoutModalOpen(false);
     }
   };
 
@@ -182,7 +202,7 @@ const MainLayout = () => {
         {/* Footer */}
         <div className="flex flex-col gap-2 px-4 py-4 border-t border-gray-100 flex-shrink-0 mt-auto">
           <Link
-            to="/settings"
+            to="/contact-support"
             className="flex items-center justify-center gap-2 w-full py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl transition-all font-medium border border-gray-200/60"
           >
             <HelpCircle className="w-4 h-4" />
@@ -249,7 +269,7 @@ const MainLayout = () => {
               {/* Footer */}
               <div className="mt-auto flex flex-col gap-2">
                 <Link
-                  to="/settings"
+                  to="/contact-support"
                   onClick={closeSidebar}
                   className="flex items-center gap-3 px-4 py-2 text-gray-600 hover:text-[#093C5D] transition-colors font-medium"
                 >
@@ -453,6 +473,50 @@ const MainLayout = () => {
           <Outlet />
         </div>
       </main>
+
+      {/* Logout Confirmation Modal */}
+      {logoutModalOpen && (
+        <div className="fixed inset-0 z-[100]">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+            onClick={() => setLogoutModalOpen(false)}
+          />
+
+          {/* Modal Content */}
+          <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
+            <div
+              className="bg-white rounded-xl shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-5 sm:p-6 text-center">
+                <div className="w-12 h-12 rounded-full bg-red-50 mx-auto flex items-center justify-center mb-4 border border-red-100">
+                  <LogOut className="w-6 h-6 text-red-600 ml-0.5" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{t('Logout')}</h3>
+                <p className="text-gray-500 text-sm mb-6 font-medium">
+                  {t('Are you sure you want to log out?')}
+                </p>
+
+                <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 justify-center w-full mt-2">
+                  <button
+                    onClick={() => setLogoutModalOpen(false)}
+                    className="cursor-pointer w-full sm:flex-1 px-4 py-2.5 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-sm transition-colors active:scale-95"
+                  >
+                    {t('Cancel')}
+                  </button>
+                  <button
+                    onClick={executeLogout}
+                    className="cursor-pointer w-full sm:flex-1 px-4 py-2.5 sm:py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 flex items-center justify-center"
+                  >
+                    {t('Yes, Logout')}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
