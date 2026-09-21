@@ -175,9 +175,9 @@ const MainLayout = () => {
     <div className="min-h-screen bg-[#F5F5F5]">
       {/* Sidebar Desktop */}
       <aside className="hidden lg:flex flex-col h-screen bg-white lg:w-[220px] min-[1440px]:w-[240px] fixed left-0 top-0 border-r border-gray-100 z-50">
-        {/* Brand - same height as header h-16, aligned */}
-        <div className="h-[64px] min-[1440px]:h-[72px] flex items-center px-5 min-[1440px]:px-7 border-b border-gray-100 flex-shrink-0">
-          <span className="text-[22px] min-[1440px]:text-[24px] font-semibold tracking-tight text-[#093C5D] select-none cursor-default">UdharPay<span className="inline-block w-[7px] h-[7px] min-[1440px]:w-2 min-[1440px]:h-2 rounded-full bg-[#2ECC71] ml-[2px] mb-[2px] align-baseline"></span></span>
+        {/* Brand - same height as header h-14, aligned */}
+        <div className="h-14 flex items-center px-6 border-b border-gray-100 flex-shrink-0">
+          <span className="text-[22px] font-semibold tracking-tight text-[#093C5D] select-none cursor-default flex items-center">UdharPay<span className="inline-block w-[7px] h-[7px] rounded-full bg-[#2ECC71] ml-[2px]"></span></span>
         </div>
 
         {/* Links */}
@@ -233,14 +233,14 @@ const MainLayout = () => {
           }`}>
           <div className="flex flex-col h-full">
             {/* Header with Close Button - Same height and padding as main header */}
-            <div className="h-16 flex items-center justify-between px-4 border-b border-gray-100">
-              <span className="text-[20px] font-semibold tracking-tight text-[#093C5D] select-none">UdharPay<span className="inline-block w-[6px] h-[6px] rounded-full bg-[#2ECC71] ml-[2px] mb-[2px] align-baseline"></span></span>
+            <div className="h-14 flex items-center justify-between px-4 sm:px-6 border-b border-gray-100 flex-shrink-0">
+              <span className="text-[20px] sm:text-[22px] font-semibold tracking-tight text-[#093C5D] select-none flex items-center">UdharPay<span className="inline-block w-[6px] h-[6px] sm:w-[7px] sm:h-[7px] rounded-full bg-[#2ECC71] ml-[2px]"></span></span>
               <button
                 onClick={closeSidebar}
-                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 transition-all"
+                className="w-9 h-9 flex items-center justify-center rounded-full lg:hover:bg-gray-100 active:bg-gray-200 transition-all text-gray-500"
                 aria-label="Close menu"
               >
-                <svg className="w-4 h-4 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
               </button>
             </div>
 
@@ -292,165 +292,153 @@ const MainLayout = () => {
         </aside>
       </div>
 
-      <header className="fixed top-0 right-0 left-0 lg:left-[220px] min-[1440px]:left-[240px] h-[64px] min-[1440px]:h-[72px] bg-white border-b border-gray-100 z-40 flex items-center justify-between px-4 md:px-6 lg:px-8 min-[1440px]:px-12">
+      <header className="fixed top-0 right-0 left-0 lg:left-[220px] min-[1440px]:left-[240px] h-14 bg-white border-b border-gray-100 z-40 flex items-center justify-between px-4 sm:px-6 lg:px-8 min-[1440px]:px-10">
         {/* Left Side - Hamburger & Page Title */}
         <div className="flex items-center gap-4">
           {/* Hamburger Menu Button (Mobile Only) */}
           {!sidebarOpen && (
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-full transition-all active:scale-90 hover:bg-gray-50 flex items-center justify-center text-gray-700"
+              className="lg:hidden w-9 h-9 rounded-lg transition-colors active:bg-gray-100 md:hover:bg-gray-100 flex items-center justify-center text-gray-700"
               aria-label="Open menu"
             >
-              <div className="w-5 h-5 flex flex-col justify-center gap-1.5">
-                <span className="w-full h-0.5 bg-current rounded-full"></span>
-                <span className="w-3/4 h-0.5 bg-current rounded-full"></span>
-                <span className="w-full h-0.5 bg-current rounded-full"></span>
+              <div className="w-[18px] h-[14px] flex flex-col justify-between">
+                <span className="w-full h-[2px] bg-current rounded-full"></span>
+                <span className="w-full h-[2px] bg-current rounded-full"></span>
+                <span className="w-full h-[2px] bg-current rounded-full"></span>
               </div>
             </button>
           )}
-
-          {/* Page Title (Desktop) & Logo (Mobile) */}
-          <div className="relative lg:hidden flex items-center">
-            <span className="text-[18px] font-semibold tracking-tight text-[#093C5D] select-none">UdharPay<span className="inline-block w-[5px] h-[5px] rounded-full bg-[#2ECC71] ml-[1px] mb-[2px] align-baseline"></span></span>
-          </div>
         </div>
 
 
         {/* Right Side - Actions */}
-        <div className="flex items-center gap-1.5 sm:gap-3 md:gap-4">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {/* Language Switcher */}
           <LanguageSwitcher variant="compact" />
 
           {/* Notification */}
-          <div className="relative">
+          <div className="relative flex items-center justify-center">
             <button
               onClick={handleNotificationClick}
-              className="cursor-pointer border border-gray-200 relative w-9 h-9 sm:w-10 sm:h-10 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-full transition-all duration-300 active:scale-95 flex items-center justify-center flex-shrink-0"
+              className="cursor-pointer relative w-9 h-9 text-gray-600 rounded-lg active:bg-gray-100 md:hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center flex-shrink-0"
               aria-label="Notifications"
             >
-              <Bell className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={2} />
+              <Bell className="w-5 h-5" strokeWidth={1.5} />
               {notificationCount > 0 && (
-                <span className="absolute top-0 right-0 flex h-2.5 w-2.5">
+                <span className="absolute top-[8px] right-[8px] flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border-2 border-white"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 border border-white"></span>
                 </span>
               )}
             </button>
 
-            {/* Notification Dropdown Panel */}
-            {notificationOpen && (
-              <>
-                {/* Backdrop */}
-                <div
-                  className="fixed inset-0 z-30 bg-transparent"
-                  onClick={() => setNotificationOpen(false)}
-                />
+              {/* Notification Dropdown Panel */}
+              {notificationOpen && (
+                <>
+                  {/* Backdrop */}
+                  <div
+                    className="fixed inset-0 z-30 bg-transparent"
+                    onClick={() => setNotificationOpen(false)}
+                  />
 
-                {/* Panel - Mobile: Full width from top, Desktop: Dropdown */}
-                <div className="fixed sm:absolute left-0 right-0 sm:left-auto top-14 sm:top-full sm:right-0 sm:mt-3 w-full sm:w-96 sm:max-w-md bg-white sm:rounded-2xl sm:border-b border-gray-200 z-40 max-h-[calc(100vh-3.5rem)] sm:max-h-[500px] flex flex-col animate-fade-in">
-                  {/* Header */}
-                  <div className="p-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0 bg-white">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-semibold text-gray-900">{t("Notifications")}</h3>
-                      {notificationCount > 0 && (
-                        <span className="bg-[#E5E7EB] text-[#082a42] text-xs font-bold px-2 py-0.5 rounded-full">
-                          {notificationCount}
-                        </span>
+                  {/* Panel - Mobile: Full width from top, Desktop: Dropdown */}
+                  <div className="fixed sm:absolute left-0 right-0 sm:left-auto top-14 sm:top-[calc(100%+4px)] sm:right-0 w-full sm:w-[380px] bg-white sm:rounded-xl sm:border border-gray-200 sm:shadow-lg shadow-black/5 z-40 max-h-[calc(100vh-3.5rem)] sm:max-h-[500px] flex flex-col animate-fade-in origin-top-right">
+                    {/* Header */}
+                    <div className="p-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0 bg-white">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-lg font-semibold text-gray-900">{t("Notifications")}</h3>
+                        {notificationCount > 0 && (
+                          <span className="bg-[#E5E7EB] text-[#082a42] text-xs font-bold px-2 py-0.5 rounded-full">
+                            {notificationCount}
+                          </span>
+                        )}
+                      </div>
+                      {notifications.some(n => !n.read) && (
+                        <button
+                          onClick={markAllAsRead}
+                          className="text-xs text-[#093C5D] font-semibold hover:text-[#082a42] transition-colors active:scale-95 px-2 py-1"
+                        >
+                          Mark all read
+                        </button>
                       )}
                     </div>
-                    {notifications.some(n => !n.read) && (
-                      <button
-                        onClick={markAllAsRead}
-                        className="text-xs text-[#093C5D] font-semibold hover:text-[#082a42] transition-colors active:scale-95 px-2 py-1"
-                      >
-                        Mark all read
-                      </button>
-                    )}
-                  </div>
 
-                  {/* Notification List */}
-                  <div className="flex-1 overflow-y-auto overscroll-contain">
-                    {notifications.length === 0 ? (
-                      <div className="p-12 text-center">
-                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
-                          <Bell className="w-8 h-8 text-gray-400" strokeWidth={2} />
+                    {/* Notification List */}
+                    <div className="flex-1 overflow-y-auto overscroll-contain">
+                      {notifications.length === 0 ? (
+                        <div className="p-12 text-center">
+                          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+                            <Bell className="w-8 h-8 text-gray-400" strokeWidth={2} />
+                          </div>
+                          <p className="text-base text-gray-700 font-semibold mb-1">{t("No notifications")}</p>
+                          <p className="text-sm text-gray-500">{t("You're all caught up!")}</p>
                         </div>
-                        <p className="text-base text-gray-700 font-semibold mb-1">{t("No notifications")}</p>
-                        <p className="text-sm text-gray-500">{t("You're all caught up!")}</p>
-                      </div>
-                    ) : (
-                      <div className="divide-y divide-gray-100">
-                        {notifications.map((notification) => (
-                          <div
-                            key={notification._id}
-                            onClick={() => !notification.read && markAsRead(notification._id)}
-                            className={`p-4 hover:bg-gray-50 active:bg-gray-100 transition-colors cursor-pointer ${!notification.read ? 'bg-[#F5F5F5]/50' : ''
-                              }`}
-                          >
-                            <div className="flex items-start gap-3">
-                              {/* Icon */}
-                              <div className="flex-shrink-0 w-11 h-11 rounded-full bg-gradient-to-br from-[#E5E7EB] to-[#F5F5F5] flex items-center justify-center text-xl shadow-sm">
-                                {getNotificationIcon(notification.type)}
-                              </div>
-
-                              {/* Content */}
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-start justify-between gap-2 mb-1">
-                                  <h4 className={`text-sm font-semibold leading-snug ${!notification.read ? 'text-gray-900' : 'text-gray-700'
-                                    }`}>
-                                    {notification.title}
-                                  </h4>
-                                  {!notification.read && (
-                                    <span className="w-2 h-2 bg-[#093C5D] rounded-full flex-shrink-0 mt-1.5"></span>
-                                  )}
+                      ) : (
+                        <div className="divide-y divide-gray-100">
+                          {notifications.map((notification) => (
+                            <div
+                              key={notification._id}
+                              onClick={() => !notification.read && markAsRead(notification._id)}
+                              className={`p-4 hover:bg-gray-50 active:bg-gray-100 transition-colors cursor-pointer ${!notification.read ? 'bg-[#F5F5F5]/50' : ''
+                                }`}
+                            >
+                              <div className="flex items-start gap-3">
+                                {/* Icon */}
+                                <div className="flex-shrink-0 w-11 h-11 rounded-full bg-gradient-to-br from-[#E5E7EB] to-[#F5F5F5] flex items-center justify-center text-xl shadow-sm">
+                                  {getNotificationIcon(notification.type)}
                                 </div>
-                                <p className="text-sm text-gray-600 mb-2 line-clamp-2 leading-relaxed">
-                                  {notification.message}
-                                </p>
-                                <p className="text-xs text-gray-400 font-medium">
-                                  {getTimeAgo(notification.createdAt)}
-                                </p>
+
+                                {/* Content */}
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-start justify-between gap-2 mb-1">
+                                    <h4 className={`text-sm font-semibold leading-snug ${!notification.read ? 'text-gray-900' : 'text-gray-700'
+                                      }`}>
+                                      {notification.title}
+                                    </h4>
+                                    {!notification.read && (
+                                      <span className="w-2 h-2 bg-[#093C5D] rounded-full flex-shrink-0 mt-1.5"></span>
+                                    )}
+                                  </div>
+                                  <p className="text-sm text-gray-600 mb-2 line-clamp-2 leading-relaxed">
+                                    {notification.message}
+                                  </p>
+                                  <p className="text-xs text-gray-400 font-medium">
+                                    {getTimeAgo(notification.createdAt)}
+                                  </p>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Footer */}
+                    {notifications.length > 0 && (
+                      <div className="p-3 border-t border-gray-100">
+                        <Link
+                          to="/notifications"
+                          onClick={() => setShowNotifications(false)}
+                          className="block w-full text-center text-sm font-semibold text-[#093C5D] hover:text-[#082a42] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 py-2.5 rounded-xl transition-colors"
+                        >
+                          {t('View all notifications →')}
+                        </Link>
                       </div>
                     )}
                   </div>
-
-                  {/* Footer */}
-                  {notifications.length > 0 && (
-                    <div className="p-3 border-t border-gray-100">
-                      <Link
-                        to="/notifications"
-                        onClick={() => setShowNotifications(false)}
-                        className="block w-full text-center text-sm font-semibold text-[#093C5D] hover:text-[#082a42] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 py-2.5 rounded-xl transition-colors"
-                      >
-                        {t('View all notifications →')}
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Profile */}
-          <Link to="/profile" className="flex items-center gap-2 sm:gap-3 group">
-            {/* User Info (Desktop only) */}
-            <div className="hidden md:flex flex-col text-right">
-              <span className="text-[10px] font-medium text-gray-400 tracking-wider">
-                {t('Welcome back')}
-              </span>
-              <span className="text-sm font-semibold text-gray-900 leading-tight">
-                {user?.name || 'User'}
-              </span>
+                </>
+              )}
             </div>
 
+          {/* Separator */}
+          <div className="h-5 w-[1px] bg-gray-200 mx-1 flex-shrink-0"></div>
+
+          {/* Profile */}
+          <Link to="/profile" className="flex items-center group flex-shrink-0">
             {/* Avatar */}
             {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden active:scale-95 cursor-pointer ring-1 ring-gray-200 flex-shrink-0">
+              <div className="w-8 h-8 rounded-full overflow-hidden active:scale-95 transition-transform flex-shrink-0">
                 <img
                   src={getImageUrl(user.profileImage)}
                   alt="Profile"
@@ -459,7 +447,7 @@ const MainLayout = () => {
                 />
               </div>
             ) : (
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center font-semibold text-xs sm:text-sm ring-1 ring-[#093C5D]/20 flex-shrink-0">
+              <div className="w-8 h-8 rounded-full bg-[#E6F4EA] text-[#137333] flex items-center justify-center font-medium text-sm active:scale-95 transition-transform flex-shrink-0">
                 {getInitials(user?.name)}
               </div>
             )}
@@ -468,7 +456,7 @@ const MainLayout = () => {
       </header>
 
       {/* Main Content */}
-      <main className="lg:ml-[220px] min-[1440px]:ml-[240px] pt-[88px] md:pt-[96px] lg:pt-[104px] min-[1440px]:pt-[120px] px-4 md:px-6 lg:px-8 min-[1440px]:px-12 pb-6 md:pb-8 lg:pb-10 min-[1440px]:pb-12 min-h-screen overflow-x-hidden">
+      <main className="lg:ml-[220px] min-[1440px]:ml-[240px] pt-[80px] px-4 md:px-6 lg:px-8 min-[1440px]:px-10 pb-6 md:pb-8 lg:pb-10 min-[1440px]:pb-12 min-h-screen overflow-x-hidden">
         <div className="max-w-[1440px] mx-auto w-full">
           <Outlet />
         </div>

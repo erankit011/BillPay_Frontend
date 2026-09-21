@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronDown, Check, Languages } from 'lucide-react';
+import { ChevronDown, Check, Globe } from 'lucide-react';
 
 const LanguageSwitcher = ({ variant = 'default' }) => {
   const { i18n } = useTranslation();
@@ -42,18 +42,17 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
   // Compact variant for navbar
   if (variant === 'compact') {
     return (
-      <div className="relative" ref={dropdownRef}>
+      <div className="relative flex items-center justify-center" ref={dropdownRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 h-9 sm:h-10 text-xs sm:text-sm font-semibold text-[#093C5D] hover:text-[#072C44] bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-full transition-all active:scale-95 cursor-pointer flex-shrink-0"
+          className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-600 active:bg-gray-100 md:hover:bg-gray-100 transition-colors duration-200 cursor-pointer flex-shrink-0"
           aria-label="Change language"
         >
-          <Languages className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-[#093C5D]" />
-          <span className="uppercase tracking-wider">EN/HI</span>
+          <Globe className="w-5 h-5" strokeWidth={1.5} />
         </button>
 
         {isOpen && (
-          <div className="absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-xl border border-gray-200 py-1.5 z-50 animate-fade-in">
+          <div className="absolute right-0 sm:-right-2 top-[calc(100%+4px)] w-32 bg-white rounded-xl shadow-lg shadow-black/5 border border-gray-200 py-1.5 z-50 animate-fade-in origin-top-right">
             {languages.map((lang) => (
               <button
                 key={lang.code}
