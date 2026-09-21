@@ -203,7 +203,7 @@ const MainLayout = () => {
         <div className="flex flex-col gap-2 px-4 py-4 border-t border-gray-100 flex-shrink-0 mt-auto">
           <Link
             to="/contact-support"
-            className="flex items-center justify-center gap-2 w-full py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl transition-all font-medium border border-gray-200/60"
+            className="flex items-center justify-center gap-2 w-full py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-all font-medium border border-gray-200/60"
           >
             <HelpCircle className="w-4 h-4" />
             <span className="text-sm">{t('Support')}</span>
