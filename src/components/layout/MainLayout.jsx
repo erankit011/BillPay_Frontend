@@ -223,21 +223,21 @@ const MainLayout = () => {
         {/* Overlay */}
         {sidebarOpen && (
           <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 animate-fade-in"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] animate-fade-in"
             onClick={closeSidebar}
           />
         )}
 
         {/* Sidebar */}
-        <aside className={`fixed left-0 top-0 h-full w-64 bg-white/95 backdrop-blur-xl border-r border-white/40 z-50 transform transition-transform duration-300 ease-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        <aside className={`fixed left-0 top-0 h-full w-64 bg-white/95 backdrop-blur-xl border-r border-white/40 z-[110] transform transition-transform duration-300 ease-out rounded-r-xl shadow-2xl ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
           }`}>
           <div className="flex flex-col h-full">
             {/* Header with Close Button - Same height and padding as main header */}
-            <div className="h-14 flex items-center justify-between px-4 sm:px-6 border-b border-gray-100 flex-shrink-0">
-              <span className="text-[20px] sm:text-[22px] font-semibold tracking-tight text-[#093C5D] select-none flex items-center">UdharPay<span className="inline-block w-[6px] h-[6px] sm:w-[7px] sm:h-[7px] rounded-full bg-[#2ECC71] ml-[2px]"></span></span>
+            <div className="h-14 flex items-center justify-between px-6 border-b border-gray-100 flex-shrink-0">
+              <span className="text-[22px] font-semibold tracking-tight text-[#093C5D] select-none flex items-center">UdharPay<span className="inline-block w-[7px] h-[7px] rounded-full bg-[#2ECC71] ml-[2px]"></span></span>
               <button
                 onClick={closeSidebar}
-                className="w-9 h-9 flex items-center justify-center rounded-full lg:hover:bg-gray-100 active:bg-gray-200 transition-all text-gray-500"
+                className="p-1.5 -mr-1.5 flex items-center justify-center rounded-full lg:hover:bg-gray-100 active:bg-gray-200 transition-all text-gray-500"
                 aria-label="Close menu"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
@@ -245,7 +245,7 @@ const MainLayout = () => {
             </div>
 
             {/* Sidebar Content */}
-            <div className="flex-1 flex flex-col px-6 pt-10 pb-6">
+            <div className="flex-1 flex flex-col px-6 pt-8 pb-8 overflow-y-auto">
               {/* Links */}
               <nav className="flex-1 flex flex-col gap-1.5">
                 {navItems.map((item) => (
@@ -254,8 +254,8 @@ const MainLayout = () => {
                     to={item.path}
                     onClick={closeSidebar}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 active:scale-95 ${isActive
-                        ? 'bg-[#093C5D] text-white font-medium shadow-sm shadow-[#093C5D]/20'
+                      `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 active:scale-95 ${isActive
+                        ? 'bg-[#093C5D] text-white font-medium'
                         : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 font-medium'
                       }`
                     }
