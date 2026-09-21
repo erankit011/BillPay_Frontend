@@ -299,7 +299,7 @@ const MainLayout = () => {
           {!sidebarOpen && (
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-1.5 -ml-1 border border-transparent hover:border-gray-200 rounded-full transition-colors bg-transparent active:bg-gray-100 hover:bg-gray-100 flex items-center justify-center text-gray-700"
+              className="lg:hidden w-8 h-8 -ml-1 border border-transparent hover:border-gray-200 rounded-full transition-colors bg-transparent active:bg-gray-100 hover:bg-gray-100 flex items-center justify-center text-gray-700"
               aria-label="Open menu"
             >
               <svg
@@ -330,11 +330,11 @@ const MainLayout = () => {
           <div className="relative flex items-center justify-center">
             <button
               onClick={handleNotificationClick}
-              className="cursor-pointer relative p-1.5 text-gray-600 border border-transparent hover:border-gray-200 rounded-full active:bg-gray-100 hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center flex-shrink-0"
+              className="cursor-pointer relative w-7 h-7 sm:w-9 sm:h-9 text-gray-600 border border-transparent hover:border-gray-200 rounded-full bg-transparent active:bg-gray-100 hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center flex-shrink-0"
               aria-label="Notifications"
             >
               <div className="relative flex items-center justify-center">
-                <Bell className="w-5 h-5" strokeWidth={1.5} />
+                <Bell className="w-[22px] h-[22px] sm:w-5 sm:h-5" strokeWidth={1.5} />
                 {notificationCount > 0 && (
                   <span className="absolute -top-0.5 right-0.5 flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -448,18 +448,18 @@ const MainLayout = () => {
           {/* Profile */}
           <Link
             to="/profile"
-            className="flex items-center justify-center w-8 h-8 rounded-full border border-gray-200 bg-transparent active:scale-95 active:bg-gray-100 hover:bg-gray-100 transition-all duration-200 flex-shrink-0 overflow-hidden"
+            className="flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 rounded-full border border-gray-200 bg-transparent active:scale-95 active:bg-gray-100 hover:bg-gray-100 hover:border-gray-300 transition-all duration-200 flex-shrink-0 p-[2px]"
           >
             {/* Avatar */}
             {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
               <img
                 src={getImageUrl(user.profileImage)}
                 alt="Profile"
-                className="w-full h-full object-cover"
+                className="w-full h-full rounded-full object-cover"
                 referrerPolicy="no-referrer"
               />
             ) : (
-              <User className="w-5 h-5 text-gray-500" strokeWidth={1.5} />
+              <User className="w-[22px] h-[22px] sm:w-5 sm:h-5 text-gray-500" strokeWidth={1.5} />
             )}
           </Link>
         </div>

@@ -45,10 +45,10 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
       <div className="relative flex items-center justify-center" ref={dropdownRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center border border-transparent md:hover:border-gray-200 rounded-full text-gray-600 active:bg-gray-100 md:hover:bg-gray-100 active:border-gray-200 transition-colors duration-200 cursor-pointer flex-shrink-0"
+          className="w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center border border-transparent hover:border-gray-200 rounded-full text-gray-600 bg-transparent active:bg-gray-100 hover:bg-gray-100 transition-colors duration-200 cursor-pointer flex-shrink-0"
           aria-label="Change language"
         >
-          <Globe className="w-5 h-5" strokeWidth={1.5} />
+          <Globe className="w-[22px] h-[22px] sm:w-5 sm:h-5" strokeWidth={1.5} />
         </button>
 
         {isOpen && (
