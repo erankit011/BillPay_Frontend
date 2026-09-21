@@ -563,7 +563,13 @@ const resources = {
       "Help": "Help",
       "Notifications": "Notifications",
       "View all notifications →": "View all notifications →",
-}
+      "Server Unreachable": "Server Unreachable",
+      "We couldn't connect to our servers. Please check your internet connection or the server might be restarting.": "We couldn't connect to our servers. Please check your internet connection or the server might be restarting.",
+      "Retry Connection": "Retry Connection",
+      "Page Not Found": "Page Not Found",
+      "The page you are looking for doesn't exist or has been moved.": "The page you are looking for doesn't exist or has been moved.",
+      "Go to Homepage": "Go to Homepage"
+    }
   },
   hi: {
     translation: {
@@ -1195,7 +1201,13 @@ const resources = {
       "Help": "मदद (Help)",
       "Notifications": "सूचनाएं (Notifications)",
       "View all notifications →": "सभी सूचनाएं देखें →",
-}
+      "Server Unreachable": "सर्वर उपलब्ध नहीं है",
+      "We couldn't connect to our servers. Please check your internet connection or the server might be restarting.": "हम सर्वर से कनेक्ट नहीं हो पा रहे हैं। कृपया अपना इंटरनेट कनेक्शन जांचें या सर्वर रीस्टार्ट हो रहा होगा।",
+      "Retry Connection": "फिर से कनेक्ट करें",
+      "Page Not Found": "पेज नहीं मिला",
+      "The page you are looking for doesn't exist or has been moved.": "आप जिस पेज को खोज रहे हैं वह मौजूद नहीं है या हटा दिया गया है।",
+      "Go to Homepage": "होमपेज पर जाएं"
+    }
   }
 };
 

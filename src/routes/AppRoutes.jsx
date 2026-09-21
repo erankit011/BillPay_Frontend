@@ -21,6 +21,7 @@ const Products = lazy(() => import('../pages/Products'));
 const Reminders = lazy(() => import('../pages/Reminders'));
 const Profile = lazy(() => import('../pages/Profile'));
 const Notifications = lazy(() => import('../pages/Notifications'));
+const NotFound = lazy(() => import('../pages/NotFound'));
 
 // Static pages
 const PrivacyPolicy = lazy(() => import('../pages/PrivacyPage'));
@@ -126,8 +127,8 @@ const AppRoutes = () => {
           <Route path="/notifications" element={<Notifications />} />
         </Route>
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* Fallback 404 Route */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );
