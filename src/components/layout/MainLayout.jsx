@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
-import { Home, Users, FileText, Mic, BarChart2, Settings, Bell, Box, Bell as BellIcon, HelpCircle, LogOut } from 'lucide-react';
+import { Home, Users, FileText, Mic, BarChart2, Settings, Bell, Box, Bell as BellIcon, HelpCircle, LogOut, User } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/slices/authSlice';
 import { useTranslation } from 'react-i18next';
@@ -299,14 +299,23 @@ const MainLayout = () => {
           {!sidebarOpen && (
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden w-9 h-9 rounded-lg transition-colors active:bg-gray-100 md:hover:bg-gray-100 flex items-center justify-center text-gray-700"
+              className="lg:hidden p-1.5 -ml-1 border border-transparent hover:border-gray-200 rounded-full transition-colors bg-transparent active:bg-gray-100 hover:bg-gray-100 flex items-center justify-center text-gray-700"
               aria-label="Open menu"
             >
-              <div className="w-[18px] h-[14px] flex flex-col justify-between">
-                <span className="w-full h-[2px] bg-current rounded-full"></span>
-                <span className="w-full h-[2px] bg-current rounded-full"></span>
-                <span className="w-full h-[2px] bg-current rounded-full"></span>
-              </div>
+              <svg
+                className="w-6 h-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4 6h16M4 12h10M4 18h16"
+                  stroke="currentColor"
+                  strokeWidth="2.25"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </button>
           )}
         </div>
@@ -321,135 +330,136 @@ const MainLayout = () => {
           <div className="relative flex items-center justify-center">
             <button
               onClick={handleNotificationClick}
-              className="cursor-pointer relative w-9 h-9 text-gray-600 rounded-lg active:bg-gray-100 md:hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center flex-shrink-0"
+              className="cursor-pointer relative p-1.5 text-gray-600 border border-transparent hover:border-gray-200 rounded-full active:bg-gray-100 hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center flex-shrink-0"
               aria-label="Notifications"
             >
-              <Bell className="w-5 h-5" strokeWidth={1.5} />
-              {notificationCount > 0 && (
-                <span className="absolute top-[8px] right-[8px] flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 border border-white"></span>
-                </span>
-              )}
+              <div className="relative flex items-center justify-center">
+                <Bell className="w-5 h-5" strokeWidth={1.5} />
+                {notificationCount > 0 && (
+                  <span className="absolute -top-0.5 right-0.5 flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 border border-white"></span>
+                  </span>
+                )}
+              </div>
             </button>
 
-              {/* Notification Dropdown Panel */}
-              {notificationOpen && (
-                <>
-                  {/* Backdrop */}
-                  <div
-                    className="fixed inset-0 z-30 bg-transparent"
-                    onClick={() => setNotificationOpen(false)}
-                  />
+            {/* Notification Dropdown Panel */}
+            {notificationOpen && (
+              <>
+                {/* Backdrop */}
+                <div
+                  className="fixed inset-0 z-30 bg-transparent"
+                  onClick={() => setNotificationOpen(false)}
+                />
 
-                  {/* Panel - Mobile: Full width from top, Desktop: Dropdown */}
-                  <div className="fixed sm:absolute left-0 right-0 sm:left-auto top-14 sm:top-[calc(100%+4px)] sm:right-0 w-full sm:w-[380px] bg-white sm:rounded-xl sm:border border-gray-200 sm:shadow-lg shadow-black/5 z-40 max-h-[calc(100vh-3.5rem)] sm:max-h-[500px] flex flex-col animate-fade-in origin-top-right">
-                    {/* Header */}
-                    <div className="p-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0 bg-white">
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-lg font-semibold text-gray-900">{t("Notifications")}</h3>
-                        {notificationCount > 0 && (
-                          <span className="bg-[#E5E7EB] text-[#082a42] text-xs font-bold px-2 py-0.5 rounded-full">
-                            {notificationCount}
-                          </span>
-                        )}
-                      </div>
-                      {notifications.some(n => !n.read) && (
-                        <button
-                          onClick={markAllAsRead}
-                          className="text-xs text-[#093C5D] font-semibold hover:text-[#082a42] transition-colors active:scale-95 px-2 py-1"
-                        >
-                          Mark all read
-                        </button>
+                {/* Panel - Mobile: Full width from top, Desktop: Dropdown */}
+                <div className="fixed sm:absolute left-0 right-0 sm:left-auto top-14 sm:top-[calc(100%+4px)] sm:right-0 w-full sm:w-[380px] bg-white sm:rounded-xl sm:border border-gray-200 sm:shadow-lg shadow-black/5 z-40 max-h-[calc(100vh-3.5rem)] sm:max-h-[500px] flex flex-col animate-fade-in origin-top-right">
+                  {/* Header */}
+                  <div className="p-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0 bg-white">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-lg font-semibold text-gray-900">{t("Notifications")}</h3>
+                      {notificationCount > 0 && (
+                        <span className="bg-[#E5E7EB] text-[#082a42] text-xs font-bold px-2 py-0.5 rounded-full">
+                          {notificationCount}
+                        </span>
                       )}
                     </div>
+                    {notifications.some(n => !n.read) && (
+                      <button
+                        onClick={markAllAsRead}
+                        className="text-xs text-[#093C5D] font-semibold hover:text-[#082a42] transition-colors active:scale-95 px-2 py-1"
+                      >
+                        Mark all read
+                      </button>
+                    )}
+                  </div>
 
-                    {/* Notification List */}
-                    <div className="flex-1 overflow-y-auto overscroll-contain">
-                      {notifications.length === 0 ? (
-                        <div className="p-12 text-center">
-                          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
-                            <Bell className="w-8 h-8 text-gray-400" strokeWidth={2} />
-                          </div>
-                          <p className="text-base text-gray-700 font-semibold mb-1">{t("No notifications")}</p>
-                          <p className="text-sm text-gray-500">{t("You're all caught up!")}</p>
+                  {/* Notification List */}
+                  <div className="flex-1 overflow-y-auto overscroll-contain">
+                    {notifications.length === 0 ? (
+                      <div className="p-12 text-center">
+                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+                          <Bell className="w-8 h-8 text-gray-400" strokeWidth={2} />
                         </div>
-                      ) : (
-                        <div className="divide-y divide-gray-100">
-                          {notifications.map((notification) => (
-                            <div
-                              key={notification._id}
-                              onClick={() => !notification.read && markAsRead(notification._id)}
-                              className={`p-4 hover:bg-gray-50 active:bg-gray-100 transition-colors cursor-pointer ${!notification.read ? 'bg-[#F5F5F5]/50' : ''
-                                }`}
-                            >
-                              <div className="flex items-start gap-3">
-                                {/* Icon */}
-                                <div className="flex-shrink-0 w-11 h-11 rounded-full bg-gradient-to-br from-[#E5E7EB] to-[#F5F5F5] flex items-center justify-center text-xl shadow-sm">
-                                  {getNotificationIcon(notification.type)}
-                                </div>
+                        <p className="text-base text-gray-700 font-semibold mb-1">{t("No notifications")}</p>
+                        <p className="text-sm text-gray-500">{t("You're all caught up!")}</p>
+                      </div>
+                    ) : (
+                      <div className="divide-y divide-gray-100">
+                        {notifications.map((notification) => (
+                          <div
+                            key={notification._id}
+                            onClick={() => !notification.read && markAsRead(notification._id)}
+                            className={`p-4 hover:bg-gray-50 active:bg-gray-100 transition-colors cursor-pointer ${!notification.read ? 'bg-[#F5F5F5]/50' : ''
+                              }`}
+                          >
+                            <div className="flex items-start gap-3">
+                              {/* Icon */}
+                              <div className="flex-shrink-0 w-11 h-11 rounded-full bg-gradient-to-br from-[#E5E7EB] to-[#F5F5F5] flex items-center justify-center text-xl shadow-sm">
+                                {getNotificationIcon(notification.type)}
+                              </div>
 
-                                {/* Content */}
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-start justify-between gap-2 mb-1">
-                                    <h4 className={`text-sm font-semibold leading-snug ${!notification.read ? 'text-gray-900' : 'text-gray-700'
-                                      }`}>
-                                      {notification.title}
-                                    </h4>
-                                    {!notification.read && (
-                                      <span className="w-2 h-2 bg-[#093C5D] rounded-full flex-shrink-0 mt-1.5"></span>
-                                    )}
-                                  </div>
-                                  <p className="text-sm text-gray-600 mb-2 line-clamp-2 leading-relaxed">
-                                    {notification.message}
-                                  </p>
-                                  <p className="text-xs text-gray-400 font-medium">
-                                    {getTimeAgo(notification.createdAt)}
-                                  </p>
+                              {/* Content */}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-start justify-between gap-2 mb-1">
+                                  <h4 className={`text-sm font-semibold leading-snug ${!notification.read ? 'text-gray-900' : 'text-gray-700'
+                                    }`}>
+                                    {notification.title}
+                                  </h4>
+                                  {!notification.read && (
+                                    <span className="w-2 h-2 bg-[#093C5D] rounded-full flex-shrink-0 mt-1.5"></span>
+                                  )}
                                 </div>
+                                <p className="text-sm text-gray-600 mb-2 line-clamp-2 leading-relaxed">
+                                  {notification.message}
+                                </p>
+                                <p className="text-xs text-gray-400 font-medium">
+                                  {getTimeAgo(notification.createdAt)}
+                                </p>
                               </div>
                             </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Footer */}
-                    {notifications.length > 0 && (
-                      <div className="p-3 border-t border-gray-100">
-                        <Link
-                          to="/notifications"
-                          onClick={() => setShowNotifications(false)}
-                          className="block w-full text-center text-sm font-semibold text-[#093C5D] hover:text-[#082a42] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 py-2.5 rounded-xl transition-colors"
-                        >
-                          {t('View all notifications →')}
-                        </Link>
+                          </div>
+                        ))}
                       </div>
                     )}
                   </div>
-                </>
-              )}
-            </div>
+
+                  {/* Footer */}
+                  {notifications.length > 0 && (
+                    <div className="p-3 border-t border-gray-100">
+                      <Link
+                        to="/notifications"
+                        onClick={() => setShowNotifications(false)}
+                        className="block w-full text-center text-sm font-semibold text-[#093C5D] hover:text-[#082a42] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 py-2.5 rounded-xl transition-colors"
+                      >
+                        {t('View all notifications →')}
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
 
           {/* Separator */}
           <div className="h-5 w-[1px] bg-gray-200 mx-1 flex-shrink-0"></div>
 
           {/* Profile */}
-          <Link to="/profile" className="flex items-center group flex-shrink-0">
+          <Link
+            to="/profile"
+            className="flex items-center justify-center w-8 h-8 rounded-full border border-gray-200 bg-transparent active:scale-95 active:bg-gray-100 hover:bg-gray-100 transition-all duration-200 flex-shrink-0 overflow-hidden"
+          >
             {/* Avatar */}
             {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
-              <div className="w-8 h-8 rounded-full overflow-hidden active:scale-95 transition-transform flex-shrink-0">
-                <img
-                  src={getImageUrl(user.profileImage)}
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
+              <img
+                src={getImageUrl(user.profileImage)}
+                alt="Profile"
+                className="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
             ) : (
-              <div className="w-8 h-8 rounded-full bg-[#E6F4EA] text-[#137333] flex items-center justify-center font-medium text-sm active:scale-95 transition-transform flex-shrink-0">
-                {getInitials(user?.name)}
-              </div>
+              <User className="w-5 h-5 text-gray-500" strokeWidth={1.5} />
             )}
           </Link>
         </div>
