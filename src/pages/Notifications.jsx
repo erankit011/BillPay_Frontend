@@ -34,14 +34,14 @@ const Notifications = () => {
     onMutate: async (notificationId) => {
       await queryClient.cancelQueries(['notifications']);
       const previousData = queryClient.getQueryData(['notifications']);
-      
+
       queryClient.setQueryData(['notifications'], (old) => {
         if (!old) return old;
         return {
           ...old,
           pages: old.pages.map(page => ({
             ...page,
-            data: page.data.map(notif => 
+            data: page.data.map(notif =>
               notif._id === notificationId ? { ...notif, isRead: true } : notif
             )
           }))
@@ -75,7 +75,7 @@ const Notifications = () => {
   };
 
   const getNotificationIcon = (type) => {
-    switch(type) {
+    switch (type) {
       case 'PAYMENT': return '💰';
       case 'CUSTOMER': return '👤';
       case 'BILL': return '📄';
@@ -122,9 +122,9 @@ const Notifications = () => {
             className="cursor-pointer flex items-center justify-center gap-2 w-full sm:w-auto bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg font-semibold text-xs md:text-sm active:scale-95 transition-all disabled:opacity-50"
           >
             {markAllReadMutation.isPending ? (
-               <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+              <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
             ) : (
-               <CheckCheck className="w-4 h-4 sm:w-5 sm:h-5" />
+              <CheckCheck className="w-4 h-4 sm:w-5 sm:h-5" />
             )}
             {t('Mark all as read')}
           </button>
@@ -138,7 +138,7 @@ const Notifications = () => {
             <Loader2 className="w-8 h-8 md:w-10 md:h-10 text-[#093C5D] animate-spin" />
           </div>
         ) : isError ? (
-           <div className="bg-white border border-gray-200 rounded-xl p-8 md:p-10 lg:p-12 text-center text-red-500">
+          <div className="bg-white border border-gray-200 rounded-xl p-8 md:p-10 lg:p-12 text-center text-red-500">
             <p className="font-medium text-xs md:text-sm">{t('Failed to load notifications.')}</p>
           </div>
         ) : notifications.length === 0 ? (
@@ -155,11 +155,10 @@ const Notifications = () => {
               <div
                 key={notification._id}
                 onClick={() => !notification.isRead && markAsRead(notification._id)}
-                className={`mb-3 md:mb-4 bg-white rounded-xl p-4 md:p-5 border transition-all duration-200 animate-fade-in ${
-                  !notification.isRead 
-                    ? 'cursor-pointer border-[#093C5D]/20 hover:border-[#093C5D]/40 bg-[#093C5D]/[0.02]' 
+                className={`mb-3 md:mb-4 bg-white rounded-xl p-4 md:p-5 border transition-all duration-200 animate-fade-in ${!notification.isRead
+                    ? 'cursor-pointer border-[#093C5D]/20 hover:border-[#093C5D]/40 bg-[#093C5D]/[0.02]'
                     : 'border-gray-200 hover:border-gray-300'
-                }`}
+                  }`}
                 style={{ animationDelay: `${index * 40}ms` }}
               >
                 <div className="flex items-start gap-3 md:gap-4">
@@ -171,9 +170,8 @@ const Notifications = () => {
                   {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2 mb-1 md:mb-1.5">
-                      <h3 className={`text-sm md:text-base font-semibold leading-snug ${
-                        !notification.isRead ? 'text-gray-900' : 'text-gray-700'
-                      }`}>
+                      <h3 className={`text-sm md:text-base font-semibold leading-snug ${!notification.isRead ? 'text-gray-900' : 'text-gray-700'
+                        }`}>
                         {notification.title}
                       </h3>
                       <div className="flex-shrink-0 mt-0.5">
@@ -196,10 +194,10 @@ const Notifications = () => {
                 </div>
               </div>
             ))}
-            <InfiniteScrollObserver 
-              hasNextPage={hasNextPage} 
-              isFetchingNextPage={isFetchingNextPage} 
-              fetchNextPage={fetchNextPage} 
+            <InfiniteScrollObserver
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              fetchNextPage={fetchNextPage}
             />
           </div>
         )}
