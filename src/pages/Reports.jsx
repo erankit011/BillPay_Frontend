@@ -149,7 +149,7 @@ const Reports = () => {
   );
 
   return (
-    <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
+    <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
@@ -181,39 +181,42 @@ const Reports = () => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden animate-fade-in">
+        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden animate-fade-in cursor-default">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <ChartNoAxesCombined className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">
             <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Monthly Sales')}</p>
             <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(analytics?.monthlySales || 0)}</p>
+            <p className="text-[10px] md:text-xs text-green-700 font-medium truncate mt-0.5">{t('Earned this month')}</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden animate-fade-in" style={{ animationDelay: '100ms' }}>
+        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden animate-fade-in cursor-default" style={{ animationDelay: '100ms' }}>
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
               <Wallet className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">
             <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Monthly Collections')}</p>
             <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(analytics?.monthlyCollection || 0)}</p>
+            <p className="text-[10px] md:text-xs text-green-700 font-medium truncate mt-0.5">{t('Collected this month')}</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden animate-fade-in " style={{ animationDelay: '200ms' }}>
+        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-700 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden animate-fade-in cursor-default" style={{ animationDelay: '200ms' }}>
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-red-50 flex items-center justify-center text-red-700 border border-red-100">
               <IndianRupee className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">
             <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Pending')}</p>
             <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(analytics?.pendingAmount || 0)}</p>
+            <p className="text-[10px] md:text-xs text-red-700 font-medium truncate mt-0.5">{t('Needs Collection')}</p>
           </div>
         </div>
       </div>
@@ -233,7 +236,7 @@ const Reports = () => {
           </div>
           <div className="w-full h-[220px] md:h-[250px] lg:h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={salesData} margin={{ top: 5, right: 0, left: -25, bottom: 0 }}>
+              <AreaChart data={salesData} margin={{ top: 20, right: 20, left: -15, bottom: 10 }}>
                 <defs>
                   <linearGradient id="salesGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#4b5563" stopOpacity={0.3} />
@@ -246,9 +249,11 @@ const Reports = () => {
                   axisLine={false}
                   tickLine={false}
                   tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 600 }}
+                  padding={{ left: 20, right: 20 }}
                 />
                 <YAxis
                   axisLine={false}
+                  width={45}
                   tickLine={false}
                   tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 600 }}
                   tickFormatter={(val) => `₹${val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val}`}
@@ -299,7 +304,7 @@ const Reports = () => {
           </div>
           <div className="w-full h-[220px] md:h-[250px] lg:h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={salesData} margin={{ top: 5, right: 0, left: -25, bottom: 0 }}>
+              <AreaChart data={salesData} margin={{ top: 20, right: 20, left: -15, bottom: 10 }}>
                 <defs>
                   <linearGradient id="collectionsGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
@@ -312,9 +317,11 @@ const Reports = () => {
                   axisLine={false}
                   tickLine={false}
                   tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 600 }}
+                  padding={{ left: 20, right: 20 }}
                 />
                 <YAxis
                   axisLine={false}
+                  width={45}
                   tickLine={false}
                   tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 600 }}
                   tickFormatter={(val) => `₹${val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val}`}

@@ -206,7 +206,7 @@ const Customers = () => {
           <div className="mt-auto pt-2 min-w-0">
             <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Customers')}</p>
             <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{totalCount}</p>
-            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">{t('Active accounts')}</p>
+            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">{t('Active Accounts')}</p>
           </div>
         </div>
 
@@ -258,7 +258,7 @@ const Customers = () => {
             <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
               {thisMonthCustomersCount}
             </p>
-            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">{t('New customers')}</p>
+            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">{t('New Customers')}</p>
           </div>
         </div>
       </div>

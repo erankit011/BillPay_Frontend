@@ -73,7 +73,7 @@ const Dashboard = () => {
             <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t("Today's Sales")}</p>
             <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(data?.todaySales ?? 0)}</p>
             <p className="text-[10px] md:text-xs text-green-700 font-medium truncate mt-0.5">
-              {t('Today\'s earnings')}
+              {t('Today\'s Earnings')}
             </p>
           </div>
         </motion.div>
@@ -94,7 +94,7 @@ const Dashboard = () => {
             <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t("Today's Collections")}</p>
             <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{formatCurrency(data?.todayCollection ?? 0)}</p>
             <p className="text-[10px] md:text-xs text-green-700 font-medium truncate mt-0.5">
-              {t('Collected today')}
+              {t('Collected Today')}
             </p>
           </div>
         </motion.div>
@@ -117,7 +117,7 @@ const Dashboard = () => {
               {formatCurrency(data?.pendingAmount ?? 0)}
             </p>
             <p className="text-[10px] md:text-xs text-red-700 font-medium truncate mt-0.5">
-              {t('Needs collection')}
+              {t('Needs Collection')}
             </p>
           </div>
         </motion.div>
@@ -138,7 +138,7 @@ const Dashboard = () => {
             <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Customers')}</p>
             <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{data?.totalCustomers ?? 0}</p>
             <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">
-              {t('Active accounts')}
+              {t('Active Accounts')}
             </p>
           </div>
         </motion.div>
