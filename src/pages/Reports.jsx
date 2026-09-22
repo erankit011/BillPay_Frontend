@@ -8,9 +8,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { useTranslation } from 'react-i18next';
 
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(amount);
-};
+import { formatCurrency } from '../utils/currency';
 
 const Reports = () => {
   const { t } = useTranslation();
@@ -134,8 +132,8 @@ const Reports = () => {
 
     doc.setFontSize(11);
     doc.text(`${t('Total Bills')}: ${filteredBills.length}`, 14, finalY + 12);
-    doc.text(`${t('Total Sales')}: Rs ${totalSales.toFixed(2)}`, 14, finalY + 18);
-    doc.text(`${t('Total Collections')}: Rs ${totalCollections.toFixed(2)}`, 14, finalY + 24);
+    doc.text(`${t('Total Sales')}: ${formatCurrency(totalSales)}`, 14, finalY + 18);
+    doc.text(`${t('Total Collections')}: ${formatCurrency(totalCollections)}`, 14, finalY + 24);
 
     doc.save(`Store_Statement_${statementPeriod}.pdf`);
   };
