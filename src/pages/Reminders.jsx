@@ -7,6 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
 import SearchableSelect from '../components/common/SearchableSelect';
+import { formatDate } from '../utils/dateUtils';
 
 const Reminders = () => {
   const { t } = useTranslation();
@@ -394,7 +395,7 @@ const Reminders = () => {
                       {/* Schedule */}
                       <td className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
                         <span className="text-xs lg:text-sm text-gray-900 font-medium block whitespace-nowrap">
-                          {new Date(reminder.scheduledDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                          {formatDate(reminder.scheduledDate)}
                         </span>
                         <span className="flex items-center gap-1.5 text-[10px] lg:text-xs text-gray-500 font-medium mt-0.5 whitespace-nowrap uppercase tracking-wider">
                           {reminder.type === 'WHATSAPP' ? (
@@ -492,7 +493,7 @@ const Reminders = () => {
                         </div>
                         <div className="flex items-center text-gray-500 text-[11px] sm:text-xs font-medium mt-1">
                           <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1 flex-shrink-0" />
-                          <span className="leading-none pt-[1.5px]">{new Date(reminder.scheduledDate).toLocaleDateString()}</span>
+                          <span className="leading-none pt-[1.5px]">{formatDate(reminder.scheduledDate)}</span>
                         </div>
                       </div>
                     </div>
