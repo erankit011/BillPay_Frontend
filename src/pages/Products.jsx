@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Search, Edit, Trash2, Download, PlusCircle, Wallet, Box, AlertTriangle, Loader2 } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Download, PlusCircle, Wallet, Box, AlertTriangle, Loader2, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -292,34 +292,42 @@ const Products = () => {
         </div>
       </div>
 
-      {/* Search + Filter Row */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4">
-        {/* Search Bar */}
-        <div className="relative flex-1 min-w-0 group">
+      {/* Search Bar + Filter */}
+      {/* Filter Chips */}
+      <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        {[
+          { label: 'All Stocks', value: 'All' },
+          { label: 'In Stock', value: 'In Stock' },
+          { label: 'Low Stock', value: 'Low Stock' },
+          { label: 'Out of Stock', value: 'Out of Stock' },
+        ].map((filter) => (
+          <button
+            key={filter.value}
+            onClick={() => setFilterStock(filter.value)}
+            className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
+              filterStock === filter.value
+                ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
+                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
+            }`}
+          >
+            {t(filter.label)}
+          </button>
+        ))}
+      </div>
+
+      {/* Search Bar */}
+      <div className="flex flex-col w-full mb-3 sm:mb-4">
+        <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-            <Search className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-focus-within:text-[#093C5D] transition-colors" />
+            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
           </div>
           <input
             type="text"
-            placeholder={t("Search products...")}
+            placeholder={t("Search By Products")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block h-10 sm:h-12 w-full pl-9 sm:pl-11 pr-3 sm:pr-4 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm font-medium text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all shadow-none"
+            className="block w-full h-10 sm:h-12 pl-9 sm:pl-10 pr-3 sm:pr-4 bg-white border border-gray-300 rounded-lg text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 placeholder:font-medium focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
           />
-        </div>
-
-        {/* Filter Dropdown */}
-        <div className="relative sm:flex-shrink-0">
-          <select
-            value={filterStock}
-            onChange={(e) => setFilterStock(e.target.value)}
-            className="block h-10 sm:h-12 w-full sm:w-auto sm:min-w-[150px] px-3 sm:px-4 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all cursor-pointer shadow-none"
-          >
-            <option value="All">{t('All Stocks')}</option>
-            <option value="In Stock">{t('In Stock')}</option>
-            <option value="Low Stock">{t('Low Stock')}</option>
-            <option value="Out of Stock">{t('Out of Stock')}</option>
-          </select>
         </div>
       </div>
 
@@ -356,12 +364,15 @@ const Products = () => {
                     <tr key={product._id} className="hover:bg-gray-50/50 transition-colors">
                       <td className="w-[35%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
                         <div className="flex items-center gap-3 lg:gap-4">
-                          <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-lg bg-gray-50 flex items-center justify-center text-xl lg:text-2xl flex-shrink-0 border border-gray-200">
-                            {getProductIcon(product.name)}
+                          <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-lg p-[2px] border border-gray-200 bg-white flex-shrink-0">
+                            <div className="w-full h-full rounded-md flex items-center justify-center text-xl lg:text-2xl bg-gray-50 text-[#093C5D]">
+                              {getProductIcon(product.name)}
+                            </div>
                           </div>
-                          <div className="min-w-0">
-                            <span className="text-xs lg:text-sm font-semibold text-gray-900 truncate block">{product.name}</span>
-                            <span className="text-[9px] lg:text-[10px] text-gray-400 font-medium truncate mt-0.5 block">
+                          <div className="min-w-0 flex flex-col justify-center">
+                            <span className="text-sm lg:text-[15px] font-semibold text-[#093C5D] truncate block mb-0.5">{product.name}</span>
+                            <span className="text-[10px] lg:text-[11px] text-gray-500 font-medium flex items-center whitespace-nowrap">
+                              <Clock className="w-3 h-3 mr-1" />
                               {t('Last updated')} {getTimeAgo(product.updatedAt || product.createdAt)}
                             </span>
                           </div>
@@ -415,16 +426,17 @@ const Products = () => {
                 >
                   <div className="flex justify-between items-start gap-2">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-gray-50 flex items-center justify-center text-xl sm:text-2xl flex-shrink-0 border border-gray-200">
-                        {getProductIcon(product.name)}
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg p-[2px] border border-gray-200 bg-white flex-shrink-0">
+                        <div className="w-full h-full rounded-md flex items-center justify-center text-xl sm:text-2xl bg-gray-50 text-[#093C5D]">
+                          {getProductIcon(product.name)}
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <h3 className="text-[13px] sm:text-sm font-semibold text-gray-900 truncate leading-tight">{product.name}</h3>
-                        </div>
-                        <div className="flex items-center text-gray-500 text-[10px] sm:text-xs font-medium mt-1 gap-2.5">
-                          <span className="truncate">{t('Last updated')} {getTimeAgo(product.updatedAt || product.createdAt)}</span>
-                        </div>
+                      <div className="min-w-0 flex flex-col justify-center">
+                        <h3 className="text-sm sm:text-[15px] font-semibold text-[#093C5D] truncate leading-tight mb-0.5">{product.name}</h3>
+                        <span className="text-[10px] sm:text-[11px] text-gray-500 font-medium flex items-center whitespace-nowrap">
+                          <Clock className="w-3 h-3 mr-1" />
+                          {t('Last updated')} {getTimeAgo(product.updatedAt || product.createdAt)}
+                        </span>
                       </div>
                     </div>
 
@@ -447,18 +459,18 @@ const Products = () => {
                   <div className="border-t border-gray-100 my-2.5 sm:my-3"></div>
 
                   {/* Actions */}
-                  <div className="grid grid-cols-2 gap-2 w-full mt-1.5">
+                  <div className="flex items-center justify-end flex-nowrap gap-1.5 sm:gap-2 w-full mt-1.5 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                     <button
                       onClick={() => openEditModal(product)}
-                      className="cursor-pointer text-gray-700 font-medium bg-gray-50 border border-gray-200 hover:bg-gray-100 px-1.5 sm:px-2.5 py-1.5 rounded-md flex items-center justify-center gap-1.5 transition-all text-[11px] sm:text-xs active:scale-95 whitespace-nowrap leading-none !min-h-0 !min-w-0 !h-fit"
+                      className="shrink-0 cursor-pointer text-gray-700 font-medium bg-gray-50 border border-gray-200 hover:bg-gray-100 px-2 sm:px-3 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                     >
-                      <Edit className="w-3.5 h-3.5 shrink-0" /> <span className="pt-[1px]">{t('Edit')}</span>
+                      <Edit className="w-3.5 h-3.5 mr-1 sm:mr-1.5 shrink-0" /> {t('Edit')}
                     </button>
                     <button
                       onClick={() => handleDelete(product)}
-                      className="cursor-pointer text-red-700 font-medium bg-red-50 border border-red-200 hover:bg-red-100 px-1.5 sm:px-2.5 py-1.5 rounded-md flex items-center justify-center gap-1.5 transition-all text-[11px] sm:text-xs active:scale-95 whitespace-nowrap leading-none !min-h-0 !min-w-0 !h-fit"
+                      className="shrink-0 cursor-pointer text-red-700 font-medium bg-red-50 border border-red-200 hover:bg-red-100 px-2 sm:px-3 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                     >
-                      <Trash2 className="w-3.5 h-3.5 shrink-0" /> <span className="pt-[1px]">{t('Delete')}</span>
+                      <Trash2 className="w-3.5 h-3.5 mr-1 sm:mr-1.5 shrink-0" /> {t('Delete')}
                     </button>
                   </div>
                 </div>
