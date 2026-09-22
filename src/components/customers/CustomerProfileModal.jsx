@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { X, Phone, Mail, MapPin, Clock, IndianRupee, Wallet } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../../utils/currency';
+import { formatDate } from '../../utils/dateUtils';
 
 const CustomerProfileModal = ({ isOpen, onClose, customer }) => {
   const { t } = useTranslation();
@@ -24,7 +25,7 @@ const CustomerProfileModal = ({ isOpen, onClose, customer }) => {
   if (!isOpen || !customer) return null;
 
   const initials = customer.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-  const joinedDate = new Date(customer.createdAt).toLocaleDateString('en-US');
+  const joinedDate = formatDate(customer.createdAt);
 
   const getAvatarColor = (balance) => {
     if (balance > 0) return 'bg-red-50 text-red-700 border-red-200';

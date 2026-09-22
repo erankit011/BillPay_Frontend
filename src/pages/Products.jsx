@@ -7,9 +7,11 @@ import { useTranslation } from 'react-i18next';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import ProductFormModal from '../components/products/ProductFormModal';
+import ProductViewModal from '../components/products/ProductViewModal';
 import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
 
 import { formatCurrency } from '../utils/currency';
+import { formatDate } from '../utils/dateUtils';
 
 // Product icon/emoji mapping
 const getProductIcon = (name) => {
@@ -60,12 +62,13 @@ const Products = () => {
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
+  const [viewProduct, setViewProduct] = useState(null);
 
   const queryClient = useQueryClient();
 
   // Handle body scroll for modals
   useEffect(() => {
-    if (isModalOpen || deleteModalOpen) {
+    if (isModalOpen || deleteModalOpen || viewProduct) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
     } else {
@@ -76,7 +79,7 @@ const Products = () => {
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
     };
-  }, [isModalOpen, deleteModalOpen]);
+  }, [isModalOpen, deleteModalOpen, viewProduct]);
 
   const setFilterStock = (value) => {
     setSearchParams(prev => {
@@ -203,7 +206,7 @@ const Products = () => {
 
     products.forEach(p => {
       const status = p.stock === 0 ? t('Out of Stock') : p.stock < 20 ? t('Low Stock') : t('In Stock');
-      const date = new Date(p.updatedAt || p.createdAt).toLocaleDateString();
+      const date = formatDate(p.updatedAt || p.createdAt);
       const productData = [
         p.name,
         p.price.toString(),
@@ -304,11 +307,10 @@ const Products = () => {
           <button
             key={filter.value}
             onClick={() => setFilterStock(filter.value)}
-            className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
-              filterStock === filter.value
+            className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${filterStock === filter.value
                 ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
                 : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
-            }`}
+              }`}
           >
             {t(filter.label)}
           </button>
@@ -364,16 +366,20 @@ const Products = () => {
                     <tr key={product._id} className="hover:bg-gray-50/50 transition-colors">
                       <td className="w-[35%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
                         <div className="flex items-center gap-3 lg:gap-4">
-                          <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-lg p-[2px] border border-gray-200 bg-white flex-shrink-0">
+                          <div
+                            onClick={(e) => { e.stopPropagation(); setViewProduct(product); }}
+                            className="w-9 h-9 lg:w-10 lg:h-10 rounded-lg p-[2px] border border-gray-200 bg-white flex-shrink-0 cursor-pointer hover:opacity-80 active:scale-95 transition-all"
+                            title={t('View Product')}
+                          >
                             <div className="w-full h-full rounded-md flex items-center justify-center text-xl lg:text-2xl bg-gray-50 text-[#093C5D]">
                               {getProductIcon(product.name)}
                             </div>
                           </div>
                           <div className="min-w-0 flex flex-col justify-center">
                             <span className="text-sm lg:text-[15px] font-semibold text-[#093C5D] truncate block mb-0.5">{product.name}</span>
-                            <span className="text-[10px] lg:text-[11px] text-gray-500 font-medium flex items-center whitespace-nowrap">
-                              <Clock className="w-3 h-3 mr-1" />
-                              {t('Last updated')} {getTimeAgo(product.updatedAt || product.createdAt)}
+                            <span className="text-[10px] lg:text-[11px] text-gray-500 font-medium flex items-center whitespace-nowrap gap-1">
+                              <Clock className="w-[11px] h-[11px] lg:w-3 lg:h-3 shrink-0 mt-[1px]" />
+                              <span>{formatDate(product.updatedAt || product.createdAt)}</span>
                             </span>
                           </div>
                         </div>
@@ -385,10 +391,10 @@ const Products = () => {
                       </td>
                       <td className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
                         <span className={`inline-block px-2.5 py-1 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide text-center ${product.stock === 0
-                            ? 'bg-red-50 text-red-700 border border-red-200'
-                            : product.stock < 20
-                              ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-                              : 'bg-green-50 text-green-700 border border-green-200'
+                          ? 'bg-red-50 text-red-700 border border-red-200'
+                          : product.stock < 20
+                            ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+                            : 'bg-green-50 text-green-700 border border-green-200'
                           }`}>
                           {product.stock === 0 ? t('Out of Stock') : `${product.stock} ${t('in stock')}`}
                         </span>
@@ -426,16 +432,20 @@ const Products = () => {
                 >
                   <div className="flex justify-between items-start gap-2">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg p-[2px] border border-gray-200 bg-white flex-shrink-0">
+                      <div
+                        onClick={(e) => { e.stopPropagation(); setViewProduct(product); }}
+                        className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg p-[2px] border border-gray-200 bg-white flex-shrink-0 cursor-pointer hover:opacity-80 active:scale-95 transition-all"
+                        title={t('View Product')}
+                      >
                         <div className="w-full h-full rounded-md flex items-center justify-center text-xl sm:text-2xl bg-gray-50 text-[#093C5D]">
                           {getProductIcon(product.name)}
                         </div>
                       </div>
                       <div className="min-w-0 flex flex-col justify-center">
                         <h3 className="text-sm sm:text-[15px] font-semibold text-[#093C5D] truncate leading-tight mb-0.5">{product.name}</h3>
-                        <span className="text-[10px] sm:text-[11px] text-gray-500 font-medium flex items-center whitespace-nowrap">
-                          <Clock className="w-3 h-3 mr-1" />
-                          {t('Last updated')} {getTimeAgo(product.updatedAt || product.createdAt)}
+                        <span className="text-[10px] sm:text-[11px] text-gray-500 font-medium flex items-center whitespace-nowrap gap-1">
+                          <Clock className="w-[11px] h-[11px] sm:w-3 sm:h-3 shrink-0 mt-[1px]" />
+                          <span>{formatDate(product.updatedAt || product.createdAt)}</span>
                         </span>
                       </div>
                     </div>
@@ -445,10 +455,10 @@ const Products = () => {
                         {formatCurrency(product.price)}
                       </p>
                       <span className={`px-2 py-0.5 rounded text-[9px] uppercase sm:text-[10px] font-semibold ${product.stock === 0
-                          ? 'bg-red-50 text-red-700 border border-red-200'
-                          : product.stock < 20
-                            ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-                            : 'bg-green-50 text-green-700 border border-green-200'
+                        ? 'bg-red-50 text-red-700 border border-red-200'
+                        : product.stock < 20
+                          ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+                          : 'bg-green-50 text-green-700 border border-green-200'
                         }`}>
                         {product.stock === 0 ? t('Out of Stock') : `${product.stock} ${t('in stock')}`}
                       </span>
@@ -534,6 +544,13 @@ const Products = () => {
           isPending={createMutation.isPending || updateMutation.isPending}
         />
       )}
+
+      {/* View Product Modal */}
+      <ProductViewModal
+        isOpen={viewProduct !== null}
+        onClose={() => setViewProduct(null)}
+        product={viewProduct}
+      />
 
       {/* Delete Confirmation Modal */}
       {deleteModalOpen && productToDelete && (
