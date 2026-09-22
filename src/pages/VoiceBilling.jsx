@@ -270,16 +270,21 @@ const VoiceBilling = () => {
         {inputMode === 'voice' && (
           <div className="bg-gradient-to-br from-[#F5F5F5] via-purple-50 to-white rounded-lg p-6 md:p-8 lg:p-10 text-center flex flex-col items-center justify-center min-h-[400px] md:min-h-[450px] relative overflow-hidden animate-slide-up border border-[#E5E7EB]" style={{ animationDelay: '200ms' }}>
             
-            {/* Animated Background Circles */}
-            {isRecording && (
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-40 h-40 md:w-48 md:h-48 bg-[#D1D5DB] rounded-full animate-ping opacity-60"></div>
-                <div className="absolute w-56 h-56 md:w-64 md:h-64 bg-[#E5E7EB] rounded-full animate-ping opacity-40"></div>
-              </div>
-            )}
+
 
             <div className="relative z-10 flex flex-col items-center w-full space-y-6">
-              {/* Large Circular Mic Button */}
+              {/* Mic Button Wrapper with its own Relative Context */}
+              <div className="relative flex items-center justify-center mt-4 md:mt-8">
+                
+                {/* Premium Animated Rings (Centered exactly on the button) */}
+                {isRecording && (
+                  <>
+                    <div className="absolute w-[140%] h-[140%] bg-red-400/20 rounded-full animate-ping pointer-events-none" style={{ animationDuration: '2s' }}></div>
+                    <div className="absolute w-[180%] h-[180%] bg-red-300/10 rounded-full animate-ping pointer-events-none" style={{ animationDuration: '3s', animationDelay: '500ms' }}></div>
+                  </>
+                )}
+
+                {/* Large Circular Mic Button */}
               <button
                 onClick={isRecording ? stopVoiceRecognition : startVoiceRecognition}
                 disabled={isProcessing}
@@ -295,6 +300,7 @@ const VoiceBilling = () => {
                   <Mic className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 ${isRecording ? 'animate-pulse' : ''}`} />
                 )}
               </button>
+            </div>
 
               {/* Tap to speak text */}
               <div className="h-14 flex flex-col items-center justify-center">

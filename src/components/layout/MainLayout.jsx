@@ -496,16 +496,16 @@ const MainLayout = () => {
                   {t('Are you sure you want to log out?')}
                 </p>
 
-                <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 justify-center w-full mt-2">
+                <div className="flex flex-row gap-3 justify-center w-full mt-4">
                   <button
                     onClick={() => setLogoutModalOpen(false)}
-                    className="cursor-pointer w-full sm:flex-1 px-4 py-2.5 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-sm transition-colors active:scale-95"
+                    className="cursor-pointer flex-1 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-sm transition-colors active:scale-95"
                   >
                     {t('Cancel')}
                   </button>
                   <button
                     onClick={executeLogout}
-                    className="cursor-pointer w-full sm:flex-1 px-4 py-2.5 sm:py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 flex items-center justify-center"
+                    className="cursor-pointer flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 flex items-center justify-center"
                   >
                     {t('Yes, Logout')}
                   </button>
