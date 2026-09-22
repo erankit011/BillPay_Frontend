@@ -10,9 +10,7 @@ import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver'
 import CreateBillModal from '../components/bills/CreateBillModal';
 import ViewBillModal from '../components/bills/ViewBillModal';
 
-const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(amount);
-};
+import { formatCurrency } from '../utils/currency';
 
 const getInitials = (name) => {
     if (!name) return 'WI';

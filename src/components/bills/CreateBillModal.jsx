@@ -306,7 +306,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
                   <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
                     {t('Amount Paid')} <span className="text-red-500">*</span>
                   </label>
-                  <input type="number" {...register('amountPaid')} className={inputCls} placeholder="0.00" />
+                  <input type="number" {...register('amountPaid')} className={inputCls} placeholder="0" />
                   {errors.amountPaid && (
                     <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />

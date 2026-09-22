@@ -9,9 +9,7 @@ import autoTable from 'jspdf-autotable';
 import ProductFormModal from '../components/products/ProductFormModal';
 import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
 
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(amount);
-};
+import { formatCurrency } from '../utils/currency';
 
 // Product icon/emoji mapping
 const getProductIcon = (name) => {

@@ -2,9 +2,7 @@ import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(amount);
-};
+import { formatCurrency } from '../../utils/currency';
 
 const formatPaymentMode = (mode) => {
   if (!mode) return '';

@@ -5,9 +5,7 @@ import { BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, R
 import { Wallet, Users, ChartNoAxesCombined, IndianRupee } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(amount || 0);
-};
+import { formatCurrency } from '../utils/currency';
 
 const Dashboard = () => {
   const { t } = useTranslation();

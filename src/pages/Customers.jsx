@@ -8,9 +8,7 @@ import CustomerLedger from '../components/customers/CustomerLedger';
 import CustomerFormModal from '../components/customers/CustomerFormModal';
 import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
 
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
-};
+import { formatCurrency } from '../utils/currency';
 
 const Customers = () => {
   const { t } = useTranslation();

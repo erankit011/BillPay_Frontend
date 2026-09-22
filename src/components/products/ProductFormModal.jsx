@@ -96,7 +96,7 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
                     step="0.01"
                     {...register('price')}
                     className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.price ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'}`}
-                    placeholder="0.00"
+                    placeholder="0"
                   />
                   {errors.price && (
                     <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">

@@ -4,9 +4,7 @@ import api from '../../api/axios';
 import { Phone, X, IndianRupee, History, ArrowDownRight, ArrowUpRight, Loader2, Calendar, Mail, MessageSquareText, Wallet, Eye, Receipt } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
-};
+import { formatCurrency } from '../../utils/currency';
 
 const formatPaymentMode = (mode) => {
   switch (mode) {
@@ -186,7 +184,7 @@ const CustomerLedger = ({ customer, onClose }) => {
                         if (errors.amount) setErrors({ ...errors, amount: null });
                       }}
                       className={`block w-full h-10 sm:h-11 pl-9 pr-3 py-2 bg-white border ${errors.amount ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'} rounded-lg focus:ring-1 font-medium transition-colors duration-200 text-sm`}
-                      placeholder="0.00"
+                      placeholder="0"
                     />
                   </div>
                   {errors.amount && <p className="text-red-500 text-[10px] sm:text-[11px] mt-0.5 font-medium">{t(errors.amount)}</p>}
