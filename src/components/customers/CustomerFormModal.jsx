@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 const customerSchema = yup.object({
   name: yup.string().required('Name is required'),
   phone: yup.string().matches(/^[0-9]{10}$/, 'Must be a 10 digit number').required('Phone is required'),
-  email: yup.string().email('Invalid email').required('Email is required'),
+  email: yup.string().email('Invalid email').nullable().transform(value => value === '' ? null : value),
   address: yup.string().nullable(),
 });
 
@@ -130,7 +130,7 @@ const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSub
 
               <div>
                 <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
-                  {t('Email')} <span className="text-red-500">*</span>
+                  {t('Email')}
                 </label>
                 <input
                   {...register('email')}
@@ -155,7 +155,6 @@ const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSub
                   rows="3"
                   placeholder={t("Enter Address")}
                 />
-                <p className="text-gray-400 text-[10px] sm:text-[11px] mt-0.5 font-medium">{t('Optional')}</p>
               </div>
 
               <div className="pt-2">
