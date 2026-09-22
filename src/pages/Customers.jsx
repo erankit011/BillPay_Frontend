@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Search, Phone, IndianRupee, History, Loader2, Edit, Trash2, Users, Wallet, FileText, Mail, Calendar } from 'lucide-react';
+import { Plus, Search, Phone, IndianRupee, History, Loader2, Edit, Trash2, Users, Wallet, FileText, Mail, Calendar, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import CustomerLedger from '../components/customers/CustomerLedger';
 import CustomerFormModal from '../components/customers/CustomerFormModal';
+import CustomerProfileModal from '../components/customers/CustomerProfileModal';
 import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
 
 import { formatCurrency } from '../utils/currency';
@@ -19,6 +20,7 @@ const Customers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
+  const [viewProfileCustomer, setViewProfileCustomer] = useState(null);
   const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
 
@@ -333,21 +335,21 @@ const Customers = () => {
                     <tr key={customer._id} className="hover:bg-gray-50/50 transition-colors">
                       <td className="w-[35%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
                         <div className="flex items-center gap-3 lg:gap-4">
-                          <div className={`w-9 h-9 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center text-sm font-semibold flex-shrink-0 ${getAvatarColor(customer.balance)}`}>
-                            {getInitials(customer.name)}
+                          <div 
+                            onClick={(e) => { e.stopPropagation(); setViewProfileCustomer(customer); }}
+                            className="w-9 h-9 lg:w-10 lg:h-10 rounded-lg p-[2px] border border-gray-200 bg-white flex-shrink-0 cursor-pointer hover:opacity-80 active:scale-95 transition-all"
+                            title={t('View Profile')}
+                          >
+                            <div className="w-full h-full rounded-md flex items-center justify-center text-sm font-semibold bg-gray-50 text-[#093C5D]">
+                              {getInitials(customer.name)}
+                            </div>
                           </div>
-                          <div className="min-w-0">
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs lg:text-sm font-semibold text-gray-900 truncate block">{customer.name}</span>
-                              <span className="text-[9px] lg:text-[10px] text-gray-400 bg-gray-50 border border-gray-100 px-1.5 py-0.5 rounded flex items-center whitespace-nowrap">
-                                <Calendar className="w-2.5 h-2.5 mr-1" />
-                                {new Date(customer.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
-                              </span>
-                            </div>
-                            <div className="text-[10px] lg:text-xs text-gray-500 font-medium flex items-center gap-3 mt-1">
-                              <span className="flex items-center whitespace-nowrap"><Phone className="w-3 h-3 mr-1" /> {customer.phone}</span>
-                              {customer.email && <span className="flex items-center truncate"><Mail className="w-3 h-3 mr-1 shrink-0" /> <span className="truncate">{customer.email}</span></span>}
-                            </div>
+                          <div className="min-w-0 flex flex-col justify-center">
+                            <span className="text-sm lg:text-[15px] font-semibold text-[#093C5D] truncate block mb-0.5">{customer.name}</span>
+                            <span className="text-[10px] lg:text-[11px] text-gray-500 font-medium flex items-center whitespace-nowrap">
+                              <Clock className="w-3 h-3 mr-1" />
+                              {new Date(customer.createdAt).toLocaleDateString('en-US')}
+                            </span>
                           </div>
                         </div>
                       </td>
@@ -409,29 +411,21 @@ const Customers = () => {
                 >
                   <div className="flex justify-between items-start gap-2">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-sm font-semibold flex-shrink-0 ${getAvatarColor(customer.balance)}`}>
-                        {getInitials(customer.name)}
+                      <div 
+                        onClick={(e) => { e.stopPropagation(); setViewProfileCustomer(customer); }}
+                        className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg p-[2px] border border-gray-200 bg-white flex-shrink-0 cursor-pointer hover:opacity-80 active:scale-95 transition-all"
+                        title={t('View Profile')}
+                      >
+                        <div className="w-full h-full rounded-md flex items-center justify-center text-sm font-semibold bg-gray-50 text-[#093C5D]">
+                          {getInitials(customer.name)}
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <h3 className="text-[13px] sm:text-sm font-semibold text-gray-900 truncate leading-tight">{customer.name}</h3>
-                          <span className="text-[9px] text-gray-500 bg-gray-50 border border-gray-200 px-1.5 py-0.5 rounded-md whitespace-nowrap flex items-center gap-1">
-                            <Calendar className="w-2.5 h-2.5 shrink-0" />
-                            {new Date(customer.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
-                          </span>
-                        </div>
-                        <div className="flex items-center text-gray-500 text-[10px] sm:text-xs font-medium mt-1 gap-2.5">
-                          <div className="flex items-center whitespace-nowrap">
-                            <Phone className="w-3 h-3 mr-1 flex-shrink-0" />
-                            <span>{customer.phone}</span>
-                          </div>
-                          {customer.email && (
-                            <div className="flex items-center min-w-0">
-                              <Mail className="w-3 h-3 mr-1 flex-shrink-0" />
-                              <span className="truncate">{customer.email}</span>
-                            </div>
-                          )}
-                        </div>
+                      <div className="min-w-0 flex flex-col justify-center">
+                        <h3 className="text-sm sm:text-[15px] font-semibold text-[#093C5D] truncate leading-tight mb-0.5">{customer.name}</h3>
+                        <span className="text-[10px] sm:text-[11px] text-gray-500 font-medium flex items-center whitespace-nowrap">
+                          <Clock className="w-3 h-3 mr-1" />
+                          {new Date(customer.createdAt).toLocaleDateString('en-US')}
+                        </span>
                       </div>
                     </div>
 
@@ -449,13 +443,13 @@ const Customers = () => {
                   <div className="border-t border-gray-100 my-2.5 sm:my-3"></div>
 
                   {/* Actions */}
-                  <div className="grid grid-cols-4 gap-1 sm:gap-1.5 w-full mt-1.5">
+                  <div className="flex items-center justify-end flex-nowrap gap-1.5 sm:gap-2 w-full mt-1.5 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                     <a
                       href={`tel:${customer.phone}`}
                       onClick={(e) => e.stopPropagation()}
-                      className="cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-1.5 sm:px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                      className="shrink-0 cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-2 sm:px-3 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                     >
-                      <Phone className="w-3.5 h-3.5 mr-0.5 sm:mr-1.5 shrink-0" /> <span className="truncate">{t('Call')}</span>
+                      <Phone className="w-3.5 h-3.5 mr-1 sm:mr-1.5 shrink-0" /> {t('Call')}
                     </a>
                     <button
                       onClick={(e) => {
@@ -466,18 +460,18 @@ const Customers = () => {
                           return next;
                         });
                       }}
-                      className="cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-1.5 sm:px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                      className="shrink-0 cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2 sm:px-3 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                     >
-                      <FileText className="w-3.5 h-3.5 mr-0.5 sm:mr-1.5 shrink-0" /> <span className="truncate">{t('Transactions')}</span>
+                      <FileText className="w-3.5 h-3.5 mr-1 sm:mr-1.5 shrink-0" /> {t('Transactions')}
                     </button>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleEdit(customer);
                       }}
-                      className="cursor-pointer text-gray-700 font-medium bg-gray-50 border border-gray-200 hover:bg-gray-100 px-1.5 sm:px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                      className="shrink-0 cursor-pointer text-gray-700 font-medium bg-gray-50 border border-gray-200 hover:bg-gray-100 px-2 sm:px-3 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                     >
-                      <Edit className="w-3.5 h-3.5 mr-0.5 sm:mr-1.5 shrink-0" /> <span className="truncate">{t('Edit')}</span>
+                      <Edit className="w-3.5 h-3.5 mr-1 sm:mr-1.5 shrink-0" /> {t('Edit')}
                     </button>
                     <button
                       onClick={(e) => {
@@ -485,9 +479,9 @@ const Customers = () => {
                         handleDelete(customer);
                       }}
                       disabled={deleteMutation.isPending}
-                      className="cursor-pointer text-red-700 font-medium bg-red-50 border border-red-200 hover:bg-red-100 px-1.5 sm:px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 disabled:opacity-50 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                      className="shrink-0 cursor-pointer text-red-700 font-medium bg-red-50 border border-red-200 hover:bg-red-100 px-2 sm:px-3 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 disabled:opacity-50 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                     >
-                      <Trash2 className="w-3.5 h-3.5 mr-0.5 sm:mr-1.5 shrink-0" /> <span className="truncate">{t('Delete')}</span>
+                      <Trash2 className="w-3.5 h-3.5 mr-1 sm:mr-1.5 shrink-0" /> {t('Delete')}
                     </button>
                   </div>
                 </div>
@@ -554,14 +548,14 @@ const Customers = () => {
                       setDeleteModalOpen(false);
                       setCustomerToDelete(null);
                     }}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-sm transition-colors active:scale-95"
+                    className="cursor-pointer flex-1 px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium text-xs sm:text-[13px] transition-colors active:scale-95"
                   >
                     {t('Cancel')}
                   </button>
                   <button
                     onClick={confirmDelete}
                     disabled={deleteMutation.isPending}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 sm:gap-2"
+                    className="cursor-pointer flex-1 px-3 py-1.5 sm:px-4 sm:py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium text-xs sm:text-[13px] transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
                   >
                     {deleteMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
                     {t('Yes, Delete')}
@@ -596,6 +590,13 @@ const Customers = () => {
           {t('Add Customer')}
         </button>
       )}
+
+      {/* Customer Profile Modal */}
+      <CustomerProfileModal
+        isOpen={!!viewProfileCustomer}
+        onClose={() => setViewProfileCustomer(null)}
+        customer={viewProfileCustomer}
+      />
     </div>
   );
 };
