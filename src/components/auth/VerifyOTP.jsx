@@ -34,8 +34,8 @@ const VerifyOTP = ({ type = 'registration' }) => {
       resendEndpoint: '/auth/resend-verification-otp',
     },
     login: {
-      verifyEndpoint: '/auth/login/verify-password-otp',
-      resendEndpoint: '/auth/login/resend-password-otp',
+      verifyEndpoint: '/auth/login/verify-otp',
+      resendEndpoint: '/auth/login/send-otp',
     }
   };
 
