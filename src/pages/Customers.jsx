@@ -21,7 +21,7 @@ const Customers = () => {
   const [editingCustomer, setEditingCustomer] = useState(null);
   const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
-  
+
   const setFilterBalance = (value) => {
     setSearchParams(prev => {
       const next = new URLSearchParams(prev);
@@ -77,8 +77,8 @@ const Customers = () => {
   });
 
   const viewTransactionId = searchParams.get('viewTransaction');
-  const activeCustomer = viewTransactionId && data?.pages 
-    ? data.pages.flatMap(p => p.data || []).find(c => c._id === viewTransactionId) 
+  const activeCustomer = viewTransactionId && data?.pages
+    ? data.pages.flatMap(p => p.data || []).find(c => c._id === viewTransactionId)
     : null;
 
   // Handle body scroll for delete modal
@@ -262,32 +262,42 @@ const Customers = () => {
       </div>
 
       {/* Search Bar + Filter */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
-        {/* Search Input */}
+      {/* Filter Chips */}
+      <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        {[
+          { label: 'All Customers', value: 'All' },
+          { label: 'Pending Udhar', value: 'Pending' },
+          { label: 'Advance Given', value: 'Advance' },
+          { label: 'Settled', value: 'Settled' },
+        ].map((filter) => (
+          <button
+            key={filter.value}
+            onClick={() => setFilterBalance(filter.value)}
+            className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
+              filterBalance === filter.value
+                ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
+                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
+            }`}
+          >
+            {t(filter.label)}
+          </button>
+        ))}
+      </div>
+
+      {/* Search Bar */}
+      <div className="flex flex-col w-full">
         <div className="relative flex-1">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
             <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
           </div>
           <input
             type="text"
-            placeholder={t("Search by customer name...")}
+            placeholder={t("Search By Name Or Number")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all shadow-none"
+            className="block w-full h-10 sm:h-12 pl-8 sm:pl-10 pr-3 sm:pr-4 bg-white border border-gray-300 rounded-lg text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 placeholder:font-medium focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
           />
         </div>
-
-        {/* Filter Dropdown */}
-        <select
-          value={filterBalance}
-          onChange={(e) => setFilterBalance(e.target.value)}
-          className="block h-10 sm:h-12 w-full sm:w-auto sm:min-w-[150px] px-3 sm:px-4 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all cursor-pointer shadow-none"
-        >
-          <option value="All">{t('All Customers')}</option>
-          <option value="Pending">{t('Pending Udhar')}</option>
-          <option value="Advance">{t('Advance Given')}</option>
-          <option value="Settled">{t('Settled')}</option>
-        </select>
       </div>
 
       {/* Customer List */}
@@ -515,64 +525,64 @@ const Customers = () => {
       {deleteModalOpen && customerToDelete && (
         <div className="fixed inset-0 z-[100]">
           {/* Backdrop */}
-          <div 
-            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" 
+          <div
+            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
             onClick={() => {
               setDeleteModalOpen(false);
               setCustomerToDelete(null);
-            }} 
+            }}
           />
-          
+
           {/* Modal Content */}
           <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
-            <div 
-              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100" 
+            <div
+              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-5 sm:p-6 text-center">
-              <div className="w-12 h-12 rounded-full bg-red-50 mx-auto flex items-center justify-center mb-4 border border-red-100">
-                <Trash2 className="w-6 h-6 text-red-600" />
-              </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{t('Delete Customer')}</h3>
-              <p className="text-gray-500 text-sm mb-6 font-medium">
-                {t('Are you sure you want to delete')} <span className="font-semibold text-gray-800">{customerToDelete.name}</span>? {t('This action cannot be undone.')}
-              </p>
-              
-              <div className="flex gap-2 sm:gap-3 justify-center">
-                <button
-                  onClick={() => {
-                    setDeleteModalOpen(false);
-                    setCustomerToDelete(null);
-                  }}
-                  className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-sm transition-colors active:scale-95"
-                >
-                  {t('Cancel')}
-                </button>
-                <button
-                  onClick={confirmDelete}
-                  disabled={deleteMutation.isPending}
-                  className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 sm:gap-2"
-                >
-                  {deleteMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-                  {t('Yes, Delete')}
-                </button>
+                <div className="w-12 h-12 rounded-full bg-red-50 mx-auto flex items-center justify-center mb-4 border border-red-100">
+                  <Trash2 className="w-6 h-6 text-red-600" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{t('Delete Customer')}</h3>
+                <p className="text-gray-500 text-sm mb-6 font-medium">
+                  {t('Are you sure you want to delete')} <span className="font-semibold text-gray-800">{customerToDelete.name}</span>? {t('This action cannot be undone.')}
+                </p>
+
+                <div className="flex gap-2 sm:gap-3 justify-center">
+                  <button
+                    onClick={() => {
+                      setDeleteModalOpen(false);
+                      setCustomerToDelete(null);
+                    }}
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-sm transition-colors active:scale-95"
+                  >
+                    {t('Cancel')}
+                  </button>
+                  <button
+                    onClick={confirmDelete}
+                    disabled={deleteMutation.isPending}
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 sm:gap-2"
+                  >
+                    {deleteMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
+                    {t('Yes, Delete')}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        </div>
       )}
 
       {activeCustomer && (
-        <CustomerLedger 
-          customer={activeCustomer} 
+        <CustomerLedger
+          customer={activeCustomer}
           onClose={() => {
             setSearchParams(prev => {
               const next = new URLSearchParams(prev);
               next.delete('viewTransaction');
               return next;
             });
-          }} 
+          }}
         />
       )}
 
