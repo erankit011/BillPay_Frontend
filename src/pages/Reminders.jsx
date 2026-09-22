@@ -254,7 +254,7 @@ const Reminders = () => {
           <div className="mt-auto pt-2 min-w-0">
             <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Reminders Sent')}</p>
             <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{stats.sentCount}</p>
-            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">{t('Delivered successfully')}</p>
+            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">{t('Delivered Successfully')}</p>
           </div>
         </div>
 
