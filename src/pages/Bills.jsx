@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Search, FileText, Send, Loader2, Wallet, Users, Mail, MessageSquare, MoreVertical, IndianRupee, Eye, Filter, Download, Printer } from 'lucide-react';
+import { Plus, Search, FileText, Send, Loader2, Wallet, Users, Mail, MessageSquare, MoreVertical, IndianRupee, Eye, Filter, Download, Printer, Clock, Hash } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { generateInvoicePDF } from '../utils/generateInvoicePDF';
@@ -11,6 +11,7 @@ import CreateBillModal from '../components/bills/CreateBillModal';
 import ViewBillModal from '../components/bills/ViewBillModal';
 
 import { formatCurrency } from '../utils/currency';
+import { formatDate } from '../utils/dateUtils';
 
 const getInitials = (name) => {
     if (!name) return 'WI';
@@ -21,19 +22,6 @@ const getInitials = (name) => {
     return name.substring(0, 2).toUpperCase();
 };
 
-const getAvatarStyle = (status) => {
-    switch (status) {
-        case 'UNPAID':
-            return 'bg-red-50 text-red-700 border-red-200';
-        case 'PARTIAL':
-            return 'bg-yellow-50 text-yellow-700 border-yellow-200';
-        case 'PAID':
-        case 'ADVANCE':
-            return 'bg-green-50 text-green-700 border-green-200';
-        default:
-            return 'bg-gray-100 text-gray-700 border-gray-200';
-    }
-};
 
 const Bills = () => {
     const { t } = useTranslation();
@@ -44,7 +32,7 @@ const Bills = () => {
 
     const [searchTerm, setSearchTerm] = useState(initialSearch);
     const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
-    
+
     const setFilterStatus = (value) => {
         setSearchParams(prev => {
             const next = new URLSearchParams(prev);
@@ -376,11 +364,11 @@ const Bills = () => {
                                             className={`bg-white border-b border-gray-100 last:border-b-0 hover:bg-[#F5F5F5]/60 transition-colors duration-150 relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
                                         >
                                             <td className="px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
-                                                <div className="flex items-center gap-2.5">
-                                                    <div className={`w-8 h-8 lg:w-9 lg:h-9 rounded-lg flex items-center justify-center flex-shrink-0 border ${getAvatarStyle(bill.paymentStatus)}`}>
-                                                        <span className="text-[10px] lg:text-xs font-semibold">
+                                                <div className="flex items-center gap-3 w-full">
+                                                    <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-lg p-[2px] border border-gray-200 bg-white flex-shrink-0">
+                                                        <div className="w-full h-full rounded-md flex items-center justify-center text-sm lg:text-base font-semibold bg-gray-50 text-[#093C5D]">
                                                             {getInitials(bill.customerId?.name)}
-                                                        </span>
+                                                        </div>
                                                     </div>
                                                     <span className="text-xs lg:text-sm font-semibold text-[#093C5D] truncate">{bill.invoiceNumber}</span>
                                                 </div>
@@ -394,8 +382,7 @@ const Bills = () => {
                                                 )}
                                             </td>
                                             <td className="px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
-                                                <span className="text-xs lg:text-sm text-gray-900 font-medium block whitespace-nowrap">{new Date(bill.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
-                                                <span className="text-[10px] lg:text-xs text-gray-500 font-medium block mt-0.5 whitespace-nowrap uppercase tracking-wider">{new Date(bill.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })}</span>
+                                                <span className="text-xs lg:text-sm text-gray-900 font-medium block whitespace-nowrap">{formatDate(bill.createdAt)}</span>
                                             </td>
                                             <td className="px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
                                                 <span className="text-xs lg:text-sm font-semibold text-gray-900 block">{formatCurrency(bill.grandTotal)}</span>
@@ -430,19 +417,22 @@ const Bills = () => {
                                                                 return next;
                                                             });
                                                         }}
-                                                        className="cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
+                                                        className="shrink-0 cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2 sm:px-3 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                                                         title={t('View Bill')}
                                                     >
-                                                        <Eye className="w-3.5 h-3.5 mr-1.5" /> {t('View')}
+                                                        <Eye className="w-3.5 h-3.5 mr-1 sm:mr-1.5 shrink-0" /> {t('View')}
                                                     </button>
 
                                                     <div className="relative inline-block action-dropdown">
                                                         <button
-                                                            onClick={() => setOpenDropdown(openDropdown === bill._id ? null : bill._id)}
-                                                            className="cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setOpenDropdown(openDropdown === bill._id ? null : bill._id);
+                                                            }}
+                                                            className="shrink-0 cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-2 sm:px-3 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                                                         >
-                                                            <Send className="w-3.5 h-3.5 mr-1.5" /> {t('Send')}
-                                                            <MoreVertical className="w-3.5 h-3.5 ml-0.5" />
+                                                            <Send className="w-3.5 h-3.5 mr-1 sm:mr-1.5 shrink-0" /> {t('Send')}
+                                                            <MoreVertical className="w-3.5 h-3.5 ml-0.5 shrink-0" />
                                                         </button>
 
                                                         {/* Dropdown Menu */}
@@ -535,74 +525,75 @@ const Bills = () => {
                                     className={`bg-white border border-gray-200 rounded-lg p-3 sm:p-4 animate-fade-in transition-colors relative ${openDropdown === bill._id ? 'z-50' : 'z-0'}`}
                                     style={{ animationDelay: `${index * 50}ms` }}
                                 >
-                                    <div className="flex items-start gap-2.5 sm:gap-3">
-                                        <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg border flex items-center justify-center flex-shrink-0 ${getAvatarStyle(bill.paymentStatus)}`}>
-                                            <span className="text-xs font-semibold">
-                                                {getInitials(bill.customerId?.name)}
-                                            </span>
+                                    <div className="flex justify-between items-start gap-2">
+                                        <div className="flex items-center gap-2.5 min-w-0">
+                                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg p-[2px] border border-gray-200 bg-white flex-shrink-0">
+                                                <div className="w-full h-full rounded-md flex items-center justify-center text-sm font-semibold bg-gray-50 text-[#093C5D]">
+                                                    {getInitials(bill.customerId?.name)}
+                                                </div>
+                                            </div>
+                                            <div className="min-w-0 flex flex-col justify-center">
+                                                <h3 className="text-sm sm:text-[15px] font-semibold text-[#093C5D] truncate leading-tight mb-0.5">{bill.customerId?.name || t('Walk-in Customer')}</h3>
+                                                <span className="text-[11px] sm:text-xs font-medium text-gray-500 flex items-center whitespace-nowrap gap-0.5">
+                                                    <Hash className="w-[11px] h-[11px] sm:w-3 sm:h-3 shrink-0" />
+                                                    <span>{bill.invoiceNumber}</span>
+                                                </span>
+                                            </div>
                                         </div>
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex justify-between items-start">
-                                                <h4 className="text-[13px] sm:text-sm font-semibold text-gray-900 truncate pr-2 leading-tight">{bill.customerId?.name || t('Walk-in Customer')}</h4>
-                                                <p className="text-[14px] sm:text-[15px] font-semibold text-gray-900 flex-shrink-0 leading-tight text-right">{formatCurrency(bill.grandTotal)}</p>
-                                            </div>
 
-                                            <div className="flex justify-between items-start mt-0.5">
-                                                <div className="flex flex-col gap-1">
-                                                    <p className="text-[11px] sm:text-xs font-semibold text-[#093C5D] leading-tight mt-0.5">{bill.invoiceNumber}</p>
-                                                    <p className="text-[10px] sm:text-xs text-gray-500 whitespace-nowrap leading-tight">
-                                                        {new Date(bill.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })} • {new Date(bill.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })}
-                                                    </p>
-                                                </div>
-                                                <div className="text-right flex-shrink-0 flex flex-col items-end gap-0.5">
-                                                    {bill.grandTotal > (bill.amountPaid || 0) ? (
-                                                        <p className="text-[10px] text-red-700 font-medium leading-tight">
-                                                            {t('Bill Due')}: {formatCurrency(bill.grandTotal - (bill.amountPaid || 0))}
-                                                        </p>
-                                                    ) : (bill.amountPaid || 0) > bill.grandTotal ? (
-                                                        <p className="text-[10px] text-green-700 font-medium leading-tight">
-                                                            {t('Advance')}: {formatCurrency((bill.amountPaid || 0) - bill.grandTotal)}
-                                                        </p>
-                                                    ) : null}
-                                                    {bill.customerId?.balance > 0 && (
-                                                        <p className="text-[10px] text-red-700 font-medium leading-tight">
-                                                            {t('Total Due')}: {formatCurrency(bill.customerId.balance)}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                            </div>
+                                        <div className="text-right flex-shrink-0 flex flex-col items-end gap-0.5">
+                                            <p className="text-[14px] sm:text-[15px] font-semibold text-gray-900 leading-tight">{formatCurrency(bill.grandTotal)}</p>
+                                            {bill.grandTotal > (bill.amountPaid || 0) ? (
+                                                <p className="text-[10px] text-red-700 font-medium leading-tight">
+                                                    {t('Bill Due')}: {formatCurrency(bill.grandTotal - (bill.amountPaid || 0))}
+                                                </p>
+                                            ) : (bill.amountPaid || 0) > bill.grandTotal ? (
+                                                <p className="text-[10px] text-green-700 font-medium leading-tight">
+                                                    {t('Advance')}: {formatCurrency((bill.amountPaid || 0) - bill.grandTotal)}
+                                                </p>
+                                            ) : null}
+                                            {bill.customerId?.balance > 0 && (
+                                                <p className="text-[10px] text-red-700 font-medium leading-tight">
+                                                    {t('Total Due')}: {formatCurrency(bill.customerId.balance)}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
 
                                     {/* Divider inside card */}
                                     <div className="border-t border-gray-100 my-2.5 sm:my-3"></div>
 
-                                    <div className="flex justify-between items-center gap-2">
-                                        <span className={`px-2 py-0.5 rounded text-[9px] uppercase sm:text-[10px] font-semibold
-                          ${(bill.paymentStatus === 'PAID' || bill.paymentStatus === 'ADVANCE') ? 'bg-green-50 text-green-700 border border-green-200' :
-                                                bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
-                                                    'bg-red-50 text-red-700 border border-red-200'}`}>
-                                            {bill.paymentStatus === 'PAID' ? t('Paid') : bill.paymentStatus === 'UNPAID' ? t('Unpaid') : bill.paymentStatus === 'PARTIAL' ? t('Partial') : bill.paymentStatus === 'ADVANCE' ? t('Advance') : bill.paymentStatus}
-                                        </span>
+                                    <div className="flex flex-wrap justify-between items-center gap-2">
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <span className={`px-2 py-0.5 rounded text-[9px] uppercase sm:text-[10px] font-semibold
+                                                ${(bill.paymentStatus === 'PAID' || bill.paymentStatus === 'ADVANCE') ? 'bg-green-50 text-green-700 border border-green-200' :
+                                                    bill.paymentStatus === 'PARTIAL' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
+                                                        'bg-red-50 text-red-700 border border-red-200'}`}>
+                                                {bill.paymentStatus === 'PAID' ? t('Paid') : bill.paymentStatus === 'UNPAID' ? t('Unpaid') : bill.paymentStatus === 'PARTIAL' ? t('Partial') : bill.paymentStatus === 'ADVANCE' ? t('Advance') : bill.paymentStatus}
+                                            </span>
+                                        </div>
 
-                                        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                        <div className="flex items-center gap-2 ml-auto" onClick={(e) => e.stopPropagation()}>
                                             <button
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     handleSetViewBill(bill);
                                                 }}
-                                                className="cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                                                className="cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2 sm:px-3 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                                             >
-                                                <Eye className="w-3.5 h-3.5 mr-1.5" /> {t('View')}
+                                                <Eye className="w-3.5 h-3.5 mr-1 sm:mr-1.5 shrink-0" /> {t('View')}
                                             </button>
 
                                             <div className="relative action-dropdown">
                                                 <button
-                                                    onClick={() => setOpenDropdown(openDropdown === bill._id ? null : bill._id)}
-                                                    className="cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setOpenDropdown(openDropdown === bill._id ? null : bill._id);
+                                                    }}
+                                                    className="cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-2 sm:px-3 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
                                                 >
-                                                    <Send className="w-3.5 h-3.5 mr-1.5" /> {t('Send')}
-                                                    <MoreVertical className="w-3.5 h-3.5 ml-0.5" />
+                                                    <Send className="w-3.5 h-3.5 mr-1 sm:mr-1.5 shrink-0" /> {t('Send')}
+                                                    <MoreVertical className="w-3.5 h-3.5 ml-0.5 shrink-0" />
                                                 </button>
 
                                                 {/* Dropdown Menu */}
