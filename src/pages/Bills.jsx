@@ -301,45 +301,42 @@ const Bills = () => {
                 </div>
             </div>
 
-            {/* Search Bar + Filter - Clean Modern UI */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full mb-4 sm:mb-6">
+            {/* Filter Chips */}
+            <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                {[
+                    { label: 'All Bills', value: 'All' },
+                    { label: 'Paid', value: 'PAID' },
+                    { label: 'Unpaid', value: 'UNPAID' },
+                    { label: 'Partial', value: 'PARTIAL' },
+                    { label: 'Advance', value: 'ADVANCE' },
+                ].map((filter) => (
+                    <button
+                        key={filter.value}
+                        onClick={() => setFilterStatus(filter.value)}
+                        className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${filterStatus === filter.value
+                            ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
+                            : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
+                            }`}
+                    >
+                        {t(filter.label)}
+                    </button>
+                ))}
+            </div>
 
-                {/* Search Input */}
-                <div className="relative flex-1">
+            {/* Search Bar */}
+            <div className="flex flex-col w-full mb-3 sm:mb-4">
+                <div className="relative flex-1 w-full">
                     <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
                         <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
                     </div>
                     <input
                         type="text"
-                        placeholder={t("Search bills or customer...")}
+                        placeholder={t("Search By Bill Or Customer")}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all shadow-none"
+                        className="block w-full h-10 sm:h-12 pl-9 sm:pl-10 pr-3 sm:pr-4 bg-white border border-gray-300 rounded-lg text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 placeholder:font-medium focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
                     />
                 </div>
-
-                {/* Filter Dropdown */}
-                <div className="relative sm:flex-shrink-0">
-                    <div className="absolute inset-y-0 left-0 pl-3 sm:pl-3 flex items-center pointer-events-none">
-                        <Filter className="h-4 w-4 text-gray-400" />
-                    </div>
-                    <select
-                        value={filterStatus}
-                        onChange={(e) => setFilterStatus(e.target.value)}
-                        className="block h-10 sm:h-12 w-full sm:w-auto sm:min-w-[130px] pl-9 sm:pl-9 pr-8 sm:pr-8 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all cursor-pointer appearance-none bg-no-repeat bg-[right_12px_center] shadow-none"
-                        style={{
-                            backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-                            backgroundSize: '1.2em 1.2em'
-                        }}
-                    >
-                        <option value="All">{t('All Bills')}</option>
-                        <option value="PAID">{t('Paid')}</option>
-                        <option value="UNPAID">{t('Unpaid')}</option>
-                        <option value="PARTIAL">{t('Partial')}</option>
-                        <option value="ADVANCE">{t('Advance')}</option>
-                    </select>
-                </div>
-
             </div>
 
             {/* Bills Table */}
