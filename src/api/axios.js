@@ -7,6 +7,7 @@ const api = axios.create({
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': 'https://billpay-frontend-wk6i.onrender.com',
     'Access-Control-Allow-Credentials': 'true',
+    "ngrok-skip-browser-warning": "true",
   },
 });
 
