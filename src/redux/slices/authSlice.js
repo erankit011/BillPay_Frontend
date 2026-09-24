@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   user: null,
   isAuthenticated: false,
-  isLoading: true, // initial load checks auth
+  isLoading: localStorage.getItem('isLoggedIn') === 'true', // Only show initial loader if user is logged in
 };
 
 const authSlice = createSlice({
@@ -14,18 +14,19 @@ const authSlice = createSlice({
       state.user = action.payload.user || action.payload;
       state.isAuthenticated = true;
       state.isLoading = false;
-      // Tokens are stored in httpOnly cookies (no localStorage needed)
+      localStorage.setItem('isLoggedIn', 'true');
     },
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
       state.isLoading = false;
-      // Cookies are cleared by server on logout
+      localStorage.removeItem('isLoggedIn');
     },
     setUser: (state, action) => {
       state.user = action.payload;
       state.isAuthenticated = true;
       state.isLoading = false;
+      localStorage.setItem('isLoggedIn', 'true');
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
