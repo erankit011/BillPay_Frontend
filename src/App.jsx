@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { store } from './redux/store';
 import AppRoutes from './routes/AppRoutes';
-import { setLoading, setUser } from './redux/slices/authSlice';
+import { setLoading, setUser, logout } from './redux/slices/authSlice';
 import api from './api/axios';
 import ServerUnreachable from './components/common/ServerUnreachable';
 
@@ -37,8 +37,10 @@ const AuthInitializer = ({ children }) => {
         if (!error.response) {
           // Network error or Server Down
           setIsNetworkError(true);
+          dispatch(setLoading(false));
+        } else {
+          dispatch(logout());
         }
-        dispatch(setLoading(false));
       }
     };
     initAuth();

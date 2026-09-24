@@ -73,7 +73,11 @@ const AppRoutes = () => {
     }>
       <Routes>
         {/* Landing Page - Public */}
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={
+          <PublicRoute>
+            <Landing />
+          </PublicRoute>
+        } />
         
         {/* Static Pages - Public */}
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
