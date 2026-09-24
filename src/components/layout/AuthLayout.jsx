@@ -4,17 +4,9 @@ import { useSelector } from 'react-redux';
 
 const AuthLayout = () => {
   const { t } = useTranslation();
-  const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const location = useLocation();
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#093C5D]"></div>
-      </div>
-    );
-  }
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />;

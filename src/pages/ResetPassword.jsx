@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 
+
 const ResetPassword = () => {
   const { t } = useTranslation();
   const { resetToken } = useParams();

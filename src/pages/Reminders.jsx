@@ -7,6 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
 import SearchableSelect from '../components/common/SearchableSelect';
+import SwirlingLoader from '../components/common/SwirlingLoader';
 import { formatDate } from '../utils/dateUtils';
 
 const Reminders = () => {
@@ -330,7 +331,7 @@ const Reminders = () => {
       <div className="bg-white md:border md:border-gray-100 md:rounded-lg overflow-hidden">
         {isLoading ? (
           <div className="flex justify-center items-center py-12 border border-gray-100 rounded-lg md:border-none">
-            <Loader2 className="w-6 h-6 md:w-8 md:h-8 animate-spin text-[#093C5D]" />
+            <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#093C5D]" />
           </div>
         ) : isError ? (
           <div className="flex flex-col items-center justify-center min-h-[300px] py-12 border border-gray-100 rounded-lg md:border-none">

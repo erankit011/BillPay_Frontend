@@ -9,6 +9,7 @@ import autoTable from 'jspdf-autotable';
 import ProductFormModal from '../components/products/ProductFormModal';
 import ProductViewModal from '../components/products/ProductViewModal';
 import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
+import SwirlingLoader from '../components/common/SwirlingLoader';
 
 import { formatCurrency } from '../utils/currency';
 import { formatDate } from '../utils/dateUtils';
@@ -337,7 +338,7 @@ const Products = () => {
       <div className="bg-white md:border md:border-gray-100 md:rounded-lg overflow-hidden">
         {isLoading ? (
           <div className="flex justify-center items-center py-12">
-            <div className="animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-[#093C5D]"></div>
+            <SwirlingLoader className="w-10 h-10 text-[#093C5D]" />
           </div>
         ) : isError ? (
           <div className="bg-white rounded-lg border border-red-200 md:border-none p-8 md:p-12 text-center text-red-700">

@@ -7,6 +7,7 @@ import { Download, Wallet, IndianRupee, ChartNoAxesCombined } from 'lucide-react
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { useTranslation } from 'react-i18next';
+import SwirlingLoader from '../components/common/SwirlingLoader';
 
 import { formatCurrency } from '../utils/currency';
 
@@ -141,8 +142,8 @@ const Reports = () => {
   const salesData = analytics?.chartData || [];
 
   if (analyticsLoading) return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#093C5D]"></div>
+    <div className="flex items-center justify-center min-h-[80vh]">
+      <SwirlingLoader />
     </div>
   );
 
