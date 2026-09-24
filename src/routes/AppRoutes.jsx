@@ -29,15 +29,7 @@ const TermsOfService = lazy(() => import('../pages/TermsOfService'));
 const ContactSupport = lazy(() => import('../pages/ContactSupport'));
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
-
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#093C5D]"></div>
-      </div>
-    );
-  }
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
@@ -47,15 +39,7 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const PublicRoute = ({ children }) => {
-  const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
-
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#093C5D]"></div>
-      </div>
-    );
-  }
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
@@ -66,11 +50,7 @@ const PublicRoute = ({ children }) => {
 
 const AppRoutes = () => {
   return (
-    <Suspense fallback={
-      <div className="flex h-screen items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#093C5D]"></div>
-      </div>
-    }>
+    <Suspense fallback={<div className="min-h-screen bg-gray-50"></div>}>
       <Routes>
         {/* Landing Page - Public */}
         <Route path="/" element={

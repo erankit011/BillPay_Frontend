@@ -3,6 +3,7 @@ import { Bell, Check, CheckCheck, Loader2 } from 'lucide-react';
 import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
 import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
+import SwirlingLoader from '../components/common/SwirlingLoader';
 
 const Notifications = () => {
   const { t } = useTranslation();
@@ -135,7 +136,7 @@ const Notifications = () => {
       <div className="space-y-3 md:space-y-4">
         {isLoading ? (
           <div className="bg-white rounded-xl p-8 md:p-10 lg:p-12 text-center border border-gray-200 flex justify-center">
-            <Loader2 className="w-8 h-8 md:w-10 md:h-10 text-[#093C5D] animate-spin" />
+            <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#093C5D]" />
           </div>
         ) : isError ? (
           <div className="bg-white border border-gray-200 rounded-xl p-8 md:p-10 lg:p-12 text-center text-red-500">

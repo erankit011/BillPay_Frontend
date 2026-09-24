@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
+import SwirlingLoader from '../components/common/SwirlingLoader';
 
 const Settings = () => {
   const { t } = useTranslation();
@@ -67,8 +68,8 @@ const Settings = () => {
 
   if (fetching) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#093C5D]"></div>
+      <div className="flex items-center justify-center min-h-[80vh]">
+        <SwirlingLoader />
       </div>
     );
   }

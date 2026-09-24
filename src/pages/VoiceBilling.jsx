@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Mic, Loader2, CheckCircle2, Keyboard } from 'lucide-react';
 import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
+import SwirlingLoader from '../components/common/SwirlingLoader';
 
 const VoiceBilling = () => {
   const { t } = useTranslation();
@@ -295,7 +296,7 @@ const VoiceBilling = () => {
                 } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 {isProcessing ? (
-                  <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 animate-spin" />
+                  <SwirlingLoader className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-white" />
                 ) : (
                   <Mic className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 ${isRecording ? 'animate-pulse' : ''}`} />
                 )}

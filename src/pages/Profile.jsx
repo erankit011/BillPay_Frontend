@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Save, User, Mail, Phone, Store, Camera } from 'lucide-react';
 import { setUser } from '../redux/slices/authSlice';
 import api from '../api/axios';
+import SwirlingLoader from '../components/common/SwirlingLoader';
 
 const Profile = () => {
   const { t } = useTranslation();
@@ -116,7 +117,7 @@ const Profile = () => {
                   title={t('Upload Profile Photo')}
                 >
                   {uploadingImage ? (
-                    <div className="w-3.5 h-3.5 md:w-4 md:h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <SwirlingLoader className="w-3.5 h-3.5 md:w-4 md:h-4 text-white" />
                   ) : (
                     <Camera className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   )}

@@ -4,6 +4,7 @@ import api from '../api/axios';
 import { BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Wallet, Users, ChartNoAxesCombined, IndianRupee } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import SwirlingLoader from '../components/common/SwirlingLoader';
 
 import { formatCurrency } from '../utils/currency';
 
@@ -31,8 +32,8 @@ const Dashboard = () => {
   }));
 
   if (isLoading) return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-[#093C5D]"></div>
+    <div className="flex items-center justify-center min-h-[80vh]">
+      <SwirlingLoader />
     </div>
   );
 

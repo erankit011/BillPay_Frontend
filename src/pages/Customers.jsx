@@ -8,6 +8,7 @@ import CustomerLedger from '../components/customers/CustomerLedger';
 import CustomerFormModal from '../components/customers/CustomerFormModal';
 import CustomerProfileModal from '../components/customers/CustomerProfileModal';
 import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
+import SwirlingLoader from '../components/common/SwirlingLoader';
 
 import { formatCurrency } from '../utils/currency';
 import { formatDate } from '../utils/dateUtils';
@@ -306,7 +307,7 @@ const Customers = () => {
       <div className="bg-white md:border md:border-gray-100 md:rounded-lg overflow-hidden">
         {isLoading ? (
           <div className="flex justify-center items-center py-12 border border-gray-100 rounded-lg md:border-none">
-            <Loader2 className="w-6 h-6 md:w-8 md:h-8 animate-spin text-[#093C5D]" />
+            <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#093C5D]" />
           </div>
         ) : isError ? (
           <div className="bg-white rounded-lg border border-red-200 md:border-none p-8 md:p-12 text-center text-red-700">

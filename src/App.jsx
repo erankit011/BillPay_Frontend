@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { store } from './redux/store';
@@ -8,6 +8,7 @@ import AppRoutes from './routes/AppRoutes';
 import { setLoading, setUser, logout } from './redux/slices/authSlice';
 import api from './api/axios';
 import ServerUnreachable from './components/common/ServerUnreachable';
+import SwirlingLoader from './components/common/SwirlingLoader';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,6 +25,7 @@ const queryClient = new QueryClient({
 
 const AuthInitializer = ({ children }) => {
   const dispatch = useDispatch();
+  const { isLoading } = useSelector((state) => state.auth);
   const [isNetworkError, setIsNetworkError] = useState(false);
 
   useEffect(() => {
@@ -48,6 +50,14 @@ const AuthInitializer = ({ children }) => {
 
   if (isNetworkError) {
     return <ServerUnreachable />;
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+        <SwirlingLoader className="w-12 h-12 text-[#093C5D]" />
+      </div>
+    );
   }
 
   return children;

@@ -9,6 +9,7 @@ import { generateInvoicePDF } from '../utils/generateInvoicePDF';
 import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
 import CreateBillModal from '../components/bills/CreateBillModal';
 import ViewBillModal from '../components/bills/ViewBillModal';
+import SwirlingLoader from '../components/common/SwirlingLoader';
 
 import { formatCurrency } from '../utils/currency';
 import { formatDate } from '../utils/dateUtils';
@@ -331,7 +332,7 @@ const Bills = () => {
             <div className="bg-white border border-gray-100 rounded-lg overflow-hidden">
                 {isLoading ? (
                     <div className="p-8 md:p-12 text-center text-gray-500 flex justify-center">
-                        <Loader2 className="w-6 h-6 md:w-8 md:h-8 animate-spin text-[#093C5D]" />
+                        <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#093C5D]" />
                     </div>
                 ) : isError ? (
                     <div className="p-8 md:p-12 text-center text-red-700">
