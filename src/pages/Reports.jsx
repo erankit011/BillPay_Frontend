@@ -4,15 +4,17 @@ import { useQuery } from '@tanstack/react-query';
 import api from '../api/axios';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Download, Wallet, IndianRupee, ChartNoAxesCombined } from 'lucide-react';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { generateStatementPDF } from '../utils/generateStatementPDF';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 
 import { formatCurrency } from '../utils/currency';
+import { formatDate } from '../utils/dateUtils';
 
 const Reports = () => {
   const { t } = useTranslation();
+  const { user } = useSelector((state) => state.auth);
   const [searchParams, setSearchParams] = useSearchParams();
   const statementPeriod = searchParams.get('period') || 'all';
 
@@ -39,7 +41,8 @@ const Reports = () => {
     queryKey: ['bills'],
     queryFn: async () => {
       const res = await api.get('/bills');
-      return res.data.data;
+      // If the backend returns paginated data (res.data.data.data), use that, otherwise fallback to res.data.data
+      return res.data.data?.data || res.data.data || [];
     },
     staleTime: 1 * 60 * 1000,
     gcTime: 5 * 60 * 1000,
@@ -78,65 +81,7 @@ const Reports = () => {
     const filteredBills = bills.filter(bill => new Date(bill.createdAt) >= startDate);
     const filteredTransactions = transactions.filter(tx => new Date(tx.createdAt) >= startDate && tx.type === 'PAYMENT');
 
-    if (filteredBills.length === 0 && filteredTransactions.length === 0) {
-      alert(t("No data available for the selected period."));
-      return;
-    }
-
-    const doc = new jsPDF();
-
-    doc.setFontSize(20);
-    doc.text(t('Store Statement'), 14, 20);
-
-    doc.setFontSize(10);
-    const periodLabels = {
-      'today': t('Today'),
-      '7days': t('Last 7 Days'),
-      '30days': t('Last 30 Days'),
-      'all': t('All Time')
-    };
-
-    doc.text(`${t('Period')}: ${periodLabels[statementPeriod]}`, 14, 30);
-    doc.text(`${t('Generated on')}: ${new Date().toLocaleDateString()}`, 14, 36);
-
-    const tableColumn = [t("Invoice No"), t("Customer"), t("Date"), t("Amount"), t("Status")];
-    const tableRows = [];
-
-    let totalSales = 0;
-    let totalCollections = 0;
-
-    filteredBills.forEach(bill => {
-      totalSales += bill.grandTotal;
-      const billData = [
-        bill.invoiceNumber,
-        bill.customerId?.name || t('Walk-in Customer'),
-        new Date(bill.createdAt).toLocaleDateString(),
-        `Rs ${bill.grandTotal}`,
-        bill.paymentStatus
-      ];
-      tableRows.push(billData);
-    });
-
-    filteredTransactions.forEach(tx => {
-      totalCollections += tx.amount;
-    });
-
-    autoTable(doc, {
-      startY: 42,
-      head: [tableColumn],
-      body: tableRows,
-      theme: 'grid',
-      headStyles: { fillColor: [37, 99, 235] },
-    });
-
-    const finalY = doc.lastAutoTable.finalY || 42;
-
-    doc.setFontSize(11);
-    doc.text(`${t('Total Bills')}: ${filteredBills.length}`, 14, finalY + 12);
-    doc.text(`${t('Total Sales')}: ${formatCurrency(totalSales)}`, 14, finalY + 18);
-    doc.text(`${t('Total Collections')}: ${formatCurrency(totalCollections)}`, 14, finalY + 24);
-
-    doc.save(`Store_Statement_${statementPeriod}.pdf`);
+    generateStatementPDF(filteredBills, filteredTransactions, statementPeriod, user, t, formatCurrency, formatDate);
   };
 
   const salesData = analytics?.chartData || [];
@@ -169,8 +114,7 @@ const Reports = () => {
           </select>
           <button
             onClick={downloadStatement}
-            disabled={billsLoading}
-            className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg flex items-center whitespace-nowrap shrink-0 font-semibold text-xs sm:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg flex items-center whitespace-nowrap shrink-0 font-semibold text-xs sm:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
           >
             <Download className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
             {t('Export PDF')}

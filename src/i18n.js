@@ -5,6 +5,10 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
+      "Total Stock Value": "Total Stock Value",
+      "Total Stock": "Total Stock",
+      "Download PDF": "Download PDF",
+      "Search By Product Name": "Search By Product Name",
       "Dashboard": "Dashboard",
       "Customers": "Customers",
       "Transactions": "Transactions",
@@ -574,6 +578,10 @@ const resources = {
   },
   hi: {
     translation: {
+      "Total Stock Value": "कुल स्टॉक की कीमत",
+      "Total Stock": "कुल स्टॉक",
+      "Download PDF": "PDF डाउनलोड करें",
+      "Search By Product Name": "सामान के नाम से खोजें",
       "Dashboard": "डैशबोर्ड",
       "Customers": "ग्राहक",
       "Transactions": "खाता",
