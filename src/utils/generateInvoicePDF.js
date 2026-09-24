@@ -1,5 +1,6 @@
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { formatDate } from './dateUtils';
 
 const formatCurrency = (amount) => {
   return 'Rs. ' + new Intl.NumberFormat('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount || 0);
@@ -33,14 +34,10 @@ export const generateInvoicePDF = (bill, shopDetails, action = 'download', t = (
   doc.setTextColor(9, 60, 93);
   doc.text(t('INVOICE'), 196, 22, { align: 'right' });
   
-  const billDate = new Date(bill.createdAt);
-  const dateStr = billDate.toLocaleDateString('en-GB');
-  const timeStr = billDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-
   doc.setFontSize(10);
   doc.setTextColor(100);
   doc.text(`${t('Invoice No')}: ${bill.invoiceNumber}`, 196, 28, { align: 'right' });
-  doc.text(`${t('Date')}: ${dateStr} ${timeStr}`, 196, 33, { align: 'right' });
+  doc.text(`${t('Date')}: ${formatDate(bill.createdAt)}`, 196, 33, { align: 'right' });
   doc.text(`${t('Status')}: ${bill.paymentStatus}`, 196, 38, { align: 'right' });
 
   // Customer Details Section
