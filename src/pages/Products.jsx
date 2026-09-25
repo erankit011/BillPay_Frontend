@@ -170,8 +170,19 @@ const Products = () => {
 
   const products = data?.pages?.flatMap(page => page.data || []) || [];
 
-  const handleDownloadReport = () => {
-    generateInventoryPDF(products, user, t, formatDate);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownloadReport = async () => {
+    try {
+      setIsDownloading(true);
+      const res = await api.get(`/products?limit=10000&search=${encodeURIComponent(debouncedSearch)}&filterStock=${encodeURIComponent(filterStock)}`);
+      const allProducts = res.data.data?.data || res.data.data || [];
+      generateInventoryPDF(allProducts, user, t, formatDate);
+    } catch (error) {
+      console.error("Error generating inventory PDF:", error);
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   // Get EXACT stats from the first page backend response
@@ -195,10 +206,15 @@ const Products = () => {
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto mt-3 sm:mt-0">
           <button
             onClick={handleDownloadReport}
-            className="flex cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
+            disabled={isDownloading}
+            className="flex cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            <Download className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
-            {t('Download PDF')}
+            {isDownloading ? (
+              <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2 animate-spin" />
+            ) : (
+              <Download className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
+            )}
+            {isDownloading ? t('Generating...') : t('Download PDF')}
           </button>
           <button
             onClick={() => setIsModalOpen(true)}

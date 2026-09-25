@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import api from '../api/axios';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Download, Wallet, IndianRupee, ChartNoAxesCombined } from 'lucide-react';
+import { Download, Wallet, IndianRupee, ChartNoAxesCombined, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { generateStatementPDF } from '../utils/generateStatementPDF';
@@ -33,55 +33,52 @@ const Reports = () => {
       const res = await api.get('/reports/dashboard');
       return res.data.data;
     },
-    staleTime: 1 * 60 * 1000, // Data is fresh for 1 min
-    gcTime: 5 * 60 * 1000,   // Garbage collect if unused for 5 mins
-  });
-
-  const { data: bills = [], isLoading: billsLoading } = useQuery({
-    queryKey: ['bills'],
-    queryFn: async () => {
-      const res = await api.get('/bills');
-      // If the backend returns paginated data (res.data.data.data), use that, otherwise fallback to res.data.data
-      return res.data.data?.data || res.data.data || [];
-    },
     staleTime: 1 * 60 * 1000,
     gcTime: 5 * 60 * 1000,
   });
 
-  const { data: transactions = [] } = useQuery({
-    queryKey: ['transactions'],
-    queryFn: async () => {
-      const res = await api.get('/transactions');
-      return res.data.data;
-    },
-    staleTime: 1 * 60 * 1000,
-    gcTime: 5 * 60 * 1000,
-  });
+  const [isDownloading, setIsDownloading] = useState(false);
 
-  const downloadStatement = () => {
-    const now = new Date();
-    let startDate = new Date();
+  const downloadStatement = async () => {
+    try {
+      setIsDownloading(true);
+      const now = new Date();
+      let startDate = new Date();
 
-    switch (statementPeriod) {
-      case 'today':
-        startDate.setHours(0, 0, 0, 0);
-        break;
-      case '7days':
-        startDate.setDate(now.getDate() - 7);
-        break;
-      case '30days':
-        startDate.setDate(now.getDate() - 30);
-        break;
-      case 'all':
-      default:
-        startDate = new Date(0);
-        break;
+      switch (statementPeriod) {
+        case 'today':
+          startDate.setHours(0, 0, 0, 0);
+          break;
+        case '7days':
+          startDate.setDate(now.getDate() - 7);
+          break;
+        case '30days':
+          startDate.setDate(now.getDate() - 30);
+          break;
+        case 'all':
+        default:
+          startDate = new Date(0);
+          break;
+      }
+
+      // Fetch ALL bills and transactions dynamically only when clicking the button
+      const [billsRes, txRes] = await Promise.all([
+        api.get('/bills?limit=10000'), // Large limit to ensure we get all for the report
+        api.get('/transactions')
+      ]);
+
+      const allBills = billsRes.data.data?.data || billsRes.data.data || [];
+      const allTransactions = txRes.data.data || [];
+
+      const filteredBills = allBills.filter(bill => new Date(bill.createdAt) >= startDate);
+      const filteredTransactions = allTransactions.filter(tx => new Date(tx.createdAt) >= startDate && tx.type === 'PAYMENT');
+
+      generateStatementPDF(filteredBills, filteredTransactions, statementPeriod, user, t, formatCurrency, formatDate);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    } finally {
+      setIsDownloading(false);
     }
-
-    const filteredBills = bills.filter(bill => new Date(bill.createdAt) >= startDate);
-    const filteredTransactions = transactions.filter(tx => new Date(tx.createdAt) >= startDate && tx.type === 'PAYMENT');
-
-    generateStatementPDF(filteredBills, filteredTransactions, statementPeriod, user, t, formatCurrency, formatDate);
   };
 
   const salesData = analytics?.chartData || [];
@@ -114,10 +111,15 @@ const Reports = () => {
           </select>
           <button
             onClick={downloadStatement}
-            className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg flex items-center whitespace-nowrap shrink-0 font-semibold text-xs sm:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
+            disabled={isDownloading}
+            className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg flex items-center whitespace-nowrap shrink-0 font-semibold text-xs sm:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            <Download className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
-            {t('Export PDF')}
+            {isDownloading ? (
+              <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2 animate-spin" />
+            ) : (
+              <Download className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
+            )}
+            {isDownloading ? t('Generating...') : t('Export PDF')}
           </button>
         </div>
       </div>
