@@ -341,7 +341,7 @@ const Settings = () => {
                         value={formData.gstNumber}
                         onChange={handleChange}
                         placeholder="23ABCDE0000A1A2"
-                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                       />
                     </div>
                     <div>
@@ -352,7 +352,7 @@ const Settings = () => {
                         value={formData.upiId}
                         onChange={handleChange}
                         placeholder="yourshop@upi"
-                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                       />
                     </div>
                     <div>
@@ -363,7 +363,7 @@ const Settings = () => {
                       value={formData.shopPhone}
                       onChange={handleChange}
                       placeholder="+91 98005 00012"
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                     />
                     <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Shown on invoices, can differ from personal phone')}</p>
                   </div>
@@ -375,7 +375,7 @@ const Settings = () => {
                       value={formData.shopEmail}
                       onChange={handleChange}
                       placeholder="yourshop@gmail.com"
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                     />
                     <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Shown on invoices, can differ from personal email')}</p>
                   </div>
@@ -388,7 +388,7 @@ const Settings = () => {
                       onChange={handleChange}
                       placeholder={t('123, MG Road, Near City Mall, Indore, Madhya Pradesh - 110010')}
                       rows={3}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] resize-none"
+                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] resize-none"
                     />
                     <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('This address will appear on all invoices')}</p>
                   </div>
@@ -415,7 +415,7 @@ const Settings = () => {
                       value={formData.invoicePrefix}
                       onChange={handleChange}
                       placeholder="INV"
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                     />
                     <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Used before invoice number, e.g. INV-001')}</p>
                   </div>
@@ -425,7 +425,7 @@ const Settings = () => {
                       name="currency"
                       value={formData.currency}
                       onChange={handleChange}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] appearance-none bg-white cursor-pointer"
+                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] appearance-none bg-white cursor-pointer"
                       style={{
                         backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
                         backgroundPosition: 'right 0.75rem center',
@@ -446,7 +446,7 @@ const Settings = () => {
                       name="defaultPaymentMode"
                       value={formData.defaultPaymentMode}
                       onChange={handleChange}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] appearance-none bg-white cursor-pointer"
+                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] appearance-none bg-white cursor-pointer"
                       style={{
                         backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
                         backgroundPosition: 'right 0.75rem center',
@@ -472,7 +472,7 @@ const Settings = () => {
                         value={formData.defaultPaymentTerms}
                         onChange={handleChange}
                         min="0"
-                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                       />
                       <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Default due period for invoices')}</p>
                     </div>
@@ -499,7 +499,7 @@ const Settings = () => {
                             min="0"
                             max="100"
                             step="0.1"
-                            className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                            className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                           />
                           <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Applied to all new invoices')}</p>
                         </div>
@@ -556,7 +556,7 @@ const Settings = () => {
                           value={formData.reminderDays}
                           onChange={handleChange}
                           min="1"
-                          className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                          className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                         />
                         <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Days before due date to send reminder')}</p>
                       </div>
@@ -591,7 +591,7 @@ const Settings = () => {
                           value={formData.lowStockThreshold}
                           onChange={handleChange}
                           min="1"
-                          className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                          className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                         />
                         <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Products below this quantity will be flagged')}</p>
                       </div>
@@ -618,7 +618,7 @@ const Settings = () => {
                       placeholder={t('Thank you for your business!')}
                       maxLength={500}
                       rows={3}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] resize-none"
+                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] resize-none"
                     />
                     <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Max 500 characters')}</p>
                   </div>
@@ -631,7 +631,7 @@ const Settings = () => {
                       placeholder={t('Goods once sold will not be returned')}
                       maxLength={1000}
                       rows={3}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] resize-none"
+                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] resize-none"
                     />
                     <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Max 1000 characters')}</p>
                   </div>
@@ -656,7 +656,7 @@ const Settings = () => {
                       value={passwordData.currentPassword}
                       onChange={handlePasswordChange}
                       placeholder={t('Enter current password')}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                     />
                   </div>
                     <div>
@@ -667,7 +667,7 @@ const Settings = () => {
                       value={passwordData.newPassword}
                       onChange={handlePasswordChange}
                       placeholder={t('Enter new password')}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                     />
                   </div>
                     <div>
@@ -678,7 +678,7 @@ const Settings = () => {
                       value={passwordData.confirmPassword}
                       onChange={handlePasswordChange}
                       placeholder={t('Confirm new password')}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                     />
                   </div>
                     <div className="pt-4">
@@ -718,7 +718,7 @@ const Settings = () => {
                       value={deleteAccountData.password}
                       onChange={handleDeleteAccountChange}
                       placeholder={t('Current password')}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                     />
                   </div>
                     ) : (
@@ -730,7 +730,7 @@ const Settings = () => {
                           value={deleteAccountData.confirmationText}
                           onChange={handleDeleteAccountChange}
                           placeholder="DELETE MY ACCOUNT"
-                          className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-semibold text-gray-900 placeholder-gray-400 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                          className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                         />
                         <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium"><>{t('Since you logged in with Google, please type')} <span className="font-semibold text-gray-900">DELETE MY ACCOUNT</span> {t('to confirm.')}</></p>
                       </div>
