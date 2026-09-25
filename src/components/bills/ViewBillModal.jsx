@@ -16,7 +16,7 @@ const formatPaymentMode = (mode) => {
   }
 };
 
-const ViewBillModal = ({ viewBill, setViewBill }) => {
+const ViewBillModal = ({ viewBill, setViewBill, shopSettings = {} }) => {
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -115,10 +115,13 @@ const ViewBillModal = ({ viewBill, setViewBill }) => {
                    <span className="text-gray-500 font-medium">{t('Subtotal')}</span>
                    <span className="font-semibold text-gray-900">{formatCurrency(viewBill.subtotal)}</span>
                  </div>
-                 {viewBill.tax > 0 && (
+                 {(shopSettings?.taxEnabled || viewBill.tax > 0) && (
                    <div className="flex justify-between items-center text-xs sm:text-sm">
-                     <span className="text-gray-500 font-medium">{t('Tax')}</span>
-                     <span className="font-semibold text-gray-900">{formatCurrency(viewBill.tax)}</span>
+                     <span className="text-gray-500 font-medium">
+                       {t('Tax')}
+                       {shopSettings?.taxRate ? ` (${shopSettings.taxRate}%)` : ''}
+                     </span>
+                     <span className="font-semibold text-gray-900">{formatCurrency(viewBill.tax || 0)}</span>
                    </div>
                  )}
                  {viewBill.discount > 0 && (
@@ -157,6 +160,23 @@ const ViewBillModal = ({ viewBill, setViewBill }) => {
                  ) : null}
                </div>
              </div>
+             
+             {/* Shop Settings Footer Notes */}
+             {(shopSettings?.invoiceFooterNote || shopSettings?.termsAndConditions) && (
+               <div className="pt-3 sm:pt-4 border-t border-dashed border-gray-200 flex-shrink-0">
+                 {shopSettings?.invoiceFooterNote && (
+                   <p className="text-[10px] sm:text-[11px] text-gray-500 text-center italic mb-2">
+                     {shopSettings.invoiceFooterNote}
+                   </p>
+                 )}
+                 {shopSettings?.termsAndConditions && (
+                   <div className="text-[10px] sm:text-[11px] text-gray-500">
+                     <span className="font-semibold text-gray-700">{t('Terms & Conditions')}:</span>
+                     <p className="whitespace-pre-line mt-0.5">{shopSettings.termsAndConditions}</p>
+                   </div>
+                 )}
+               </div>
+             )}
           </div>
         </div>
       </div>

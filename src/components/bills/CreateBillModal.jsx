@@ -24,7 +24,7 @@ const createBillSchema = yup.object({
   })
 });
 
-const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) => {
+const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, shopSettings = {} }) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
@@ -39,12 +39,19 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
     defaultValues: {
       products: [{ productId: '', quantity: 1 }],
       amountPaid: 0,
-      paymentMode: 'CASH'
+      paymentMode: shopSettings?.defaultPaymentMode || 'CASH'
     }
   });
 
+  // Re-sync default payment mode when shopSettings loads
+  useEffect(() => {
+    if (shopSettings?.defaultPaymentMode) {
+      setValue('paymentMode', shopSettings.defaultPaymentMode);
+    }
+  }, [shopSettings, setValue]);
+
   const formProducts = watch('products') || [];
-  const totalAmount = formProducts.reduce((sum, item) => {
+  const subtotal = formProducts.reduce((sum, item) => {
     if (item.productId && item.quantity) {
       const p = products.find(prod => prod._id === item.productId);
       if (p) sum += p.price * Number(item.quantity);
@@ -52,10 +59,21 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
     return sum;
   }, 0);
 
+  const taxRate = shopSettings?.taxEnabled ? (shopSettings?.taxRate || 0) : 0;
+  const taxAmount = Math.round((subtotal * taxRate) / 100);
+  const totalAmount = Math.round(subtotal + taxAmount);
+
   const { fields, append, remove } = useFieldArray({ control, name: 'products' });
 
   const mutation = useMutation({
-    mutationFn: (newBill) => api.post('/bills', newBill),
+    mutationFn: (newBill) => {
+      // Include calculated tax in payload
+      return api.post('/bills', {
+        ...newBill,
+        tax: taxAmount,
+        discount: 0 // Optional: implement discount in UI if needed later
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(['bills']);
       queryClient.invalidateQueries(['customers']);
@@ -277,9 +295,21 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products }) =
               </div>
 
               {/* Total Amount Display */}
-              <div className="flex items-center justify-between bg-blue-50 border border-blue-100 rounded-lg px-3 py-2.5 sm:px-4 sm:py-3">
-                <span className="text-sm font-medium text-[#093C5D]">{t('Total Bill Amount')}</span>
-                <span className="text-base sm:text-lg font-semibold text-[#093C5D]">₹{totalAmount.toLocaleString('en-IN')}</span>
+              <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 sm:p-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-blue-900">{t('Subtotal')}</span>
+                  <span className="text-sm font-semibold text-blue-900">₹{subtotal.toLocaleString('en-IN')}</span>
+                </div>
+                {shopSettings?.taxEnabled && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-blue-900">{t('Tax')} ({taxRate}%)</span>
+                    <span className="text-sm font-semibold text-blue-900">₹{taxAmount.toLocaleString('en-IN')}</span>
+                  </div>
+                )}
+                <div className="pt-2 mt-2 border-t border-blue-200/60 flex items-center justify-between">
+                  <span className="text-sm font-bold text-[#093C5D]">{t('Total Bill Amount')}</span>
+                  <span className="text-base sm:text-lg font-bold text-[#093C5D]">₹{totalAmount.toLocaleString('en-IN')}</span>
+                </div>
               </div>
 
               {/* Amount & Payment Mode */}

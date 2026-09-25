@@ -6,9 +6,17 @@ const formatCurrency = (amount) => {
   return 'Rs. ' + new Intl.NumberFormat('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount || 0);
 };
 
-export const generateInvoicePDF = (bill, shopDetails, action = 'download', t = (str) => str) => {
+export const generateInvoicePDF = (bill, shopDetails, action = 'download', t = (str) => str, settings = {}) => {
   const doc = new jsPDF();
   
+  // Use settings for business info, fall back to user profile
+  const shopPhone = settings.shopPhone || shopDetails?.phone || '';
+  const shopEmail = settings.shopEmail || shopDetails?.email || '';
+  const shopAddress = settings.shopAddress || '';
+  const gstNumber = settings.gstNumber || '';
+  const footerNote = settings.invoiceFooterNote || '';
+  const termsText = settings.termsAndConditions || '';
+
   // Header: Shop Name and Invoice Title
   doc.setFontSize(22);
   doc.setTextColor(9, 60, 93); // #093C5D
@@ -17,16 +25,21 @@ export const generateInvoicePDF = (bill, shopDetails, action = 'download', t = (
   doc.setFontSize(10);
   doc.setTextColor(100);
   let headerY = 27;
-  if (shopDetails?.email) {
-      doc.text(shopDetails.email, 14, headerY);
+  if (shopEmail) {
+      doc.text(shopEmail, 14, headerY);
       headerY += 4.5;
   }
-  if (shopDetails?.phone) {
-      doc.text(`${t('Phone')}: ${shopDetails.phone}`, 14, headerY);
+  if (shopPhone) {
+      doc.text(`${t('Phone')}: ${shopPhone}`, 14, headerY);
       headerY += 4.5;
   }
-  if (shopDetails?.address) {
-      doc.text(shopDetails.address, 14, headerY);
+  if (shopAddress) {
+      const splitAddr = doc.splitTextToSize(shopAddress, 90);
+      doc.text(splitAddr, 14, headerY);
+      headerY += splitAddr.length * 4.5;
+  }
+  if (gstNumber) {
+      doc.text(`${t('GST')}: ${gstNumber}`, 14, headerY);
   }
 
   // Invoice Text (Right aligned)
@@ -103,18 +116,19 @@ export const generateInvoicePDF = (bill, shopDetails, action = 'download', t = (
   doc.setFontSize(10);
   doc.setTextColor(0);
   
-  doc.text(t('Subtotal:'), rightColX, finalY + 10);
+  doc.text(t('Subtotal') + ':', rightColX, finalY + 10);
   doc.text(formatCurrency(bill.subtotal || 0), valuesX, finalY + 10, { align: 'right' });
 
   let totalsY = finalY + 16;
-  if (bill.tax > 0) {
-    doc.text(t('Tax:'), rightColX, totalsY);
-    doc.text(formatCurrency(bill.tax), valuesX, totalsY, { align: 'right' });
+  if (settings?.taxEnabled || bill.tax > 0) {
+    const taxRateStr = settings?.taxRate ? ` (${settings.taxRate}%)` : '';
+    doc.text(t('Tax') + taxRateStr + ':', rightColX, totalsY);
+    doc.text(formatCurrency(bill.tax || 0), valuesX, totalsY, { align: 'right' });
     totalsY += 6;
   }
   
   if (bill.discount > 0) {
-    doc.text(`${t('Discount')}:`, rightColX, totalsY);
+    doc.text(t('Discount') + ':', rightColX, totalsY);
     doc.text(`-${formatCurrency(bill.discount)}`, valuesX, totalsY, { align: 'right', textColor: [220, 38, 38] }); // Red color for discount
     totalsY += 6;
     doc.setTextColor(0); // Reset
@@ -122,7 +136,7 @@ export const generateInvoicePDF = (bill, shopDetails, action = 'download', t = (
 
   doc.setFontSize(11);
   doc.setFont('helvetica', 'normal');
-  doc.text(t('Grand Total:'), rightColX, totalsY + 3);
+  doc.text(t('Grand Total') + ':', rightColX, totalsY + 3);
   doc.text(formatCurrency(bill.grandTotal || 0), valuesX, totalsY + 3, { align: 'right' });
 
   // Paid and Balance
@@ -137,19 +151,19 @@ export const generateInvoicePDF = (bill, shopDetails, action = 'download', t = (
   }
   
   doc.setTextColor(0);
-  doc.text(`${t('Amount Paid')}:`, rightColX, totalsY);
+  doc.text(t('Amount Paid') + ':', rightColX, totalsY);
   doc.setTextColor(22, 163, 74); // Green
   doc.text(formatCurrency(bill.amountPaid || 0), valuesX, totalsY, { align: 'right' });
   doc.setTextColor(0);
 
   totalsY += 6;
   if (bill.grandTotal > (bill.amountPaid || 0)) {
-    doc.text(t('Pending Amount:'), rightColX, totalsY);
+    doc.text(t('Pending Amount') + ':', rightColX, totalsY);
     doc.setTextColor(220, 38, 38); // Red
     doc.text(formatCurrency(bill.grandTotal - (bill.amountPaid || 0)), valuesX, totalsY, { align: 'right' });
     doc.setTextColor(0);
   } else if ((bill.amountPaid || 0) > bill.grandTotal) {
-    doc.text(t('Advance Amount:'), rightColX, totalsY);
+    doc.text(t('Advance Amount') + ':', rightColX, totalsY);
     doc.setTextColor(22, 163, 74); // Green
     doc.text(formatCurrency((bill.amountPaid || 0) - bill.grandTotal), valuesX, totalsY, { align: 'right' });
     doc.setTextColor(0);
@@ -165,9 +179,21 @@ export const generateInvoicePDF = (bill, shopDetails, action = 'download', t = (
     doc.text(splitNotes, 14, finalY + 15);
   }
 
-  // Signature
+  // Terms & Conditions (from settings)
   const pageHeight = doc.internal.pageSize.height;
-  
+
+  if (termsText) {
+    const termsStartY = totalsY + 14;
+    doc.setFontSize(9);
+    doc.setTextColor(100);
+    doc.setFont('helvetica', 'bold');
+    doc.text(t('Terms & Conditions') + ':', 14, termsStartY);
+    doc.setFont('helvetica', 'normal');
+    const splitTerms = doc.splitTextToSize(termsText, 120);
+    doc.text(splitTerms, 14, termsStartY + 5);
+  }
+
+  // Signature
   doc.setFontSize(10);
   doc.setTextColor(0);
   doc.setFont('helvetica', 'normal');
@@ -182,7 +208,9 @@ export const generateInvoicePDF = (bill, shopDetails, action = 'download', t = (
   doc.setFontSize(9);
   doc.setTextColor(150);
   doc.setFont('helvetica', 'italic');
-  doc.text(t('Thank you for your business!'), 105, pageHeight - 14, { align: 'center' });
+  // Use custom footer note from settings, or default message
+  const footerMessage = footerNote || t('Thank you for your business!');
+  doc.text(footerMessage, 105, pageHeight - 14, { align: 'center' });
   
   const generatedDate = new Date();
   const genDateStr = generatedDate.toLocaleDateString('en-GB');
