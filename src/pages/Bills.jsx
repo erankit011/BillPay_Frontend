@@ -131,6 +131,15 @@ const Bills = () => {
         }
     });
 
+    const { data: shopSettings = {} } = useQuery({
+        queryKey: ['shopSettings'],
+        queryFn: async () => {
+            const res = await api.get('/settings');
+            return res.data.data || {};
+        },
+        staleTime: 5 * 60 * 1000,
+    });
+
     const bills = data?.pages?.flatMap(page => page.data || []) || [];
     const viewBillId = searchParams.get('viewBill');
     const activeBill = viewBillId ? bills.find(b => b._id === viewBillId) : null;
@@ -482,7 +491,7 @@ const Bills = () => {
                                                                 <button
                                                                     onClick={(e) => {
                                                                         e.stopPropagation();
-                                                                        generateInvoicePDF(bill, shopDetails, 'download', t);
+                                                                        generateInvoicePDF(bill, shopDetails, 'download', t, shopSettings);
                                                                         setOpenDropdown(null);
                                                                     }}
                                                                     className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100"
@@ -493,7 +502,7 @@ const Bills = () => {
                                                                 <button
                                                                     onClick={(e) => {
                                                                         e.stopPropagation();
-                                                                        generateInvoicePDF(bill, shopDetails, 'print', t);
+                                                                        generateInvoicePDF(bill, shopDetails, 'print', t, shopSettings);
                                                                         setOpenDropdown(null);
                                                                     }}
                                                                     className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100"
@@ -643,7 +652,7 @@ const Bills = () => {
                                                         <button
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
-                                                                generateInvoicePDF(bill, shopDetails, 'download', t);
+                                                                generateInvoicePDF(bill, shopDetails, 'download', t, shopSettings);
                                                                 setOpenDropdown(null);
                                                             }}
                                                             className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100"
@@ -654,7 +663,7 @@ const Bills = () => {
                                                         <button
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
-                                                                generateInvoicePDF(bill, shopDetails, 'print', t);
+                                                                generateInvoicePDF(bill, shopDetails, 'print', t, shopSettings);
                                                                 setOpenDropdown(null);
                                                             }}
                                                             className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100"
@@ -690,13 +699,14 @@ const Bills = () => {
                 )}
             </div>
 
-            <ViewBillModal viewBill={activeBill} setViewBill={handleSetViewBill} />
+            <ViewBillModal viewBill={activeBill} setViewBill={handleSetViewBill} shopSettings={shopSettings} />
 
             <CreateBillModal
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
                 customers={customers}
                 products={products}
+                shopSettings={shopSettings}
             />
 
             {/* Mobile & Tablet Extended FAB (No Shadow) - hidden when any modal is open */}
