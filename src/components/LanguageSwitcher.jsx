@@ -52,7 +52,7 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
         </button>
 
         {isOpen && (
-          <div className="absolute right-0 sm:-right-2 top-[calc(100%+4px)] w-32 bg-white rounded-xl shadow-lg shadow-black/5 border border-gray-200 py-1.5 z-50 animate-fade-in origin-top-right">
+          <div className="absolute right-0 sm:-right-2 top-[calc(100%+8px)] w-32 bg-white rounded-lg shadow-none border border-gray-200 py-1.5 z-50 animate-fade-in origin-top-right">
             {languages.map((lang) => (
               <button
                 key={lang.code}

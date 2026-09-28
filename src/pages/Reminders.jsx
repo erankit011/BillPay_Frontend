@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useInfiniteQuery, useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient, useQuery, keepPreviousData } from '@tanstack/react-query';
 import api from '../api/axios';
 import { Plus, Bell, Clock, User, X, MessageSquare, Mail, Edit, Trash2, TrendingUp, Lightbulb, Activity, Send, Loader2, AlertCircle, Eye } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
@@ -75,6 +75,7 @@ const Reminders = () => {
     getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
     staleTime: 1 * 60 * 1000, // Data is fresh for 1 min
     gcTime: 5 * 60 * 1000,   // Garbage collect (delete from memory) if unused for 5 mins
+    placeholderData: keepPreviousData,
   });
 
   const { data: customers = [] } = useQuery({

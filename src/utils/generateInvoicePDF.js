@@ -6,7 +6,33 @@ const formatCurrency = (amount) => {
   return 'Rs. ' + new Intl.NumberFormat('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount || 0);
 };
 
-export const generateInvoicePDF = (bill, shopDetails, action = 'download', t = (str) => str, settings = {}) => {
+const fetchImageAsBase64 = async (url) => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL('image/jpeg'));
+      } catch (e) {
+        resolve(null);
+      }
+    };
+    img.onerror = () => resolve(null);
+    img.src = url;
+  });
+};
+
+export const generateInvoicePDF = async (bill, shopDetails, action = 'download', t = (str) => str, settings = {}) => {
+  const isThermal = settings?.printerType === 'THERMAL_3INCH' || settings?.printerType === 'THERMAL_2INCH';
+  if (isThermal) {
+    return generateThermalPDF(bill, shopDetails, action, t, settings);
+  }
+
   const doc = new jsPDF();
   
   // Use settings for business info, fall back to user profile
@@ -20,26 +46,38 @@ export const generateInvoicePDF = (bill, shopDetails, action = 'download', t = (
   // Header: Shop Name and Invoice Title
   doc.setFontSize(22);
   doc.setTextColor(9, 60, 93); // #093C5D
-  doc.text((shopDetails?.shopName || t('Shop Invoice')).toUpperCase(), 14, 22);
+  
+  let headerX = 14;
+  
+  // Render Logo if available
+  if (settings.invoiceLogo) {
+    const base64Logo = await fetchImageAsBase64(settings.invoiceLogo);
+    if (base64Logo) {
+      doc.addImage(base64Logo, 'JPEG', 14, 15, 25, 25, undefined, 'FAST');
+      headerX = 43; // Push text to the right of the logo
+    }
+  }
+
+  doc.text((shopDetails?.shopName || t('Shop Invoice')).toUpperCase(), headerX, 22);
   
   doc.setFontSize(10);
   doc.setTextColor(100);
   let headerY = 27;
   if (shopEmail) {
-      doc.text(shopEmail, 14, headerY);
+      doc.text(shopEmail, headerX, headerY);
       headerY += 4.5;
   }
   if (shopPhone) {
-      doc.text(`${t('Phone')}: ${shopPhone}`, 14, headerY);
+      doc.text(`${t('Phone')}: ${shopPhone}`, headerX, headerY);
       headerY += 4.5;
   }
   if (shopAddress) {
       const splitAddr = doc.splitTextToSize(shopAddress, 90);
-      doc.text(splitAddr, 14, headerY);
+      doc.text(splitAddr, headerX, headerY);
       headerY += splitAddr.length * 4.5;
   }
   if (gstNumber) {
-      doc.text(`${t('GST')}: ${gstNumber}`, 14, headerY);
+      doc.text(`${t('GST')}: ${gstNumber}`, headerX, headerY);
   }
 
   // Invoice Text (Right aligned)
@@ -121,10 +159,22 @@ export const generateInvoicePDF = (bill, shopDetails, action = 'download', t = (
 
   let totalsY = finalY + 16;
   if (settings?.taxEnabled || bill.tax > 0) {
-    const taxRateStr = settings?.taxRate ? ` (${settings.taxRate}%)` : '';
-    doc.text(t('Tax') + taxRateStr + ':', rightColX, totalsY);
-    doc.text(formatCurrency(bill.tax || 0), valuesX, totalsY, { align: 'right' });
-    totalsY += 6;
+    if (settings?.gstSplit) {
+      const halfTax = (bill.tax || 0) / 2;
+      const halfRate = (settings.taxRate || 0) / 2;
+      const rateStr = halfRate ? ` (${halfRate}%)` : '';
+      doc.text(t('CGST') + rateStr + ':', rightColX, totalsY);
+      doc.text(formatCurrency(halfTax), valuesX, totalsY, { align: 'right' });
+      totalsY += 6;
+      doc.text(t('SGST') + rateStr + ':', rightColX, totalsY);
+      doc.text(formatCurrency(halfTax), valuesX, totalsY, { align: 'right' });
+      totalsY += 6;
+    } else {
+      const taxRateStr = settings?.taxRate ? ` (${settings.taxRate}%)` : '';
+      doc.text(t('Tax') + taxRateStr + ':', rightColX, totalsY);
+      doc.text(formatCurrency(bill.tax || 0), valuesX, totalsY, { align: 'right' });
+      totalsY += 6;
+    }
   }
   
   if (bill.discount > 0) {
@@ -225,5 +275,110 @@ export const generateInvoicePDF = (bill, shopDetails, action = 'download', t = (
   } else {
     // Download PDF
     doc.save(`Invoice_${bill.invoiceNumber}.pdf`);
+  }
+};
+
+const generateThermalPDF = async (bill, shopDetails, action, t, settings) => {
+  const width = settings.printerType === 'THERMAL_2INCH' ? 58 : 80;
+  const height = 100 + (bill.products?.length || 0) * 15;
+  const doc = new jsPDF({ format: [width, height], unit: 'mm' });
+  
+  const centerText = (text, y, size = 10) => {
+    doc.setFontSize(size);
+    const textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    const x = (width - textWidth) / 2;
+    doc.text(text, x, y);
+  };
+
+  let y = 10;
+  
+  // Thermal Logo
+  if (settings.invoiceLogo) {
+    const base64Logo = await fetchImageAsBase64(settings.invoiceLogo);
+    if (base64Logo) {
+      const logoSize = 16;
+      doc.addImage(base64Logo, 'JPEG', (width - logoSize) / 2, y, logoSize, logoSize, undefined, 'FAST');
+      y += logoSize + 5;
+    }
+  }
+
+  doc.setTextColor(0);
+  centerText(shopDetails?.shopName || t('Shop Invoice'), y, 14);
+  y += 5;
+  
+  const shopPhone = settings.shopPhone || shopDetails?.phone;
+  if (shopPhone) {
+    centerText(`Ph: ${shopPhone}`, y, 9);
+    y += 4;
+  }
+  
+  doc.setLineWidth(0.2);
+  doc.line(2, y, width - 2, y);
+  y += 4;
+  
+  doc.setFontSize(9);
+  doc.text(`Inv: ${bill.invoiceNumber}`, 2, y);
+  doc.text(formatDate(bill.createdAt), width - 2, y, { align: 'right' });
+  y += 5;
+  
+  doc.line(2, y, width - 2, y);
+  y += 4;
+  
+  doc.setFontSize(9);
+  doc.text(t('Item'), 2, y);
+  doc.text(t('Qty'), width * 0.5, y);
+  doc.text(t('Total'), width - 2, y, { align: 'right' });
+  y += 2;
+  doc.line(2, y, width - 2, y);
+  y += 4;
+  
+  bill.products?.forEach(item => {
+    const name = doc.splitTextToSize(item.name || item.productName || '', width * 0.45);
+    doc.text(name, 2, y);
+    doc.text(item.quantity?.toString() || '0', width * 0.5, y);
+    doc.text(formatCurrency((item.price || 0) * (item.quantity || 0)), width - 2, y, { align: 'right' });
+    y += name.length * 4.5;
+  });
+  
+  doc.line(2, y, width - 2, y);
+  y += 5;
+  
+  doc.text(t('Subtotal') + ':', 2, y);
+  doc.text(formatCurrency(bill.subtotal || 0), width - 2, y, { align: 'right' });
+  y += 4.5;
+  
+  if (settings?.taxEnabled || bill.tax > 0) {
+    if (settings?.gstSplit) {
+      const halfTax = (bill.tax || 0) / 2;
+      doc.text(t('CGST') + ':', 2, y);
+      doc.text(formatCurrency(halfTax), width - 2, y, { align: 'right' });
+      y += 4.5;
+      doc.text(t('SGST') + ':', 2, y);
+      doc.text(formatCurrency(halfTax), width - 2, y, { align: 'right' });
+      y += 4.5;
+    } else {
+      doc.text(t('Tax') + ':', 2, y);
+      doc.text(formatCurrency(bill.tax || 0), width - 2, y, { align: 'right' });
+      y += 4.5;
+    }
+  }
+  
+  if (bill.discount > 0) {
+    doc.text(t('Discount') + ':', 2, y);
+    doc.text(`-${formatCurrency(bill.discount)}`, width - 2, y, { align: 'right' });
+    y += 4.5;
+  }
+  
+  doc.setFontSize(10);
+  doc.text(t('Grand Total') + ':', 2, y);
+  doc.text(formatCurrency(bill.grandTotal || 0), width - 2, y, { align: 'right' });
+  y += 6;
+  
+  centerText(settings.invoiceFooterNote || t('Thank you for your business!'), y, 9);
+  
+  if (action === 'print') {
+    window.open(doc.output('bloburl'), '_blank');
+  } else {
+    doc.save(`Receipt_${bill.invoiceNumber}.pdf`);
   }
 };

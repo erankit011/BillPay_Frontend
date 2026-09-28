@@ -16,7 +16,6 @@ const navItems = [
   { path: '/reminders', labelKey: 'Reminders', icon: BellIcon },
   { path: '/voice', labelKey: 'Voice Entry', icon: Mic },
   { path: '/reports', labelKey: 'Reports', icon: BarChart2 },
-  { path: '/settings', labelKey: 'Settings', icon: Settings },
 ];
 
 const MainLayout = () => {
@@ -25,9 +24,10 @@ const MainLayout = () => {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   useEffect(() => {
-    if (logoutModalOpen || sidebarOpen || notificationOpen) {
+    if (logoutModalOpen || sidebarOpen || notificationOpen || profileDropdownOpen) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
     } else {
@@ -38,7 +38,7 @@ const MainLayout = () => {
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
     };
-  }, [logoutModalOpen, sidebarOpen, notificationOpen]);
+  }, [logoutModalOpen, sidebarOpen, notificationOpen, profileDropdownOpen]);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { t } = useTranslation();
@@ -208,13 +208,6 @@ const MainLayout = () => {
             <HelpCircle className="w-4 h-4" />
             <span className="text-sm">{t('Support')}</span>
           </Link>
-          <button
-            onClick={handleLogout}
-            className="flex items-center justify-center gap-2 w-full py-2.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all font-medium"
-          >
-            <LogOut className="w-4 h-4" />
-            <span className="text-sm">{t('Logout')}</span>
-          </button>
         </div>
       </aside>
 
@@ -276,16 +269,6 @@ const MainLayout = () => {
                   <HelpCircle className="w-5 h-5" />
                   <span className="text-sm">{t('Help')}</span>
                 </Link>
-                <button
-                  onClick={() => {
-                    closeSidebar();
-                    handleLogout();
-                  }}
-                  className="flex items-center gap-3 px-4 py-2 text-gray-600 hover:text-red-600 transition-colors font-medium"
-                >
-                  <LogOut className="w-5 h-5" />
-                  <span className="text-sm">{t('Logout')}</span>
-                </button>
               </div>
             </div>
           </div>
@@ -354,7 +337,7 @@ const MainLayout = () => {
                 />
 
                 {/* Panel - Mobile: Full width from top, Desktop: Dropdown */}
-                <div className="fixed sm:absolute left-0 right-0 sm:left-auto top-14 sm:top-[calc(100%+4px)] sm:right-0 w-full sm:w-[380px] bg-white sm:rounded-xl sm:border border-gray-200 sm:shadow-lg shadow-black/5 z-40 max-h-[calc(100vh-3.5rem)] sm:max-h-[500px] flex flex-col animate-fade-in origin-top-right">
+                <div className="fixed sm:absolute left-4 right-4 sm:left-auto top-14 sm:top-[calc(100%+8px)] sm:right-0 w-auto sm:w-[380px] bg-white rounded-lg border border-gray-200 shadow-none z-40 max-h-[calc(100vh-3.5rem)] sm:max-h-[500px] flex flex-col animate-fade-in origin-top-right overflow-hidden">
                   {/* Header */}
                   <div className="p-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0 bg-white">
                     <div className="flex items-center gap-2">
@@ -445,23 +428,77 @@ const MainLayout = () => {
           {/* Separator */}
           <div className="h-5 w-[1px] bg-gray-200 mx-1 flex-shrink-0"></div>
 
-          {/* Profile */}
-          <Link
-            to="/profile"
-            className="flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 rounded-full border border-gray-200 bg-transparent active:scale-95 active:bg-gray-100 hover:bg-gray-100 hover:border-gray-300 transition-all duration-200 flex-shrink-0 p-[2px]"
-          >
-            {/* Avatar */}
-            {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
-              <img
-                src={getImageUrl(user.profileImage)}
-                alt="Profile"
-                className="w-full h-full rounded-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-            ) : (
-              <User className="w-[22px] h-[22px] sm:w-5 sm:h-5 text-gray-500" strokeWidth={1.5} />
+          {/* Profile Dropdown */}
+          <div className="relative flex items-center justify-center">
+            <button
+              onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+              className="flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 rounded-full border border-gray-200 bg-transparent active:scale-95 active:bg-gray-100 hover:bg-gray-100 hover:border-gray-300 transition-all duration-200 flex-shrink-0 p-[2px] cursor-pointer"
+              aria-label="User menu"
+            >
+              {/* Avatar */}
+              {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
+                <img
+                  src={getImageUrl(user.profileImage)}
+                  alt="Profile"
+                  className="w-full h-full rounded-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                <div className="w-full h-full rounded-full bg-[#73a841] text-white flex items-center justify-center text-[10px] sm:text-xs font-medium">
+                  {getInitials(user?.name)}
+                </div>
+              )}
+            </button>
+
+            {/* Profile Dropdown Panel */}
+            {profileDropdownOpen && (
+              <>
+                <div 
+                  className="fixed inset-0 z-30 bg-transparent" 
+                  onClick={() => setProfileDropdownOpen(false)} 
+                />
+                <div className="fixed sm:absolute left-4 right-4 sm:left-auto top-14 sm:top-[calc(100%+8px)] sm:right-0 w-auto sm:w-[260px] bg-white rounded-lg border border-gray-200 shadow-none z-40 flex flex-col animate-fade-in origin-top-right overflow-hidden">
+                  
+                  {/* User Info Header */}
+                  <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/30">
+                    <p className="text-[15px] sm:text-sm font-semibold text-gray-900 truncate mb-0.5">{user?.name || 'User'}</p>
+                    <p className="text-[13px] sm:text-xs font-medium text-gray-500 truncate">{user?.email || 'user@example.com'}</p>
+                  </div>
+
+                  {/* Menu Items */}
+                  <div className="flex flex-col">
+                    <Link
+                      to="/profile"
+                      onClick={() => setProfileDropdownOpen(false)}
+                      className="flex items-center gap-3.5 px-5 py-2.5 sm:py-2.5 text-[15px] sm:text-sm text-[#093C5D] font-medium hover:bg-gray-50 transition-colors border-b border-gray-100"
+                    >
+                      <User className="w-[18px] h-[18px] sm:w-[18px] sm:h-[18px]" strokeWidth={2} />
+                      {t('Profile')}
+                    </Link>
+                    <Link
+                      to="/settings"
+                      onClick={() => setProfileDropdownOpen(false)}
+                      className="flex items-center gap-3.5 px-5 py-2.5 sm:py-2.5 text-[15px] sm:text-sm text-gray-700 font-medium hover:bg-gray-50 hover:text-[#093C5D] transition-colors border-b border-gray-100"
+                    >
+                      <Settings className="w-[18px] h-[18px] sm:w-[18px] sm:h-[18px] text-gray-500" strokeWidth={2} />
+                      {t('Settings')}
+                    </Link>
+                    
+                    <button
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        handleLogout();
+                      }}
+                      className="flex items-center gap-3.5 px-5 py-2.5 sm:py-2.5 text-[15px] sm:text-sm text-red-600 font-medium hover:bg-red-50 transition-colors w-full text-left"
+                    >
+                      <LogOut className="w-[18px] h-[18px] sm:w-[18px] sm:h-[18px] text-red-500" strokeWidth={2} />
+                      {t('Logout')}
+                    </button>
+                  </div>
+                </div>
+              </>
             )}
-          </Link>
+          </div>
         </div>
       </header>
 

@@ -139,6 +139,13 @@ const Settings = () => {
             lowStockAlert: s.lowStockAlert ?? true,
             invoiceFooterNote: s.invoiceFooterNote || '',
             termsAndConditions: s.termsAndConditions || '',
+            printerType: s.printerType || 'A4',
+            autoPrint: s.autoPrint ?? false,
+            invoiceLogo: s.invoiceLogo || '',
+            discountType: s.discountType || 'PERCENTAGE',
+            gstSplit: s.gstSplit ?? false,
+            defaultCreditLimit: s.defaultCreditLimit ?? 0,
+            voiceLanguage: s.voiceLanguage || 'hi-IN',
           };
           setFormData(fetchedSettings);
           setInitialData(fetchedSettings);
@@ -380,6 +387,16 @@ const Settings = () => {
                     <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Shown on invoices, can differ from personal email')}</p>
                   </div>
                     <div className="md:col-span-2">
+                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Invoice Logo URL (Optional)')}</label>
+                      <input
+                        type="url"
+                        name="invoiceLogo"
+                        value={formData.invoiceLogo}
+                        onChange={handleChange}
+                        placeholder="https://example.com/logo.png"
+                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      />
+                      <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium mb-4">{t('URL for your business logo to display on invoices')}</p>
                       <div>
                     <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Shop Address')}</label>
                     <textarea
@@ -476,6 +493,87 @@ const Settings = () => {
                       />
                       <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Default due period for invoices')}</p>
                     </div>
+                    <div>
+                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Printer Type')}</label>
+                      <select
+                        name="printerType"
+                        value={formData.printerType}
+                        onChange={handleChange}
+                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] appearance-none bg-white cursor-pointer"
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                          backgroundPosition: 'right 0.75rem center',
+                          backgroundRepeat: 'no-repeat',
+                          backgroundSize: '1.5em 1.5em',
+                          paddingRight: '2.5rem'
+                        }}
+                      >
+                        <option value="A4">{t('A4 Size')}</option>
+                        <option value="THERMAL_3INCH">{t('Thermal Printer (3 Inch)')}</option>
+                        <option value="THERMAL_2INCH">{t('Thermal Printer (2 Inch)')}</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Discount Type')}</label>
+                      <select
+                        name="discountType"
+                        value={formData.discountType}
+                        onChange={handleChange}
+                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] appearance-none bg-white cursor-pointer"
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                          backgroundPosition: 'right 0.75rem center',
+                          backgroundRepeat: 'no-repeat',
+                          backgroundSize: '1.5em 1.5em',
+                          paddingRight: '2.5rem'
+                        }}
+                      >
+                        <option value="PERCENTAGE">{t('Percentage (%)')}</option>
+                        <option value="FLAT">{t('Flat Amount (₹)')}</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Default Udhaar (Credit) Limit')}</label>
+                      <input
+                        type="number"
+                        name="defaultCreditLimit"
+                        value={formData.defaultCreditLimit}
+                        onChange={handleChange}
+                        min="0"
+                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      />
+                      <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('0 means unlimited credit')}</p>
+                    </div>
+                    <div>
+                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Voice Billing Language')}</label>
+                      <select
+                        name="voiceLanguage"
+                        value={formData.voiceLanguage}
+                        onChange={handleChange}
+                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] appearance-none bg-white cursor-pointer"
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                          backgroundPosition: 'right 0.75rem center',
+                          backgroundRepeat: 'no-repeat',
+                          backgroundSize: '1.5em 1.5em',
+                          paddingRight: '2.5rem'
+                        }}
+                      >
+                        <option value="hi-IN">{t('Hindi (India)')}</option>
+                        <option value="en-US">{t('English')}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Settings Toggles */}
+                  <div className="mt-6 pt-5 border-t border-gray-100 space-y-4">
+                    <ToggleSwitch
+                      name="autoPrint"
+                      checked={formData.autoPrint}
+                      onChange={handleChange}
+                      label={t('Auto-Print Invoices')}
+                      description={t('Automatically print invoice after saving a bill')}
+                    />
                   </div>
 
                   {/* Tax Settings */}
@@ -488,7 +586,14 @@ const Settings = () => {
                       description={t('Add tax to invoices automatically')}
                     />
                     {formData.taxEnabled && (
-                      <div className="mt-4 ml-0 md:ml-0">
+                      <div className="mt-4 ml-0 md:ml-0 space-y-4">
+                        <ToggleSwitch
+                          name="gstSplit"
+                          checked={formData.gstSplit}
+                          onChange={handleChange}
+                          label={t('Split Tax (CGST + SGST)')}
+                          description={t('Show CGST and SGST separately on invoices')}
+                        />
                         <div>
                           <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Tax Rate (%)')}</label>
                           <input
