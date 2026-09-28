@@ -452,8 +452,8 @@ const Settings = () => {
                       }}
                     >
                       
-                      <option value="INR">{t('₹ (INR)')}</option>
-                      <option value="USD">{t('$ (USD)')}</option>
+                      <option value="INR">{t('₹ INR')}</option>
+                      <option value="USD">{t('$ USD')}</option>
                     
                     </select>
                   </div>
@@ -482,7 +482,7 @@ const Settings = () => {
                     </select>
                   </div>
                     <div>
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Payment Terms (Days)')}</label>
+                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Payment Terms in Days')}</label>
                       <input
                         type="number"
                         name="defaultPaymentTerms"
@@ -509,8 +509,8 @@ const Settings = () => {
                         }}
                       >
                         <option value="A4">{t('A4 Size')}</option>
-                        <option value="THERMAL_3INCH">{t('Thermal Printer (3 Inch)')}</option>
-                        <option value="THERMAL_2INCH">{t('Thermal Printer (2 Inch)')}</option>
+                        <option value="THERMAL_3INCH">{t('Thermal Printer 3 Inch')}</option>
+                        <option value="THERMAL_2INCH">{t('Thermal Printer 2 Inch')}</option>
                       </select>
                     </div>
                     <div>
@@ -528,12 +528,12 @@ const Settings = () => {
                           paddingRight: '2.5rem'
                         }}
                       >
-                        <option value="PERCENTAGE">{t('Percentage (%)')}</option>
-                        <option value="FLAT">{t('Flat Amount (₹)')}</option>
+                        <option value="PERCENTAGE">{t('Percentage %')}</option>
+                        <option value="FLAT">{t('Rupees ₹')}</option>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Default Udhaar (Credit) Limit')}</label>
+                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Default Udhaar Limit')}</label>
                       <input
                         type="number"
                         name="defaultCreditLimit"
@@ -559,7 +559,7 @@ const Settings = () => {
                           paddingRight: '2.5rem'
                         }}
                       >
-                        <option value="hi-IN">{t('Hindi (India)')}</option>
+                        <option value="hi-IN">{t('Hindi')}</option>
                         <option value="en-US">{t('English')}</option>
                       </select>
                     </div>
@@ -591,11 +591,11 @@ const Settings = () => {
                           name="gstSplit"
                           checked={formData.gstSplit}
                           onChange={handleChange}
-                          label={t('Split Tax (CGST + SGST)')}
+                          label={t('Split Tax CGST and SGST')}
                           description={t('Show CGST and SGST separately on invoices')}
                         />
                         <div>
-                          <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Tax Rate (%)')}</label>
+                          <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Tax Rate in %')}</label>
                           <input
                             type="number"
                             name="taxRate"
@@ -654,7 +654,7 @@ const Settings = () => {
                   {formData.autoSendReminders && (
                     <div className="pt-3">
                       <div>
-                        <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Remind Before (Days)')}</label>
+                        <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Remind Before in Days')}</label>
                         <input
                           type="number"
                           name="reminderDays"
