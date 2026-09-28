@@ -22,6 +22,7 @@ const Customers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
+  const [formError, setFormError] = useState(null);
   const [viewProfileCustomer, setViewProfileCustomer] = useState(null);
   const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
@@ -113,6 +114,11 @@ const Customers = () => {
       setIsModalOpen(false);
       setIsEditMode(false);
       setEditingCustomer(null);
+      setFormError(null);
+    },
+    onError: (error) => {
+      const backendMessage = error.response?.data?.message;
+      setFormError(backendMessage ? t(backendMessage) : t('Failed to add customer. Please try again.'));
     }
   });
 
@@ -146,6 +152,7 @@ const Customers = () => {
     setIsModalOpen(false);
     setIsEditMode(false);
     setEditingCustomer(null);
+    setFormError(null);
   };
 
   const onSubmit = (formData) => {
@@ -515,6 +522,7 @@ const Customers = () => {
         onClose={handleCloseModal}
         onSubmit={onSubmit}
         isPending={mutation.isPending}
+        serverError={formError}
       />
 
       {/* Delete Confirmation Modal */}

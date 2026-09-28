@@ -12,7 +12,7 @@ const customerSchema = yup.object({
   address: yup.string().nullable(),
 });
 
-const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSubmit, isPending }) => {
+const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSubmit, isPending, serverError }) => {
   const { t } = useTranslation();
 
   const { register, handleSubmit, reset, formState: { errors, isDirty } } = useForm({
@@ -92,6 +92,15 @@ const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSub
 
           <div className="p-5 md:p-6 overflow-y-auto">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              {serverError && (
+                <div className="bg-red-50 border-l-4 border-red-500 p-3 md:p-4 rounded-r-lg">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 md:w-5 md:h-5 text-red-500 shrink-0" />
+                    <p className="text-sm md:text-[15px] font-medium text-red-700">{serverError}</p>
+                  </div>
+                </div>
+              )}
+              
               <div>
                 <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
                   {t('Full Name')} <span className="text-red-500">*</span>
