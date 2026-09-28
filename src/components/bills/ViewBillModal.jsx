@@ -61,7 +61,7 @@ const ViewBillModal = ({ viewBill, setViewBill, shopSettings = {} }) => {
              <div className="flex flex-row items-start justify-between border-b border-dashed border-gray-200 pb-3 sm:pb-4 mb-2 flex-shrink-0">
                <div className="flex-1 pr-2">
                  <p className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t('Billed To')}</p>
-                 <p className="text-[13px] sm:text-sm font-semibold text-gray-900 leading-tight">{viewBill.customerId?.name || t('Walk-in Customer')}</p>
+                 <p className="text-[13px] sm:text-sm font-semibold text-gray-900 leading-tight">{viewBill.customerId?.name || t('Counter Sale')}</p>
                  {viewBill.customerId?.phone && <p className="text-[12px] sm:text-xs text-gray-500 mt-1">{viewBill.customerId.phone}</p>}
                  {viewBill.customerId?.email && <p className="text-[12px] sm:text-xs text-gray-500 mt-0.5">{viewBill.customerId.email}</p>}
                </div>

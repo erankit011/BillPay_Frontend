@@ -647,7 +647,11 @@ const resources = {
       "Hindi": "Hindi",
       "Customer with this phone number already exists": "Customer with this phone number already exists",
       "Customer with this email already exists": "Customer with this email already exists",
-      "Failed to add customer. Please try again.": "Failed to add customer. Please try again."}
+      "Failed to add customer. Please try again.": "Failed to add customer. Please try again.",
+      "Quick Cash Sale": "Quick Cash Sale",
+      "Udhaar is not allowed for Quick Cash Sale. Please enter full amount paid.": "Udhaar is not allowed for Quick Cash Sale. Please enter full amount paid.",
+      "Counter Sale": "Counter Sale",
+      "Udhaar is not allowed for Counter Sale. Please enter full amount paid.": "Udhaar is not allowed for Counter Sale. Please enter full amount paid."}
   },
   hi: {
     translation: {
@@ -1425,7 +1429,11 @@ const resources = {
       "Hindi": "हिंदी",
       "Customer with this phone number already exists": "इस फोन नंबर के साथ ग्राहक पहले से मौजूद है",
       "Customer with this email already exists": "इस ईमेल के साथ ग्राहक पहले से मौजूद है",
-      "Failed to add customer. Please try again.": "ग्राहक जोड़ने में विफल। कृपया पुनः प्रयास करें।"}
+      "Failed to add customer. Please try again.": "ग्राहक जोड़ने में विफल। कृपया पुनः प्रयास करें।",
+      "Quick Cash Sale": "त्वरित नकद बिक्री",
+      "Udhaar is not allowed for Quick Cash Sale. Please enter full amount paid.": "त्वरित नकद बिक्री के लिए उधार की अनुमति नहीं है। कृपया पूरी राशि दर्ज करें।",
+      "Counter Sale": "काउंटर सेल",
+      "Udhaar is not allowed for Counter Sale. Please enter full amount paid.": "काउंटर सेल पर उधार नहीं दिया जा सकता। कृपया पूरा अमाउंट भरें।"}
   }
 };
 

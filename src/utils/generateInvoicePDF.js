@@ -99,7 +99,7 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
   
   doc.setFontSize(10);
   doc.setTextColor(100);
-  doc.text(`${t('Name')}: ${bill.customerId?.name || t('Walk-in Customer')}`, 14, 53);
+  doc.text(`${t('Name')}: ${bill.customerId?.name || t('Counter Sale')}`, 14, 53);
   
   let customerY = 57.5;
   if (bill.customerId?.phone) {
