@@ -216,24 +216,24 @@ const MainLayout = () => {
         {/* Overlay */}
         {sidebarOpen && (
           <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] animate-fade-in"
+            className="fixed inset-0 bg-black/50 z-[100] animate-fade-in"
             onClick={closeSidebar}
           />
         )}
 
         {/* Sidebar */}
-        <aside className={`fixed left-0 top-0 h-full w-64 bg-white/95 backdrop-blur-xl border-r border-white/40 z-[110] transform transition-transform duration-300 ease-out rounded-r-xl shadow-2xl ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        <aside className={`fixed left-0 top-0 h-full w-[280px] sm:w-[320px] bg-white border-r border-gray-100 z-[110] transform transition-transform duration-300 ease-out shadow-2xl ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
           }`}>
           <div className="flex flex-col h-full">
             {/* Header with Close Button - Same height and padding as main header */}
-            <div className="h-14 flex items-center justify-between px-6 border-b border-gray-100 flex-shrink-0">
+            <div className="h-14 flex items-center justify-between pl-8 pr-6 border-b border-gray-100 flex-shrink-0">
               <span className="text-[22px] font-semibold tracking-tight text-[#093C5D] select-none flex items-center">UdharPay<span className="inline-block w-[7px] h-[7px] rounded-full bg-[#2ECC71] ml-[2px]"></span></span>
               <button
                 onClick={closeSidebar}
-                className="p-1.5 -mr-1.5 flex items-center justify-center rounded-full lg:hover:bg-gray-100 active:bg-gray-200 transition-all text-gray-500"
+                className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200"
                 aria-label="Close menu"
               >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
               </button>
             </div>
 
@@ -260,14 +260,14 @@ const MainLayout = () => {
               </nav>
 
               {/* Footer */}
-              <div className="mt-auto flex flex-col gap-2">
+              <div className="mt-auto flex flex-col pt-4 border-t border-gray-100">
                 <Link
                   to="/contact-support"
                   onClick={closeSidebar}
-                  className="flex items-center gap-3 px-4 py-2 text-gray-600 hover:text-[#093C5D] transition-colors font-medium"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 bg-gray-50 hover:bg-gray-100 active:bg-gray-200 text-gray-700 rounded-lg transition-all font-medium border border-gray-200/60"
                 >
                   <HelpCircle className="w-5 h-5" />
-                  <span className="text-sm">{t('Help')}</span>
+                  <span className="text-sm">{t('Help & Support')}</span>
                 </Link>
               </div>
             </div>
