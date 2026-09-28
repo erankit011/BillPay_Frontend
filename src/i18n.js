@@ -644,7 +644,10 @@ const resources = {
       "$ USD": "$ USD",
       "Percentage %": "Percentage %",
       "Rupees ₹": "Rupees ₹",
-      "Hindi": "Hindi"}
+      "Hindi": "Hindi",
+      "Customer with this phone number already exists": "Customer with this phone number already exists",
+      "Customer with this email already exists": "Customer with this email already exists",
+      "Failed to add customer. Please try again.": "Failed to add customer. Please try again."}
   },
   hi: {
     translation: {
@@ -1419,7 +1422,10 @@ const resources = {
       "$ USD": "$",
       "Percentage %": "प्रतिशत %",
       "Rupees ₹": "रुपये ₹",
-      "Hindi": "हिंदी"}
+      "Hindi": "हिंदी",
+      "Customer with this phone number already exists": "इस फोन नंबर के साथ ग्राहक पहले से मौजूद है",
+      "Customer with this email already exists": "इस ईमेल के साथ ग्राहक पहले से मौजूद है",
+      "Failed to add customer. Please try again.": "ग्राहक जोड़ने में विफल। कृपया पुनः प्रयास करें।"}
   }
 };
 
