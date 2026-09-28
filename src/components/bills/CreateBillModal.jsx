@@ -94,7 +94,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
       if (isCreditLimitExceeded && !isWalkin) {
         return Promise.reject(new Error(`${t('Credit Limit Exceeded! Max udhaar allowed is ₹')}${creditLimit}`));
       }
-      
+
       const payload = {
         ...newBill,
         tax: taxAmount,
@@ -111,11 +111,11 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
       queryClient.invalidateQueries(['bills']);
       queryClient.invalidateQueries(['customers']);
       queryClient.invalidateQueries(['products']);
-      
+
       if (shopSettings?.autoPrint && res.data?.data) {
-          generateInvoicePDF(res.data.data, shopDetails, 'print', t, shopSettings);
+        generateInvoicePDF(res.data.data, shopDetails, 'print', t, shopSettings);
       }
-      
+
       setIsModalOpen(false);
       reset();
       setBillError('');
@@ -256,15 +256,15 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                 )}
 
                 <Controller name="customerId" control={control} render={({ field }) => (
-                  <SearchableSelect 
+                  <SearchableSelect
                     options={[
                       { value: 'WALKIN', label: `📦 ${t('Counter Sale')}` },
                       ...customers.map(c => ({ value: c._id, label: `${c.name} +91 ${c.phone}` }))
-                    ]} 
-                    value={field.value} 
-                    onChange={field.onChange} 
-                    placeholder={`${t('Select Customer')}`} 
-                    searchPlaceholder={t('Search by name or phone...')} 
+                    ]}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder={`${t('Select Customer')}`}
+                    searchPlaceholder={t('Search by name or phone...')}
                   />
                 )} />
                 {errors.customerId && (

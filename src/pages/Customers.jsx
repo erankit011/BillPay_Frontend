@@ -286,8 +286,8 @@ const Customers = () => {
             key={filter.value}
             onClick={() => setFilterBalance(filter.value)}
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${filterBalance === filter.value
-                ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
+              ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
+              : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
               }`}
           >
             {t(filter.label)}
