@@ -59,7 +59,7 @@ export const generateStatementPDF = (filteredBills, filteredTransactions, statem
     totalSales += bill.grandTotal;
     const billData = [
       bill.invoiceNumber,
-      bill.customerId?.name || t('Walk-in Customer'),
+      bill.customerId?.name || t('Counter Sale'),
       formatDate(bill.createdAt),
       `Rs ${bill.grandTotal}`,
       bill.paymentStatus

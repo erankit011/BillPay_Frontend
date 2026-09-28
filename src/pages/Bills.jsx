@@ -15,7 +15,7 @@ import { formatCurrency } from '../utils/currency';
 import { formatDate } from '../utils/dateUtils';
 
 const getInitials = (name) => {
-    if (!name) return 'WI';
+    if (!name) return 'CS';
     const parts = name.trim().split(/\s+/);
     if (parts.length > 1) {
         return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
@@ -385,7 +385,7 @@ const Bills = () => {
                                                 </div>
                                             </td>
                                             <td className="px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
-                                                <span className="text-xs lg:text-sm font-semibold text-gray-900 truncate block">{bill.customerId?.name || t('Walk-in Customer')}</span>
+                                                <span className="text-xs lg:text-sm font-semibold text-gray-900 truncate block">{bill.customerId?.name || t('Counter Sale')}</span>
                                                 {bill.customerId?.balance > 0 && (
                                                     <span className="text-[10px] lg:text-xs text-red-700 font-medium block mt-0.5">
                                                         {t('Total Due')}: {formatCurrency(bill.customerId.balance)}
@@ -544,7 +544,7 @@ const Bills = () => {
                                                 </div>
                                             </div>
                                             <div className="min-w-0 flex flex-col justify-center">
-                                                <h3 className="text-sm sm:text-[15px] font-semibold text-[#093C5D] truncate leading-tight mb-0.5">{bill.customerId?.name || t('Walk-in Customer')}</h3>
+                                                <h3 className="text-sm sm:text-[15px] font-semibold text-[#093C5D] truncate leading-tight mb-0.5">{bill.customerId?.name || t('Counter Sale')}</h3>
                                                 <span className="text-[11px] sm:text-xs font-medium text-gray-500 flex items-center whitespace-nowrap gap-0.5">
                                                     <Hash className="w-[11px] h-[11px] sm:w-3 sm:h-3 shrink-0" />
                                                     <span>{bill.invoiceNumber}</span>

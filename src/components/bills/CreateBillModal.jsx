@@ -36,6 +36,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
   const [newCustomer, setNewCustomer] = useState({ name: '', phone: '', email: '', address: '' });
   const [customerError, setCustomerError] = useState('');
   const [productError, setProductError] = useState('');
+  const [billError, setBillError] = useState('');
 
   const { register, handleSubmit, control, formState: { errors }, reset, setValue, getValues, watch } = useForm({
     resolver: yupResolver(createBillSchema),
@@ -85,15 +86,26 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
 
   const mutation = useMutation({
     mutationFn: (newBill) => {
-      if (isCreditLimitExceeded) {
+      const isWalkin = newBill.customerId === 'WALKIN';
+      if (isWalkin && newPending > 0) {
+        return Promise.reject(new Error(t('Udhaar is not allowed for Counter Sale. Please enter full amount paid.')));
+      }
+
+      if (isCreditLimitExceeded && !isWalkin) {
         return Promise.reject(new Error(`${t('Credit Limit Exceeded! Max udhaar allowed is ₹')}${creditLimit}`));
       }
-      // Include calculated tax in payload
-      return api.post('/bills', {
+      
+      const payload = {
         ...newBill,
         tax: taxAmount,
         discount: discountAmount
-      });
+      };
+
+      if (isWalkin) {
+        delete payload.customerId;
+      }
+
+      return api.post('/bills', payload);
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries(['bills']);
@@ -106,6 +118,10 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
       
       setIsModalOpen(false);
       reset();
+      setBillError('');
+    },
+    onError: (err) => {
+      setBillError(err.response?.data?.message || err.message);
     }
   });
 
@@ -168,6 +184,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
     return () => {
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
+      setBillError('');
     };
   }, [isModalOpen]);
 
@@ -239,7 +256,16 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                 )}
 
                 <Controller name="customerId" control={control} render={({ field }) => (
-                  <SearchableSelect options={customers.map(c => ({ value: c._id, label: `${c.name} +91 ${c.phone}` }))} value={field.value} onChange={field.onChange} placeholder={`${t('Select Customer')}`} searchPlaceholder={t('Search by name or phone...')} />
+                  <SearchableSelect 
+                    options={[
+                      { value: 'WALKIN', label: `📦 ${t('Counter Sale')}` },
+                      ...customers.map(c => ({ value: c._id, label: `${c.name} +91 ${c.phone}` }))
+                    ]} 
+                    value={field.value} 
+                    onChange={field.onChange} 
+                    placeholder={`${t('Select Customer')}`} 
+                    searchPlaceholder={t('Search by name or phone...')} 
+                  />
                 )} />
                 {errors.customerId && (
                   <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
@@ -389,12 +415,21 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                 </div>
               </div>
 
+              {billError && (
+                <div className="bg-red-50 border-l-[3px] border-red-500 p-2 rounded-r-md">
+                  <div className="flex items-center gap-1.5">
+                    <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-500 shrink-0" />
+                    <p className="text-[11px] sm:text-[12px] font-medium text-red-700 leading-none">{t(billError)}</p>
+                  </div>
+                </div>
+              )}
+
               {isCreditLimitExceeded && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2 animate-fade-in">
-                  <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                <div className="bg-red-50 border-l-[3px] border-red-500 p-2.5 sm:p-3 rounded-r-md flex items-start gap-2 sm:gap-2.5 animate-fade-in">
+                  <AlertCircle className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-red-500 shrink-0 mt-[1px] sm:mt-[2px]" />
                   <div>
-                    <h4 className="text-sm font-semibold text-red-800">{t('Credit Limit Exceeded')}</h4>
-                    <p className="text-xs font-medium text-red-600 mt-0.5">
+                    <h4 className="text-[13px] sm:text-sm font-semibold text-red-800 leading-none mb-1">{t('Credit Limit Exceeded')}</h4>
+                    <p className="text-[11px] sm:text-xs font-medium text-red-700 leading-snug">
                       {t('This bill will increase the customer\'s pending balance to')} ₹{newTotalBalance.toLocaleString('en-IN')}, {t('which exceeds the limit of')} ₹{creditLimit.toLocaleString('en-IN')}.
                     </p>
                   </div>

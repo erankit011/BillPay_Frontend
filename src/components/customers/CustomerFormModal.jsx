@@ -93,10 +93,10 @@ const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSub
           <div className="p-5 md:p-6 overflow-y-auto">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {serverError && (
-                <div className="bg-red-50 border-l-4 border-red-500 p-3 md:p-4 rounded-r-lg">
-                  <div className="flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 md:w-5 md:h-5 text-red-500 shrink-0" />
-                    <p className="text-sm md:text-[15px] font-medium text-red-700">{serverError}</p>
+                <div className="bg-red-50 border-l-[3px] border-red-500 p-2 rounded-r-md">
+                  <div className="flex items-center gap-1.5">
+                    <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-500 shrink-0" />
+                    <p className="text-[11px] sm:text-[12px] font-medium text-red-700 leading-none">{serverError}</p>
                   </div>
                 </div>
               )}
