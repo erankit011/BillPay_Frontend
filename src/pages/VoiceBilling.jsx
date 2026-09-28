@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Mic, Loader2, CheckCircle2, Keyboard } from 'lucide-react';
 import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from '@tanstack/react-query';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 
 const VoiceBilling = () => {
@@ -24,6 +25,15 @@ const VoiceBilling = () => {
   const [transcript, setTranscript] = useState('');
   const [result, setResult] = useState(null);
   const [manualText, setManualText] = useState('');
+
+  const { data: shopSettings = {} } = useQuery({
+      queryKey: ['shopSettings'],
+      queryFn: async () => {
+          const res = await api.get('/settings');
+          return res.data.data || {};
+      },
+      staleTime: 5 * 60 * 1000,
+  });
   
   // Form data state for editing parsed data
   const [formData, setFormData] = useState({
@@ -49,7 +59,7 @@ const VoiceBilling = () => {
       const recognition = new SpeechRecognition();
       recognitionRef.current = recognition;
       
-      recognition.lang = 'hi-IN';
+      recognition.lang = shopSettings?.voiceLanguage || 'hi-IN';
       recognition.interimResults = false;
       recognition.maxAlternatives = 1;
       recognition.continuous = false;

@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/axios';
 import SearchableSelect from '../common/SearchableSelect';
+import { useSelector } from 'react-redux';
+import { generateInvoicePDF } from '../../utils/generateInvoicePDF';
 
 const createBillSchema = yup.object({
   customerId: yup.string().required('Customer is required'),
@@ -27,6 +29,7 @@ const createBillSchema = yup.object({
 const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, shopSettings = {} }) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const { user: shopDetails } = useSelector(state => state.auth);
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
   const [newProduct, setNewProduct] = useState({ name: '', price: '', stock: '' });
   const [isAddCustomerOpen, setIsAddCustomerOpen] = useState(false);
@@ -39,6 +42,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
     defaultValues: {
       products: [{ productId: '', quantity: 1 }],
       amountPaid: 0,
+      discountInput: 0,
       paymentMode: shopSettings?.defaultPaymentMode || 'CASH'
     }
   });
@@ -59,25 +63,47 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
     return sum;
   }, 0);
 
+  const discountInput = Number(watch('discountInput')) || 0;
+  const isPercentage = shopSettings?.discountType === 'PERCENTAGE';
+  const discountAmount = isPercentage ? Math.round((subtotal * discountInput) / 100) : discountInput;
+
   const taxRate = shopSettings?.taxEnabled ? (shopSettings?.taxRate || 0) : 0;
-  const taxAmount = Math.round((subtotal * taxRate) / 100);
-  const totalAmount = Math.round(subtotal + taxAmount);
+  const taxAmount = Math.round(((subtotal - discountAmount) * taxRate) / 100);
+  const totalAmount = Math.round(subtotal - discountAmount + taxAmount);
+
+  const selectedCustomerId = watch('customerId');
+  const selectedCustomer = customers?.find(c => c._id === selectedCustomerId);
+  const amountPaid = Number(watch('amountPaid')) || 0;
+  const newPending = totalAmount - amountPaid;
+  const currentBalance = (selectedCustomer?.balance || 0) > 0 ? selectedCustomer.balance : 0;
+  const newTotalBalance = currentBalance + newPending;
+
+  const creditLimit = shopSettings?.defaultCreditLimit || 0;
+  const isCreditLimitExceeded = creditLimit > 0 && newTotalBalance > creditLimit;
 
   const { fields, append, remove } = useFieldArray({ control, name: 'products' });
 
   const mutation = useMutation({
     mutationFn: (newBill) => {
+      if (isCreditLimitExceeded) {
+        return Promise.reject(new Error(`${t('Credit Limit Exceeded! Max udhaar allowed is ₹')}${creditLimit}`));
+      }
       // Include calculated tax in payload
       return api.post('/bills', {
         ...newBill,
         tax: taxAmount,
-        discount: 0 // Optional: implement discount in UI if needed later
+        discount: discountAmount
       });
     },
-    onSuccess: () => {
+    onSuccess: (res) => {
       queryClient.invalidateQueries(['bills']);
       queryClient.invalidateQueries(['customers']);
       queryClient.invalidateQueries(['products']);
+      
+      if (shopSettings?.autoPrint && res.data?.data) {
+          generateInvoicePDF(res.data.data, shopDetails, 'print', t, shopSettings);
+      }
+      
       setIsModalOpen(false);
       reset();
     }
@@ -147,7 +173,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
 
   if (!isModalOpen) return null;
 
-  const inputCls = "w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium text-gray-900 placeholder-gray-400 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors outline-none";
+  const inputCls = "w-full h-[42px] rounded-lg border border-gray-300 px-3 text-sm font-medium text-gray-900 placeholder-gray-400 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors outline-none";
 
   return (
     <div className="fixed inset-0 z-50">
@@ -271,7 +297,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                     </div>
                     <div className="flex-shrink-0">
                       <input type="number" {...register(`products.${index}.quantity`)} placeholder="1"
-                        className="w-16 sm:w-20 font-medium rounded-lg border border-gray-300 px-2 py-2.5 text-sm text-center text-gray-900 placeholder-gray-400 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors outline-none" />
+                        className="w-16 sm:w-20 h-[42px] font-medium rounded-lg border border-gray-300 px-2 text-sm text-center text-gray-900 placeholder-gray-400 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors outline-none" />
                       {errors.products?.[index]?.quantity && (
                         <p className="text-red-500 text-[11px] sm:text-xs mt-1 font-medium text-center">
                           {t(errors.products[index].quantity.message)}
@@ -300,6 +326,23 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                   <span className="text-sm font-medium text-blue-900">{t('Subtotal')}</span>
                   <span className="text-sm font-semibold text-blue-900">₹{subtotal.toLocaleString('en-IN')}</span>
                 </div>
+
+                {/* Discount Input Row */}
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-blue-900">{t('Discount')} {isPercentage ? '(%)' : '(₹)'}</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-medium text-blue-900">{isPercentage ? '%' : '₹'}</span>
+                    <input type="number" {...register('discountInput')} className="w-20 rounded-md border border-blue-200 px-2 py-1 text-sm font-medium text-right text-blue-900 bg-white focus:outline-none focus:ring-1 focus:ring-blue-400" placeholder="0" min="0" />
+                  </div>
+                </div>
+
+                {discountAmount > 0 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-blue-900 text-opacity-80">{t('Discount Amount')}</span>
+                    <span className="text-sm font-semibold text-red-600">-₹{discountAmount.toLocaleString('en-IN')}</span>
+                  </div>
+                )}
+
                 {shopSettings?.taxEnabled && (
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-blue-900">{t('Tax')} ({taxRate}%)</span>
@@ -336,7 +379,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                   <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
                     {t('Amount Paid')} <span className="text-red-500">*</span>
                   </label>
-                  <input type="number" {...register('amountPaid')} className={inputCls} placeholder="0" />
+                  <input type="number" {...register('amountPaid')} className={inputCls} placeholder="0" min="0" />
                   {errors.amountPaid && (
                     <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
@@ -346,8 +389,20 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                 </div>
               </div>
 
+              {isCreditLimitExceeded && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2 animate-fade-in">
+                  <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="text-sm font-semibold text-red-800">{t('Credit Limit Exceeded')}</h4>
+                    <p className="text-xs font-medium text-red-600 mt-0.5">
+                      {t('This bill will increase the customer\'s pending balance to')} ₹{newTotalBalance.toLocaleString('en-IN')}, {t('which exceeds the limit of')} ₹{creditLimit.toLocaleString('en-IN')}.
+                    </p>
+                  </div>
+                </div>
+              )}
+
               {/* Submit */}
-              <button type="submit" disabled={mutation.isPending}
+              <button type="submit" disabled={mutation.isPending || isCreditLimitExceeded}
                 className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-lg py-3 font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all">
                 {mutation.isPending ? (
                   <span className="flex items-center justify-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{t('Processing...')}</span>

@@ -1,4 +1,4 @@
-﻿import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, ChevronDown } from 'lucide-react';
 import ReactDOM from 'react-dom';
@@ -110,7 +110,7 @@ const SearchableSelect = ({ options, value, onChange, placeholder, searchPlaceho
       {/* Trigger */}
       <div
         ref={triggerRef}
-        className="cursor-pointer w-full font-medium rounded-lg border border-gray-300 px-3 py-2.5 text-sm transition-all flex justify-between items-center bg-white hover:border-gray-400 select-none"
+        className="cursor-pointer w-full h-[42px] font-medium rounded-lg border border-gray-300 px-3 text-sm transition-all flex justify-between items-center bg-white hover:border-gray-400 select-none"
         onClick={() => isOpen ? closeDropdown() : openDropdown()}
       >
         <span className={`truncate pr-2 ${selectedOption ? 'text-gray-900' : 'text-gray-400'}`}>

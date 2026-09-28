@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import api from '../api/axios';
 import { Plus, Search, Phone, IndianRupee, History, Loader2, Edit, Trash2, Users, Wallet, FileText, Mail, Calendar, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -78,6 +78,7 @@ const Customers = () => {
     getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
     staleTime: 1 * 60 * 1000, // Data is fresh for 1 min
     gcTime: 5 * 60 * 1000,   // Garbage collect (delete from memory) if unused for 5 mins
+    placeholderData: keepPreviousData,
   });
 
   const viewTransactionId = searchParams.get('viewTransaction');
@@ -298,7 +299,7 @@ const Customers = () => {
             placeholder={t("Search By Name Or Number")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full h-10 sm:h-12 pl-8 sm:pl-10 pr-3 sm:pr-4 bg-white border border-gray-300 rounded-lg text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 placeholder:font-medium focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
+            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-white border border-gray-300 rounded-lg text-[13px] sm:text-sm font-medium text-gray-900 placeholder-gray-400 placeholder:font-medium focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
           />
         </div>
       </div>

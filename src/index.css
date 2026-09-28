@@ -7,6 +7,78 @@
 
 @import "tailwindcss";
 
+/* ========================================
+   DARK MODE THEME SYSTEM (CSS Variables)
+   ======================================== */
+:root {
+  --bg-app: #F5F5F5;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fafafa;
+  --bg-sidebar: #ffffff;
+  --bg-header: #ffffff;
+  --bg-input: #ffffff;
+  --bg-muted: #f3f4f6;
+  --bg-accent: #093C5D;
+  --bg-accent-hover: #082a42;
+  --bg-danger: #fef2f2;
+  --bg-success: #f0fdf4;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-tertiary: #6b7280;
+  --text-muted: #9ca3af;
+  --text-inverse: #ffffff;
+  --text-accent: #093C5D;
+  --text-danger: #dc2626;
+  --text-success: #15803d;
+  --border-default: #e5e7eb;
+  --border-light: #f3f4f6;
+  --border-hover: #d1d5db;
+  --border-accent: rgba(9, 60, 93, 0.15);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  --overlay-bg: rgba(0, 0, 0, 0.4);
+  --scrollbar-thumb: #d1d5db;
+  --scrollbar-thumb-hover: #9ca3af;
+  --chart-grid: #e5e7eb;
+  --chart-text: #6b7280;
+}
+
+.dark {
+  --bg-app: #0f1117;
+  --bg-card: #1a1d27;
+  --bg-card-hover: #22252f;
+  --bg-sidebar: #141720;
+  --bg-header: #141720;
+  --bg-input: #1e2130;
+  --bg-muted: #1e2130;
+  --bg-accent: #2563eb;
+  --bg-accent-hover: #1d4ed8;
+  --bg-danger: rgba(239, 68, 68, 0.1);
+  --bg-success: rgba(34, 197, 94, 0.1);
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --text-muted: #64748b;
+  --text-inverse: #0f172a;
+  --text-accent: #60a5fa;
+  --text-danger: #f87171;
+  --text-success: #4ade80;
+  --border-default: #2d3348;
+  --border-light: #232838;
+  --border-hover: #3d4460;
+  --border-accent: rgba(96, 165, 250, 0.2);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+  --overlay-bg: rgba(0, 0, 0, 0.6);
+  --scrollbar-thumb: #3d4460;
+  --scrollbar-thumb-hover: #4d5574;
+  --chart-grid: #2d3348;
+  --chart-text: #94a3b8;
+}
+
+
 @layer utilities {
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);
