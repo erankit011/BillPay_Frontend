@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery, keepPreviousData } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Bell, Clock, User, X, MessageSquare, Mail, Edit, Trash2, TrendingUp, Lightbulb, Activity, Send, Loader2, AlertCircle, Eye } from 'lucide-react';
+import { Plus, Bell, Clock, User, X, MessageSquare, Mail, Edit, Trash2, TrendingUp, Lightbulb, Activity, Send, Loader2, AlertCircle, Eye, Search } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
@@ -298,34 +298,40 @@ const Reminders = () => {
         </div>
       </div>
 
-      {/* Search & Filter */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
-        {/* Search Input */}
-        <div className="relative flex-1">
+      {/* Filter Chips */}
+      <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        {[
+          { label: 'All', value: 'All' },
+          { label: 'Pending', value: 'Pending' },
+          { label: 'Sent', value: 'Sent' },
+        ].map((filter) => (
+          <button
+            key={filter.value}
+            onClick={() => setFilterStatus(filter.value)}
+            className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${filterStatus === filter.value
+              ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
+              : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
+              }`}
+          >
+            {t(filter.label)}
+          </button>
+        ))}
+      </div>
+
+      {/* Search Bar */}
+      <div className="flex flex-col w-full mb-3 sm:mb-4">
+        <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-            <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
           </div>
           <input
             type="text"
             placeholder={t('Search customer...')}
             value={searchName}
             onChange={(e) => setSearchName(e.target.value)}
-            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all shadow-none"
+            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-white border border-gray-300 rounded-lg text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
           />
         </div>
-
-        {/* Filter Dropdown */}
-        <select
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          className="block h-10 sm:h-12 w-full sm:w-auto sm:min-w-[150px] px-3 sm:px-4 bg-white border border-gray-200 rounded-lg text-[13px] sm:text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all cursor-pointer shadow-none appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_8px_center] bg-[length:16px_16px]"
-        >
-          <option value="All">{t('All')}</option>
-          <option value="Pending">{t('Pending')}</option>
-          <option value="Sent">{t('Sent')}</option>
-        </select>
       </div>
 
       {/* Main Content Area */}
