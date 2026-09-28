@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery, keepPreviousData } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Search, FileText, Send, Loader2, Wallet, Users, Mail, MessageSquare, MoreVertical, IndianRupee, Eye, Filter, Download, Printer, Clock, Hash } from 'lucide-react';
+import { Plus, Search, FileText, Send, Loader2, Wallet, Users, Mail, MessageSquare, MoreVertical, IndianRupee, Eye, Filter, Download, Printer, Clock, Hash, TrendingUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { generateInvoicePDF } from '../utils/generateInvoicePDF';
@@ -194,108 +194,58 @@ const Bills = () => {
                 </button>
             </div>
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
-
-                {/* Total Revenue */}
-                <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
-                    <div className="flex justify-between items-start gap-1">
-                        <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
-                            <Wallet className="w-4 h-4 md:w-5 md:h-5" />
-                        </div>
-                    </div>
-                    <div className="mt-auto pt-2 min-w-0">
-                        <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Revenue')}</p>
-                        <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
-                            {formatCurrency(stats.totalRevenue)}
-                        </p>
-                        <p className={`text-[10px] md:text-xs font-medium truncate mt-0.5 ${stats.revenueGrowth >= 0 ? 'text-green-700' : 'text-red-700'}`}>
-                            {stats.revenueGrowth >= 0 ? '+' : ''}{stats.revenueGrowth.toFixed(1)}% {t('this month')}
-                        </p>
-                    </div>
-                </div>
-
-                {/* Pending Udhar */}
-                <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-700 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
-                    <div className="flex justify-between items-start gap-1">
-                        <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-red-50 flex items-center justify-center text-red-700 border border-red-100">
-                            <IndianRupee className="w-4 h-4 md:w-5 md:h-5" />
-                        </div>
-                    </div>
-                    <div className="mt-auto pt-2 min-w-0">
-                        <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Pending Udhar')}</p>
-                        <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
-                            {formatCurrency(stats.pendingUdharTotal)}
-                        </p>
-                        <p className="text-[10px] md:text-xs text-red-700 font-medium truncate mt-0.5">
-                            {stats.customersWithUdhar} {t('Customers with udhar')}
-                        </p>
-                    </div>
-                </div>
-
-                {/* Total Advance */}
-                <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-green-700 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
-                    <div className="flex justify-between items-start gap-1">
-                        <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-green-50 flex items-center justify-center text-green-700 border border-green-100">
-                            <Wallet className="w-4 h-4 md:w-5 md:h-5" />
-                        </div>
-                    </div>
-                    <div className="mt-auto pt-2 min-w-0">
-                        <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Advance')}</p>
-                        <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
-                            {formatCurrency(stats.advanceTotal)}
-                        </p>
-                        <p className="text-[10px] md:text-xs text-green-700 font-medium truncate mt-0.5">
-                            {stats.customersWithAdvance} {t('With advance balance')}
-                        </p>
-                    </div>
-                </div>
-
-                {/* Active Customers */}
-                <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
-                    <div className="flex justify-between items-start gap-1">
-                        <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            {/* Dashboard Stats Section (Matched with Products Page UI) */}
+            <div className="w-full bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default mb-4 sm:mb-6 mt-2">
+                
+                {/* Top Part: Active Customers */}
+                <div className="p-4 md:p-5 xl:p-6 flex items-center gap-3 md:gap-4">
+                    <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg p-[2px] border border-gray-200 bg-white">
+                        <div className="w-full h-full rounded-md flex items-center justify-center bg-gray-50 text-[#093C5D]">
                             <Users className="w-4 h-4 md:w-5 md:h-5" />
                         </div>
                     </div>
-                    <div className="mt-auto pt-2 min-w-0">
-                        <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Active Customers')}</p>
-                        <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
-                            {stats.activeCustomers}
-                        </p>
-                        <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">
-                            {stats.newCustomersThisWeek} {t('New this week')}
-                        </p>
+                    <div className="min-w-0 flex-1">
+                        <p className="text-[10px] md:text-xs xl:text-sm text-gray-500 mb-1 font-semibold uppercase tracking-wide truncate">{t('Active Customers')}</p>
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <p className="text-3xl sm:text-4xl md:text-5xl font-semibold text-[#093C5D] truncate leading-none tracking-tight">{stats.activeCustomers}</p>
+                            {stats.newCustomersThisWeek > 0 && (
+                                <div className="flex items-center gap-1 bg-[#f0fdf4] px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md border border-[#bbf7d0] shrink-0">
+                                    <TrendingUp className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-green-600" />
+                                    <p className="text-[10px] sm:text-[11px] md:text-xs text-green-700 font-medium whitespace-nowrap">
+                                        +{stats.newCustomersThisWeek} {t('New this week')}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Bill Count Stats - Clean Style */}
-            <div className="mb-4 sm:mb-6 mt-2">
-                <div className="flex items-center pb-2 sm:pb-3 mb-2 sm:mb-4 border-b border-dashed border-gray-200">
-                    <FileText className="w-4 h-4 md:w-5 md:h-5 mr-2 text-[#093C5D]" />
-                    <h3 className="text-sm md:text-base font-semibold text-gray-900">{t('Bills Generated Overview')}</h3>
-                </div>
-                <div className="grid grid-cols-3 md:grid-cols-5 gap-1.5 sm:gap-3 md:gap-4">
-                    <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
-                        <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Today')}</p>
-                        <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.today}</p>
+                {/* Bottom Part: Bills Generated Overview */}
+                <div className="bg-gray-50/80 px-4 py-3 md:px-5 md:py-3.5 border-t border-gray-100 flex flex-wrap items-center gap-x-4 gap-y-2.5 sm:gap-x-6">
+                    <div className="flex items-center gap-1.5 sm:gap-2 mr-2">
+                        <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#093C5D] mb-[1px]" />
+                        <span className="text-[11px] sm:text-xs md:text-sm font-semibold text-gray-900 uppercase tracking-wide whitespace-nowrap leading-none mt-0.5">{t('Bills Generated')}</span>
                     </div>
-                    <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
-                        <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Yesterday')}</p>
-                        <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.yesterday}</p>
+                    
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#093C5D] shrink-0 opacity-80"></span>
+                        <span className="text-[11px] sm:text-xs md:text-sm text-gray-500 font-medium whitespace-nowrap">{t('Today')}: <span className="font-semibold text-gray-900">{stats.billCounts.today}</span></span>
                     </div>
-                    <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
-                        <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('This Week')}</p>
-                        <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.week}</p>
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#093C5D] shrink-0 opacity-60"></span>
+                        <span className="text-[11px] sm:text-xs md:text-sm text-gray-500 font-medium whitespace-nowrap">{t('Yesterday')}: <span className="font-semibold text-gray-900">{stats.billCounts.yesterday}</span></span>
                     </div>
-                    <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default">
-                        <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('This Month')}</p>
-                        <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.month}</p>
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#093C5D] shrink-0 opacity-40"></span>
+                        <span className="text-[11px] sm:text-xs md:text-sm text-gray-500 font-medium whitespace-nowrap">{t('This Week')}: <span className="font-semibold text-gray-900">{stats.billCounts.week}</span></span>
                     </div>
-                    <div className="bg-white rounded-lg p-2.5 sm:p-4 flex flex-col items-center justify-center text-center border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default col-span-2 sm:col-span-1">
-                        <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5 sm:mb-1 truncate w-full">{t('Lifetime')}</p>
-                        <p className="text-base sm:text-xl md:text-2xl font-semibold text-[#093C5D]">{stats.billCounts.lifetime}</p>
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#093C5D] shrink-0 opacity-20"></span>
+                        <span className="text-[11px] sm:text-xs md:text-sm text-gray-500 font-medium whitespace-nowrap">{t('This Month')}: <span className="font-semibold text-gray-900">{stats.billCounts.month}</span></span>
+                    </div>
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gray-300 shrink-0"></span>
+                        <span className="text-[11px] sm:text-xs md:text-sm text-gray-500 font-medium whitespace-nowrap">{t('Lifetime')}: <span className="font-semibold text-gray-900">{stats.billCounts.lifetime}</span></span>
                     </div>
                 </div>
             </div>
