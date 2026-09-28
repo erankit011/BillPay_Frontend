@@ -205,13 +205,13 @@ const Bills = () => {
                         </div>
                     </div>
                     <div className="min-w-0 flex-1">
-                        <p className="text-[10px] md:text-xs xl:text-sm text-gray-500 mb-1 font-semibold uppercase tracking-wide truncate">{t('Active Customers')}</p>
-                        <div className="flex items-center gap-2 sm:gap-3">
-                            <p className="text-3xl sm:text-4xl md:text-5xl font-semibold text-[#093C5D] truncate leading-none tracking-tight">{stats.activeCustomers}</p>
+                        <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Active Customers')}</p>
+                        <div className="flex items-center gap-2.5 sm:gap-3">
+                            <p className="text-2xl sm:text-3xl font-bold text-gray-900 truncate leading-none tracking-tight">{stats.activeCustomers}</p>
                             {stats.newCustomersThisWeek > 0 && (
-                                <div className="flex items-center gap-1 bg-[#f0fdf4] px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md border border-[#bbf7d0] shrink-0">
-                                    <TrendingUp className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-green-600" />
-                                    <p className="text-[10px] sm:text-[11px] md:text-xs text-green-700 font-medium whitespace-nowrap">
+                                <div className="flex items-center gap-1 bg-[#f0fdf4] px-2 py-0.5 rounded-md border border-[#bbf7d0] shrink-0">
+                                    <TrendingUp className="w-3 h-3 text-green-600" />
+                                    <p className="text-[10px] text-green-700 font-medium whitespace-nowrap">
                                         +{stats.newCustomersThisWeek} {t('New this week')}
                                     </p>
                                 </div>
@@ -306,7 +306,7 @@ const Bills = () => {
                 ) : (
                     <div>
                         {/* Desktop Table */}
-                        <div className="hidden md:block overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                        <div className="hidden lg:block overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                             <table className="w-full min-w-[900px] whitespace-nowrap">
                                 <thead className="bg-gray-50/80 border-b border-gray-200">
                                     <tr>
@@ -478,8 +478,8 @@ const Bills = () => {
                             />
                         </div>
 
-                        {/* Mobile Cards */}
-                        <div className="md:hidden flex flex-col gap-2.5">
+                        {/* Mobile & Tablet Cards */}
+                        <div className="lg:hidden flex flex-col gap-2.5">
                             {bills.map((bill, index) => (
                                 <div
                                     key={bill._id}
