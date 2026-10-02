@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Save, Store, FileText, Bell, ShoppingCart, CreditCard, ChevronRight, BriefcaseBusiness, Lock, Trash2, AlertTriangle, Loader2 } from 'lucide-react';
+import { Save, Store, FileText, Bell, ShoppingCart, CreditCard, ChevronRight, BriefcaseBusiness, Lock, Trash2, AlertTriangle, Loader2, Download } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -103,17 +103,23 @@ const Settings = () => {
   const [formData, setFormData] = useState(defaultSettings);
   const [initialData, setInitialData] = useState(defaultSettings);
   const [userHasPassword, setUserHasPassword] = useState(true); // Default to true
+  const [platformInvoices, setPlatformInvoices] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [settingsRes, authRes] = await Promise.all([
+        const [settingsRes, authRes, invoicesRes] = await Promise.all([
           api.get('/settings'),
-          api.get('/auth/me').catch(() => null)
+          api.get('/auth/me').catch(() => null),
+          api.get('/subscription/invoices').catch(() => null)
         ]);
 
         if (authRes?.data?.success) {
           setUserHasPassword(authRes.data.data.hasPassword);
+        }
+
+        if (invoicesRes?.data?.success) {
+          setPlatformInvoices(invoicesRes.data.data.invoices || []);
         }
 
         if (settingsRes.data.success && settingsRes.data.data) {
@@ -293,6 +299,7 @@ const Settings = () => {
           <nav className="sticky top-24 space-y-1">
             <SectionNavItem icon={BriefcaseBusiness} label={t('Business Info')} sectionId="business" activeSection={activeSection} onClick={scrollToSection} />
             <SectionNavItem icon={CreditCard} label={t('Billing & Invoice')} sectionId="billing" activeSection={activeSection} onClick={scrollToSection} />
+            <SectionNavItem icon={FileText} label={t('Platform Invoices')} sectionId="platform-invoices" activeSection={activeSection} onClick={scrollToSection} />
             <SectionNavItem icon={Bell} label={t('Notifications')} sectionId="notifications" activeSection={activeSection} onClick={scrollToSection} />
             <SectionNavItem icon={ShoppingCart} label={t('Product')} sectionId="product" activeSection={activeSection} onClick={scrollToSection} />
             <SectionNavItem icon={FileText} label={t('Invoice Notes')} sectionId="notes" activeSection={activeSection} onClick={scrollToSection} />
@@ -306,6 +313,7 @@ const Settings = () => {
           {[
             { id: 'business', icon: BriefcaseBusiness, label: t('Business Info') },
             { id: 'billing', icon: CreditCard, label: t('Billing & Invoice') },
+            { id: 'platform-invoices', icon: FileText, label: t('Platform Invoices') },
             { id: 'notifications', icon: Bell, label: t('Notifications') },
             { id: 'product', icon: ShoppingCart, label: t('Product') },
             { id: 'notes', icon: FileText, label: t('Invoice Notes') },
@@ -615,6 +623,141 @@ const Settings = () => {
               </section>
             )}
 
+            {/* ═══════════════ PLATFORM INVOICES ═══════════════ */}
+            {activeSection === 'platform-invoices' && (
+              <section id="section-platform-invoices" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                  <div>
+                    <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Platform Invoices')}</h2>
+                    <p className="text-xs text-gray-500 mt-0.5">{t('Your UdharPay subscription billing history')}</p>
+                  </div>
+                </div>
+                <div className="px-0 py-0">
+                  {platformInvoices.length === 0 ? (
+                    <div className="p-8 text-center text-gray-500 text-sm">
+                      {t('No billing history found. Upgrade your plan to see invoices here.')}
+                    </div>
+                  ) : (
+                    <div>
+                      {/* Desktop Table (Visible on lg and above) */}
+                      <div className="hidden lg:block overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                          <thead>
+                            <tr className="bg-gray-50 border-b border-gray-200 text-xs text-gray-500 uppercase tracking-wider">
+                              <th className="px-6 py-3 font-medium">{t('Date')}</th>
+                              <th className="px-6 py-3 font-medium">{t('Transaction ID')}</th>
+                              <th className="px-6 py-3 font-medium">{t('Plan')}</th>
+                              <th className="px-6 py-3 font-medium">{t('Validity')}</th>
+                              <th className="px-6 py-3 font-medium">{t('Amount')}</th>
+                              <th className="px-6 py-3 font-medium">{t('Status')}</th>
+                              <th className="px-6 py-3 font-medium">{t('Action')}</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-100">
+                            {platformInvoices.map((inv) => {
+                              const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
+                              return (
+                              <tr key={inv._id} className="hover:bg-gray-50/50 transition-colors">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                  {formatDate(inv.createdAt)}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-gray-500 font-mono text-xs">
+                                  {inv.razorpayPaymentId || '-'}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                                  {inv.planName}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                  <div className="flex items-center gap-1.5">
+                                    <span>{formatDate(inv.billingPeriodStart)}</span>
+                                    <span className="text-gray-400">&rarr;</span>
+                                    <span>{formatDate(inv.billingPeriodEnd)}</span>
+                                  </div>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                                  ₹{inv.amount}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                                    inv.status === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                  }`}>
+                                    {inv.status}
+                                  </span>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                  <Link 
+                                    to={`/platform-receipt/${inv._id}`} 
+                                    target="_blank"
+                                    className="inline-flex items-center gap-1.5 text-[#093C5D] hover:text-[#072d46] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 py-1.5 rounded-md transition-colors"
+                                  >
+                                    <Download className="w-3.5 h-3.5" />
+                                    <span>{t('Invoice')}</span>
+                                  </Link>
+                                </td>
+                              </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+
+                      {/* Mobile & Tablet Cards (Visible below lg) */}
+                      <div className="block lg:hidden space-y-3 p-1">
+                        {platformInvoices.map((inv) => {
+                          const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
+                          return (
+                            <div key={`card-${inv._id}`} className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 active:bg-gray-50 transition-colors duration-200">
+                              <div className="flex justify-between items-start gap-2 mb-3">
+                                <div className="min-w-0">
+                                  <h3 className="text-sm sm:text-[15px] font-semibold text-[#093C5D] truncate leading-tight mb-0.5">{inv.planName} Subscription</h3>
+                                  <div className="text-[10px] sm:text-[11px] text-gray-500 font-medium font-mono truncate">#{inv.razorpayPaymentId || '-'}</div>
+                                </div>
+                                <span className={`shrink-0 inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-xs font-semibold uppercase tracking-wider ${
+                                  inv.status === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'
+                                }`}>
+                                  {inv.status}
+                                </span>
+                              </div>
+                              
+                              <div className="grid grid-cols-2 gap-3 text-sm bg-gray-50/50 p-2.5 sm:p-3 rounded-lg border border-gray-100 mb-3">
+                                <div>
+                                  <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Date')}</span>
+                                  <div className="mt-0.5 text-gray-900 font-medium text-xs sm:text-sm">{formatDate(inv.createdAt)}</div>
+                                </div>
+                                <div>
+                                  <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Amount')}</span>
+                                  <div className="mt-0.5 text-gray-900 font-semibold text-sm sm:text-[15px]">₹{inv.amount}</div>
+                                </div>
+                                <div className="col-span-2">
+                                  <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Validity')}</span>
+                                  <div className="mt-0.5 text-gray-700 font-medium flex items-center gap-1.5 text-xs sm:text-sm">
+                                    <span>{formatDate(inv.billingPeriodStart)}</span>
+                                    <span className="text-gray-400">&rarr;</span>
+                                    <span>{formatDate(inv.billingPeriodEnd)}</span>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div className="flex justify-end pt-1">
+                                <Link 
+                                  to={`/platform-receipt/${inv._id}`} 
+                                  target="_blank"
+                                  className="inline-flex items-center justify-center gap-1.5 text-[#093C5D] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 sm:px-4 py-1.5 sm:py-2 rounded-md transition-colors text-xs sm:text-sm font-semibold w-full sm:w-auto border border-[#093C5D]/10 active:scale-95"
+                                >
+                                  <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                                  <span>{t('View & Download Invoice')}</span>
+                                </Link>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+
             {/* ═══════════════ NOTIFICATIONS & AUTOMATION ═══════════════ */}
             {activeSection === 'notifications' && (
               <section id="section-notifications" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
@@ -858,7 +1001,7 @@ const Settings = () => {
             )}
 
             {/* ═══════════════ SAVE BUTTON ═══════════════ */}
-            {activeSection !== 'security' && activeSection !== 'account' && (
+            {activeSection !== 'security' && activeSection !== 'account' && activeSection !== 'platform-invoices' && (
               <div className="sticky bottom-16 lg:bottom-4 z-20 mt-8 pt-4 pb-4 lg:pb-0">
                 <div className="bg-white border border-gray-200 p-2 sm:px-4 sm:py-2.5 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 w-full">
                   <div className="hidden sm:flex items-center gap-2 text-sm ml-1">

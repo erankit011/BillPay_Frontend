@@ -21,6 +21,8 @@ const Products = lazy(() => import('../pages/Products'));
 const Reminders = lazy(() => import('../pages/Reminders'));
 const Profile = lazy(() => import('../pages/Profile'));
 const Notifications = lazy(() => import('../pages/Notifications'));
+const Subscription = lazy(() => import('../pages/Subscription'));
+const PlatformReceipt = lazy(() => import('../pages/PlatformReceipt'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
 // Static pages
@@ -109,7 +111,15 @@ const AppRoutes = () => {
           <Route path="/settings" element={<Settings />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/notifications" element={<Notifications />} />
+          <Route path="/subscription" element={<Subscription />} />
         </Route>
+
+        {/* Protected Standalone Routes (No MainLayout for Print/Full page) */}
+        <Route path="/platform-receipt/:id" element={
+          <ProtectedRoute>
+            <PlatformReceipt />
+          </ProtectedRoute>
+        } />
 
         {/* Fallback 404 Route */}
         <Route path="*" element={<NotFound />} />

@@ -10,6 +10,7 @@ import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver'
 import CreateBillModal from '../components/bills/CreateBillModal';
 import ViewBillModal from '../components/bills/ViewBillModal';
 import SwirlingLoader from '../components/common/SwirlingLoader';
+import UpgradeModal from '../components/common/UpgradeModal';
 
 import { formatCurrency } from '../utils/currency';
 import { formatDate } from '../utils/dateUtils';
@@ -42,6 +43,9 @@ const Bills = () => {
             return next;
         }, { replace: true });
     };
+
+    // Upgrade Modal State
+    const [upgradeModal, setUpgradeModal] = useState({ isOpen: false, title: '', message: '' });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(null);
@@ -175,6 +179,33 @@ const Bills = () => {
         billCounts: { today: 0, yesterday: 0, week: 0, month: 0, lifetime: 0 }
     };
 
+    const handleNewBillClick = () => {
+        if (!shopDetails?.subscriptionPlan || shopDetails?.subscriptionPlan === 'FREE' || shopDetails?.subscriptionStatus === 'none') {
+            const trialEnd = new Date(shopDetails?.createdAt);
+            trialEnd.setDate(trialEnd.getDate() + 7);
+            
+            if (new Date() > trialEnd) {
+                setUpgradeModal({
+                    isOpen: true,
+                    title: t('Trial Expired'),
+                    message: t('Your 7-day free trial has expired. Please upgrade your plan to continue creating bills.')
+                });
+                return;
+            }
+            
+            const totalBills = stats.billCounts.lifetime || 0;
+            if (totalBills >= 10) {
+                setUpgradeModal({
+                    isOpen: true,
+                    title: t('Limit Reached'),
+                    message: t('Free trial limit reached: You can only create up to 10 bills on the free plan. Please upgrade your subscription.')
+                });
+                return;
+            }
+        }
+        setIsModalOpen(true);
+    };
+
     return (
         <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
@@ -186,7 +217,7 @@ const Bills = () => {
                     </p>
                 </div>
                 <button
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={handleNewBillClick}
                     className="hidden lg:flex cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
                 >
                     <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
@@ -663,7 +694,7 @@ const Bills = () => {
             {/* Mobile & Tablet Extended FAB (No Shadow) - hidden when any modal is open */}
             {!activeBill && !isModalOpen && (
                 <button
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={handleNewBillClick}
                     className="lg:hidden fixed bottom-6 sm:bottom-8 right-6 sm:right-8 z-50 bg-[#093C5D] hover:bg-[#082a42] text-white px-5 sm:px-6 py-3 rounded-lg cursor-pointer flex items-center justify-center gap-2 active:scale-95 transition-all duration-200"
                     title={t('Create Bills')}
                 >
@@ -671,6 +702,13 @@ const Bills = () => {
                     <span className="font-semibold text-sm">{t('Create Bills')}</span>
                 </button>
             )}
+
+            <UpgradeModal
+                isOpen={upgradeModal.isOpen}
+                onClose={() => setUpgradeModal({ ...upgradeModal, isOpen: false })}
+                title={upgradeModal.title}
+                message={upgradeModal.message}
+            />
         </div>
     );
 };
