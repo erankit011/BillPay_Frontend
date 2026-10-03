@@ -71,13 +71,27 @@ const PlatformReceipt = () => {
             <ArrowLeft className="w-4 h-4" />
             {t('Back to Settings')}
           </Link>
-          <button
-            onClick={handlePrint}
-            className="flex w-full sm:w-auto items-center justify-center gap-2 bg-[#093C5D] hover:bg-[#072d46] text-white px-5 py-2.5 rounded-lg transition-colors font-medium text-sm"
-          >
-            <Printer className="w-4 h-4" />
-            {t('Print Invoice')}
-          </button>
+          <div className="flex w-full sm:w-auto items-center gap-3 flex-col sm:flex-row">
+            {invoice.receiptUrl ? (
+              <a
+                href={invoice.receiptUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="flex w-full sm:w-auto items-center justify-center gap-2 bg-[#093C5D] hover:bg-[#072d46] text-white px-5 py-2.5 rounded-lg transition-colors font-medium text-sm shadow-sm"
+              >
+                <Printer className="w-4 h-4" />
+                {t('Download Cloud PDF')}
+              </a>
+            ) : (
+              <button
+                onClick={handlePrint}
+                className="flex w-full sm:w-auto items-center justify-center gap-2 bg-[#093C5D] hover:bg-[#072d46] text-white px-5 py-2.5 rounded-lg transition-colors font-medium text-sm shadow-sm"
+              >
+                <Printer className="w-4 h-4" />
+                {t('Print Invoice')}
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Invoice Paper */}

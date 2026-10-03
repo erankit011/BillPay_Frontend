@@ -68,6 +68,12 @@ const Profile = () => {
     const file = e.target.files[0];
     if (!file) return;
 
+    if (file.size > 5 * 1024 * 1024) {
+      alert(t('File is too large. Max 5MB allowed.'));
+      e.target.value = '';
+      return;
+    }
+
     const formDataObj = new FormData();
     formDataObj.append('image', file);
 
