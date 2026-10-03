@@ -16,13 +16,11 @@ const Profile = () => {
     name: '',
     email: '',
     phone: '',
-    shopName: '',
   });
   const [initialData, setInitialData] = useState({
     name: '',
     email: '',
     phone: '',
-    shopName: '',
   });
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -35,7 +33,6 @@ const Profile = () => {
         name: user.name || '',
         email: user.email || '',
         phone: user.phone || '',
-        shopName: user.shopName || '',
       };
       setFormData(initial);
       setInitialData(initial);
@@ -202,20 +199,7 @@ const Profile = () => {
                 <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('* Cannot be changed')}</p>
               </div>
 
-              <div>
-                <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
-                  {t('Shop Name')} <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="shopName"
-                  value={formData.shopName}
-                  onChange={handleChange}
-                  placeholder={t('Enter your shop name')}
-                  required
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
-                />
-              </div>
+
             </div>
           </div>
         </section>

@@ -11,10 +11,10 @@ const productSchema = yup.object({
   stock: yup.number().transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value).min(0, 'Stock cannot be negative').required('Stock is required'),
 });
 
-const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending }) => {
+const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending, serverError }) => {
   const { t } = useTranslation();
 
-  const { register, handleSubmit, reset, setValue, formState: { errors, isDirty } } = useForm({
+  const { register, handleSubmit, reset, setValue, setError, formState: { errors, isDirty } } = useForm({
     resolver: yupResolver(productSchema),
     defaultValues: editingProduct ? {
       name: editingProduct.name,
@@ -36,6 +36,16 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
       }
     }
   }, [isOpen, editingProduct, reset]);
+
+  React.useEffect(() => {
+    if (serverError) {
+      if (serverError.toLowerCase().includes('name')) {
+        setError('name', { type: 'server', message: serverError });
+      } else {
+        setError('root.server', { type: 'server', message: serverError });
+      }
+    }
+  }, [serverError, setError]);
 
   if (!isOpen) return null;
 
@@ -69,6 +79,14 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
 
           <div className="p-5 md:p-6 overflow-y-auto">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              {errors.root?.server && (
+                <div className="bg-red-50 border-l-[3px] border-red-500 p-2 rounded-r-md mb-4">
+                  <div className="flex items-center gap-1.5">
+                    <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-500 shrink-0" />
+                    <p className="text-[11px] sm:text-[12px] font-medium text-red-700 leading-none">{errors.root.server.message}</p>
+                  </div>
+                </div>
+              )}
               <div>
                 <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
                   {t('Product Name')} <span className="text-red-500">*</span>

@@ -114,12 +114,18 @@ const Products = () => {
     gcTime: 5 * 60 * 1000,   // Garbage collect (delete from memory) if unused for 5 mins
     placeholderData: keepPreviousData,
   });
+  
+  const [formError, setFormError] = useState(null);
 
   const createMutation = useMutation({
     mutationFn: (newProduct) => api.post('/products', newProduct),
     onSuccess: () => {
       queryClient.invalidateQueries(['products']);
       closeModal();
+    },
+    onError: (error) => {
+      const backendMessage = error.response?.data?.message;
+      setFormError(backendMessage ? t(backendMessage) : t('Failed to add product. Please try again.'));
     }
   });
 
@@ -128,6 +134,10 @@ const Products = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(['products']);
       closeModal();
+    },
+    onError: (error) => {
+      const backendMessage = error.response?.data?.message;
+      setFormError(backendMessage ? t(backendMessage) : t('Failed to update product. Please try again.'));
     }
   });
 
@@ -167,6 +177,7 @@ const Products = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingProduct(null);
+    setFormError(null);
   };
 
   const products = data?.pages?.flatMap(page => page.data || []) || [];
@@ -177,8 +188,9 @@ const Products = () => {
     try {
       setIsDownloading(true);
       const res = await api.get(`/products?limit=10000&search=${encodeURIComponent(debouncedSearch)}&filterStock=${encodeURIComponent(filterStock)}`);
+      const settingsRes = await api.get(`/settings`);
       const allProducts = res.data.data?.data || res.data.data || [];
-      generateInventoryPDF(allProducts, user, t, formatDate);
+      generateInventoryPDF(allProducts, settingsRes.data.data, t, formatDate);
     } catch (error) {
       console.error("Error generating inventory PDF:", error);
     } finally {
@@ -476,6 +488,7 @@ const Products = () => {
           onClose={closeModal}
           onSubmit={onSubmit}
           isPending={createMutation.isPending || updateMutation.isPending}
+          serverError={formError}
         />
       )}
 

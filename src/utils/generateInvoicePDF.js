@@ -36,8 +36,8 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
   const doc = new jsPDF();
   
   // Use settings for business info, fall back to user profile
-  const shopPhone = settings.shopPhone || shopDetails?.phone || '';
-  const shopEmail = settings.shopEmail || shopDetails?.email || '';
+  const shopPhone = settings.shopPhone || '';
+  const shopEmail = settings.shopEmail || '';
   const shopAddress = settings.shopAddress || '';
   const gstNumber = settings.gstNumber || '';
   const footerNote = settings.invoiceFooterNote || '';
@@ -58,7 +58,7 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
     }
   }
 
-  doc.text((shopDetails?.shopName || t('Shop Invoice')).toUpperCase(), headerX, 22);
+  doc.text((settings?.shopName || t('Shop Invoice')).toUpperCase(), headerX, 22);
   
   doc.setFontSize(10);
   doc.setTextColor(100);
@@ -303,10 +303,10 @@ const generateThermalPDF = async (bill, shopDetails, action, t, settings) => {
   }
 
   doc.setTextColor(0);
-  centerText(shopDetails?.shopName || t('Shop Invoice'), y, 14);
+  centerText(settings?.shopName || t('Shop Invoice'), y, 14);
   y += 5;
   
-  const shopPhone = settings.shopPhone || shopDetails?.phone;
+  const shopPhone = settings.shopPhone;
   if (shopPhone) {
     centerText(`Ph: ${shopPhone}`, y, 9);
     y += 4;

@@ -30,11 +30,24 @@ const PrivacyPolicy = lazy(() => import('../pages/PrivacyPage'));
 const TermsOfService = lazy(() => import('../pages/TermsOfService'));
 const ContactSupport = lazy(() => import('../pages/ContactSupport'));
 
+// Onboarding
+const BusinessSetup = lazy(() => import('../pages/BusinessSetup'));
+
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
+const OnboardingRoute = ({ children }) => {
+  const { user } = useSelector((state) => state.auth);
+
+  if (user && !user.isBusinessSetupCompleted) {
+    return <Navigate to="/setup-business" replace />;
   }
 
   return children;
@@ -98,7 +111,9 @@ const AppRoutes = () => {
         {/* Protected Dashboard Routes */}
         <Route element={
           <ProtectedRoute>
-            <MainLayout />
+            <OnboardingRoute>
+              <MainLayout />
+            </OnboardingRoute>
           </ProtectedRoute>
         }>
           <Route path="/dashboard" element={<Dashboard />} />
@@ -118,6 +133,13 @@ const AppRoutes = () => {
         <Route path="/platform-receipt/:id" element={
           <ProtectedRoute>
             <PlatformReceipt />
+          </ProtectedRoute>
+        } />
+
+        {/* Onboarding Route (Protected but not behind OnboardingRoute) */}
+        <Route path="/setup-business" element={
+          <ProtectedRoute>
+            <BusinessSetup />
           </ProtectedRoute>
         } />
 

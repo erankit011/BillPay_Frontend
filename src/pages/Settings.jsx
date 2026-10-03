@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
-import { logout } from '../redux/slices/authSlice';
+import { logout, setUser } from '../redux/slices/authSlice';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 
 
@@ -87,6 +87,7 @@ const Settings = () => {
     defaultPaymentMode: 'CASH',
     defaultPaymentTerms: 30,
     // Shop / Business Info
+    shopName: '',
     gstNumber: '',
     shopAddress: '',
     upiId: '',
@@ -138,6 +139,7 @@ const Settings = () => {
             taxRate: s.taxRate ?? 0,
             defaultPaymentMode: s.defaultPaymentMode || 'CASH',
             defaultPaymentTerms: s.defaultPaymentTerms ?? 30,
+            shopName: s.shopName || '',
             gstNumber: s.gstNumber || '',
             shopAddress: s.shopAddress || '',
             upiId: s.upiId || '',
@@ -388,6 +390,17 @@ const Settings = () => {
                 </div>
                 <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                    <div className="md:col-span-2">
+                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Business / Shop Name')} <span className="text-red-500">*</span></label>
+                      <input
+                        type="text"
+                        name="shopName"
+                        value={formData.shopName}
+                        onChange={handleChange}
+                        placeholder="Sharma General Store"
+                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      />
+                    </div>
                     <div>
                       <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('GST Number')}</label>
                       <input
