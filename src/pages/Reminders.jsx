@@ -9,6 +9,7 @@ import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver'
 import SearchableSelect from '../components/common/SearchableSelect';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import { formatDate } from '../utils/dateUtils';
+import toast from 'react-hot-toast';
 
 const Reminders = () => {
   const { t } = useTranslation();
@@ -105,8 +106,10 @@ const Reminders = () => {
       setIsEditMode(false);
       setEditingReminder(null);
       reset();
+      toast.success(isEditMode ? t('Reminder updated successfully!') : t('Reminder created successfully!'));
     },
     onError: (error) => {
+      toast.error(error.response?.data?.message || t('Failed to save reminder.'));
       console.error('Reminder creation failed:', error);
     }
   });
@@ -115,6 +118,7 @@ const Reminders = () => {
     mutationFn: (reminderId) => api.delete(`/reminders/${reminderId}`),
     onSuccess: () => {
       queryClient.invalidateQueries(['reminders']);
+      toast.success(t('Reminder deleted successfully!'));
     }
   });
 
@@ -122,10 +126,10 @@ const Reminders = () => {
     mutationFn: (reminderId) => api.post(`/reminders/${reminderId}/send`),
     onSuccess: () => {
       queryClient.invalidateQueries(['reminders']);
-      alert(t('Reminder sent successfully!'));
+      toast.success(t('Reminder sent successfully!'));
     },
     onError: (err) => {
-      alert(t('Failed to send reminder: ') + (err.response?.data?.message || err.message));
+      toast.error(t('Failed to send reminder: ') + (err.response?.data?.message || err.message));
     }
   });
 
@@ -191,7 +195,7 @@ const Reminders = () => {
     if (data.type === 'EMAIL') {
       const selectedCustomer = customers.find(c => c._id === data.customerId);
       if (!selectedCustomer?.email) {
-        alert(t('Customer email not provided! Please add customer email first or use WhatsApp reminder.'));
+        toast.error(t('Customer email not provided! Please add customer email first or use WhatsApp reminder.'));
         return;
       }
     }

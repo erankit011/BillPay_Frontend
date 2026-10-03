@@ -15,7 +15,7 @@ const customerSchema = yup.object({
 const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSubmit, isPending, serverError }) => {
   const { t } = useTranslation();
 
-  const { register, handleSubmit, reset, formState: { errors, isDirty } } = useForm({
+  const { register, handleSubmit, reset, setError, formState: { errors, isDirty } } = useForm({
     resolver: yupResolver(customerSchema),
     defaultValues: isEditMode && editingCustomer ? {
       name: editingCustomer.name,
@@ -55,6 +55,18 @@ const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSub
     };
   }, [isOpen, isEditMode, editingCustomer, reset]);
 
+  React.useEffect(() => {
+    if (serverError) {
+      if (serverError.toLowerCase().includes('phone')) {
+        setError('phone', { type: 'server', message: serverError });
+      } else if (serverError.toLowerCase().includes('email')) {
+        setError('email', { type: 'server', message: serverError });
+      } else {
+        setError('root.server', { type: 'server', message: serverError });
+      }
+    }
+  }, [serverError, setError]);
+
   if (!isOpen) return null;
 
   const handleClose = () => {
@@ -92,11 +104,11 @@ const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSub
 
           <div className="p-5 md:p-6 overflow-y-auto">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              {serverError && (
-                <div className="bg-red-50 border-l-[3px] border-red-500 p-2 rounded-r-md">
+              {errors.root?.server && (
+                <div className="bg-red-50 border-l-[3px] border-red-500 p-2 rounded-r-md mb-4">
                   <div className="flex items-center gap-1.5">
                     <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-500 shrink-0" />
-                    <p className="text-[11px] sm:text-[12px] font-medium text-red-700 leading-none">{serverError}</p>
+                    <p className="text-[11px] sm:text-[12px] font-medium text-red-700 leading-none">{errors.root.server.message}</p>
                   </div>
                 </div>
               )}

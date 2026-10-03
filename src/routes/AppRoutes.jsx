@@ -21,6 +21,8 @@ const Products = lazy(() => import('../pages/Products'));
 const Reminders = lazy(() => import('../pages/Reminders'));
 const Profile = lazy(() => import('../pages/Profile'));
 const Notifications = lazy(() => import('../pages/Notifications'));
+const Subscription = lazy(() => import('../pages/Subscription'));
+const PlatformReceipt = lazy(() => import('../pages/PlatformReceipt'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
 // Static pages
@@ -28,11 +30,24 @@ const PrivacyPolicy = lazy(() => import('../pages/PrivacyPage'));
 const TermsOfService = lazy(() => import('../pages/TermsOfService'));
 const ContactSupport = lazy(() => import('../pages/ContactSupport'));
 
+// Onboarding
+const BusinessSetup = lazy(() => import('../pages/BusinessSetup'));
+
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
+const OnboardingRoute = ({ children }) => {
+  const { user } = useSelector((state) => state.auth);
+
+  if (user && !user.isBusinessSetupCompleted) {
+    return <Navigate to="/setup-business" replace />;
   }
 
   return children;
@@ -96,7 +111,9 @@ const AppRoutes = () => {
         {/* Protected Dashboard Routes */}
         <Route element={
           <ProtectedRoute>
-            <MainLayout />
+            <OnboardingRoute>
+              <MainLayout />
+            </OnboardingRoute>
           </ProtectedRoute>
         }>
           <Route path="/dashboard" element={<Dashboard />} />
@@ -109,7 +126,22 @@ const AppRoutes = () => {
           <Route path="/settings" element={<Settings />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/notifications" element={<Notifications />} />
+          <Route path="/subscription" element={<Subscription />} />
         </Route>
+
+        {/* Protected Standalone Routes (No MainLayout for Print/Full page) */}
+        <Route path="/platform-receipt/:id" element={
+          <ProtectedRoute>
+            <PlatformReceipt />
+          </ProtectedRoute>
+        } />
+
+        {/* Onboarding Route (Protected but not behind OnboardingRoute) */}
+        <Route path="/setup-business" element={
+          <ProtectedRoute>
+            <BusinessSetup />
+          </ProtectedRoute>
+        } />
 
         {/* Fallback 404 Route */}
         <Route path="*" element={<NotFound />} />

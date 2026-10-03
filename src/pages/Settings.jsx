@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Save, Store, FileText, Bell, ShoppingCart, CreditCard, ChevronRight, BriefcaseBusiness, Lock, Trash2, AlertTriangle, Loader2 } from 'lucide-react';
+import { Save, Store, FileText, Bell, ShoppingCart, CreditCard, ChevronRight, BriefcaseBusiness, Lock, Trash2, AlertTriangle, Loader2, Download, Upload, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
-import { logout } from '../redux/slices/authSlice';
+import { logout, setUser } from '../redux/slices/authSlice';
 import SwirlingLoader from '../components/common/SwirlingLoader';
+import toast from 'react-hot-toast';
 
 
 // ── Section Nav Item ──
@@ -53,7 +54,13 @@ const Settings = () => {
   const { user } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
-  const [activeSection, setActiveSection] = useState('business');
+  const [activeSection, setActiveSection] = useState(() => {
+    return localStorage.getItem('billpay_settings_tab') || 'business';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('billpay_settings_tab', activeSection);
+  }, [activeSection]);
 
   // Password state
   const [passwordData, setPasswordData] = useState({
@@ -81,6 +88,7 @@ const Settings = () => {
     defaultPaymentMode: 'CASH',
     defaultPaymentTerms: 30,
     // Shop / Business Info
+    shopName: '',
     gstNumber: '',
     shopAddress: '',
     upiId: '',
@@ -103,17 +111,24 @@ const Settings = () => {
   const [formData, setFormData] = useState(defaultSettings);
   const [initialData, setInitialData] = useState(defaultSettings);
   const [userHasPassword, setUserHasPassword] = useState(true); // Default to true
+  const [platformInvoices, setPlatformInvoices] = useState([]);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [settingsRes, authRes] = await Promise.all([
+        const [settingsRes, authRes, invoicesRes] = await Promise.all([
           api.get('/settings'),
-          api.get('/auth/me').catch(() => null)
+          api.get('/auth/me').catch(() => null),
+          api.get('/subscription/invoices').catch(() => null)
         ]);
 
         if (authRes?.data?.success) {
           setUserHasPassword(authRes.data.data.hasPassword);
+        }
+
+        if (invoicesRes?.data?.success) {
+          setPlatformInvoices(invoicesRes.data.data.invoices || []);
         }
 
         if (settingsRes.data.success && settingsRes.data.data) {
@@ -125,6 +140,7 @@ const Settings = () => {
             taxRate: s.taxRate ?? 0,
             defaultPaymentMode: s.defaultPaymentMode || 'CASH',
             defaultPaymentTerms: s.defaultPaymentTerms ?? 30,
+            shopName: s.shopName || '',
             gstNumber: s.gstNumber || '',
             shopAddress: s.shopAddress || '',
             upiId: s.upiId || '',
@@ -174,10 +190,10 @@ const Settings = () => {
       const res = await api.put('/settings', formData);
       if (res.data.success) {
         setInitialData(formData); // Update initial data after successful save
-        alert(t('Settings updated successfully'));
+        toast.success(t('Settings updated successfully'));
       }
     } catch (error) {
-      alert(error.response?.data?.message || t('Failed to update settings'));
+      toast.error(error.response?.data?.message || t('Failed to update settings'));
     } finally {
       setLoading(false);
     }
@@ -196,12 +212,12 @@ const Settings = () => {
 
   const handlePasswordSubmit = async () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert(t('New password and confirm password do not match!'));
+      toast.error(t('New password and confirm password do not match!'));
       return;
     }
 
     if (passwordData.newPassword.length < 6) {
-      alert(t('Password must be at least 6 characters long!'));
+      toast.error(t('Password must be at least 6 characters long!'));
       return;
     }
 
@@ -213,12 +229,12 @@ const Settings = () => {
       });
 
       if (res.data.success) {
-        alert(t('Password updated successfully!'));
+        toast.success(t('Password updated successfully!'));
         setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
       }
     } catch (error) {
       console.error('Password change error:', error);
-      alert(error.response?.data?.message || t('Failed to update password.'));
+      toast.error(error.response?.data?.message || t('Failed to update password.'));
     } finally {
       setPasswordLoading(false);
     }
@@ -232,12 +248,12 @@ const Settings = () => {
   const handleDeleteAccountSubmit = () => {
     // Basic validation
     if (userHasPassword && !deleteAccountData.password) {
-      alert(t('Please enter your password to delete the account.'));
+      toast.error(t('Please enter your password to delete the account.'));
       return;
     }
     const REQUIRED_TEXT = 'DELETE MY ACCOUNT';
     if (!userHasPassword && deleteAccountData.confirmationText !== REQUIRED_TEXT) {
-      alert(t(`Please type ${REQUIRED_TEXT} to confirm.`));
+      toast.error(t(`Please type ${REQUIRED_TEXT} to confirm.`));
       return;
     }
 
@@ -256,16 +272,49 @@ const Settings = () => {
 
       if (res.data.success) {
         setDeleteModalOpen(false);
-        alert(t('Account deleted successfully.'));
+        toast.success(t('Account deleted successfully.'));
         dispatch(logout());
         window.location.href = '/login';
       }
     } catch (error) {
       console.error('Account deletion error:', error);
-      alert(error.response?.data?.message || t('Failed to delete account.'));
+      toast.error(error.response?.data?.message || t('Failed to delete account.'));
       setDeleteModalOpen(false);
     } finally {
       setDeleteAccountLoading(false);
+    }
+  };
+
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate size (e.g., 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error(t('File is too large. Max 5MB allowed.'));
+      return;
+    }
+
+    try {
+      setUploadingLogo(true);
+      const uploadData = new FormData();
+      uploadData.append('file', file);
+
+      const res = await api.post('/upload', uploadData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      if (res.data.success && res.data.data.url) {
+        setFormData(prev => ({ ...prev, invoiceLogo: res.data.data.url }));
+        toast.success(t('Logo uploaded successfully. Remember to save settings.'));
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast.error(t('Failed to upload logo. Please try again.'));
+    } finally {
+      setUploadingLogo(false);
+      // Reset input
+      e.target.value = '';
     }
   };
 
@@ -293,6 +342,7 @@ const Settings = () => {
           <nav className="sticky top-24 space-y-1">
             <SectionNavItem icon={BriefcaseBusiness} label={t('Business Info')} sectionId="business" activeSection={activeSection} onClick={scrollToSection} />
             <SectionNavItem icon={CreditCard} label={t('Billing & Invoice')} sectionId="billing" activeSection={activeSection} onClick={scrollToSection} />
+            <SectionNavItem icon={FileText} label={t('Platform Invoices')} sectionId="platform-invoices" activeSection={activeSection} onClick={scrollToSection} />
             <SectionNavItem icon={Bell} label={t('Notifications')} sectionId="notifications" activeSection={activeSection} onClick={scrollToSection} />
             <SectionNavItem icon={ShoppingCart} label={t('Product')} sectionId="product" activeSection={activeSection} onClick={scrollToSection} />
             <SectionNavItem icon={FileText} label={t('Invoice Notes')} sectionId="notes" activeSection={activeSection} onClick={scrollToSection} />
@@ -306,6 +356,7 @@ const Settings = () => {
           {[
             { id: 'business', icon: BriefcaseBusiness, label: t('Business Info') },
             { id: 'billing', icon: CreditCard, label: t('Billing & Invoice') },
+            { id: 'platform-invoices', icon: FileText, label: t('Platform Invoices') },
             { id: 'notifications', icon: Bell, label: t('Notifications') },
             { id: 'product', icon: ShoppingCart, label: t('Product') },
             { id: 'notes', icon: FileText, label: t('Invoice Notes') },
@@ -340,6 +391,17 @@ const Settings = () => {
                 </div>
                 <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                    <div className="md:col-span-2">
+                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Business / Shop Name')} <span className="text-red-500">*</span></label>
+                      <input
+                        type="text"
+                        name="shopName"
+                        value={formData.shopName}
+                        onChange={handleChange}
+                        placeholder="Sharma General Store"
+                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      />
+                    </div>
                     <div>
                       <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('GST Number')}</label>
                       <input
@@ -387,17 +449,53 @@ const Settings = () => {
                     <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Shown on invoices, can differ from personal email')}</p>
                   </div>
                     <div className="md:col-span-2">
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Invoice Logo URL (Optional)')}</label>
-                      <input
-                        type="url"
-                        name="invoiceLogo"
-                        value={formData.invoiceLogo}
-                        onChange={handleChange}
-                        placeholder="https://example.com/logo.png"
-                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
-                      />
-                      <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium mb-4">{t('URL for your business logo to display on invoices')}</p>
-                      <div>
+                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Invoice Logo')}</label>
+                      
+                      <div className="flex flex-col items-start gap-4">
+                        {formData.invoiceLogo ? (
+                          <div className="flex items-center gap-3">
+                            <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-white border border-gray-300 rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
+                              <img src={formData.invoiceLogo} alt="Logo" className="w-full h-full object-contain" />
+                              <button
+                                type="button"
+                                onClick={() => setFormData(prev => ({ ...prev, invoiceLogo: '' }))}
+                                className="absolute top-1.5 right-1.5 cursor-pointer bg-[#093C5D] text-white hover:bg-[#072d46] w-6 h-6 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[24px] !min-w-[24px] !p-0 shadow-none z-10"
+                                title={t('Remove Logo')}
+                              >
+                                <X className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                            <div className="flex flex-col items-start justify-center">
+                              <span className="text-[13px] sm:text-sm font-semibold text-gray-800">{t('Logo Uploaded')}</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex-1 w-full space-y-3">
+                            <div className="flex flex-col md:flex-row items-start md:items-center gap-3 w-full">
+                              <label className={`cursor-pointer w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 md:py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium text-xs md:text-sm transition-colors ${uploadingLogo ? 'opacity-50' : 'hover:bg-gray-50 hover:text-gray-900 active:bg-gray-100'}`}>
+                                {uploadingLogo ? <Loader2 className="w-4 h-4 animate-spin text-[#093C5D]" /> : <Upload className="w-4 h-4 text-gray-500" />}
+                                <span>{uploadingLogo ? t('Uploading...') : t('Upload New Logo')}</span>
+                                <input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} disabled={uploadingLogo} />
+                              </label>
+                              
+                              <div className="flex-1 w-full flex items-center gap-2">
+                                <span className="text-gray-400 font-medium text-xs md:text-sm hidden md:inline-block">{t('Or')}</span>
+                                <input
+                                  type="url"
+                                  name="invoiceLogo"
+                                  value={formData.invoiceLogo}
+                                  onChange={handleChange}
+                                  placeholder={t('Enter image URL (https://...)')}
+                                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-gray-900 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                                />
+                              </div>
+                            </div>
+                            <p className="text-gray-500 text-[11px] sm:text-xs font-medium">{t('Upload from your device or paste an image URL. Recommended size: 400x150px. Max 5MB.')}</p>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="mt-5">
                     <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Shop Address')}</label>
                     <textarea
                       name="shopAddress"
@@ -615,6 +713,165 @@ const Settings = () => {
               </section>
             )}
 
+            {/* ═══════════════ PLATFORM INVOICES ═══════════════ */}
+            {activeSection === 'platform-invoices' && (
+              <section id="section-platform-invoices" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                  <div>
+                    <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Platform Invoices')}</h2>
+                    <p className="text-xs text-gray-500 mt-0.5">{t('Your UdharPay subscription billing history')}</p>
+                  </div>
+                </div>
+                <div className="px-0 py-0">
+                  {platformInvoices.length === 0 ? (
+                    <div className="p-8 text-center text-gray-500 text-sm">
+                      {t('No billing history found. Upgrade your plan to see invoices here.')}
+                    </div>
+                  ) : (
+                    <div>
+                      {/* Desktop Table (Visible on lg and above) */}
+                      <div className="hidden lg:block overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                          <thead>
+                            <tr className="bg-gray-50 border-b border-gray-200 text-xs text-gray-500 uppercase tracking-wider">
+                              <th className="px-6 py-3 font-medium">{t('Date')}</th>
+                              <th className="px-6 py-3 font-medium">{t('Transaction ID')}</th>
+                              <th className="px-6 py-3 font-medium">{t('Plan')}</th>
+                              <th className="px-6 py-3 font-medium">{t('Validity')}</th>
+                              <th className="px-6 py-3 font-medium">{t('Amount')}</th>
+                              <th className="px-6 py-3 font-medium">{t('Status')}</th>
+                              <th className="px-6 py-3 font-medium">{t('Action')}</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-100">
+                            {platformInvoices.map((inv) => {
+                              const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
+                              return (
+                              <tr key={inv._id} className="hover:bg-gray-50/50 transition-colors">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                  {formatDate(inv.createdAt)}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-gray-500 font-mono text-xs">
+                                  {inv.razorpayPaymentId || '-'}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                                  {inv.planName}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                  <div className="flex items-center gap-1.5">
+                                    <span>{formatDate(inv.billingPeriodStart)}</span>
+                                    <span className="text-gray-400">&rarr;</span>
+                                    <span>{formatDate(inv.billingPeriodEnd)}</span>
+                                  </div>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                                  ₹{inv.amount}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                                    inv.status === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                  }`}>
+                                    {inv.status}
+                                  </span>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                  {inv.receiptUrl ? (
+                                    <a 
+                                      href={inv.receiptUrl} 
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="inline-flex items-center gap-1.5 text-[#093C5D] hover:text-[#072d46] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 py-1.5 rounded-md transition-colors"
+                                    >
+                                      <Download className="w-3.5 h-3.5" />
+                                      <span>{t('Invoice')}</span>
+                                    </a>
+                                  ) : (
+                                    <Link 
+                                      to={`/platform-receipt/${inv._id}`} 
+                                      target="_blank"
+                                      className="inline-flex items-center gap-1.5 text-[#093C5D] hover:text-[#072d46] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 py-1.5 rounded-md transition-colors"
+                                    >
+                                      <Download className="w-3.5 h-3.5" />
+                                      <span>{t('Invoice')}</span>
+                                    </Link>
+                                  )}
+                                </td>
+                              </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+
+                      {/* Mobile & Tablet Cards (Visible below lg) */}
+                      <div className="block lg:hidden space-y-3 p-1">
+                        {platformInvoices.map((inv) => {
+                          const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
+                          return (
+                            <div key={`card-${inv._id}`} className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 active:bg-gray-50 transition-colors duration-200">
+                              <div className="flex justify-between items-start gap-2 mb-3">
+                                <div className="min-w-0">
+                                  <h3 className="text-sm sm:text-[15px] font-semibold text-[#093C5D] truncate leading-tight mb-0.5">{inv.planName} Subscription</h3>
+                                  <div className="text-[10px] sm:text-[11px] text-gray-500 font-medium font-mono truncate">#{inv.razorpayPaymentId || '-'}</div>
+                                </div>
+                                <span className={`shrink-0 inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-xs font-semibold uppercase tracking-wider ${
+                                  inv.status === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'
+                                }`}>
+                                  {inv.status}
+                                </span>
+                              </div>
+                              
+                              <div className="grid grid-cols-2 gap-3 text-sm bg-gray-50/50 p-2.5 sm:p-3 rounded-lg border border-gray-100 mb-3">
+                                <div>
+                                  <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Date')}</span>
+                                  <div className="mt-0.5 text-gray-900 font-medium text-xs sm:text-sm">{formatDate(inv.createdAt)}</div>
+                                </div>
+                                <div>
+                                  <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Amount')}</span>
+                                  <div className="mt-0.5 text-gray-900 font-semibold text-sm sm:text-[15px]">₹{inv.amount}</div>
+                                </div>
+                                <div className="col-span-2">
+                                  <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Validity')}</span>
+                                  <div className="mt-0.5 text-gray-700 font-medium flex items-center gap-1.5 text-xs sm:text-sm">
+                                    <span>{formatDate(inv.billingPeriodStart)}</span>
+                                    <span className="text-gray-400">&rarr;</span>
+                                    <span>{formatDate(inv.billingPeriodEnd)}</span>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div className="flex justify-end pt-1">
+                                {inv.receiptUrl ? (
+                                  <a 
+                                    href={inv.receiptUrl} 
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center justify-center gap-1.5 text-[#093C5D] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 sm:px-4 py-1.5 sm:py-2 rounded-md transition-colors text-xs sm:text-sm font-semibold w-full sm:w-auto border border-[#093C5D]/10 active:scale-95"
+                                  >
+                                    <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                                    <span>{t('View & Download Invoice')}</span>
+                                  </a>
+                                ) : (
+                                  <Link 
+                                    to={`/platform-receipt/${inv._id}`} 
+                                    target="_blank"
+                                    className="inline-flex items-center justify-center gap-1.5 text-[#093C5D] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 sm:px-4 py-1.5 sm:py-2 rounded-md transition-colors text-xs sm:text-sm font-semibold w-full sm:w-auto border border-[#093C5D]/10 active:scale-95"
+                                  >
+                                    <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                                    <span>{t('View & Download Invoice')}</span>
+                                  </Link>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+
             {/* ═══════════════ NOTIFICATIONS & AUTOMATION ═══════════════ */}
             {activeSection === 'notifications' && (
               <section id="section-notifications" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
@@ -754,44 +1011,81 @@ const Settings = () => {
                 <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
                   <div className="space-y-5 max-w-md">
                     <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Current Password')}</label>
-                    <input
-                      type="password"
-                      name="currentPassword"
-                      value={passwordData.currentPassword}
-                      onChange={handlePasswordChange}
-                      placeholder={t('Enter current password')}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
-                    />
-                  </div>
+                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Current Password')}</label>
+                      <input
+                        type="password"
+                        name="currentPassword"
+                        value={passwordData.currentPassword}
+                        onChange={handlePasswordChange}
+                        placeholder={t('Enter current password')}
+                        className={`block w-full rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${
+                          passwordData.currentPassword.length > 0 && passwordData.currentPassword.length < 6
+                            ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
+                            : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'
+                        }`}
+                      />
+                    </div>
                     <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('New Password')}</label>
-                    <input
-                      type="password"
-                      name="newPassword"
-                      value={passwordData.newPassword}
-                      onChange={handlePasswordChange}
-                      placeholder={t('Enter new password')}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
-                    />
-                  </div>
+                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('New Password')}</label>
+                      <input
+                        type="password"
+                        name="newPassword"
+                        value={passwordData.newPassword}
+                        onChange={handlePasswordChange}
+                        placeholder={t('Enter new password (min 6 characters)')}
+                        className={`block w-full rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${
+                          passwordData.newPassword.length > 0 && (passwordData.newPassword.length < 6 || passwordData.newPassword === passwordData.currentPassword)
+                            ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
+                            : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'
+                        }`}
+                      />
+                      {passwordData.newPassword.length > 0 && passwordData.newPassword.length < 6 && (
+                        <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Password must be at least 6 characters')}</p>
+                      )}
+                      {passwordData.newPassword.length >= 6 && passwordData.newPassword === passwordData.currentPassword && (
+                        <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('New password must be different from current password')}</p>
+                      )}
+                    </div>
                     <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Confirm New Password')}</label>
-                    <input
-                      type="password"
-                      name="confirmPassword"
-                      value={passwordData.confirmPassword}
-                      onChange={handlePasswordChange}
-                      placeholder={t('Confirm new password')}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
-                    />
-                  </div>
+                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Confirm New Password')}</label>
+                      <input
+                        type="password"
+                        name="confirmPassword"
+                        value={passwordData.confirmPassword}
+                        onChange={handlePasswordChange}
+                        placeholder={t('Confirm new password')}
+                        className={`block w-full rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${
+                          passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword
+                            ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
+                            : (passwordData.confirmPassword && passwordData.newPassword === passwordData.confirmPassword && passwordData.newPassword.length >= 6)
+                              ? 'border-green-300 focus:ring-green-500 focus:border-green-500'
+                              : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'
+                        }`}
+                      />
+                      {passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword && (
+                        <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Passwords do not match')}</p>
+                      )}
+                      {passwordData.confirmPassword && passwordData.newPassword === passwordData.confirmPassword && passwordData.newPassword.length >= 6 && (
+                         <p className="text-green-600 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Passwords match')}</p>
+                      )}
+                    </div>
                     <div className="pt-4">
                       <button
                         type="button"
                         onClick={handlePasswordSubmit}
-                        disabled={passwordLoading || !passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword}
-                        className={`cursor-pointer bg-[#093C5D] text-white px-8 py-2 sm:py-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold text-sm w-full sm:w-auto active:scale-[0.98] transition-colors duration-300 ${(passwordLoading || !passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#072d46]'}`}
+                        disabled={
+                          passwordLoading || 
+                          !passwordData.currentPassword || 
+                          passwordData.newPassword.length < 6 || 
+                          passwordData.newPassword === passwordData.currentPassword ||
+                          !passwordData.confirmPassword || 
+                          passwordData.newPassword !== passwordData.confirmPassword
+                        }
+                        className={`cursor-pointer bg-[#093C5D] text-white px-8 py-2 sm:py-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold text-sm w-full sm:w-auto active:scale-[0.98] transition-colors duration-300 ${
+                          (passwordLoading || !passwordData.currentPassword || passwordData.newPassword.length < 6 || passwordData.newPassword === passwordData.currentPassword || !passwordData.confirmPassword || passwordData.newPassword !== passwordData.confirmPassword) 
+                            ? 'opacity-50 cursor-not-allowed' 
+                            : 'hover:bg-[#072d46]'
+                        }`}
                       >
                         <Lock className="w-4 h-4 shrink-0" />
                         <span className="tracking-wide">{passwordLoading ? t('Updating...') : t('Update Password')}</span>
@@ -858,7 +1152,7 @@ const Settings = () => {
             )}
 
             {/* ═══════════════ SAVE BUTTON ═══════════════ */}
-            {activeSection !== 'security' && activeSection !== 'account' && (
+            {activeSection !== 'security' && activeSection !== 'account' && activeSection !== 'platform-invoices' && (
               <div className="sticky bottom-16 lg:bottom-4 z-20 mt-8 pt-4 pb-4 lg:pb-0">
                 <div className="bg-white border border-gray-200 p-2 sm:px-4 sm:py-2.5 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 w-full">
                   <div className="hidden sm:flex items-center gap-2 text-sm ml-1">

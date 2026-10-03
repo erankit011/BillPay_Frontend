@@ -10,6 +10,8 @@ import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver'
 import CreateBillModal from '../components/bills/CreateBillModal';
 import ViewBillModal from '../components/bills/ViewBillModal';
 import SwirlingLoader from '../components/common/SwirlingLoader';
+import UpgradeModal from '../components/common/UpgradeModal';
+import toast from 'react-hot-toast';
 
 import { formatCurrency } from '../utils/currency';
 import { formatDate } from '../utils/dateUtils';
@@ -42,6 +44,9 @@ const Bills = () => {
             return next;
         }, { replace: true });
     };
+
+    // Upgrade Modal State
+    const [upgradeModal, setUpgradeModal] = useState({ isOpen: false, title: '', message: '' });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(null);
@@ -146,26 +151,30 @@ const Bills = () => {
     const activeBill = viewBillId ? bills.find(b => b._id === viewBillId) : null;
 
     const handleSendInvoice = async (billId, sendVia = 'whatsapp') => {
-        try {
-            const bill = bills.find(b => b._id === billId);
-            if (sendVia === 'email' && !bill?.customerId?.email) {
-                alert(t('Customer email not provided! Please add customer email first.'));
-                return;
-            }
-            if (sendVia === 'whatsapp' && !bill?.customerId?.phone) {
-                alert(t('Customer phone number not provided!'));
-                return;
-            }
-
-            await api.post(`/invoices/generate/${billId}`, { sendVia });
-
-            if (sendVia === 'email') alert(t('Invoice sent via email successfully!'));
-            else if (sendVia === 'both') alert(t('Invoice sent via WhatsApp and email successfully!'));
-            else alert(t('Invoice sent via WhatsApp successfully!'));
-        } catch (err) {
-            const errorMsg = err.response?.data?.message || err.message;
-            alert(t('Failed to send invoice') + ': ' + errorMsg);
+        const bill = bills.find(b => b._id === billId);
+        if (sendVia === 'email' && !bill?.customerId?.email) {
+            toast.error(t('Customer email not provided! Please add customer email first.'));
+            return;
         }
+        if (sendVia === 'whatsapp' && !bill?.customerId?.phone) {
+            toast.error(t('Customer phone number not provided!'));
+            return;
+        }
+
+        const sendPromise = api.post(`/invoices/generate/${billId}`, { sendVia });
+
+        toast.promise(sendPromise, {
+            loading: t('Sending invoice...'),
+            success: () => {
+                if (sendVia === 'email') return t('Invoice sent via email successfully!');
+                if (sendVia === 'both') return t('Invoice sent via WhatsApp and email successfully!');
+                return t('Invoice sent via WhatsApp successfully!');
+            },
+            error: (err) => {
+                const errorMsg = err.response?.data?.message || err.message;
+                return t('Failed to send invoice') + ': ' + errorMsg;
+            }
+        });
     };
 
     const firstPage = data?.pages?.[0];
@@ -173,6 +182,33 @@ const Bills = () => {
         totalRevenue: 0, revenueGrowth: 0, pendingUdharTotal: 0, customersWithUdhar: 0,
         advanceTotal: 0, customersWithAdvance: 0, activeCustomers: 0, newCustomersThisWeek: 0,
         billCounts: { today: 0, yesterday: 0, week: 0, month: 0, lifetime: 0 }
+    };
+
+    const handleNewBillClick = () => {
+        if (!shopDetails?.subscriptionPlan || shopDetails?.subscriptionPlan === 'FREE' || shopDetails?.subscriptionStatus === 'none') {
+            const trialEnd = new Date(shopDetails?.createdAt);
+            trialEnd.setDate(trialEnd.getDate() + 7);
+            
+            if (new Date() > trialEnd) {
+                setUpgradeModal({
+                    isOpen: true,
+                    title: t('Trial Expired'),
+                    message: t('Your 7-day free trial has expired. Please upgrade your plan to continue creating bills.')
+                });
+                return;
+            }
+            
+            const totalBills = stats.billCounts.lifetime || 0;
+            if (totalBills >= 10) {
+                setUpgradeModal({
+                    isOpen: true,
+                    title: t('Limit Reached'),
+                    message: t('Free trial limit reached: You can only create up to 10 bills on the free plan. Please upgrade your subscription.')
+                });
+                return;
+            }
+        }
+        setIsModalOpen(true);
     };
 
     return (
@@ -186,7 +222,7 @@ const Bills = () => {
                     </p>
                 </div>
                 <button
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={handleNewBillClick}
                     className="hidden lg:flex cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
                 >
                     <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
@@ -663,7 +699,7 @@ const Bills = () => {
             {/* Mobile & Tablet Extended FAB (No Shadow) - hidden when any modal is open */}
             {!activeBill && !isModalOpen && (
                 <button
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={handleNewBillClick}
                     className="lg:hidden fixed bottom-6 sm:bottom-8 right-6 sm:right-8 z-50 bg-[#093C5D] hover:bg-[#082a42] text-white px-5 sm:px-6 py-3 rounded-lg cursor-pointer flex items-center justify-center gap-2 active:scale-95 transition-all duration-200"
                     title={t('Create Bills')}
                 >
@@ -671,6 +707,13 @@ const Bills = () => {
                     <span className="font-semibold text-sm">{t('Create Bills')}</span>
                 </button>
             )}
+
+            <UpgradeModal
+                isOpen={upgradeModal.isOpen}
+                onClose={() => setUpgradeModal({ ...upgradeModal, isOpen: false })}
+                title={upgradeModal.title}
+                message={upgradeModal.message}
+            />
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
-import { Home, Users, FileText, Mic, BarChart2, Settings, Bell, Box, Bell as BellIcon, HelpCircle, LogOut, User } from 'lucide-react';
+import { Home, Users, FileText, Mic, BarChart2, Settings, Bell, Box, Bell as BellIcon, HelpCircle, LogOut, User, Shield, AlertCircle, Gem } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/slices/authSlice';
 import { useTranslation } from 'react-i18next';
@@ -453,12 +453,12 @@ const MainLayout = () => {
             {/* Profile Dropdown Panel */}
             {profileDropdownOpen && (
               <>
-                <div 
-                  className="fixed inset-0 z-30 bg-transparent" 
-                  onClick={() => setProfileDropdownOpen(false)} 
+                <div
+                  className="fixed inset-0 z-30 bg-transparent"
+                  onClick={() => setProfileDropdownOpen(false)}
                 />
                 <div className="fixed sm:absolute left-4 right-4 sm:left-auto top-14 sm:top-[calc(100%+8px)] sm:right-0 w-auto sm:w-[260px] bg-white rounded-lg border border-gray-200 shadow-none z-40 flex flex-col animate-fade-in origin-top-right overflow-hidden">
-                  
+
                   {/* User Info Header */}
                   <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/30">
                     <p className="text-[15px] sm:text-sm font-semibold text-gray-900 truncate mb-0.5">{user?.name || 'User'}</p>
@@ -466,7 +466,23 @@ const MainLayout = () => {
                   </div>
 
                   {/* Menu Items */}
-                  <div className="flex flex-col">
+                  <div className="flex flex-col pb-1">
+                    <div className="px-3 pt-3 pb-1">
+                      <Link
+                        to="/subscription"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        className="flex items-center gap-3 px-3 py-2.5 bg-[#093C5D] hover:bg-[#082a42] rounded-lg transition-all active:scale-95 group w-full"
+                      >
+                        <div className="flex items-center justify-center pl-1">
+                          <Gem className="w-5 h-5 text-white/90 group-hover:text-white" strokeWidth={2} />
+                        </div>
+                        <div className="flex flex-col justify-center">
+                          <span className="text-[14px] font-semibold text-white leading-tight">{t('Upgrade Plan')}</span>
+                          <span className="text-[12px] text-white/80 font-medium leading-tight mt-0.5">{t('Get extra benefits')}</span>
+                        </div>
+                      </Link>
+                    </div>
+
                     <Link
                       to="/profile"
                       onClick={() => setProfileDropdownOpen(false)}
@@ -483,7 +499,7 @@ const MainLayout = () => {
                       <Settings className="w-[18px] h-[18px] sm:w-[18px] sm:h-[18px] text-gray-500" strokeWidth={2} />
                       {t('Settings')}
                     </Link>
-                    
+
                     <button
                       onClick={() => {
                         setProfileDropdownOpen(false);
@@ -505,6 +521,27 @@ const MainLayout = () => {
       {/* Main Content */}
       <main className="lg:ml-[220px] min-[1440px]:ml-[240px] pt-[80px] px-4 md:px-6 lg:px-8 min-[1440px]:px-10 pb-6 md:pb-8 lg:pb-10 min-[1440px]:pb-12 min-h-screen overflow-x-hidden">
         <div className="max-w-[1440px] mx-auto w-full">
+          {user?.subscriptionStatus === 'past_due' && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-3 flex-1">
+                <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <h4 className="text-sm font-semibold text-red-900">
+                    {t('Payment Action Required')}
+                  </h4>
+                  <p className="text-sm font-medium text-red-800/90 mt-0.5 leading-snug">
+                    {t('Your recent payment could not be processed. Please check your bank or payment method to avoid service interruption.')}
+                  </p>
+                </div>
+              </div>
+              <Link
+                to="/subscription"
+                className="w-full sm:w-auto inline-flex justify-center items-center text-sm font-semibold text-white bg-red-600 hover:bg-red-700 active:scale-95 px-5 py-2.5 rounded-lg transition-all shrink-0"
+              >
+                {t('Resolve Now')}
+              </Link>
+            </div>
+          )}
           <Outlet />
         </div>
       </main>

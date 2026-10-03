@@ -1,7 +1,7 @@
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-export const generateInventoryPDF = (products, user, t, formatDate) => {
+export const generateInventoryPDF = (products, shopSettings, t, formatDate) => {
   if (!products || products.length === 0) return;
 
   const doc = new jsPDF();
@@ -19,23 +19,23 @@ export const generateInventoryPDF = (products, user, t, formatDate) => {
   doc.text(`${t('Generated on')}: ${formatDate(new Date())}`, 14, 30);
 
   // Right side: Shop Details
-  if (user) {
+  if (shopSettings) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12);
     doc.setTextColor(9, 60, 93);
-    const shopName = user.shopName || user.name || 'UdharPay Shop';
+    const shopName = shopSettings.shopName || 'UdharPay Shop';
     doc.text(shopName, pageWidth - 14, 22, { align: 'right' });
 
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(100);
     let currentY = 28;
-    if (user.phone) {
-      doc.text(`Phone: ${user.phone}`, pageWidth - 14, currentY, { align: 'right' });
+    if (shopSettings.shopPhone || shopSettings.phone) {
+      doc.text(`Phone: ${shopSettings.shopPhone || shopSettings.phone}`, pageWidth - 14, currentY, { align: 'right' });
       currentY += 6;
     }
-    if (user.email) {
-      doc.text(`Email: ${user.email}`, pageWidth - 14, currentY, { align: 'right' });
+    if (shopSettings.shopEmail || shopSettings.email) {
+      doc.text(`Email: ${shopSettings.shopEmail || shopSettings.email}`, pageWidth - 14, currentY, { align: 'right' });
     }
   }
 

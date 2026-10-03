@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -13,7 +14,7 @@ const loginSchema = yup.object({
 });
 
 const Login = () => {
-  const [error, setError] = useState(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -26,11 +27,12 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
-    setError(null);
+
     try {
       const res = await api.post('/auth/login/verify-password', data);
 
       if (res.data.success) {
+        toast.success(t('Login successful!'));
         navigate('/verify-login-otp', {
           state: {
             email: data.email,
@@ -39,7 +41,7 @@ const Login = () => {
         });
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid credentials. Please try again.');
+      toast.error(err.response?.data?.message || 'Invalid credentials. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -56,13 +58,6 @@ const Login = () => {
           {t('Please enter your details to sign in.')}
         </p>
       </div>
-
-      {/* Error message */}
-      {error && (
-        <div className="bg-red-50 text-red-600 p-2.5 sm:p-3 rounded-lg mb-3 sm:mb-4 text-xs sm:text-sm font-medium border border-red-100/50 animate-scale-in text-left">
-          {error}
-        </div>
-      )}
 
       {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">

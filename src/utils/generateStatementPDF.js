@@ -1,9 +1,10 @@
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import toast from 'react-hot-toast';
 
-export const generateStatementPDF = (filteredBills, filteredTransactions, statementPeriod, user, t, formatCurrency, formatDate) => {
+export const generateStatementPDF = (filteredBills, filteredTransactions, statementPeriod, shopSettings, t, formatCurrency, formatDate) => {
   if (filteredBills.length === 0 && filteredTransactions.length === 0) {
-    alert(t("No data available for the selected period."));
+    toast.error(t("No data available for the selected period."));
     return;
   }
 
@@ -29,23 +30,23 @@ export const generateStatementPDF = (filteredBills, filteredTransactions, statem
   doc.text(`${t('Generated on')}: ${formatDate(new Date())}`, 14, 36);
 
   // Right side: Shop Details
-  if (user) {
+  if (shopSettings) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12);
     doc.setTextColor(9, 60, 93);
-    const shopName = user.shopName || user.name || 'UdharPay Shop';
+    const shopName = shopSettings.shopName || 'UdharPay Shop';
     doc.text(shopName, pageWidth - 14, 22, { align: 'right' });
 
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(100);
     let currentY = 28;
-    if (user.phone) {
-      doc.text(`Phone: ${user.phone}`, pageWidth - 14, currentY, { align: 'right' });
+    if (shopSettings.shopPhone || shopSettings.phone) {
+      doc.text(`Phone: ${shopSettings.shopPhone || shopSettings.phone}`, pageWidth - 14, currentY, { align: 'right' });
       currentY += 6;
     }
-    if (user.email) {
-      doc.text(`Email: ${user.email}`, pageWidth - 14, currentY, { align: 'right' });
+    if (shopSettings.shopEmail || shopSettings.email) {
+      doc.text(`Email: ${shopSettings.shopEmail || shopSettings.email}`, pageWidth - 14, currentY, { align: 'right' });
     }
   }
 
@@ -71,7 +72,7 @@ export const generateStatementPDF = (filteredBills, filteredTransactions, statem
     totalCollections += tx.amount;
   });
 
-  const startY = user && (user.phone || user.email) ? 48 : 42;
+  const startY = shopSettings && (shopSettings.phone || shopSettings.shopPhone || shopSettings.email || shopSettings.shopEmail) ? 48 : 42;
 
   autoTable(doc, {
     startY: startY,

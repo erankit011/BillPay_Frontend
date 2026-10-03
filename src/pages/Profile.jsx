@@ -5,6 +5,7 @@ import { Save, Camera } from 'lucide-react';
 import { setUser } from '../redux/slices/authSlice';
 import api from '../api/axios';
 import SwirlingLoader from '../components/common/SwirlingLoader';
+import toast from 'react-hot-toast';
 
 
 const Profile = () => {
@@ -16,13 +17,11 @@ const Profile = () => {
     name: '',
     email: '',
     phone: '',
-    shopName: '',
   });
   const [initialData, setInitialData] = useState({
     name: '',
     email: '',
     phone: '',
-    shopName: '',
   });
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -35,7 +34,6 @@ const Profile = () => {
         name: user.name || '',
         email: user.email || '',
         phone: user.phone || '',
-        shopName: user.shopName || '',
       };
       setFormData(initial);
       setInitialData(initial);
@@ -55,10 +53,10 @@ const Profile = () => {
       const res = await api.put('/auth/me', formData);
       if (res.data.success) {
         dispatch(setUser(res.data.data));
-        alert(t('Profile updated successfully'));
+        toast.success(t('Profile updated successfully'));
       }
     } catch (error) {
-      alert(error.response?.data?.message || t('Failed to update profile'));
+      toast.error(error.response?.data?.message || t('Failed to update profile'));
     } finally {
       setLoading(false);
     }
@@ -67,6 +65,12 @@ const Profile = () => {
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error(t('File is too large. Max 5MB allowed.'));
+      e.target.value = '';
+      return;
+    }
 
     const formDataObj = new FormData();
     formDataObj.append('image', file);
@@ -78,10 +82,10 @@ const Profile = () => {
       });
       if (res.data.success) {
         dispatch(setUser(res.data.data));
-        alert(t('Profile image updated successfully'));
+        toast.success(t('Profile image updated successfully'));
       }
     } catch (error) {
-      alert(error.response?.data?.message || t('Failed to update profile image'));
+      toast.error(error.response?.data?.message || t('Failed to update profile image'));
     } finally {
       setUploadingImage(false);
     }
@@ -196,20 +200,7 @@ const Profile = () => {
                 <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('* Cannot be changed')}</p>
               </div>
 
-              <div>
-                <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
-                  {t('Shop Name')} <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="shopName"
-                  value={formData.shopName}
-                  onChange={handleChange}
-                  placeholder={t('Enter your shop name')}
-                  required
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
-                />
-              </div>
+
             </div>
           </div>
         </section>

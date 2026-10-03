@@ -1,4 +1,5 @@
 import { useState, Fragment } from 'react';
+import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -11,12 +12,11 @@ const registerSchema = yup.object({
   name: yup.string().required('Name is required'),
   email: yup.string().email('Must be a valid email').required('Email is required'),
   phone: yup.string().matches(/^[0-9]{10}$/, 'Must be a 10-digit number').required('Phone is required'),
-  shopName: yup.string().required('Shop name is required'),
   password: yup.string().min(6, 'Must be at least 6 characters').required('Password is required'),
 });
 
 const Register = () => {
-  const [error, setError] = useState(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
@@ -33,11 +33,12 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
-    setError(null);
+
     try {
       const res = await api.post('/auth/register', data);
       
       if (res.data.success) {
+        toast.success(t('Registration successful! Please verify OTP.'));
         navigate('/verify-email', {
           state: {
             email: data.email,
@@ -46,7 +47,7 @@ const Register = () => {
         });
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Something went wrong. Please try again.');
+      toast.error(err.response?.data?.message || 'Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +58,7 @@ const Register = () => {
     if (step === 1) {
       fieldsToValidate = ['name', 'email'];
     } else if (step === 2) {
-      fieldsToValidate = ['phone', 'shopName'];
+      fieldsToValidate = ['phone'];
     }
     
     const isValid = await trigger(fieldsToValidate);
@@ -117,12 +118,6 @@ const Register = () => {
               <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
           </div>
-        </div>
-      )}
-      
-      {error && (
-        <div className="bg-red-50 text-red-600 p-2.5 sm:p-3 rounded-lg mb-3 sm:mb-4 text-xs sm:text-sm font-medium border border-red-100/50 animate-scale-in text-left">
-          {error}
         </div>
       )}
 
@@ -186,27 +181,6 @@ const Register = () => {
         {/* Step 2: Business Info */}
         {step === 2 && (
           <div className="space-y-3 sm:space-y-4 animate-fade-in">
-            <div>
-              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 text-left">
-                {t("Shop Name")}
-              </label>
-              <div className="relative">
-                <Store className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-[18px] sm:h-[18px] text-gray-400 pointer-events-none" />
-                <input 
-                  {...register('shopName')}
-                  className={`w-full rounded-full border bg-white pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none ${errors.shopName ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' : 'border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]'}`}
-                  placeholder="Shop Name"
-                  autoFocus
-                />
-              </div>
-              {errors.shopName && (
-                <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1 text-left">
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                  <span className="leading-snug">{errors.shopName.message}</span>
-                </p>
-              )}
-            </div>
-
             <div>
               <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 text-left">
                 {t("Phone Number")}
@@ -291,7 +265,6 @@ const Register = () => {
               <div className="space-y-2.5 sm:space-y-3 text-xs sm:text-sm text-gray-900 font-medium border-l-2 border-[#093C5D] pl-3 sm:pl-4">
                 <div className="flex flex-col"><span className="text-gray-500 text-[10px] sm:text-xs">{t("Name")}</span> <span>{watchedFields.name || '-'}</span></div>
                 <div className="flex flex-col"><span className="text-gray-500 text-[10px] sm:text-xs">{t("Email")}</span> <span className="truncate">{watchedFields.email || '-'}</span></div>
-                <div className="flex flex-col"><span className="text-gray-500 text-[10px] sm:text-xs">{t("Shop")}</span> <span>{watchedFields.shopName || '-'}</span></div>
               </div>
             </div>
 

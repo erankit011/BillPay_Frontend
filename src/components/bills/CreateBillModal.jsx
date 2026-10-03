@@ -9,6 +9,7 @@ import api from '../../api/axios';
 import SearchableSelect from '../common/SearchableSelect';
 import { useSelector } from 'react-redux';
 import { generateInvoicePDF } from '../../utils/generateInvoicePDF';
+import toast from 'react-hot-toast';
 
 const createBillSchema = yup.object({
   customerId: yup.string().required('Customer is required'),
@@ -119,9 +120,12 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
       setIsModalOpen(false);
       reset();
       setBillError('');
+      toast.success(t('Bill created successfully!'));
     },
     onError: (err) => {
-      setBillError(err.response?.data?.message || err.message);
+      const errMsg = err.response?.data?.message || err.message;
+      setBillError(errMsg);
+      toast.error(errMsg);
     }
   });
 
@@ -132,6 +136,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
       setIsAddProductOpen(false);
       setNewProduct({ name: '', price: '', stock: '' });
       setProductError('');
+      toast.success(t('Product added successfully!'));
       if (res.data?.data?._id) {
         const newId = res.data.data._id;
         const currentProducts = getValues('products') || [];
@@ -140,7 +145,11 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
         else { append({ productId: newId, quantity: 1 }); }
       }
     },
-    onError: (err) => { setProductError(err.response?.data?.message || err.message); }
+    onError: (err) => { 
+      const errMsg = err.response?.data?.message || err.message;
+      setProductError(errMsg);
+      toast.error(errMsg);
+    }
   });
 
   const addCustomerMutation = useMutation({
@@ -150,9 +159,14 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
       setIsAddCustomerOpen(false);
       setNewCustomer({ name: '', phone: '', email: '', address: '' });
       setCustomerError('');
+      toast.success(t('Customer added successfully!'));
       if (res.data?.data?._id) { setValue('customerId', res.data.data._id); }
     },
-    onError: (err) => { setCustomerError(err.response?.data?.message || err.message); }
+    onError: (err) => { 
+      const errMsg = err.response?.data?.message || err.message;
+      setCustomerError(errMsg);
+      toast.error(errMsg);
+    }
   });
 
   const handleAddProduct = (e) => {

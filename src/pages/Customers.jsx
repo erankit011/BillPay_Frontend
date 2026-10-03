@@ -4,17 +4,21 @@ import { useInfiniteQuery, useMutation, useQueryClient, keepPreviousData } from 
 import api from '../api/axios';
 import { Plus, Search, Phone, IndianRupee, History, Loader2, Edit, Trash2, Users, Wallet, FileText, Mail, Calendar, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import CustomerLedger from '../components/customers/CustomerLedger';
 import CustomerFormModal from '../components/customers/CustomerFormModal';
 import CustomerProfileModal from '../components/customers/CustomerProfileModal';
 import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
 import SwirlingLoader from '../components/common/SwirlingLoader';
+import UpgradeModal from '../components/common/UpgradeModal';
+import toast from 'react-hot-toast';
 
 import { formatCurrency } from '../utils/currency';
 import { formatDate } from '../utils/dateUtils';
 
 const Customers = () => {
   const { t } = useTranslation();
+  const { user } = useSelector((state) => state.auth);
   const [searchParams, setSearchParams] = useSearchParams();
   const initialSearch = searchParams.get('search') || '';
   const filterBalance = searchParams.get('filter') || 'All';
@@ -26,6 +30,9 @@ const Customers = () => {
   const [viewProfileCustomer, setViewProfileCustomer] = useState(null);
   const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
+
+  // Upgrade Modal State
+  const [upgradeModal, setUpgradeModal] = useState({ isOpen: false, title: '', message: '' });
 
   const setFilterBalance = (value) => {
     setSearchParams(prev => {
@@ -115,10 +122,13 @@ const Customers = () => {
       setIsEditMode(false);
       setEditingCustomer(null);
       setFormError(null);
+      toast.success(isEditMode ? t('Customer updated successfully!') : t('Customer added successfully!'));
     },
     onError: (error) => {
       const backendMessage = error.response?.data?.message;
-      setFormError(backendMessage ? t(backendMessage) : t('Failed to add customer. Please try again.'));
+      const errorMessage = backendMessage ? t(backendMessage) : t('Failed to add customer. Please try again.');
+      setFormError(errorMessage);
+      toast.error(errorMessage);
     }
   });
 
@@ -128,6 +138,7 @@ const Customers = () => {
       queryClient.invalidateQueries(['customers']);
       setDeleteModalOpen(false);
       setCustomerToDelete(null);
+      toast.success(t('Customer deleted successfully!'));
     }
   });
 
@@ -185,6 +196,32 @@ const Customers = () => {
   const customersWithAdvanceCount = firstPage?.customersWithAdvanceCount || 0;
   const thisMonthCustomersCount = firstPage?.thisMonthCustomersCount || 0;
 
+  const handleAddCustomerClick = () => {
+    if (!user?.subscriptionPlan || user?.subscriptionPlan === 'FREE' || user?.subscriptionStatus === 'none') {
+      const trialEnd = new Date(user?.createdAt);
+      trialEnd.setDate(trialEnd.getDate() + 7);
+      
+      if (new Date() > trialEnd) {
+        setUpgradeModal({
+          isOpen: true,
+          title: t('Trial Expired'),
+          message: t('Your 7-day free trial has expired. Please upgrade your plan to continue adding customers.')
+        });
+        return;
+      }
+      
+      if (totalCount >= 2) {
+        setUpgradeModal({
+          isOpen: true,
+          title: t('Limit Reached'),
+          message: t('Free trial limit reached: You can only add up to 2 customers on the free plan. Please upgrade your subscription.')
+        });
+        return;
+      }
+    }
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
       {/* Header */}
@@ -196,7 +233,7 @@ const Customers = () => {
           </p>
         </div>
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={handleAddCustomerClick}
           className="hidden lg:flex cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
         >
           <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
@@ -593,7 +630,7 @@ const Customers = () => {
       {/* Mobile & Tablet Extended FAB (No Shadow) */}
       {!activeCustomer && !isModalOpen && (
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={handleAddCustomerClick}
           className="lg:hidden fixed bottom-6 right-6 bg-[#093C5D] hover:bg-[#082a42] text-white px-5 py-3.5 rounded-lg flex items-center transition-all z-[40] active:scale-95 group font-semibold text-sm"
         >
           <Plus className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
@@ -606,6 +643,13 @@ const Customers = () => {
         isOpen={!!viewProfileCustomer}
         onClose={() => setViewProfileCustomer(null)}
         customer={viewProfileCustomer}
+      />
+
+      <UpgradeModal
+        isOpen={upgradeModal.isOpen}
+        onClose={() => setUpgradeModal({ ...upgradeModal, isOpen: false })}
+        title={upgradeModal.title}
+        message={upgradeModal.message}
       />
     </div>
   );
