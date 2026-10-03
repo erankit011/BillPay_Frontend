@@ -11,6 +11,7 @@ import CreateBillModal from '../components/bills/CreateBillModal';
 import ViewBillModal from '../components/bills/ViewBillModal';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import UpgradeModal from '../components/common/UpgradeModal';
+import toast from 'react-hot-toast';
 
 import { formatCurrency } from '../utils/currency';
 import { formatDate } from '../utils/dateUtils';
@@ -150,26 +151,30 @@ const Bills = () => {
     const activeBill = viewBillId ? bills.find(b => b._id === viewBillId) : null;
 
     const handleSendInvoice = async (billId, sendVia = 'whatsapp') => {
-        try {
-            const bill = bills.find(b => b._id === billId);
-            if (sendVia === 'email' && !bill?.customerId?.email) {
-                alert(t('Customer email not provided! Please add customer email first.'));
-                return;
-            }
-            if (sendVia === 'whatsapp' && !bill?.customerId?.phone) {
-                alert(t('Customer phone number not provided!'));
-                return;
-            }
-
-            await api.post(`/invoices/generate/${billId}`, { sendVia });
-
-            if (sendVia === 'email') alert(t('Invoice sent via email successfully!'));
-            else if (sendVia === 'both') alert(t('Invoice sent via WhatsApp and email successfully!'));
-            else alert(t('Invoice sent via WhatsApp successfully!'));
-        } catch (err) {
-            const errorMsg = err.response?.data?.message || err.message;
-            alert(t('Failed to send invoice') + ': ' + errorMsg);
+        const bill = bills.find(b => b._id === billId);
+        if (sendVia === 'email' && !bill?.customerId?.email) {
+            toast.error(t('Customer email not provided! Please add customer email first.'));
+            return;
         }
+        if (sendVia === 'whatsapp' && !bill?.customerId?.phone) {
+            toast.error(t('Customer phone number not provided!'));
+            return;
+        }
+
+        const sendPromise = api.post(`/invoices/generate/${billId}`, { sendVia });
+
+        toast.promise(sendPromise, {
+            loading: t('Sending invoice...'),
+            success: () => {
+                if (sendVia === 'email') return t('Invoice sent via email successfully!');
+                if (sendVia === 'both') return t('Invoice sent via WhatsApp and email successfully!');
+                return t('Invoice sent via WhatsApp successfully!');
+            },
+            error: (err) => {
+                const errorMsg = err.response?.data?.message || err.message;
+                return t('Failed to send invoice') + ': ' + errorMsg;
+            }
+        });
     };
 
     const firstPage = data?.pages?.[0];

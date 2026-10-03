@@ -1,4 +1,5 @@
 import { useState, Fragment } from 'react';
+import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -15,7 +16,7 @@ const registerSchema = yup.object({
 });
 
 const Register = () => {
-  const [error, setError] = useState(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
@@ -32,11 +33,12 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
-    setError(null);
+
     try {
       const res = await api.post('/auth/register', data);
       
       if (res.data.success) {
+        toast.success(t('Registration successful! Please verify OTP.'));
         navigate('/verify-email', {
           state: {
             email: data.email,
@@ -45,7 +47,7 @@ const Register = () => {
         });
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Something went wrong. Please try again.');
+      toast.error(err.response?.data?.message || 'Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -116,12 +118,6 @@ const Register = () => {
               <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
           </div>
-        </div>
-      )}
-      
-      {error && (
-        <div className="bg-red-50 text-red-600 p-2.5 sm:p-3 rounded-lg mb-3 sm:mb-4 text-xs sm:text-sm font-medium border border-red-100/50 animate-scale-in text-left">
-          {error}
         </div>
       )}
 

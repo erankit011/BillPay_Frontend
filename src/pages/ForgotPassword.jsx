@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { Mail, Loader2, CheckCircle2, Key } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -8,13 +9,13 @@ const ForgotPassword = () => {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
+
 
     try {
       const res = await api.post('/auth/forgot-password', { email });
@@ -23,7 +24,7 @@ const ForgotPassword = () => {
         setSuccess(true);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to send reset link. Please try again.');
+      toast.error(err.response?.data?.message || 'Failed to send reset link. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -64,11 +65,6 @@ const ForgotPassword = () => {
         </p>
       </div>
 
-      {error && (
-        <div className="bg-red-50 text-red-600 p-2.5 sm:p-3 rounded-lg mb-3 sm:mb-4 text-xs sm:text-sm font-medium border border-red-100/50 animate-scale-in text-left">
-          {error}
-        </div>
-      )}
 
       <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
         <div>

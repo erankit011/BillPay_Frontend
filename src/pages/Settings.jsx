@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import { logout, setUser } from '../redux/slices/authSlice';
 import SwirlingLoader from '../components/common/SwirlingLoader';
+import toast from 'react-hot-toast';
 
 
 // ── Section Nav Item ──
@@ -189,10 +190,10 @@ const Settings = () => {
       const res = await api.put('/settings', formData);
       if (res.data.success) {
         setInitialData(formData); // Update initial data after successful save
-        alert(t('Settings updated successfully'));
+        toast.success(t('Settings updated successfully'));
       }
     } catch (error) {
-      alert(error.response?.data?.message || t('Failed to update settings'));
+      toast.error(error.response?.data?.message || t('Failed to update settings'));
     } finally {
       setLoading(false);
     }
@@ -211,12 +212,12 @@ const Settings = () => {
 
   const handlePasswordSubmit = async () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert(t('New password and confirm password do not match!'));
+      toast.error(t('New password and confirm password do not match!'));
       return;
     }
 
     if (passwordData.newPassword.length < 6) {
-      alert(t('Password must be at least 6 characters long!'));
+      toast.error(t('Password must be at least 6 characters long!'));
       return;
     }
 
@@ -228,12 +229,12 @@ const Settings = () => {
       });
 
       if (res.data.success) {
-        alert(t('Password updated successfully!'));
+        toast.success(t('Password updated successfully!'));
         setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
       }
     } catch (error) {
       console.error('Password change error:', error);
-      alert(error.response?.data?.message || t('Failed to update password.'));
+      toast.error(error.response?.data?.message || t('Failed to update password.'));
     } finally {
       setPasswordLoading(false);
     }
@@ -247,12 +248,12 @@ const Settings = () => {
   const handleDeleteAccountSubmit = () => {
     // Basic validation
     if (userHasPassword && !deleteAccountData.password) {
-      alert(t('Please enter your password to delete the account.'));
+      toast.error(t('Please enter your password to delete the account.'));
       return;
     }
     const REQUIRED_TEXT = 'DELETE MY ACCOUNT';
     if (!userHasPassword && deleteAccountData.confirmationText !== REQUIRED_TEXT) {
-      alert(t(`Please type ${REQUIRED_TEXT} to confirm.`));
+      toast.error(t(`Please type ${REQUIRED_TEXT} to confirm.`));
       return;
     }
 
@@ -271,13 +272,13 @@ const Settings = () => {
 
       if (res.data.success) {
         setDeleteModalOpen(false);
-        alert(t('Account deleted successfully.'));
+        toast.success(t('Account deleted successfully.'));
         dispatch(logout());
         window.location.href = '/login';
       }
     } catch (error) {
       console.error('Account deletion error:', error);
-      alert(error.response?.data?.message || t('Failed to delete account.'));
+      toast.error(error.response?.data?.message || t('Failed to delete account.'));
       setDeleteModalOpen(false);
     } finally {
       setDeleteAccountLoading(false);
@@ -290,7 +291,7 @@ const Settings = () => {
 
     // Validate size (e.g., 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      alert(t('File is too large. Max 5MB allowed.'));
+      toast.error(t('File is too large. Max 5MB allowed.'));
       return;
     }
 
@@ -305,11 +306,11 @@ const Settings = () => {
 
       if (res.data.success && res.data.data.url) {
         setFormData(prev => ({ ...prev, invoiceLogo: res.data.data.url }));
-        alert(t('Logo uploaded successfully. Remember to save settings.'));
+        toast.success(t('Logo uploaded successfully. Remember to save settings.'));
       }
     } catch (error) {
       console.error('Upload error:', error);
-      alert(t('Failed to upload logo. Please try again.'));
+      toast.error(t('Failed to upload logo. Please try again.'));
     } finally {
       setUploadingLogo(false);
       // Reset input

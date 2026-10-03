@@ -9,6 +9,7 @@ import { setLoading, setUser, logout } from './redux/slices/authSlice';
 import api from './api/axios';
 import ServerUnreachable from './components/common/ServerUnreachable';
 import SwirlingLoader from './components/common/SwirlingLoader';
+import { Toaster } from 'react-hot-toast';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -69,6 +70,40 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <AuthInitializer>
+            <Toaster 
+              position="bottom-right" 
+              toastOptions={{
+                style: {
+                  boxShadow: 'none',
+                  borderRadius: '0.5rem',
+                  padding: '12px 16px',
+                  fontWeight: '500',
+                  fontSize: '14px'
+                },
+                success: {
+                  style: {
+                    border: '1px solid #bbf7d0', // green-200
+                    background: '#f0fdf4',       // green-50
+                    color: '#15803d',            // green-700
+                  },
+                  iconTheme: {
+                    primary: '#16a34a',
+                    secondary: '#f0fdf4',
+                  },
+                },
+                error: {
+                  style: {
+                    border: '1px solid #fecaca', // red-200
+                    background: '#fef2f2',       // red-50
+                    color: '#b91c1c',            // red-700
+                  },
+                  iconTheme: {
+                    primary: '#dc2626',
+                    secondary: '#fef2f2',
+                  },
+                }
+              }}
+            />
             <AppRoutes />
           </AuthInitializer>
         </BrowserRouter>

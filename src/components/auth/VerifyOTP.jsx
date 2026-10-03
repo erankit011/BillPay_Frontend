@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import toast from 'react-hot-toast';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { ShieldCheck, Clock, ArrowRight, RotateCcw, Headphones } from 'lucide-react';
@@ -14,7 +15,7 @@ import { useTranslation } from 'react-i18next';
  */
 const VerifyOTP = ({ type = 'registration' }) => {
   const [otpValue, setOtpValue] = useState('');
-  const [error, setError] = useState(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [timer, setTimer] = useState(120);
@@ -78,25 +79,26 @@ const VerifyOTP = ({ type = 'registration' }) => {
   const handleOtpChange = (e) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 6);
     setOtpValue(value);
-    setError(null);
+
   };
 
   const handleVerify = async (e) => {
     e.preventDefault();
     if (otpValue.length !== 6) {
-      setError('Please enter complete 6-digit code');
+      toast.error('Please enter complete 6-digit code');
       return;
     }
     setIsLoading(true);
-    setError(null);
+
     try {
       const res = await api.post(currentConfig.verifyEndpoint, { email, otp: otpValue });
       if (res.data.success) {
+        toast.success(t('OTP verified successfully!'));
         dispatch(loginSuccess({ user: res.data.data }));
         navigate('/dashboard');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid code. Please try again.');
+      toast.error(err.response?.data?.message || 'Invalid code. Please try again.');
       setOtpValue('');
       inputRef.current?.focus();
     } finally {
@@ -107,7 +109,7 @@ const VerifyOTP = ({ type = 'registration' }) => {
   const handleResend = async () => {
     if (!canResend) return;
     setResendLoading(true);
-    setError(null);
+
     try {
       const res = await api.post(currentConfig.resendEndpoint, { email });
       if (res.data.success) {
@@ -115,9 +117,10 @@ const VerifyOTP = ({ type = 'registration' }) => {
         setTimer(120);
         setOtpValue('');
         inputRef.current?.focus();
+        toast.success(t('Verification code sent!'));
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to resend code');
+      toast.error(err.response?.data?.message || 'Failed to resend code');
     } finally {
       setResendLoading(false);
     }
@@ -140,13 +143,6 @@ const VerifyOTP = ({ type = 'registration' }) => {
           </span>
         </p>
       </div>
-
-      {/* Error */}
-      {error && (
-        <div className="bg-red-50 text-red-600 p-2.5 sm:p-3 rounded-lg mb-3 sm:mb-4 text-xs sm:text-sm font-medium border border-red-100/50 animate-scale-in text-left">
-          {error}
-        </div>
-      )}
 
       <form onSubmit={handleVerify} className="space-y-3 sm:space-y-4">
         

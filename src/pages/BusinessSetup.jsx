@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Store, Save, Loader2, AlertCircle, Upload, X } from 'lucide-react';
 import api from '../api/axios';
@@ -65,8 +66,9 @@ const BusinessSetup = () => {
         setErrors(prev => ({ ...prev, global: '' }));
       }
     } catch (err) {
-      console.error('Error uploading logo:', err);
-      setErrors({ global: err.response?.data?.message || t('Failed to upload logo') });
+      const msg = err.response?.data?.message || t('Failed to upload logo');
+      setErrors({ global: msg });
+      toast.error(msg);
     } finally {
       setUploadingLogo(false);
     }
@@ -106,11 +108,13 @@ const BusinessSetup = () => {
       if (res.data.success) {
         const updatedUser = { ...user, ...res.data.data };
         dispatch(setUser(updatedUser));
+        toast.success(t('Business details saved successfully!'));
         navigate('/dashboard', { replace: true });
       }
     } catch (err) {
-      console.error(err);
-      setErrors({ global: err.response?.data?.message || t('Something went wrong. Please try again.') });
+      const msg = err.response?.data?.message || t('Something went wrong. Please try again.');
+      setErrors({ global: msg });
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

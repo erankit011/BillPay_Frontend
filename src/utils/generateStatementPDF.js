@@ -1,9 +1,10 @@
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import toast from 'react-hot-toast';
 
 export const generateStatementPDF = (filteredBills, filteredTransactions, statementPeriod, shopSettings, t, formatCurrency, formatDate) => {
   if (filteredBills.length === 0 && filteredTransactions.length === 0) {
-    alert(t("No data available for the selected period."));
+    toast.error(t("No data available for the selected period."));
     return;
   }
 
@@ -71,7 +72,7 @@ export const generateStatementPDF = (filteredBills, filteredTransactions, statem
     totalCollections += tx.amount;
   });
 
-  const startY = user && (user.phone || user.email) ? 48 : 42;
+  const startY = shopSettings && (shopSettings.phone || shopSettings.shopPhone || shopSettings.email || shopSettings.shopEmail) ? 48 : 42;
 
   autoTable(doc, {
     startY: startY,

@@ -5,6 +5,7 @@ import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import SwirlingLoader from '../components/common/SwirlingLoader';
+import toast from 'react-hot-toast';
 
 const VoiceBilling = () => {
   const { t } = useTranslation();
@@ -50,7 +51,7 @@ const VoiceBilling = () => {
   const startVoiceRecognition = () => {
     try {
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        alert(t('Voice recognition not supported. Please use manual input.'));
+        toast.error(t('Voice recognition not supported. Please use manual input.'));
         setInputMode('manual');
         return;
       }
@@ -114,7 +115,7 @@ const VoiceBilling = () => {
     } catch (err) {
       console.error('Error starting recognition:', err);
       setIsRecording(false);
-      alert(t('Failed to start voice recognition. Please use manual input.'));
+      toast.error(t('Failed to start voice recognition. Please use manual input.'));
       setInputMode('manual');
     }
   };
@@ -189,7 +190,7 @@ const VoiceBilling = () => {
     e.preventDefault();
     
     if (!formData.customerName.trim() || !formData.amount) {
-      alert(t('Please fill in customer name and amount'));
+      toast.error(t('Please fill in customer name and amount'));
       return;
     }
 
@@ -205,7 +206,7 @@ const VoiceBilling = () => {
       });
 
       if (response.data.success) {
-        alert(t('Transaction saved successfully!'));
+        toast.success(t('Transaction saved successfully!'));
         // Reset form
         setFormData({
           customerName: '',
@@ -219,7 +220,7 @@ const VoiceBilling = () => {
       }
     } catch (error) {
       console.error('Error saving transaction:', error);
-      alert(t('Error saving transaction. Please try again.'));
+      toast.error(t('Error saving transaction. Please try again.'));
     } finally {
       setIsSaving(false);
     }

@@ -11,6 +11,7 @@ import CustomerProfileModal from '../components/customers/CustomerProfileModal';
 import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import UpgradeModal from '../components/common/UpgradeModal';
+import toast from 'react-hot-toast';
 
 import { formatCurrency } from '../utils/currency';
 import { formatDate } from '../utils/dateUtils';
@@ -121,10 +122,13 @@ const Customers = () => {
       setIsEditMode(false);
       setEditingCustomer(null);
       setFormError(null);
+      toast.success(isEditMode ? t('Customer updated successfully!') : t('Customer added successfully!'));
     },
     onError: (error) => {
       const backendMessage = error.response?.data?.message;
-      setFormError(backendMessage ? t(backendMessage) : t('Failed to add customer. Please try again.'));
+      const errorMessage = backendMessage ? t(backendMessage) : t('Failed to add customer. Please try again.');
+      setFormError(errorMessage);
+      toast.error(errorMessage);
     }
   });
 
@@ -134,6 +138,7 @@ const Customers = () => {
       queryClient.invalidateQueries(['customers']);
       setDeleteModalOpen(false);
       setCustomerToDelete(null);
+      toast.success(t('Customer deleted successfully!'));
     }
   });
 

@@ -4,6 +4,7 @@ import { Check, Shield, Loader2 } from 'lucide-react';
 import api from '../api/axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../redux/slices/authSlice';
+import toast from 'react-hot-toast';
 
 const Subscription = () => {
   const { t } = useTranslation();
@@ -95,7 +96,7 @@ const Subscription = () => {
     if (plan.id === 'FREE') return;
 
     if (!scriptLoaded) {
-      alert(t('Payment system is loading, please wait...'));
+      toast.error(t('Payment system is loading, please wait...'));
       return;
     }
 
@@ -128,7 +129,7 @@ const Subscription = () => {
             });
 
             if (verifyRes.data.success || verifyRes.status === 200) {
-              alert(t('Subscription upgraded successfully!'));
+              toast.success(t('Subscription upgraded successfully!'));
               // Update user context
               dispatch(setUser({
                 ...user,
@@ -139,7 +140,7 @@ const Subscription = () => {
             }
           } catch (error) {
             console.error('Verification failed', error);
-            alert(t('Payment verification failed. Please contact support.'));
+            toast.error(t('Payment verification failed. Please contact support.'));
           }
         },
         prefill: {
@@ -155,14 +156,14 @@ const Subscription = () => {
       const rzp1 = new window.Razorpay(options);
 
       rzp1.on('payment.failed', function (response) {
-        alert(t('Payment failed! ') + response.error.description);
+        toast.error(t('Payment failed! ') + response.error.description);
       });
 
       rzp1.open();
 
     } catch (error) {
       console.error(error);
-      alert(error.response?.data?.message || t('Failed to initiate payment. Check API Keys.'));
+      toast.error(error.response?.data?.message || t('Failed to initiate payment. Check API Keys.'));
     } finally {
       setLoadingPlan(null);
     }

@@ -5,6 +5,7 @@ import { Save, Camera } from 'lucide-react';
 import { setUser } from '../redux/slices/authSlice';
 import api from '../api/axios';
 import SwirlingLoader from '../components/common/SwirlingLoader';
+import toast from 'react-hot-toast';
 
 
 const Profile = () => {
@@ -52,10 +53,10 @@ const Profile = () => {
       const res = await api.put('/auth/me', formData);
       if (res.data.success) {
         dispatch(setUser(res.data.data));
-        alert(t('Profile updated successfully'));
+        toast.success(t('Profile updated successfully'));
       }
     } catch (error) {
-      alert(error.response?.data?.message || t('Failed to update profile'));
+      toast.error(error.response?.data?.message || t('Failed to update profile'));
     } finally {
       setLoading(false);
     }
@@ -66,7 +67,7 @@ const Profile = () => {
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      alert(t('File is too large. Max 5MB allowed.'));
+      toast.error(t('File is too large. Max 5MB allowed.'));
       e.target.value = '';
       return;
     }
@@ -81,10 +82,10 @@ const Profile = () => {
       });
       if (res.data.success) {
         dispatch(setUser(res.data.data));
-        alert(t('Profile image updated successfully'));
+        toast.success(t('Profile image updated successfully'));
       }
     } catch (error) {
-      alert(error.response?.data?.message || t('Failed to update profile image'));
+      toast.error(error.response?.data?.message || t('Failed to update profile image'));
     } finally {
       setUploadingImage(false);
     }

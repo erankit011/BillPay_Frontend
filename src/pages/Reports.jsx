@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { generateStatementPDF } from '../utils/generateStatementPDF';
 import SwirlingLoader from '../components/common/SwirlingLoader';
+import toast from 'react-hot-toast';
 
 import { formatCurrency } from '../utils/currency';
 import { formatDate } from '../utils/dateUtils';
@@ -77,6 +78,7 @@ const Reports = () => {
       generateStatementPDF(filteredBills, filteredTransactions, statementPeriod, shopSettings, t, formatCurrency, formatDate);
     } catch (error) {
       console.error("Error generating PDF:", error);
+      toast.error(t('Failed to download statement report.'));
     } finally {
       setIsDownloading(false);
     }
