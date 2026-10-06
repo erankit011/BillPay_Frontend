@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 const customerSchema = yup.object({
   name: yup.string().required('Name is required'),
-  phone: yup.string().matches(/^[0-9]{10}$/, 'Must be a 10 digit number').required('Phone is required'),
+  phone: yup.string().matches(/^(?:\+?91[\-\s]?)?[0]?(?:\d[\-\s]?){10}$/, 'Enter a valid 10-digit number').required('Phone is required'),
   email: yup.string().email('Invalid email').nullable().transform(value => value === '' ? null : value),
   address: yup.string().nullable(),
 });

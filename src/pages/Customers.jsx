@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Search, Phone, IndianRupee, History, Loader2, Edit, Trash2, Users, Wallet, FileText, Mail, Calendar, Clock } from 'lucide-react';
+import { Plus, Search, Phone, IndianRupee, History, Loader2, Edit, Trash2, Users, Wallet, FileText, Mail, Calendar, Clock, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import CustomerLedger from '../components/customers/CustomerLedger';
@@ -15,6 +15,7 @@ import toast from 'react-hot-toast';
 
 import { formatCurrency } from '../utils/currency';
 import { formatDate } from '../utils/dateUtils';
+import { shareToWhatsApp } from '../utils/whatsappUtils';
 
 const Customers = () => {
   const { t } = useTranslation();
@@ -415,6 +416,19 @@ const Customers = () => {
                         <div className="flex items-center justify-end gap-2 lg:gap-3">
                           <button
                             onClick={() => {
+                              shareToWhatsApp({
+                                customer,
+                                amount: Math.abs(customer.balance),
+                                type: 'ledger', // generic ledger update
+                                shopDetails: user
+                              }, user?.shopName);
+                            }}
+                            className="cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
+                          >
+                            <MessageCircle className="w-3.5 h-3.5 mr-1.5" /> {t('WhatsApp')}
+                          </button>
+                          <button
+                            onClick={() => {
                               setSearchParams(prev => {
                                 const next = new URLSearchParams(prev);
                                 next.set('viewTransaction', customer._id);
@@ -497,6 +511,20 @@ const Customers = () => {
                     >
                       <Phone className="w-3.5 h-3.5 mr-1 sm:mr-1.5 shrink-0" /> {t('Call')}
                     </a>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        shareToWhatsApp({
+                          customer,
+                          amount: Math.abs(customer.balance),
+                          type: 'ledger',
+                          shopDetails: user
+                        }, user?.shopName);
+                      }}
+                      className="shrink-0 cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-2 sm:px-3 py-1 rounded-md flex items-center justify-center transition-all text-[10px] sm:text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5 mr-1 sm:mr-1.5 shrink-0" /> {t('WhatsApp')}
+                    </button>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();

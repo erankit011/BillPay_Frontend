@@ -10,6 +10,7 @@ import SearchableSelect from '../components/common/SearchableSelect';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import { formatDate } from '../utils/dateUtils';
 import toast from 'react-hot-toast';
+import { shareToWhatsApp } from '../utils/whatsappUtils';
 
 const Reminders = () => {
   const { t } = useTranslation();
@@ -122,26 +123,26 @@ const Reminders = () => {
     }
   });
 
-  const sendMutation = useMutation({
-    mutationFn: (reminderId) => api.post(`/reminders/${reminderId}/send`),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['reminders']);
-      toast.success(t('Reminder sent successfully!'));
-    },
-    onError: (err) => {
-      toast.error(t('Failed to send reminder: ') + (err.response?.data?.message || err.message));
-    }
-  });
+  // Removed invalid import
 
-  const handleSendNow = (reminder) => {
-    setReminderToSend(reminder);
+  const handleSendNow = async (reminder) => {
+    // Prepare data
+    const shareData = {
+      customer: reminder.customerId, // Populated from backend
+      amount: reminder.customerId?.balance || 0, // Fallback if no specific bill
+      dueDate: reminder.scheduledDate,
+      isReminder: true,
+      shopDetails: user
+    };
+    
+    // User profile data (shop name) should ideally be passed
+    await shareToWhatsApp(shareData, user?.shopName);
+    
+    // Mark as sent in backend manually if we want (optional, but skipping for now as per requirements)
   };
 
   const confirmSend = () => {
-    if (reminderToSend) {
-      sendMutation.mutate(reminderToSend._id);
-      setReminderToSend(null);
-    }
+    // Deprecated for now since we share immediately
   };
 
   const handleEdit = (reminder) => {
@@ -452,7 +453,6 @@ const Reminders = () => {
                           {reminder.status !== 'SENT' && (
                             <button
                               onClick={() => handleSendNow(reminder)}
-                              disabled={sendMutation.isPending}
                               className="cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
                               title={t('Send Now')}
                             >
@@ -808,10 +808,8 @@ const Reminders = () => {
                   </button>
                   <button
                     onClick={confirmSend}
-                    disabled={sendMutation.isPending}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 sm:gap-2"
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 flex items-center justify-center gap-1.5 sm:gap-2"
                   >
-                    {sendMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
                     {t('Yes, Send')}
                   </button>
                 </div>
