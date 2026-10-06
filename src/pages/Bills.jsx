@@ -15,6 +15,7 @@ import toast from 'react-hot-toast';
 
 import { formatCurrency } from '../utils/currency';
 import { formatDate } from '../utils/dateUtils';
+import { shareToWhatsApp } from '../utils/whatsappUtils';
 
 const getInitials = (name) => {
     if (!name) return 'CS';
@@ -152,29 +153,45 @@ const Bills = () => {
 
     const handleSendInvoice = async (billId, sendVia = 'whatsapp') => {
         const bill = bills.find(b => b._id === billId);
-        if (sendVia === 'email' && !bill?.customerId?.email) {
-            toast.error(t('Customer email not provided! Please add customer email first.'));
-            return;
-        }
-        if (sendVia === 'whatsapp' && !bill?.customerId?.phone) {
-            toast.error(t('Customer phone number not provided!'));
-            return;
-        }
-
-        const sendPromise = api.post(`/invoices/generate/${billId}`, { sendVia });
-
-        toast.promise(sendPromise, {
-            loading: t('Sending invoice...'),
-            success: () => {
-                if (sendVia === 'email') return t('Invoice sent via email successfully!');
-                if (sendVia === 'both') return t('Invoice sent via WhatsApp and email successfully!');
-                return t('Invoice sent via WhatsApp successfully!');
-            },
-            error: (err) => {
-                const errorMsg = err.response?.data?.message || err.message;
-                return t('Failed to send invoice') + ': ' + errorMsg;
+        
+        if (sendVia === 'whatsapp' || sendVia === 'both') {
+            if (!bill?.customerId?.phone) {
+                toast.error(t('Customer phone number not provided!'));
+                return;
             }
-        });
+            
+            // Manual WhatsApp Share
+            await shareToWhatsApp({
+                customer: bill.customerId,
+                amount: bill.customerId?.balance ?? bill.grandTotal, // Use overall customer balance for Account Status
+                dueDate: bill.dueDate,
+                type: 'receipt', // assuming bill is a type of receipt/invoice
+                billNumber: bill.invoiceNumber,
+                billData: bill,
+                shopDetails: shopDetails,
+                shopSettings: shopSettings
+            }, shopDetails?.shopName, async () => {
+                await generateInvoicePDF(bill, shopDetails, 'download', t, shopSettings);
+            });
+
+            if (sendVia === 'whatsapp') return; // Stop if only WhatsApp was requested
+        }
+
+        // Email logic (backend)
+        if (sendVia === 'email' || sendVia === 'both') {
+            if (!bill?.customerId?.email) {
+                toast.error(t('Customer email not provided!'));
+                return;
+            }
+
+            const sendPromise = api.post(`/invoices/generate/${billId}`, { sendVia: 'email' });
+
+            toast.promise(sendPromise, {
+                loading: t('Sending email...'),
+                success: t('Invoice sent via email successfully!'),
+                error: (err) => t('Failed to send email') + ': ' + (err.response?.data?.message || err.message)
+            });
+        }
     };
 
     const firstPage = data?.pages?.[0];

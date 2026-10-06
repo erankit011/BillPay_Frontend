@@ -95,10 +95,7 @@ const Settings = () => {
     shopPhone: '',
     shopEmail: '',
     // Notifications & Automation
-    autoSendWhatsapp: true,
     autoSendInvoices: true,
-    autoSendReminders: true,
-    reminderDays: 3,
     emailNotifications: true,
     // Inventory
     lowStockThreshold: 5,
@@ -146,10 +143,7 @@ const Settings = () => {
             upiId: s.upiId || '',
             shopPhone: s.shopPhone || '',
             shopEmail: s.shopEmail || '',
-            autoSendWhatsapp: s.autoSendWhatsapp ?? true,
             autoSendInvoices: s.autoSendInvoices ?? true,
-            autoSendReminders: s.autoSendReminders ?? true,
-            reminderDays: s.reminderDays ?? 3,
             emailNotifications: s.emailNotifications ?? true,
             lowStockThreshold: s.lowStockThreshold ?? 5,
             lowStockAlert: s.lowStockAlert ?? true,
@@ -881,13 +875,6 @@ const Settings = () => {
                 </div>
                 <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6 space-y-0">
                   <ToggleSwitch
-                    name="autoSendWhatsapp"
-                    checked={formData.autoSendWhatsapp}
-                    onChange={handleChange}
-                    label={t('WhatsApp Notifications')}
-                    description={t('Send updates via WhatsApp')}
-                  />
-                  <ToggleSwitch
                     name="autoSendInvoices"
                     checked={formData.autoSendInvoices}
                     onChange={handleChange}
@@ -901,29 +888,7 @@ const Settings = () => {
                     label={t('Email Notifications')}
                     description={t('Receive email alerts for payments & reminders')}
                   />
-                  <ToggleSwitch
-                    name="autoSendReminders"
-                    checked={formData.autoSendReminders}
-                    onChange={handleChange}
-                    label={t('Auto Payment Reminders')}
-                    description={t('Automatically send reminders for pending payments')}
-                  />
-                  {formData.autoSendReminders && (
-                    <div className="pt-3">
-                      <div>
-                        <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Remind Before in Days')}</label>
-                        <input
-                          type="number"
-                          name="reminderDays"
-                          value={formData.reminderDays}
-                          onChange={handleChange}
-                          min="1"
-                          className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
-                        />
-                        <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Days before due date to send reminder')}</p>
-                      </div>
-                    </div>
-                  )}
+
                 </div>
               </section>
             )}

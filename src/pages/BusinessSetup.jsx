@@ -81,7 +81,7 @@ const BusinessSetup = () => {
     if (!formData.shopPhone.trim()) {
       newErrors.shopPhone = t('Business Phone is required');
     } else {
-      const phoneRegex = /^[+]?[\d\s-]{10,15}$/;
+      const phoneRegex = /^(?:\+?91[\-\s]?)?[0]?(?:\d[\-\s]?){10}$/;
       if (!phoneRegex.test(formData.shopPhone.trim())) {
         newErrors.shopPhone = t('Please enter a valid phone number');
       }
@@ -98,6 +98,7 @@ const BusinessSetup = () => {
     const validationErrors = validate();
     if (validationErrors) {
       setErrors(validationErrors);
+      toast.error(t('Please check the form for errors'));
       return;
     }
 
