@@ -23,6 +23,7 @@ const Profile = lazy(() => import('../pages/Profile'));
 const Notifications = lazy(() => import('../pages/Notifications'));
 const Subscription = lazy(() => import('../pages/Subscription'));
 const PlatformReceipt = lazy(() => import('../pages/PlatformReceipt'));
+const PublicInvoice = lazy(() => import('../pages/PublicInvoice'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
 // Static pages
@@ -142,6 +143,9 @@ const AppRoutes = () => {
             <BusinessSetup />
           </ProtectedRoute>
         } />
+
+        {/* Public Routes */}
+        <Route path="/invoice/public/:id" element={<PublicInvoice />} />
 
         {/* Fallback 404 Route */}
         <Route path="*" element={<NotFound />} />

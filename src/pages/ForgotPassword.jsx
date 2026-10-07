@@ -75,7 +75,7 @@ const ForgotPassword = () => {
             <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-[18px] sm:h-[18px] text-gray-400 pointer-events-none" />
             <input
               type="email"
-              pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$"
+              pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
               title="Please enter a valid email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}

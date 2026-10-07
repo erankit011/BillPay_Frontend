@@ -236,7 +236,7 @@ const BusinessSetup = () => {
                     id="shopEmail"
                     name="shopEmail"
                     type="email"
-                    pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$"
+                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                     title="Please enter a valid email address"
                     value={formData.shopEmail}
                     onChange={handleChange}

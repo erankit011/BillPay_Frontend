@@ -9,7 +9,7 @@ import { Loader2, Mail, Lock, Eye, EyeOff, LogIn, AlertCircle } from 'lucide-rea
 import { useTranslation } from 'react-i18next';
 
 const loginSchema = yup.object({
-  email: yup.string().matches(/^[a-zA-Z0-9._%+-]+@gmail\\.com$/, 'Please provide a valid email address').required('Email is required'),
+  email: yup.string().email('Please provide a valid email address').required('Email is required'),
   password: yup.string().required('Password is required'),
 });
 

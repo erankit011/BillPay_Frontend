@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 const registerSchema = yup.object({
   name: yup.string().required('Name is required'),
-  email: yup.string().matches(/^[a-zA-Z0-9._%+-]+@gmail\\.com$/, 'Please provide a valid email address').required('Email is required'),
+  email: yup.string().email('Please provide a valid email address').required('Email is required'),
   phone: yup.string().matches(/^(?:\+?91[\-\s]?)?[0]?(?:\d[\-\s]?){10}$/, 'Enter a valid 10-digit number').required('Phone is required'),
   password: yup.string().min(6, 'Must be at least 6 characters').required('Password is required'),
 });
