@@ -22,6 +22,27 @@ const processQueue = (error) => {
   failedQueue = [];
 };
 
+let csrfToken = null;
+let fetchingCsrf = null;
+
+api.interceptors.request.use(async (config) => {
+  // Methods that require CSRF token
+  if (['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase())) {
+    if (!csrfToken) {
+      if (!fetchingCsrf) {
+        fetchingCsrf = axios.get(`${import.meta.env.VITE_API_URL}/csrf-token`, { withCredentials: true })
+          .then(res => res.data.csrfToken)
+          .catch(() => null);
+      }
+      csrfToken = await fetchingCsrf;
+    }
+    if (csrfToken) {
+      config.headers['X-CSRF-Token'] = csrfToken;
+    }
+  }
+  return config;
+});
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -61,6 +82,13 @@ api.interceptors.response.use(
         isRefreshing = false;
         return Promise.reject(refreshError);
       }
+    }
+
+    if (error.response?.status === 429) {
+      // Import toast inside the function to avoid circular dependency or top-level issues, or assume it's imported.
+      // Wait, let's just add it and import at the top.
+      const toast = await import('react-hot-toast').then(m => m.default);
+      toast.error(error.response?.data?.message || 'Too many requests, please try again later.');
     }
 
     return Promise.reject(error);

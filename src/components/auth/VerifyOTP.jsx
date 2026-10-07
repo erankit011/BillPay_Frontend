@@ -117,7 +117,7 @@ const VerifyOTP = ({ type = 'registration' }) => {
         setTimer(120);
         setOtpValue('');
         inputRef.current?.focus();
-        toast.success(t('Verification code sent!'));
+        toast.success(res.data.message || t('Verification code sent!'));
       }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to resend code');

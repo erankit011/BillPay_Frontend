@@ -39,7 +39,7 @@ const ForgotPassword = () => {
           </div>
           <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-1 tracking-tight">{t('Check Your Email')}</h2>
           <p className="text-gray-500 font-medium text-xs sm:text-sm leading-relaxed">
-            {t('We have sent a password reset link to')} <strong className="text-gray-900">{email}</strong>
+            {t('If an account exists, a password reset link has been sent to')} <strong className="text-gray-900">{email}</strong>
           </p>
         </div>
 
@@ -75,6 +75,8 @@ const ForgotPassword = () => {
             <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-[18px] sm:h-[18px] text-gray-400 pointer-events-none" />
             <input
               type="email"
+              pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$"
+              title="Please enter a valid email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-full border bg-white pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]"
