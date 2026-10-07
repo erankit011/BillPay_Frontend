@@ -73,6 +73,8 @@ export const shareToWhatsApp = async (data, shopName = 'UdharPay Business', gene
     const shopAddress = settings?.shopAddress || data.shopDetails?.shopAddress || '';
     const shopPhone = settings?.shopPhone || data.shopDetails?.phone || data.shopDetails?.shopPhone || '';
 
+    const shopEmail = settings?.shopEmail || data.shopDetails?.shopEmail || data.shopDetails?.email || '';
+
     let secureLink = '';
     if (data.billData?._id && token) {
         secureLink = `${appUrl}/invoice/public/${data.billData._id}?token=${token}`;
@@ -80,42 +82,44 @@ export const shareToWhatsApp = async (data, shopName = 'UdharPay Business', gene
 
     let message = `🏪 *${finalShopName.toUpperCase()}*\n`;
     if (shopPhone) message += `📞 Phone: ${shopPhone}\n`;
+    if (shopEmail) message += `📧 Email: ${shopEmail}\n`;
+    if (shopAddress) message += `📍 Address: ${shopAddress}\n`;
     message += `------------------------\n\n`;
 
-    message += `👤 Dear *${customer.name}*,\n`;
+    message += `👤 *Dear ${customer.name},* (नमस्ते)\n`;
     if (type === 'receipt') {
-        message += `Here is your digital receipt.\n\n`;
+        message += `Here is your digital receipt / यह आपकी डिजिटल रसीद है।\n\n`;
     } else {
-        message += `This is a reminder for your pending account.\n\n`;
+        message += `This is a reminder for your pending account / यह आपके बकाया खाते का रिमाइंडर है।\n\n`;
         if (dueDate && displayAmount > 0) {
             const dateObj = new Date(dueDate);
-            message += `⏰ *Due Date:* ${dateObj.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}\n\n`;
+            message += `⏰ *Due Date (अंतिम तिथि):* ${dateObj.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}\n\n`;
         }
     }
 
     if (secureLink) {
-        message += `🔗 *View / Download Invoice (रसीद देखें):*\n`;
+        message += `🔗 *View / Download Invoice (रसीद यहाँ देखें):*\n`;
         message += `${secureLink}\n\n`;
     }
 
     if (type === 'receipt' && data.billData) {
         message += `------------------------\n`;
-        if (billNumber) message += `🧾 Bill No: ${billNumber}\n`;
-        message += `📅 Date: ${currentDate}\n\n`;
+        if (billNumber) message += `🧾 *Bill No (बिल नंबर):* ${billNumber}\n`;
+        message += `📅 *Date (तारीख):* ${currentDate}\n\n`;
 
-        message += `💰 *BILL SUMMARY*\n`;
-        message += `Total Bill: ₹${data.billData.grandTotal}\n`;
+        message += `💰 *BILL SUMMARY (बिल का विवरण)*\n`;
+        message += `Total Bill (कुल बिल): ₹${data.billData.grandTotal}\n`;
         
         const paid = data.billData.amountPaid || 0;
         if (paid > 0) {
-            message += `Amount Paid: ₹${paid}\n`;
+            message += `Amount Paid (जमा राशि): ₹${paid}\n`;
         }
         
         const remaining = data.billData.grandTotal - paid;
         if (remaining > 0) {
-            message += `Bill Due: ₹${remaining}\n`;
+            message += `Bill Due (बकाया बिल): ₹${remaining}\n`;
         } else {
-            message += `Status: PAID ✅\n`;
+            message += `Status (स्थिति): PAID ✅\n`;
         }
         message += `\n`;
     }
@@ -123,18 +127,19 @@ export const shareToWhatsApp = async (data, shopName = 'UdharPay Business', gene
     message += `------------------------\n`;
     message += `📊 *ACCOUNT STATUS (कुल खाता)*\n`;
     if (displayAmount > 0) {
-        message += `🔴 Pending Due: ₹${absAmount}\n`;
-        message += `_(Please clear your dues soon)_\n`;
+        message += `🔴 *Pending Due (कुल बकाया): ₹${absAmount}*\n`;
+        message += `_(Please clear your dues soon / कृपया अपना बकाया जल्द चुकाएं)_\n`;
     } else if (displayAmount < 0) {
-        message += `🟢 Advance: ₹${absAmount}\n`;
-        message += `_(Will be adjusted next time)_\n`;
+        message += `🟢 *Advance (एडवांस): ₹${absAmount}*\n`;
+        message += `_(Will be adjusted next time / अगली बार एडजस्ट कर दिया जाएगा)_\n`;
     } else {
-        message += `✅ Pending Due: ₹0\n`;
-        message += `_(Account is settled)_\n`;
+        message += `✅ *Pending Due (कुल बकाया): ₹0*\n`;
+        message += `_(Account is settled / खाता क्लियर है)_\n`;
     }
 
-    message += `\n🤝 Thank you! / धन्यवाद!\n`;
-    message += `⚡ _Powered by UdharPay_`;
+    message += `\n🤝 Thank you for your business! / धन्यवाद!\n`;
+    message += `⚡ _Powered by UdharPay Business_\n`;
+    message += `🌐 ${appUrl}`;
 
     const encodedMessage = encodeURIComponent(message);
     const waLink = `https://wa.me/${waNumber}?text=${encodedMessage}`;
