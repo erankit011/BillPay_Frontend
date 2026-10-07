@@ -45,14 +45,17 @@ export const shareToWhatsApp = async (data, shopName = 'UdharPay Business', gene
 
     const waNumber = formatWhatsAppNumber(customer.phone);
     
-    // 1. Run PDF generator callback if provided
-    if (generatePdfFn) {
-      try {
-        await generatePdfFn();
-      } catch (pdfErr) {
-        console.error("PDF generation error, continuing with text only:", pdfErr);
-        toast.error("Couldn't generate PDF, but sending text message.", { id: 'wa-share', duration: 3000 });
-      }
+    let token = data.billData?.publicViewToken;
+    if (data.billData?._id && !token) {
+        // Fallback: If React Query has stale data without the token, fetch it real-time
+        try {
+            const res = await api.get(`/bills/${data.billData._id}`);
+            if (res.data?.data?.publicViewToken) {
+                token = res.data.data.publicViewToken;
+            }
+        } catch (err) {
+            console.error('Failed to fetch latest bill token for WhatsApp share', err);
+        }
     }
 
     // 2. Build smart professional bilingual message template
@@ -70,80 +73,74 @@ export const shareToWhatsApp = async (data, shopName = 'UdharPay Business', gene
     const shopAddress = settings?.shopAddress || data.shopDetails?.shopAddress || '';
     const shopPhone = settings?.shopPhone || data.shopDetails?.phone || data.shopDetails?.shopPhone || '';
 
-    let message = `========================\n`;
-    message += `🏪 *${finalShopName.toUpperCase()}*\n`;
-    if (shopPhone) message += `📞 Phone/फ़ोन: ${shopPhone}\n`;
-    if (shopAddress) message += `📍 Address/पता: ${shopAddress}\n`;
-    message += `========================\n\n`;
+    let secureLink = '';
+    if (data.billData?._id && token) {
+        secureLink = `${appUrl}/invoice/public/${data.billData._id}?token=${token}`;
+    }
 
-    const items = data.billData?.products || data.billData?.items || [];
+    let message = `🏪 *${finalShopName.toUpperCase()}*\n`;
+    if (shopPhone) message += `📞 Phone: ${shopPhone}\n`;
+    message += `------------------------\n\n`;
 
-    message += `👤 Dear / प्रिय *${customer.name}*,\n\n`;
-
+    message += `👤 Dear *${customer.name}*,\n`;
     if (type === 'receipt') {
-        if (billNumber) message += `🧾 Bill No / बिल संख्या: ${billNumber}\n`;
-        message += `📅 Date / दिनांक: ${currentDate}\n\n`;
-
-        if (items.length > 0) {
-            message += `🛒 *ITEMS / सामान*\n`;
-            message += `------------------------\n`;
-            items.forEach((item, index) => {
-                const itemName = item.name || item.product?.name || item.item || `Item ${index + 1}`;
-                message += `${item.quantity} x ${itemName} = ₹${item.total || (item.quantity * item.price)}\n`;
-            });
-            message += `------------------------\n\n`;
-        }
-        
-        if (data.billData) {
-            message += `💰 *BILL SUMMARY / बिल का हिसाब*\n`;
-            message += `------------------------\n`;
-            message += `Total Bill (कुल बिल): ₹${data.billData.grandTotal}\n`;
-            message += `Amount Paid (जमा): ₹${data.billData.amountPaid || 0}\n`;
-            
-            const remaining = data.billData.grandTotal - (data.billData.amountPaid || 0);
-            if (remaining > 0) {
-                message += `Due (इस बिल का बाकी): ₹${remaining}\n`;
-            } else {
-                message += `Status (स्टेटस): PAID ✅\n`;
-            }
-            message += `------------------------\n\n`;
-        }
-    } else if (type === 'reminder' || data.isReminder) {
-        message += `This is a friendly reminder. / यह एक अनुस्मारक है।\n\n`;
+        message += `Here is your digital receipt.\n\n`;
+    } else {
+        message += `This is a reminder for your pending account.\n\n`;
         if (dueDate && displayAmount > 0) {
             const dateObj = new Date(dueDate);
-            message += `⏰ Due Date (अंतिम तिथि): *${dateObj.toLocaleDateString('en-IN')}*\n\n`;
+            message += `⏰ *Due Date:* ${dateObj.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}\n\n`;
         }
     }
 
-    message += `📊 *ACCOUNT STATUS / खाता स्थिति*\n`;
+    if (secureLink) {
+        message += `🔗 *View / Download Invoice (रसीद देखें):*\n`;
+        message += `${secureLink}\n\n`;
+    }
+
+    if (type === 'receipt' && data.billData) {
+        message += `------------------------\n`;
+        if (billNumber) message += `🧾 Bill No: ${billNumber}\n`;
+        message += `📅 Date: ${currentDate}\n\n`;
+
+        message += `💰 *BILL SUMMARY*\n`;
+        message += `Total Bill: ₹${data.billData.grandTotal}\n`;
+        
+        const paid = data.billData.amountPaid || 0;
+        if (paid > 0) {
+            message += `Amount Paid: ₹${paid}\n`;
+        }
+        
+        const remaining = data.billData.grandTotal - paid;
+        if (remaining > 0) {
+            message += `Bill Due: ₹${remaining}\n`;
+        } else {
+            message += `Status: PAID ✅\n`;
+        }
+        message += `\n`;
+    }
+
     message += `------------------------\n`;
+    message += `📊 *ACCOUNT STATUS (कुल खाता)*\n`;
     if (displayAmount > 0) {
-        message += `🔴 Pending Due (कुल बकाया): ₹${absAmount}\n`;
-        message += `Please clear dues. (कृपया जल्द भुगतान करें।)\n`;
+        message += `🔴 Pending Due: ₹${absAmount}\n`;
+        message += `_(Please clear your dues soon)_\n`;
     } else if (displayAmount < 0) {
-        message += `🟢 Advance (एडवांस जमा): ₹${absAmount}\n`;
-        message += `Adjusted next time. (अगले बिल में उपयोग होगा।)\n`;
+        message += `🟢 Advance: ₹${absAmount}\n`;
+        message += `_(Will be adjusted next time)_\n`;
     } else {
-        message += `✅ Pending Due (कुल बकाया): ₹0\n`;
-        message += `Account settled! (हिसाब बराबर है।)\n`;
-    }
-    message += `------------------------\n`;
-
-    if (generatePdfFn) {
-        message += `\n📎 _(Detailed PDF attached / विस्तृत PDF संलग्न है)_\n`;
+        message += `✅ Pending Due: ₹0\n`;
+        message += `_(Account is settled)_\n`;
     }
 
-    message += `\n========================\n`;
-    message += `🤝 Thank you! / धन्यवाद!\n`;
-    message += `\n⚡ Generated via *UdharPay*\n`;
-    message += `🌐 ${appUrl}`;
+    message += `\n🤝 Thank you! / धन्यवाद!\n`;
+    message += `⚡ _Powered by UdharPay_`;
 
     const encodedMessage = encodeURIComponent(message);
     const waLink = `https://wa.me/${waNumber}?text=${encodedMessage}`;
 
     // 3. Open WhatsApp link
-    toast.success('Opening WhatsApp... Please attach the downloaded PDF manually.', { id: 'wa-share', duration: 4000 });
+    toast.success('Opening WhatsApp... Secure link included in message.', { id: 'wa-share', duration: 4000 });
     
     // Open in a new tab/window
     window.open(waLink, '_blank');
