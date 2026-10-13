@@ -1,6 +1,12 @@
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import { formatDate } from './dateUtils';
+
+const loadPdfEngine = async () => {
+  const [{ jsPDF }, { default: autoTable }] = await Promise.all([
+    import('jspdf'),
+    import('jspdf-autotable')
+  ]);
+  return { jsPDF, autoTable };
+};
 
 const formatCurrency = (amount) => {
   return 'Rs. ' + new Intl.NumberFormat('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount || 0);
@@ -28,9 +34,11 @@ const fetchImageAsBase64 = async (url) => {
 };
 
 export const generateInvoicePDF = async (bill, shopDetails, action = 'download', t = (str) => str, settings = {}) => {
+  const { jsPDF, autoTable } = await loadPdfEngine();
+
   const isThermal = settings?.printerType === 'THERMAL_3INCH' || settings?.printerType === 'THERMAL_2INCH';
   if (isThermal) {
-    return generateThermalPDF(bill, shopDetails, action, t, settings);
+    return generateThermalPDF(bill, shopDetails, action, t, settings, jsPDF);
   }
 
   const doc = new jsPDF();
@@ -278,7 +286,7 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
   }
 };
 
-const generateThermalPDF = async (bill, shopDetails, action, t, settings) => {
+const generateThermalPDF = async (bill, shopDetails, action, t, settings, jsPDF) => {
   const width = settings.printerType === 'THERMAL_2INCH' ? 58 : 80;
   const height = 100 + (bill.products?.length || 0) * 15;
   const doc = new jsPDF({ format: [width, height], unit: 'mm' });

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -48,6 +49,20 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    // If this session was explicitly logged out remotely or revoked, do not attempt refresh - redirect immediately
+    if (error.response?.status === 401 && (
+      error.response?.data?.message?.includes('logged out remotely') ||
+      error.response?.data?.message?.includes('revoked')
+    )) {
+      isRefreshing = false;
+      localStorage.removeItem('isLoggedIn');
+      const path = window.location.pathname;
+      if (!path.startsWith('/login') && !path.startsWith('/register') && !path.startsWith('/bills/')) {
+        window.location.href = '/login?session_expired=true';
+      }
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (originalRequest.url?.includes('/auth/refresh')) {
         isRefreshing = false;
@@ -80,14 +95,16 @@ api.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError);
         isRefreshing = false;
+        localStorage.removeItem('isLoggedIn');
+        const path = window.location.pathname;
+        if (!path.startsWith('/login') && !path.startsWith('/register') && !path.startsWith('/bills/')) {
+          window.location.href = '/login?session_expired=true';
+        }
         return Promise.reject(refreshError);
       }
     }
 
     if (error.response?.status === 429) {
-      // Import toast inside the function to avoid circular dependency or top-level issues, or assume it's imported.
-      // Wait, let's just add it and import at the top.
-      const toast = await import('react-hot-toast').then(m => m.default);
       toast.error(error.response?.data?.message || 'Too many requests, please try again later.');
     }
 

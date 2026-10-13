@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -20,6 +20,14 @@ const Login = () => {
 
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('session_expired')) {
+      toast.error(t('This device was logged out remotely. Please sign in again.'));
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [t]);
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(loginSchema)
