@@ -10,7 +10,6 @@ import SearchableSelect from '../components/common/SearchableSelect';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import { formatDate } from '../utils/dateUtils';
 import toast from 'react-hot-toast';
-import { shareToWhatsApp } from '../utils/whatsappUtils';
 
 const Reminders = () => {
   const { t } = useTranslation();
@@ -26,6 +25,7 @@ const Reminders = () => {
   const [reminderToDelete, setReminderToDelete] = useState(null);
   const [reminderToSend, setReminderToSend] = useState(null);
   const [reminderToView, setReminderToView] = useState(null);
+  const [sendingReminderId, setSendingReminderId] = useState(null);
   const queryClient = useQueryClient();
 
   const setFilterStatus = (value) => {
@@ -94,6 +94,12 @@ const Reminders = () => {
   const selectedCustomerId = watch('customerId');
   const selectedType = watch('type');
 
+  const customerExistingReminder = !isEditMode && selectedCustomerId 
+    ? reminders.find(r => (r.customerId?._id === selectedCustomerId || r.customerId === selectedCustomerId) && (
+        r.status === 'PENDING' || (new Date(r.createdAt).getTime() > Date.now() - 24 * 60 * 60 * 1000)
+      ))
+    : null;
+
   const mutation = useMutation({
     mutationFn: (reminderData) => {
       if (isEditMode) {
@@ -126,19 +132,18 @@ const Reminders = () => {
   // Removed invalid import
 
   const handleSendNow = async (reminder) => {
-    // Prepare data
-    const shareData = {
-      customer: reminder.customerId, // Populated from backend
-      amount: reminder.customerId?.balance || 0, // Fallback if no specific bill
-      dueDate: reminder.scheduledDate,
-      isReminder: true,
-      shopDetails: user
-    };
-    
-    // User profile data (shop name) should ideally be passed
-    await shareToWhatsApp(shareData, user?.shopName);
-    
-    // Mark as sent in backend manually if we want (optional, but skipping for now as per requirements)
+    if (sendingReminderId) return;
+    try {
+      setSendingReminderId(reminder._id);
+      await api.post(`/reminders/${reminder._id}/send`);
+      queryClient.invalidateQueries(['reminders']);
+      toast.success(t('Reminder sent via WhatsApp successfully!'), { id: `send-reminder-${reminder._id}` });
+    } catch (err) {
+      console.error('Failed to send reminder directly:', err);
+      toast.error(err.response?.data?.message || t('Failed to send WhatsApp reminder.'), { id: `send-reminder-${reminder._id}` });
+    } finally {
+      setSendingReminderId(null);
+    }
   };
 
   const confirmSend = () => {
@@ -193,13 +198,6 @@ const Reminders = () => {
   }, [isAnyModalOpen]);
 
   const onSubmit = (data) => {
-    if (data.type === 'EMAIL') {
-      const selectedCustomer = customers.find(c => c._id === data.customerId);
-      if (!selectedCustomer?.email) {
-        toast.error(t('Customer email not provided! Please add customer email first or use WhatsApp reminder.'));
-        return;
-      }
-    }
     mutation.mutate(data);
   };
 
@@ -224,7 +222,7 @@ const Reminders = () => {
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Reminders')}</h1>
           <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed">
-            {t('Automate your payment recovery via WhatsApp and Email')}
+            {t('Send payment reminders directly to your customers via WhatsApp')}
           </p>
         </div>
         <button
@@ -452,12 +450,21 @@ const Reminders = () => {
                           </button>
                           {reminder.status !== 'SENT' && (
                             <button
+                              disabled={sendingReminderId === reminder._id}
                               onClick={() => handleSendNow(reminder)}
-                              className="cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
+                              className={`cursor-pointer font-medium px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap ${
+                                sendingReminderId === reminder._id
+                                  ? 'bg-gray-100 text-gray-400 border border-gray-200 cursor-wait'
+                                  : 'text-emerald-700 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100'
+                              }`}
                               title={t('Send Now')}
                             >
-                              <Send className="w-3.5 h-3.5 lg:mr-1.5 shrink-0" />
-                              <span className="hidden lg:inline">{t('Send')}</span>
+                              {sendingReminderId === reminder._id ? (
+                                <Loader2 className="w-3.5 h-3.5 lg:mr-1.5 shrink-0 animate-spin text-emerald-600" />
+                              ) : (
+                                <Send className="w-3.5 h-3.5 lg:mr-1.5 shrink-0" />
+                              )}
+                              <span className="hidden lg:inline">{sendingReminderId === reminder._id ? t('Sending...') : t('Send')}</span>
                             </button>
                           )}
                           <button
@@ -535,10 +542,20 @@ const Reminders = () => {
                     </button>
                     {reminder.status !== 'SENT' && (
                       <button
+                        disabled={sendingReminderId === reminder._id}
                         onClick={(e) => { e.stopPropagation(); handleSendNow(reminder); }}
-                        className="cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                        className={`cursor-pointer font-medium px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
+                          sendingReminderId === reminder._id
+                            ? 'bg-gray-100 text-gray-400 border border-gray-200 cursor-wait'
+                            : 'text-emerald-700 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100'
+                        }`}
                       >
-                        <Send className="w-3.5 h-3.5 mr-1.5 shrink-0" /> {t('Send')}
+                        {sendingReminderId === reminder._id ? (
+                          <Loader2 className="w-3.5 h-3.5 mr-1.5 shrink-0 animate-spin text-emerald-600" />
+                        ) : (
+                          <Send className="w-3.5 h-3.5 mr-1.5 shrink-0" />
+                        )}
+                        {sendingReminderId === reminder._id ? t('Sending...') : t('Send')}
                       </button>
                     )}
                     <button
@@ -643,6 +660,16 @@ const Reminders = () => {
                         <span className="leading-none pt-[1px]">{t(errors.customerId.message)}</span>
                       </p>
                     )}
+                    {customerExistingReminder && (
+                      <div className="mt-2 p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 text-xs flex items-start gap-2">
+                        <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-amber-600" />
+                        <span>
+                          {customerExistingReminder.status === 'PENDING'
+                            ? t('An active reminder is already pending for this customer.')
+                            : t('A reminder was already created for this customer today (Limit: 1 per day).')}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Message */}
@@ -692,31 +719,14 @@ const Reminders = () => {
                       className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                     >
                       <option value="WHATSAPP">WhatsApp</option>
-                      <option value="EMAIL">Email</option>
                     </select>
-
-                    {/* Warning message if EMAIL selected but customer has no email */}
-                    {selectedType === 'EMAIL' && selectedCustomerId && (() => {
-                      const customer = customers.find(c => c._id === selectedCustomerId);
-                      if (!customer?.email) {
-                        return (
-                          <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-2">
-                            <Mail className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-                            <p className="text-[11px] sm:text-xs text-amber-800 font-medium">
-                              ⚠️ {t('This customer does not have an email address. Please add their email first or use WhatsApp reminder.')}
-                            </p>
-                          </div>
-                        );
-                      }
-                      return null;
-                    })()}
                   </div>
 
                   {/* Submit Button */}
                   <div className="pt-2">
                     <button
                       type="submit"
-                      disabled={mutation.isPending}
+                      disabled={mutation.isPending || !!customerExistingReminder}
                       className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-lg px-5 py-2.5 font-semibold text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all shadow-none"
                     >
                       {mutation.isPending ? t('Saving...') : isEditMode ? t('Update Reminder') : t('Save Reminder')}

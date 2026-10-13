@@ -53,7 +53,7 @@ const CustomerLedger = ({ customer, onClose }) => {
       queryClient.invalidateQueries(['customers']);
       setAmount('');
       setRemarks('');
-      toast.success(type === 'GAVE' ? 'Amount given successfully!' : 'Amount received successfully!');
+      toast.success(type === 'GAVE' ? t('Udhar added & WhatsApp sent!') : t('Payment received & WhatsApp receipt sent!'));
     }
   });
 

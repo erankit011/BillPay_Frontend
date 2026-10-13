@@ -122,6 +122,7 @@ const resources = {
       "Failed to send invoice": "Failed to send invoice",
 
       "Automate your payment recovery via WhatsApp/Email": "Automate your payment recovery via WhatsApp/Email",
+      "Send payment reminders directly to your customers via WhatsApp": "Send payment reminders directly to your customers via WhatsApp",
       "No active reminders. Keep track of payments automatically.": "No active reminders. Keep track of payments automatically.",
       "Deleted Customer": "Deleted Customer",
       "Set Custom Reminder": "Set Custom Reminder",
@@ -440,7 +441,14 @@ const resources = {
       "Total Due": "Total Due",
       "Pending": "Pending",
       "View Bill": "View Bill",
-      "Send via WhatsApp": "Send via WhatsApp",
+      "WhatsApp Bill": "WhatsApp Bill",
+      "Send via WhatsApp": "WhatsApp Bill",
+      "Send Bill on WhatsApp": "WhatsApp Bill",
+      "Sending...": "Sending...",
+      "Wait Cooldown": "Wait Cooldown",
+      "Bill sent to customer via WhatsApp successfully!": "Bill sent to customer via WhatsApp successfully!",
+      "Bill sent via WhatsApp! Next reminder available after 30 minutes.": "Bill sent via WhatsApp! Next reminder available after 30 minutes.",
+      "Rate limit reached: Maximum 2 sends per 10 minutes. Blocked for 30 minutes.": "Rate limit reached: Maximum 2 sends per 10 minutes. Blocked for 30 minutes.",
       "Send via Email": "Send via Email",
       "Send Both": "Send Both",
       "Pend": "Pend",
@@ -645,7 +653,15 @@ const resources = {
       "Quick Cash Sale": "Quick Cash Sale",
       "Udhaar is not allowed for Quick Cash Sale. Please enter full amount paid.": "Udhaar is not allowed for Quick Cash Sale. Please enter full amount paid.",
       "Counter Sale": "Counter Sale",
-      "Udhaar is not allowed for Counter Sale. Please enter full amount paid.": "Udhaar is not allowed for Counter Sale. Please enter full amount paid."}
+      "Udhaar is not allowed for Counter Sale. Please enter full amount paid.": "Udhaar is not allowed for Counter Sale. Please enter full amount paid.",
+      "An active reminder is already pending for this customer.": "An active reminder is already pending for this customer.",
+      "A reminder was already created for this customer today (Limit: 1 per day).": "A reminder was already created for this customer today (Limit: 1 per day).",
+      "Udhar added & WhatsApp sent!": "Udhar added & WhatsApp sent!",
+      "Payment received & WhatsApp receipt sent!": "Payment received & WhatsApp receipt sent!",
+      "Bill created & WhatsApp invoice sent!": "Bill created & WhatsApp invoice sent!",
+      "Auto-Send WhatsApp Invoices": "Auto-Send WhatsApp Invoices",
+      "Automatically send invoice link to customer on WhatsApp after creating a bill": "Automatically send invoice link to customer on WhatsApp after creating a bill"
+    }
   },
   hi: {
     translation: {
@@ -831,6 +847,7 @@ const resources = {
       "Failed to send invoice": "बिल भेजने में विफल",
 
       "Automate your payment recovery via WhatsApp/Email": "WhatsApp/Email से पैसे की वसूली ऑटोमैटिक करें",
+      "Send payment reminders directly to your customers via WhatsApp": "अपने ग्राहकों को WhatsApp पर सीधे पेमेंट रिमाइंडर भेजें",
       "No active reminders. Keep track of payments automatically.": "कोई रिमाइंडर नहीं है। पेमेंट का ऑटोमैटिक ट्रैक रखें।",
       "Deleted Customer": "हटाया गया ग्राहक",
       "Set Custom Reminder": "नया रिमाइंडर सेट करें",
@@ -1151,7 +1168,14 @@ const resources = {
       "Pending": "बाकी है",
       "View Bill": "बिल देखें",
       "View": "देखें",
-      "Send via WhatsApp": "WhatsApp द्वारा भेजें",
+      "WhatsApp Bill": "WhatsApp बिल",
+      "Send via WhatsApp": "WhatsApp बिल",
+      "Send Bill on WhatsApp": "WhatsApp बिल",
+      "Sending...": "भेजा जा रहा है...",
+      "Wait Cooldown": "प्रतीक्षा करें",
+      "Bill sent to customer via WhatsApp successfully!": "बिल WhatsApp पर सफलतापूर्वक भेज दिया गया!",
+      "Bill sent via WhatsApp! Next reminder available after 30 minutes.": "बिल भेज दिया गया! अगला रिमाइंडर 30 मिनट बाद भेज सकते हैं।",
+      "Rate limit reached: Maximum 2 sends per 10 minutes. Blocked for 30 minutes.": "सीमा पूरी हो गई: 10 मिनट में 2 बार भेज सकते हैं। 30 मिनट तक ब्लॉक रहेगा।",
       "Send via Email": "ईमेल द्वारा भेजें",
       "Send Both": "दोनों भेजें",
       "Pend": "बाकी",
@@ -1381,7 +1405,14 @@ const resources = {
       "View Plans": "प्लान्स देखें",
       "Upgrade Plan": "प्लान अपग्रेड करें",
       "Get extra benefits": "अतिरिक्त फायदे पाएँ",
-      "Free trial expires in": "फ्री ट्रायल समाप्त होगा"
+      "Free trial expires in": "फ्री ट्रायल समाप्त होगा",
+      "An active reminder is already pending for this customer.": "इस ग्राहक के लिए पहले से एक रिमाइंडर पेंडिंग है।",
+      "A reminder was already created for this customer today (Limit: 1 per day).": "इस ग्राहक के लिए आज पहले ही रिमाइंडर बन चुका है (दिन में 1 मान्य)।",
+      "Udhar added & WhatsApp sent!": "उधार जुड़ गया और WhatsApp पर सूचना भेज दी गई!",
+      "Payment received & WhatsApp receipt sent!": "भुगतान प्राप्त हुआ और WhatsApp रसीद भेज दी गई!",
+      "Bill created & WhatsApp invoice sent!": "बिल बन गया और WhatsApp इनवॉइस भेज दिया गया!",
+      "Auto-Send WhatsApp Invoices": "ऑटो-सेंड WhatsApp इनवॉइस",
+      "Automatically send invoice link to customer on WhatsApp after creating a bill": "बिल बनाने के बाद ग्राहक को WhatsApp पर अपने आप इनवॉइस लिंक भेजें"
     }
   }
 };
