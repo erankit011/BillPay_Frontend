@@ -150,8 +150,10 @@ const MainLayout = () => {
     } finally {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('token');
+      localStorage.removeItem('isLoggedIn');
       dispatch(logout());
       setLogoutModalOpen(false);
+      window.location.href = '/login';
     }
   };
 

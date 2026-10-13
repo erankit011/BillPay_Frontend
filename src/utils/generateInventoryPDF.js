@@ -1,8 +1,10 @@
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
-
-export const generateInventoryPDF = (products, shopSettings, t, formatDate) => {
+export const generateInventoryPDF = async (products, shopSettings, t, formatDate) => {
   if (!products || products.length === 0) return;
+
+  const [{ jsPDF }, { default: autoTable }] = await Promise.all([
+    import('jspdf'),
+    import('jspdf-autotable')
+  ]);
 
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.width;

@@ -687,9 +687,9 @@ html {
 /* Mobile-First Responsive Utilities */
 @media (max-width: 640px) {
 
-  /* Better touch targets for mobile */
-  button,
-  a,
+  /* Better touch targets for mobile (exclude compact/custom-height buttons) */
+  button:not([class*="h-"]):not([class*="!min-h"]):not(.btn-compact),
+  a:not([class*="h-"]):not([class*="!min-h"]),
   .clickable {
     min-height: 44px;
     min-width: 44px;

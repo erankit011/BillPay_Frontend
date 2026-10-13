@@ -1,12 +1,15 @@
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import toast from 'react-hot-toast';
 
-export const generateStatementPDF = (filteredBills, filteredTransactions, statementPeriod, shopSettings, t, formatCurrency, formatDate) => {
+export const generateStatementPDF = async (filteredBills, filteredTransactions, statementPeriod, shopSettings, t, formatCurrency, formatDate) => {
   if (filteredBills.length === 0 && filteredTransactions.length === 0) {
     toast.error(t("No data available for the selected period."));
     return;
   }
+
+  const [{ jsPDF }, { default: autoTable }] = await Promise.all([
+    import('jspdf'),
+    import('jspdf-autotable')
+  ]);
 
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.width;

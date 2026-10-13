@@ -43,6 +43,18 @@ const BusinessSetup = () => {
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
+  const handleLogout = async () => {
+    try {
+      await api.post('/auth/logout');
+    } catch (e) {
+      // ignore
+    } finally {
+      localStorage.removeItem('isLoggedIn');
+      dispatch(logout());
+      window.location.href = '/login';
+    }
+  };
+
   const handleLogoUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -351,7 +363,7 @@ const BusinessSetup = () => {
               <div className="flex w-full sm:w-auto items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => dispatch(logout())}
+                  onClick={handleLogout}
                   className="cursor-pointer bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 sm:py-2.5 rounded-lg flex items-center justify-center font-semibold text-sm transition-colors duration-300 active:scale-[0.98] whitespace-nowrap"
                 >
                   {t('Logout')}
