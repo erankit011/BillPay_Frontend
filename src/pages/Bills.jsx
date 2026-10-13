@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery, keepPreviousData } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Search, FileText, Send, Loader2, Wallet, Users, Mail, MessageSquare, MoreVertical, IndianRupee, Eye, Filter, Download, Printer, Clock, Hash, TrendingUp } from 'lucide-react';
+import { Plus, Search, FileText, Send, Loader2, Wallet, Users, Mail, MessageSquare, MessageCircle, MoreVertical, IndianRupee, Eye, Filter, Download, Printer, Clock, Hash, TrendingUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { generateInvoicePDF } from '../utils/generateInvoicePDF';
@@ -15,7 +15,6 @@ import toast from 'react-hot-toast';
 
 import { formatCurrency } from '../utils/currency';
 import { formatDate } from '../utils/dateUtils';
-import { shareToWhatsApp } from '../utils/whatsappUtils';
 
 const getInitials = (name) => {
     if (!name) return 'CS';
@@ -101,6 +100,156 @@ const Bills = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [openDropdown]);
 
+    const [sendingBillId, setSendingBillId] = useState(null);
+    const [, setTimerTick] = useState(0);
+
+    // Cooldown state per bill: { [billId]: { count: number, cooldownUntil: number } }
+    const [cooldowns, setCooldowns] = useState(() => {
+        try {
+            const saved = localStorage.getItem('bill_whatsapp_cooldowns');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                const now = Date.now();
+                const cleaned = {};
+                for (const [id, val] of Object.entries(parsed)) {
+                    if (val.cooldownUntil && val.cooldownUntil > now) {
+                        cleaned[id] = val;
+                    }
+                }
+                return cleaned;
+            }
+        } catch (_e) {}
+        return {};
+    });
+
+    // Live countdown timer ticker (ticks every 1s when any cooldown is active)
+    useEffect(() => {
+        const hasActiveCooldown = Object.values(cooldowns).some(c => (c.cooldownUntil && c.cooldownUntil > Date.now()) || (c.firstSendAt && (Date.now() - c.firstSendAt < 10 * 60 * 1000)));
+        if (!hasActiveCooldown) return;
+
+        const interval = setInterval(() => {
+            const now = Date.now();
+            let changed = false;
+            const updated = { ...cooldowns };
+            for (const [id, val] of Object.entries(updated)) {
+                if (val.cooldownUntil && val.cooldownUntil <= now) {
+                    delete updated[id];
+                    changed = true;
+                } else if (!val.cooldownUntil && val.firstSendAt && (now - val.firstSendAt >= 10 * 60 * 1000)) {
+                    delete updated[id];
+                    changed = true;
+                }
+            }
+            if (changed) {
+                setCooldowns(updated);
+                localStorage.setItem('bill_whatsapp_cooldowns', JSON.stringify(updated));
+            } else {
+                setTimerTick(prev => prev + 1);
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [cooldowns]);
+
+    const getCooldownInfo = (billId) => {
+        const data = cooldowns[billId];
+        if (!data) {
+            return { isCooldown: false, remainingSeconds: 0, formatted: '', count: 0 };
+        }
+        if (data.firstSendAt && (Date.now() - data.firstSendAt >= 10 * 60 * 1000) && !data.cooldownUntil) {
+            return { isCooldown: false, remainingSeconds: 0, formatted: '', count: 0 };
+        }
+        if (!data.cooldownUntil) {
+            return { isCooldown: false, remainingSeconds: 0, formatted: '', count: data?.count || 0 };
+        }
+        const remaining = Math.max(0, Math.ceil((data.cooldownUntil - Date.now()) / 1000));
+        if (remaining <= 0) {
+            return { isCooldown: false, remainingSeconds: 0, formatted: '', count: 0 };
+        }
+        const mins = Math.floor(remaining / 60);
+        const secs = remaining % 60;
+        const formatted = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        return { isCooldown: true, remainingSeconds: remaining, formatted, count: data.count || 2 };
+    };
+
+    const handleSendInvoice = async (bill) => {
+        const billId = bill._id;
+        const cooldown = getCooldownInfo(billId);
+
+        if (cooldown.isCooldown) {
+            toast.error(
+                t('Rate limit active: Please wait {{time}} before sending another WhatsApp reminder for this bill.', { time: cooldown.formatted }),
+                { id: `cooldown-${billId}` }
+            );
+            return;
+        }
+
+        const customerPhone = bill.customerId?.phone;
+        if (!customerPhone || customerPhone.startsWith('000')) {
+            toast.error(t('Customer phone number is missing or invalid! WhatsApp reminder cannot be sent.'), { id: `phone-${billId}` });
+            return;
+        }
+
+        try {
+            setSendingBillId(billId);
+
+            const res = await api.post(`/bills/${billId}/send`);
+            const resData = res.data;
+
+            const updatedCooldowns = { ...cooldowns };
+            if (resData.isRateLimited && resData.cooldownUntil) {
+                updatedCooldowns[billId] = {
+                    count: 2,
+                    cooldownUntil: resData.cooldownUntil,
+                    firstSendAt: null
+                };
+            } else {
+                updatedCooldowns[billId] = {
+                    count: 1,
+                    firstSendAt: Date.now(),
+                    cooldownUntil: null
+                };
+            }
+            setCooldowns(updatedCooldowns);
+            localStorage.setItem('bill_whatsapp_cooldowns', JSON.stringify(updatedCooldowns));
+
+            if (resData.isRateLimited) {
+                toast.success(
+                    t('Bill sent via WhatsApp! Next reminder available after 30 minutes.'),
+                    { id: `send-bill-${billId}`, duration: 4000 }
+                );
+            } else {
+                toast.success(
+                    t('Bill sent to customer via WhatsApp successfully!'),
+                    { id: `send-bill-${billId}`, duration: 4000 }
+                );
+            }
+        } catch (err) {
+            console.error('Failed to send bill via WhatsApp:', err);
+            if (err.response?.status === 429) {
+                const cooldownUntil = err.response.data?.cooldownUntil || (Date.now() + (err.response.data?.remainingSeconds || 1800) * 1000);
+                const updatedCooldowns = {
+                    ...cooldowns,
+                    [billId]: { count: 2, cooldownUntil, firstSendAt: null }
+                };
+                setCooldowns(updatedCooldowns);
+                localStorage.setItem('bill_whatsapp_cooldowns', JSON.stringify(updatedCooldowns));
+
+                toast.error(
+                    err.response.data?.message || t('Rate limit reached: Maximum 2 sends per 10 minutes. Blocked for 30 minutes.'),
+                    { id: `send-bill-${billId}` }
+                );
+            } else {
+                toast.error(
+                    err.response?.data?.message || t('Failed to send WhatsApp reminder. Please check server WhatsApp connection.'),
+                    { id: `send-bill-${billId}` }
+                );
+            }
+        } finally {
+            setSendingBillId(null);
+        }
+    };
+
     const {
         data,
         isLoading,
@@ -150,49 +299,6 @@ const Bills = () => {
     const bills = data?.pages?.flatMap(page => page.data || []) || [];
     const viewBillId = searchParams.get('viewBill');
     const activeBill = viewBillId ? bills.find(b => b._id === viewBillId) : null;
-
-    const handleSendInvoice = async (billId, sendVia = 'whatsapp') => {
-        const bill = bills.find(b => b._id === billId);
-        
-        if (sendVia === 'whatsapp' || sendVia === 'both') {
-            if (!bill?.customerId?.phone) {
-                toast.error(t('Customer phone number not provided!'));
-                return;
-            }
-            
-            // Manual WhatsApp Share
-            await shareToWhatsApp({
-                customer: bill.customerId,
-                amount: bill.customerId?.balance ?? bill.grandTotal, // Use overall customer balance for Account Status
-                dueDate: bill.dueDate,
-                type: 'receipt', // assuming bill is a type of receipt/invoice
-                billNumber: bill.invoiceNumber,
-                billData: bill,
-                shopDetails: shopDetails,
-                shopSettings: shopSettings
-            }, shopDetails?.shopName, async () => {
-                await generateInvoicePDF(bill, shopDetails, 'download', t, shopSettings);
-            });
-
-            if (sendVia === 'whatsapp') return; // Stop if only WhatsApp was requested
-        }
-
-        // Email logic (backend)
-        if (sendVia === 'email' || sendVia === 'both') {
-            if (!bill?.customerId?.email) {
-                toast.error(t('Customer email not provided!'));
-                return;
-            }
-
-            const sendPromise = api.post(`/invoices/generate/${billId}`, { sendVia: 'email' });
-
-            toast.promise(sendPromise, {
-                loading: t('Sending email...'),
-                success: t('Invoice sent via email successfully!'),
-                error: (err) => t('Failed to send email') + ': ' + (err.response?.data?.message || err.message)
-            });
-        }
-    };
 
     const firstPage = data?.pages?.[0];
     const stats = firstPage?.stats || {
@@ -452,46 +558,57 @@ const Bills = () => {
                                                         {/* Dropdown Menu */}
                                                         {openDropdown === bill._id && (
                                                             <div className="absolute right-0 mt-2 w-60 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
-                                                                <button
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        handleSendInvoice(bill._id, 'whatsapp');
-                                                                        setOpenDropdown(null);
-                                                                    }}
-                                                                    className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95"
-                                                                >
-                                                                    <MessageSquare className="w-4 h-4 text-green-700 flex-shrink-0" />
-                                                                    <span>{t('Send via WhatsApp')}</span>
-                                                                </button>
-                                                                <button
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        handleSendInvoice(bill._id, 'email');
-                                                                        setOpenDropdown(null);
-                                                                    }}
-                                                                    className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                                                                    disabled={!bill.customerId?.email}
-                                                                >
-                                                                    <Mail className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
-                                                                    <span className={!bill.customerId?.email ? 'text-gray-400' : ''}>
-                                                                        {t('Send via Email')}
-                                                                        {!bill.customerId?.email && <span className="text-xs"> (No email)</span>}
-                                                                    </span>
-                                                                </button>
-                                                                <button
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        handleSendInvoice(bill._id, 'both');
-                                                                        setOpenDropdown(null);
-                                                                    }}
-                                                                    className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                                                                    disabled={!bill.customerId?.email || !bill.customerId?.phone}
-                                                                >
-                                                                    <Send className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
-                                                                    <span className={(!bill.customerId?.email || !bill.customerId?.phone) ? 'text-gray-400' : ''}>
-                                                                        {t('Send Both')}
-                                                                    </span>
-                                                                </button>
+                                                                {(() => {
+                                                                    const cooldown = getCooldownInfo(bill._id);
+                                                                    const isSending = sendingBillId === bill._id;
+                                                                    return (
+                                                                        <button
+                                                                            disabled={cooldown.isCooldown || isSending}
+                                                                            onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                if (!cooldown.isCooldown && !isSending) {
+                                                                                    handleSendInvoice(bill);
+                                                                                    setOpenDropdown(null);
+                                                                                }
+                                                                            }}
+                                                                            title={cooldown.isCooldown ? `Cooldown active: ${cooldown.formatted} remaining` : ''}
+                                                                            className={`w-full px-4 py-2.5 text-left transition-colors flex items-center justify-between text-sm font-medium ${
+                                                                                cooldown.isCooldown
+                                                                                    ? 'bg-amber-50/70 text-gray-400 cursor-not-allowed'
+                                                                                    : isSending
+                                                                                        ? 'bg-gray-50 text-gray-500 cursor-wait'
+                                                                                        : 'hover:bg-gray-50 text-gray-700 active:scale-95 cursor-pointer'
+                                                                            }`}
+                                                                        >
+                                                                                <div className="flex items-center gap-2 min-w-0">
+                                                                                    {isSending ? (
+                                                                                        <Loader2 className="w-4 h-4 text-green-600 animate-spin flex-shrink-0" />
+                                                                                    ) : cooldown.isCooldown ? (
+                                                                                        <Clock className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                                                                                    ) : (
+                                                                                        <MessageCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
+                                                                                    )}
+                                                                                    <span className="truncate font-medium">
+                                                                                        {isSending
+                                                                                            ? t('Sending...')
+                                                                                            : cooldown.isCooldown
+                                                                                                ? t('Wait Cooldown')
+                                                                                                : t('WhatsApp Bill')}
+                                                                                    </span>
+                                                                                </div>
+                                                                                {cooldown.isCooldown ? (
+                                                                                    <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200 shrink-0 ml-2">
+                                                                                        {cooldown.formatted}
+                                                                                    </span>
+                                                                                ) : !isSending && cooldown.count === 1 ? (
+                                                                                    <span className="text-[10px] text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded font-medium shrink-0 ml-2">
+                                                                                        1/2
+                                                                                    </span>
+                                                                                ) : null}
+                                                                        </button>
+                                                                    );
+                                                                })()}
+
                                                                 <button
                                                                     onClick={(e) => {
                                                                         e.stopPropagation();
@@ -613,46 +730,57 @@ const Bills = () => {
                                                 {/* Dropdown Menu */}
                                                 {openDropdown === bill._id && (
                                                     <div className="absolute right-0 mt-2 w-60 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleSendInvoice(bill._id, 'whatsapp');
-                                                                setOpenDropdown(null);
-                                                            }}
-                                                            className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95"
-                                                        >
-                                                            <MessageSquare className="w-4 h-4 text-green-700 flex-shrink-0" />
-                                                            <span>{t('Send via WhatsApp')}</span>
-                                                        </button>
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleSendInvoice(bill._id, 'email');
-                                                                setOpenDropdown(null);
-                                                            }}
-                                                            className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                                                            disabled={!bill.customerId?.email}
-                                                        >
-                                                            <Mail className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
-                                                            <span className={!bill.customerId?.email ? 'text-gray-400' : ''}>
-                                                                {t('Send via Email')}
-                                                                {!bill.customerId?.email && <span className="text-xs"> (No email)</span>}
-                                                            </span>
-                                                        </button>
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleSendInvoice(bill._id, 'both');
-                                                                setOpenDropdown(null);
-                                                            }}
-                                                            className="cursor-pointer w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm font-medium text-gray-700 active:scale-95 border-t border-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                                                            disabled={!bill.customerId?.email || !bill.customerId?.phone}
-                                                        >
-                                                            <Send className="w-4 h-4 text-[#093C5D] flex-shrink-0" />
-                                                            <span className={(!bill.customerId?.email || !bill.customerId?.phone) ? 'text-gray-400' : ''}>
-                                                                {t('Send Both')}
-                                                            </span>
-                                                        </button>
+                                                                {(() => {
+                                                                    const cooldown = getCooldownInfo(bill._id);
+                                                                    const isSending = sendingBillId === bill._id;
+                                                                    return (
+                                                                        <button
+                                                                            disabled={cooldown.isCooldown || isSending}
+                                                                            onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                if (!cooldown.isCooldown && !isSending) {
+                                                                                    handleSendInvoice(bill);
+                                                                                    setOpenDropdown(null);
+                                                                                }
+                                                                            }}
+                                                                            title={cooldown.isCooldown ? `Cooldown active: ${cooldown.formatted} remaining` : ''}
+                                                                            className={`w-full px-4 py-2.5 text-left transition-colors flex items-center justify-between text-sm font-medium ${
+                                                                                cooldown.isCooldown
+                                                                                    ? 'bg-amber-50/70 text-gray-400 cursor-not-allowed'
+                                                                                    : isSending
+                                                                                        ? 'bg-gray-50 text-gray-500 cursor-wait'
+                                                                                        : 'hover:bg-gray-50 text-gray-700 active:scale-95 cursor-pointer'
+                                                                            }`}
+                                                                        >
+                                                                                <div className="flex items-center gap-2 min-w-0">
+                                                                                    {isSending ? (
+                                                                                        <Loader2 className="w-4 h-4 text-green-600 animate-spin flex-shrink-0" />
+                                                                                    ) : cooldown.isCooldown ? (
+                                                                                        <Clock className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                                                                                    ) : (
+                                                                                        <MessageCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
+                                                                                    )}
+                                                                                    <span className="truncate font-medium">
+                                                                                        {isSending
+                                                                                            ? t('Sending...')
+                                                                                            : cooldown.isCooldown
+                                                                                                ? t('Wait Cooldown')
+                                                                                                : t('WhatsApp Bill')}
+                                                                                    </span>
+                                                                                </div>
+                                                                                {cooldown.isCooldown ? (
+                                                                                    <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200 shrink-0 ml-2">
+                                                                                        {cooldown.formatted}
+                                                                                    </span>
+                                                                                ) : !isSending && cooldown.count === 1 ? (
+                                                                                    <span className="text-[10px] text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded font-medium shrink-0 ml-2">
+                                                                                        1/2
+                                                                                    </span>
+                                                                                ) : null}
+                                                                        </button>
+                                                                    );
+                                                                })()}
+
                                                         <button
                                                             onClick={(e) => {
                                                                 e.stopPropagation();

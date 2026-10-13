@@ -660,6 +660,13 @@ const Settings = () => {
                   {/* Settings Toggles */}
                   <div className="mt-6 pt-5 border-t border-gray-100 space-y-4">
                     <ToggleSwitch
+                      name="autoSendInvoices"
+                      checked={formData.autoSendInvoices}
+                      onChange={handleChange}
+                      label={t('Auto-Send WhatsApp Invoices')}
+                      description={t('Automatically send invoice link to customer on WhatsApp after creating a bill')}
+                    />
+                    <ToggleSwitch
                       name="autoPrint"
                       checked={formData.autoPrint}
                       onChange={handleChange}

@@ -120,7 +120,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
       setIsModalOpen(false);
       reset();
       setBillError('');
-      toast.success(t('Bill created successfully!'));
+      toast.success(t('Bill created & WhatsApp invoice sent!'));
     },
     onError: (err) => {
       const errMsg = err.response?.data?.message || err.message;
