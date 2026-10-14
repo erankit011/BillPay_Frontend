@@ -1,9 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+// Purge any legacy token from localStorage to enforce strict httpOnly cookie security
+if (typeof window !== 'undefined') {
+  try {
+    localStorage.removeItem('accessToken');
+  } catch (e) {}
+}
+
+const hasSession = typeof window !== 'undefined' && localStorage.getItem('isLoggedIn') === 'true';
+
 const initialState = {
   user: null,
-  isAuthenticated: false,
-  isLoading: localStorage.getItem('isLoggedIn') === 'true', // Only show initial loader if user is logged in
+  isAuthenticated: hasSession,
+  isLoading: hasSession,
 };
 
 const authSlice = createSlice({
@@ -11,7 +20,8 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     loginSuccess: (state, action) => {
-      state.user = action.payload.user || action.payload;
+      const payload = action.payload.user || action.payload;
+      state.user = payload;
       state.isAuthenticated = true;
       state.isLoading = false;
       localStorage.setItem('isLoggedIn', 'true');

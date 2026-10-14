@@ -14,11 +14,16 @@ const ForgotPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email.trim())) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+
     setIsLoading(true);
 
-
     try {
-      const res = await api.post('/auth/forgot-password', { email });
+      const res = await api.post('/auth/forgot-password', { email: email.trim() });
       
       if (res.data.success) {
         setSuccess(true);
@@ -75,8 +80,6 @@ const ForgotPassword = () => {
             <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-[18px] sm:h-[18px] text-gray-400 pointer-events-none" />
             <input
               type="email"
-              pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-              title="Please enter a valid email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-full border bg-white pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]"

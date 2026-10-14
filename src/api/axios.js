@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true,
+  withCredentials: true, // Automatically sends and receives httpOnly cookies on every request
   headers: {
     'Content-Type': 'application/json',
   },
@@ -92,7 +92,7 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // 3. Handle Token Refresh on 401
+    // 3. Handle Token Refresh on 401 via httpOnly cookies
     if (error.response?.status === 401 && !originalRequest._retry) {
       // Don't attempt token refresh on auth endpoints (login, register, OTP, forgot/reset password, or refresh itself)
       const isAuthEndpoint =
@@ -108,7 +108,7 @@ api.interceptors.response.use(
         return Promise.reject(error);
       }
 
-      // If user was never logged in (e.g. visiting public page), don't attempt refresh
+      // If user was never logged in, don't attempt refresh
       if (localStorage.getItem('isLoggedIn') !== 'true') {
         return Promise.reject(error);
       }
