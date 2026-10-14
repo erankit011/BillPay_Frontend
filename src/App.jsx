@@ -31,9 +31,25 @@ const AuthInitializer = ({ children }) => {
 
   useEffect(() => {
     const initAuth = async () => {
-      // If user was never logged in, skip network call to prevent unnecessary 401s
+      // Only skip network call on public pages when not logged in
+      const isPublicPath = () => {
+        const path = window.location.pathname;
+        return (
+          path === '/' ||
+          path.startsWith('/login') ||
+          path.startsWith('/register') ||
+          path.startsWith('/verify') ||
+          path.startsWith('/forgot-password') ||
+          path.startsWith('/reset-password') ||
+          path.startsWith('/privacy') ||
+          path.startsWith('/terms') ||
+          path.startsWith('/bills/') ||
+          path.startsWith('/oauth-callback')
+        );
+      };
+
       const hasSession = localStorage.getItem('isLoggedIn') === 'true';
-      if (!hasSession) {
+      if (!hasSession && isPublicPath()) {
         dispatch(setLoading(false));
         return;
       }
