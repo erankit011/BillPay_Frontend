@@ -31,6 +31,14 @@ const AuthInitializer = ({ children }) => {
 
   useEffect(() => {
     const initAuth = async () => {
+      // If user was never logged in, skip network call to prevent unnecessary 401s
+      const hasSession = localStorage.getItem('isLoggedIn') === 'true';
+      if (!hasSession) {
+        dispatch(setLoading(false));
+        return;
+      }
+
+      // Hydrate authenticated user via secure httpOnly cookies
       try {
         const res = await api.get('/auth/me');
         if (res.data.success) {

@@ -1,0 +1,60 @@
+import { useEffect, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from '../redux/slices/authSlice';
+import api from '../api/axios';
+import SwirlingLoader from '../components/common/SwirlingLoader';
+import toast from 'react-hot-toast';
+
+const OAuthCallback = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const hasProcessed = useRef(false);
+
+  useEffect(() => {
+    if (hasProcessed.current) return;
+    hasProcessed.current = true;
+
+    const error = searchParams.get('error');
+    if (error) {
+      toast.error('Google sign in failed. Please try again.');
+      navigate('/login', { replace: true });
+      return;
+    }
+
+    // Hydrate user session purely via secure httpOnly cookies
+    api.get('/auth/me')
+      .then((res) => {
+        if (res.data.success) {
+          const user = res.data.data;
+          dispatch(loginSuccess({ user }));
+          toast.success(`Welcome, ${user.name || 'User'}!`);
+          
+          if (user.isBusinessSetupCompleted) {
+            navigate('/dashboard', { replace: true });
+          } else {
+            navigate('/setup-business', { replace: true });
+          }
+        } else {
+          toast.error('Failed to load user details.');
+          navigate('/login', { replace: true });
+        }
+      })
+      .catch((err) => {
+        toast.error(err.response?.data?.message || 'Authentication error. Please try again.');
+        navigate('/login', { replace: true });
+      });
+  }, [searchParams, navigate, dispatch]);
+
+  return (
+    <div className="flex h-screen items-center justify-center bg-gray-50">
+      <div className="text-center">
+        <SwirlingLoader className="w-12 h-12 text-[#093C5D] mx-auto mb-4" />
+        <p className="text-sm font-medium text-gray-600">Signing you in with Google...</p>
+      </div>
+    </div>
+  );
+};
+
+export default OAuthCallback;

@@ -31,11 +31,22 @@ const PrivacyPolicy = lazy(() => import('../pages/PrivacyPage'));
 const TermsOfService = lazy(() => import('../pages/TermsOfService'));
 const ContactSupport = lazy(() => import('../pages/ContactSupport'));
 
+import SwirlingLoader from '../components/common/SwirlingLoader';
+
 // Onboarding
 const BusinessSetup = lazy(() => import('../pages/BusinessSetup'));
+const OAuthCallback = lazy(() => import('../pages/OAuthCallback'));
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+        <SwirlingLoader className="w-12 h-12 text-[#093C5D]" />
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
@@ -55,7 +66,15 @@ const OnboardingRoute = ({ children }) => {
 };
 
 const PublicRoute = ({ children }) => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+        <SwirlingLoader className="w-12 h-12 text-[#093C5D]" />
+      </div>
+    );
+  }
 
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
@@ -108,6 +127,9 @@ const AppRoutes = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
         </Route>
+
+        {/* OAuth Callback Route */}
+        <Route path="/oauth-callback" element={<OAuthCallback />} />
 
         {/* Protected Dashboard Routes */}
         <Route element={

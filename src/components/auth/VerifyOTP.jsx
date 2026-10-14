@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
  */
 const VerifyOTP = ({ type = 'registration' }) => {
   const [otpValue, setOtpValue] = useState('');
-
+  const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [timer, setTimer] = useState(120);
@@ -79,26 +79,36 @@ const VerifyOTP = ({ type = 'registration' }) => {
   const handleOtpChange = (e) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 6);
     setOtpValue(value);
-
+    if (errorMessage) setErrorMessage('');
   };
 
   const handleVerify = async (e) => {
     e.preventDefault();
     if (otpValue.length !== 6) {
       toast.error('Please enter complete 6-digit code');
+      setErrorMessage('Please enter complete 6-digit code');
       return;
     }
     setIsLoading(true);
+    setErrorMessage('');
 
     try {
       const res = await api.post(currentConfig.verifyEndpoint, { email, otp: otpValue });
       if (res.data.success) {
         toast.success(t('OTP verified successfully!'));
-        dispatch(loginSuccess({ user: res.data.data }));
-        navigate('/dashboard');
+        const payloadData = res.data.data;
+        const userObj = payloadData?.user || payloadData;
+        dispatch(loginSuccess({ user: userObj }));
+        if (userObj && !userObj.isBusinessSetupCompleted) {
+          navigate('/setup-business', { replace: true });
+        } else {
+          navigate('/dashboard', { replace: true });
+        }
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Invalid code. Please try again.');
+      const msg = err.response?.data?.message || 'Invalid code. Please try again.';
+      toast.error(msg);
+      setErrorMessage(msg);
       setOtpValue('');
       inputRef.current?.focus();
     } finally {
@@ -161,7 +171,7 @@ const VerifyOTP = ({ type = 'registration' }) => {
               value={otpValue}
               onChange={handleOtpChange}
               className={`w-full rounded-full border bg-white pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none ${
-                error 
+                errorMessage 
                   ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
                   : 'border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]'
               }`}
@@ -171,6 +181,11 @@ const VerifyOTP = ({ type = 'registration' }) => {
               autoComplete="one-time-code"
             />
           </div>
+          {errorMessage && (
+            <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium text-left">
+              {errorMessage}
+            </p>
+          )}
         </div>
 
         {/* Timer / Resend Bar */}

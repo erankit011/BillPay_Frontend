@@ -248,8 +248,6 @@ const BusinessSetup = () => {
                     id="shopEmail"
                     name="shopEmail"
                     type="email"
-                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-                    title="Please enter a valid email address"
                     value={formData.shopEmail}
                     onChange={handleChange}
                     className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
