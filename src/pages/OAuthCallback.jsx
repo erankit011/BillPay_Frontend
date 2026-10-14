@@ -23,14 +23,24 @@ const OAuthCallback = () => {
       return;
     }
 
-    // Hydrate user session purely via secure httpOnly cookies
-    api.get('/auth/me')
-      .then((res) => {
-        if (res.data.success) {
-          const user = res.data.data;
+    const code = searchParams.get('code');
+
+    const finishAuth = async () => {
+      try {
+        let res;
+        if (code) {
+          // Direct AJAX POST exchange: sets httpOnly cookies reliably on standard 200 response
+          res = await api.post('/auth/google/exchange', { code });
+        } else {
+          // Fallback to checking existing cookie session
+          res = await api.get('/auth/me');
+        }
+
+        if (res.data?.success) {
+          const user = res.data.data?.user || res.data.data;
           dispatch(loginSuccess({ user }));
           toast.success(`Welcome, ${user.name || 'User'}!`);
-          
+
           if (user.isBusinessSetupCompleted) {
             navigate('/dashboard', { replace: true });
           } else {
@@ -40,11 +50,13 @@ const OAuthCallback = () => {
           toast.error('Failed to load user details.');
           navigate('/login', { replace: true });
         }
-      })
-      .catch((err) => {
+      } catch (err) {
         toast.error(err.response?.data?.message || 'Authentication error. Please try again.');
         navigate('/login', { replace: true });
-      });
+      }
+    };
+
+    finishAuth();
   }, [searchParams, navigate, dispatch]);
 
   return (
