@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: bakipay-frontend
+    name: udharpay-frontend
     env: static
     region: singapore
     plan: free
