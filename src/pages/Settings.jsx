@@ -55,11 +55,11 @@ const Settings = () => {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [activeSection, setActiveSection] = useState(() => {
-    return localStorage.getItem('billpay_settings_tab') || 'business';
+    return localStorage.getItem('udharpay_settings_tab') || 'business';
   });
 
   useEffect(() => {
-    localStorage.setItem('billpay_settings_tab', activeSection);
+    localStorage.setItem('udharpay_settings_tab', activeSection);
   }, [activeSection]);
 
   // Password state
