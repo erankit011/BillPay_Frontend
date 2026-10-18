@@ -6,7 +6,7 @@ import { Plus, Search, FileText, Send, Loader2, Wallet, Users, Mail, MessageSqua
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { generateInvoicePDF } from '../utils/generateInvoicePDF';
-import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
+import LoadMoreButton from '../components/common/LoadMoreButton';
 import CreateBillModal from '../components/bills/CreateBillModal';
 import ViewBillModal from '../components/bills/ViewBillModal';
 import SwirlingLoader from '../components/common/SwirlingLoader';
@@ -271,12 +271,15 @@ const Bills = () => {
 
 
 
+    // Only fetch 1000 customers/products when the create bill modal is actually opened
     const { data: customers = [] } = useQuery({
         queryKey: ['customers', 'all'],
         queryFn: async () => {
             const res = await api.get('/customers?limit=1000');
             return res.data.data.data || res.data.data || [];
-        }
+        },
+        enabled: isModalOpen,
+        staleTime: 2 * 60 * 1000,
     });
 
     const { data: products = [] } = useQuery({
@@ -284,7 +287,9 @@ const Bills = () => {
         queryFn: async () => {
             const res = await api.get('/products?limit=1000');
             return res.data.data.data || res.data.data || [];
-        }
+        },
+        enabled: isModalOpen,
+        staleTime: 2 * 60 * 1000,
     });
 
     const { data: shopSettings = {} } = useQuery({
@@ -298,9 +303,23 @@ const Bills = () => {
 
     const bills = data?.pages?.flatMap(page => page.data || []) || [];
     const viewBillId = searchParams.get('viewBill');
-    const activeBill = viewBillId ? bills.find(b => b._id === viewBillId) : null;
+    const cachedBill = viewBillId ? bills.find(b => b._id === viewBillId) : null;
+
+    // Fallback query if bill was opened via direct link or search and not in current page
+    const { data: fetchedBill } = useQuery({
+        queryKey: ['bill', viewBillId],
+        queryFn: async () => {
+            const res = await api.get(`/bills/${viewBillId}`);
+            return res.data.data;
+        },
+        enabled: Boolean(viewBillId && !cachedBill),
+        staleTime: 5 * 60 * 1000,
+    });
+
+    const activeBill = cachedBill || fetchedBill || null;
 
     const firstPage = data?.pages?.[0];
+    const totalCount = firstPage?.totalCount || 0;
     const stats = firstPage?.stats || {
         totalRevenue: 0, revenueGrowth: 0, pendingUdharTotal: 0, customersWithUdhar: 0,
         advanceTotal: 0, customersWithAdvance: 0, activeCustomers: 0, newCustomersThisWeek: 0,
@@ -439,7 +458,7 @@ const Bills = () => {
                     </div>
                     <input
                         type="text"
-                        placeholder={t("Search By Bill Or Customer")}
+                        placeholder={t("Search By Bill, Customer Name Or Phone")}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-white border border-gray-300 rounded-lg text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
@@ -640,12 +659,6 @@ const Bills = () => {
                                     ))}
                                 </tbody>
                             </table>
-
-                            <InfiniteScrollObserver
-                                hasNextPage={hasNextPage}
-                                isFetchingNextPage={isFetchingNextPage}
-                                fetchNextPage={fetchNextPage}
-                            />
                         </div>
 
                         {/* Mobile & Tablet Cards */}
@@ -812,19 +825,14 @@ const Bills = () => {
                             ))}
                         </div>
 
-                        {/* Loader + Intersection trigger */}
-                        {isFetchingNextPage && (
-                            <div className="flex justify-center items-center py-5">
-                                <div className="bg-white border border-gray-200 rounded-lg px-5 py-2.5 flex items-center gap-2.5">
-                                    <Loader2 className="w-4 h-4 animate-spin text-[#093C5D]" />
-                                    <span className="text-xs font-semibold text-gray-600 tracking-wide">{t('Loading more...')}</span>
-                                </div>
-                            </div>
-                        )}
-                        <InfiniteScrollObserver
+                        {/* Load More Button */}
+                        <LoadMoreButton
                             hasNextPage={hasNextPage}
                             isFetchingNextPage={isFetchingNextPage}
                             fetchNextPage={fetchNextPage}
+                            currentCount={bills.length}
+                            totalCount={totalCount}
+                            label={t('bills')}
                         />
 
                     </div>

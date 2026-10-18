@@ -27,6 +27,11 @@ let csrfToken = null;
 let fetchingCsrf = null;
 
 api.interceptors.request.use(async (config) => {
+  // If sending FormData, delete Content-Type so the browser sets multipart/form-data with the correct boundary
+  if (config.data instanceof FormData) {
+    delete config.headers['Content-Type'];
+  }
+
   // Methods that require CSRF token
   if (['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase())) {
     if (!csrfToken) {
@@ -53,14 +58,18 @@ api.interceptors.response.use(
     const isPublicPage = () => {
       const path = window.location.pathname;
       return (
+        path === '/' ||
         path.startsWith('/login') ||
         path.startsWith('/register') ||
         path.startsWith('/verify') ||
         path.startsWith('/forgot-password') ||
         path.startsWith('/reset-password') ||
         path.startsWith('/bills/') ||
+        path.startsWith('/invoice/public/') ||
         path.startsWith('/privacy') ||
-        path.startsWith('/terms')
+        path.startsWith('/terms') ||
+        path.startsWith('/contact-support') ||
+        path.startsWith('/oauth-callback')
       );
     };
 

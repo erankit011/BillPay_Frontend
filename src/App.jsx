@@ -43,6 +43,8 @@ const AuthInitializer = ({ children }) => {
           path.startsWith('/reset-password') ||
           path.startsWith('/privacy') ||
           path.startsWith('/terms') ||
+          path.startsWith('/contact-support') ||
+          path.startsWith('/invoice/public/') ||
           path.startsWith('/bills/') ||
           path.startsWith('/oauth-callback')
         );

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import api from '../api/axios';
@@ -24,12 +25,14 @@ const Dashboard = () => {
   // Use actual chart data, default to empty array if none
   const salesData = data?.chartData || [];
 
-  // Use for bar chart (convert name to date for backward compatibility)
-  const chartData = salesData.map(item => ({
-    date: item.name || item.date,
-    sales: item.sales,
-    collections: item.collections
-  }));
+  // Memoize chart data to avoid re-allocating array on every minor re-render
+  const chartData = useMemo(() => {
+    return salesData.map(item => ({
+      date: item.name || item.date,
+      sales: item.sales,
+      collections: item.collections
+    }));
+  }, [salesData]);
 
   if (isLoading) return (
     <div className="flex items-center justify-center min-h-[80vh]">
@@ -198,7 +201,7 @@ const Dashboard = () => {
 
         <div className="w-full h-[240px] md:h-[280px] lg:h-[320px] xl:h-[360px] bg-gray-50/50 rounded-lg p-2 md:p-3">
           {chartData.length > 0 ? (
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <BarChart
                 data={chartData}
                 margin={{ top: 20, right: 20, left: 0, bottom: 10 }}
@@ -295,7 +298,7 @@ const Dashboard = () => {
           </div>
 
           <div className="w-full h-[200px] md:h-[220px] lg:h-[250px]">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <AreaChart data={salesData} margin={{ top: 20, right: 20, left: -15, bottom: 10 }}>
                 <defs>
                   <linearGradient id="salesGradient" x1="0" y1="0" x2="0" y2="1">
@@ -370,7 +373,7 @@ const Dashboard = () => {
           </div>
 
           <div className="w-full h-[200px] md:h-[220px] lg:h-[250px]">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <AreaChart data={salesData} margin={{ top: 20, right: 20, left: -15, bottom: 10 }}>
                 <defs>
                   <linearGradient id="collectionsGradient" x1="0" y1="0" x2="0" y2="1">

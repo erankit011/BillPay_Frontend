@@ -945,6 +945,7 @@ const Settings = () => {
                                     <Link 
                                       to={`/platform-receipt/${inv._id}`} 
                                       target="_blank"
+                                      rel="noopener noreferrer"
                                       className="inline-flex items-center gap-1.5 text-[#093C5D] hover:text-[#072d46] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 py-1.5 rounded-md transition-colors"
                                     >
                                       <Download className="w-3.5 h-3.5" />
@@ -1011,6 +1012,7 @@ const Settings = () => {
                                   <Link 
                                     to={`/platform-receipt/${inv._id}`} 
                                     target="_blank"
+                                    rel="noopener noreferrer"
                                     className="inline-flex items-center justify-center gap-1.5 text-[#093C5D] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 sm:px-4 py-1.5 sm:py-2 rounded-md transition-colors text-xs sm:text-sm font-semibold w-full sm:w-auto border border-[#093C5D]/10 active:scale-95"
                                   >
                                     <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />

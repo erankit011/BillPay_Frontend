@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useInfiniteQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient, useQuery, keepPreviousData } from '@tanstack/react-query';
 import api from '../api/axios';
 import { Plus, Search, Phone, IndianRupee, History, Loader2, Edit, Trash2, Users, Wallet, FileText, Mail, Calendar, Clock, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import CustomerLedger from '../components/customers/CustomerLedger';
 import CustomerFormModal from '../components/customers/CustomerFormModal';
 import CustomerProfileModal from '../components/customers/CustomerProfileModal';
-import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
+import LoadMoreButton from '../components/common/LoadMoreButton';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import UpgradeModal from '../components/common/UpgradeModal';
 import toast from 'react-hot-toast';
@@ -90,9 +90,22 @@ const Customers = () => {
   });
 
   const viewTransactionId = searchParams.get('viewTransaction');
-  const activeCustomer = viewTransactionId && data?.pages
+  const cachedCustomer = viewTransactionId && data?.pages
     ? data.pages.flatMap(p => p.data || []).find(c => c._id === viewTransactionId)
     : null;
+
+  // Fallback query if customer was opened via deep link or search and not in current page
+  const { data: fetchedCustomer } = useQuery({
+    queryKey: ['customer', viewTransactionId],
+    queryFn: async () => {
+      const res = await api.get(`/customers/${viewTransactionId}`);
+      return res.data.data;
+    },
+    enabled: Boolean(viewTransactionId && !cachedCustomer),
+    staleTime: 2 * 60 * 1000,
+  });
+
+  const activeCustomer = cachedCustomer || fetchedCustomer || null;
 
   // Handle body scroll for delete modal
   useEffect(() => {
@@ -535,19 +548,14 @@ const Customers = () => {
               ))}
             </div>
 
-            {/* Loader + Intersection trigger */}
-            {isFetchingNextPage && (
-              <div className="flex justify-center items-center py-5">
-                <div className="bg-white border border-gray-200 rounded-lg px-5 py-2.5 flex items-center gap-2.5">
-                  <Loader2 className="w-4 h-4 animate-spin text-[#093C5D]" />
-                  <span className="text-xs font-semibold text-gray-600 tracking-wide">{t('Loading more...')}</span>
-                </div>
-              </div>
-            )}
-            <InfiniteScrollObserver
+            {/* Load More Button */}
+            <LoadMoreButton
               hasNextPage={hasNextPage}
               isFetchingNextPage={isFetchingNextPage}
               fetchNextPage={fetchNextPage}
+              currentCount={customers.length}
+              totalCount={totalCount}
+              label={t('customers')}
             />
           </div>
         )}

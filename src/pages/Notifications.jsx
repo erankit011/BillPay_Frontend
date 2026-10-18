@@ -2,7 +2,7 @@ import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-q
 import { Bell, Check, CheckCheck, Loader2 } from 'lucide-react';
 import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
-import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
+import LoadMoreButton from '../components/common/LoadMoreButton';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 
 const Notifications = () => {
@@ -29,6 +29,8 @@ const Notifications = () => {
   });
 
   const notifications = data?.pages?.flatMap(page => page.data || []) || [];
+  const firstPage = data?.pages?.[0];
+  const totalCount = firstPage?.totalCount || 0;
 
   const markReadMutation = useMutation({
     mutationFn: (notificationId) => api.patch(`/notifications/${notificationId}/read`),
@@ -195,10 +197,14 @@ const Notifications = () => {
                 </div>
               </div>
             ))}
-            <InfiniteScrollObserver
+            {/* Load More Button */}
+            <LoadMoreButton
               hasNextPage={hasNextPage}
               isFetchingNextPage={isFetchingNextPage}
               fetchNextPage={fetchNextPage}
+              currentCount={notifications.length}
+              totalCount={totalCount}
+              label={t('notifications')}
             />
           </div>
         )}

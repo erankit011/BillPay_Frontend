@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { generateInventoryPDF } from '../utils/generateInventoryPDF';
 import ProductFormModal from '../components/products/ProductFormModal';
 import ProductViewModal from '../components/products/ProductViewModal';
-import InfiniteScrollObserver from '../components/common/InfiniteScrollObserver';
+import LoadMoreButton from '../components/common/LoadMoreButton';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import toast from 'react-hot-toast';
 
@@ -209,6 +209,7 @@ const Products = () => {
 
   // Get EXACT stats from the first page backend response
   const firstPage = data?.pages?.[0];
+  const totalCount = firstPage?.totalCount || 0;
   const stats = {
     totalValue: firstPage?.totalValue || 0,
     activeItems: firstPage?.activeItems || 0,
@@ -305,7 +306,7 @@ const Products = () => {
           </div>
           <input
             type="text"
-            placeholder={t("Search By Product Name")}
+            placeholder={t("Search By Name, Barcode Or Category")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-white border border-gray-300 rounded-lg text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
@@ -467,22 +468,15 @@ const Products = () => {
               ))}
             </div>
 
-            {/* Loader + Intersection trigger */}
-            {isFetchingNextPage && (
-              <div className="flex justify-center items-center py-5">
-                <div className="bg-white border border-gray-200 rounded-lg px-5 py-2.5 flex items-center gap-2.5">
-                  <Loader2 className="w-4 h-4 animate-spin text-[#093C5D]" />
-                  <span className="text-xs font-semibold text-gray-600 tracking-wide">{t('Loading more...')}</span>
-                </div>
-              </div>
-            )}
-            <div className="mt-4">
-              <InfiniteScrollObserver
-                hasNextPage={hasNextPage}
-                isFetchingNextPage={isFetchingNextPage}
-                fetchNextPage={fetchNextPage}
-              />
-            </div>
+            {/* Load More Button */}
+            <LoadMoreButton
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              fetchNextPage={fetchNextPage}
+              currentCount={products.length}
+              totalCount={totalCount}
+              label={t('products')}
+            />
           </div>
         )}
       </div>
