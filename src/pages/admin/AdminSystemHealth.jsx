@@ -8,7 +8,8 @@ import {
   Image as ImageIcon,
   CreditCard,
   Cpu,
-  ShieldCheck
+  ShieldCheck,
+  RotateCcw
 } from 'lucide-react';
 import { getAdminSystemHealth } from '../../features/admin/api/adminApi';
 import HealthServiceCard from '../../features/admin/components/HealthServiceCard';
@@ -73,6 +74,16 @@ const AdminSystemHealth = () => {
             Real-time operational status of backend microservices, database clusters, server memory, and payment gateways.
           </p>
         </div>
+
+        <button
+          onClick={() => refetch()}
+          disabled={isFetching}
+          className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg flex items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all shadow-none disabled:opacity-70"
+          title="Refresh real-time system diagnostics"
+        >
+          <RotateCcw className={`w-4 h-4 mr-1.5 sm:mr-2 ${isFetching ? 'animate-spin' : ''}`} />
+          <span>{isFetching ? 'Refreshing...' : 'Refresh Status'}</span>
+        </button>
       </div>
 
       {/* Server Runtime & Memory Load Overview */}

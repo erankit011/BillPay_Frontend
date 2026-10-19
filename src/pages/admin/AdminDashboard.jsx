@@ -81,6 +81,7 @@ const AdminDashboard = () => {
   const planBreakdown = data?.planBreakdown || { FREE: 0, MONTHLY: 0, QUARTERLY: 0, YEARLY: 0 };
   const recentShops = data?.recentShops || [];
   const recentBills = data?.recentBills || [];
+  const recentInvoices = data?.recentInvoices || [];
   const signupTrend = data?.signupTrend || [];
   const revenueTrend = data?.revenueTrend || [];
 
@@ -190,6 +191,29 @@ const AdminDashboard = () => {
     }
   };
 
+  const getInvoiceStatusBadge = (status) => {
+    switch (status?.toLowerCase()) {
+      case 'success':
+        return (
+          <span className="inline-block px-2.5 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide border bg-green-50 text-green-700 border-green-200">
+            SUCCESS
+          </span>
+        );
+      case 'pending':
+        return (
+          <span className="inline-block px-2.5 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide border bg-amber-50 text-amber-700 border-amber-200">
+            PENDING
+          </span>
+        );
+      default:
+        return (
+          <span className="inline-block px-2.5 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide border bg-red-50 text-red-700 border-red-200">
+            FAILED
+          </span>
+        );
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[75vh]">
@@ -209,42 +233,13 @@ const AdminDashboard = () => {
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
-            Admin Dashboard Overview
-          </h1>
-          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
-            Real-time platform metrics, merchant registrations, subscription revenue, and billing activity across all stores.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-          <Link
-            to="/admin/shops"
-            className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-3.5 py-2 rounded-lg flex items-center justify-center gap-1.5 font-semibold text-xs transition-colors shadow-none whitespace-nowrap"
-            title="Inspect and manage all registered merchant stores"
-          >
-            <Store className="w-3.5 h-3.5" />
-            <span>Manage Merchants</span>
-          </Link>
-          <Link
-            to="/admin/bills"
-            className="cursor-pointer bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-3.5 py-2 rounded-lg flex items-center justify-center gap-1.5 font-semibold text-xs transition-colors shadow-none whitespace-nowrap"
-            title="Inspect all invoices generated across platform"
-          >
-            <FileText className="w-3.5 h-3.5 text-[#093C5D]" />
-            <span>Audit Bills</span>
-          </Link>
-          <Link
-            to="/admin/reports"
-            className="cursor-pointer bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-3.5 py-2 rounded-lg flex items-center justify-center gap-1.5 font-semibold text-xs transition-colors shadow-none whitespace-nowrap"
-            title="View financial analytics and merchant turnover reports"
-          >
-            <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Financial Reports</span>
-          </Link>
-        </div>
+      <div>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
+          Admin Dashboard Overview
+        </h1>
+        <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
+          Real-time platform metrics, merchant registrations, subscription revenue, and billing activity across all stores.
+        </p>
       </div>
 
       {/* KPI Cards Row (4-column real platform calculations, shadow-none, rounded-lg) */}
@@ -738,56 +733,63 @@ const AdminDashboard = () => {
               </div>
 
               {/* Bottom Footer */}
-              <div className="p-3 sm:px-4 bg-gray-50/60 border-t border-gray-200 flex items-center justify-between text-xs text-gray-500 font-medium">
+              <div className="p-3 sm:px-4 bg-gray-50/60 border-t border-gray-200 flex items-center text-xs text-gray-500 font-medium">
                 <span>Showing {recentShops.length} registered {recentShops.length === 1 ? 'store' : 'stores'}</span>
-                <Link to="/admin/shops" className="font-semibold text-[#093C5D] hover:underline inline-flex items-center gap-1">
-                  <span>All Merchants</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
               </div>
             </>
           )}
         </div>
 
-        {/* Recent Customer Invoices Table */}
+        {/* Recent Subscription Invoices Table */}
         <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-none flex flex-col justify-between h-full">
           <div className="p-4 sm:p-5 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-h-[78px]">
             <div>
-              <h3 className="text-sm sm:text-base font-semibold text-gray-900">Recent Customer Invoices</h3>
-              <p className="text-xs font-medium text-gray-500 mt-0.5">Live transaction stream & bills generated across all stores</p>
+              <h3 className="text-sm sm:text-base font-semibold text-gray-900">Recent Subscription Invoices</h3>
+              <p className="text-xs font-medium text-gray-500 mt-0.5">Live SaaS revenue receipts & membership fees collected from merchants</p>
             </div>
             <Link
-              to="/admin/bills"
+              to="/admin/subscriptions"
               className="cursor-pointer px-3.5 py-1.5 rounded-lg border border-gray-200 hover:border-[#093C5D]/40 bg-gray-50/80 hover:bg-blue-50/70 text-[#093C5D] text-xs font-semibold inline-flex items-center gap-1.5 transition-colors shadow-none whitespace-nowrap shrink-0"
-              title="Audit all invoices generated across platform"
+              title="Audit all platform subscriptions and revenue receipts"
             >
-              <span>Audit All Bills</span>
+              <span>Audit Subscriptions</span>
               <ArrowRight className="w-3.5 h-3.5 text-[#093C5D]" />
             </Link>
           </div>
 
-          {recentBills.length === 0 ? (
+          {recentInvoices.length === 0 ? (
             <div className="p-8 text-center text-gray-400 flex-1 flex flex-col items-center justify-center">
-              <Receipt className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-              <p className="text-xs font-medium text-gray-500">No customer invoices found. New store sales will appear here.</p>
+              <CreditCard className="w-10 h-10 text-gray-300 mx-auto mb-2" />
+              <p className="text-xs font-medium text-gray-500">No subscription receipts found. New plan purchases will appear here.</p>
             </div>
           ) : (
             <>
               {/* Mobile Card List (< sm) */}
               <div className="block sm:hidden divide-y divide-gray-100 flex-1">
-                {recentBills.map((bill) => (
-                  <div key={bill._id} className="p-3.5 space-y-2 hover:bg-gray-50/50 transition-colors">
+                {recentInvoices.map((inv) => (
+                  <div key={inv._id} className="p-3.5 space-y-2 hover:bg-gray-50/50 transition-colors">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="font-semibold text-xs text-[#093C5D]">#{bill.invoiceNumber}</span>
-                      {getBillStatusBadge(bill.paymentStatus)}
+                      <span className="font-mono text-xs font-semibold text-[#093C5D]">
+                        {inv.razorpayPaymentId || `#INV-${inv._id.toString().slice(-6).toUpperCase()}`}
+                      </span>
+                      {getInvoiceStatusBadge(inv.status)}
                     </div>
                     <div className="flex items-center justify-between text-xs pt-0.5">
                       <div className="min-w-0 pr-2">
-                        <span className="font-semibold text-gray-900 truncate block">{bill.shopId?.name || 'Unknown'}</span>
-                        <span className="text-[11px] text-gray-500 font-normal">Customer: {bill.customerId?.name || 'Walk-in'}</span>
+                        <span className="font-semibold text-gray-900 truncate block">
+                          {inv.shopId?.name || 'Merchant Store'}
+                        </span>
+                        <span className="text-[11px] text-gray-500 font-normal truncate block">
+                          {inv.shopId?.email || 'Store Owner'} • {inv.createdAt ? formatDate(inv.createdAt) : 'Live'}
+                        </span>
                       </div>
                       <div className="text-right shrink-0">
-                        <span className="font-semibold text-gray-900 text-xs sm:text-sm">{formatCurrency(bill.grandTotal)}</span>
+                        <span className="font-semibold text-gray-900 text-xs sm:text-sm block">
+                          {formatCurrency(inv.amount)}
+                        </span>
+                        <span className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-semibold uppercase tracking-wide border mt-1 ${getPlanBadge(inv.planName || inv.shopId?.subscriptionPlan)}`}>
+                          {inv.planName || inv.shopId?.subscriptionPlan || 'PRO'}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -799,34 +801,42 @@ const AdminDashboard = () => {
                 <table className="w-full text-left whitespace-nowrap">
                   <thead className="bg-gray-50/80 border-b border-gray-200 font-semibold text-gray-500 uppercase text-[11px] tracking-wider">
                     <tr>
-                      <th className="py-3 px-3.5">Invoice #</th>
+                      <th className="py-3 px-3.5">Payment ID</th>
                       <th className="py-3 px-3.5">Merchant Store</th>
-                      <th className="py-3 px-3.5">Customer Name</th>
-                      <th className="py-3 px-3.5 text-right">Grand Total</th>
-                      <th className="py-3 px-3.5 text-center">Payment Status</th>
+                      <th className="py-3 px-3 text-center">Plan Tier</th>
+                      <th className="py-3 px-3.5 text-right">Amount</th>
+                      <th className="py-3 px-3.5 text-center">Status</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 font-medium text-xs">
-                    {recentBills.map((bill) => (
-                      <tr key={bill._id} className="hover:bg-gray-50/60 transition-colors">
-                        <td className="py-3 px-3.5 align-middle font-semibold text-[#093C5D]">
-                          #{bill.invoiceNumber}
+                    {recentInvoices.map((inv) => (
+                      <tr key={inv._id} className="hover:bg-gray-50/60 transition-colors">
+                        <td className="py-3 px-3.5 align-middle">
+                          <div className="font-mono text-xs font-semibold text-[#093C5D]">
+                            {inv.razorpayPaymentId || `#INV-${inv._id.toString().slice(-6).toUpperCase()}`}
+                          </div>
+                          <div className="text-[11px] text-gray-500 font-normal">
+                            {inv.createdAt ? formatDate(inv.createdAt) : 'Live'}
+                          </div>
                         </td>
                         <td className="py-3 px-3.5 align-middle">
-                          <span className="font-semibold text-xs text-gray-900 truncate max-w-[110px] lg:max-w-[130px] block" title={bill.shopId?.name || 'Unknown'}>
-                            {bill.shopId?.name || 'Unknown'}
-                          </span>
+                          <div className="font-semibold text-xs text-gray-900 truncate max-w-[120px] lg:max-w-[140px]" title={inv.shopId?.name || 'Merchant Store'}>
+                            {inv.shopId?.name || 'Merchant Store'}
+                          </div>
+                          <div className="text-[11px] text-gray-500 font-normal truncate max-w-[120px] lg:max-w-[140px]" title={inv.shopId?.email || '-'}>
+                            {inv.shopId?.email || '-'}
+                          </div>
                         </td>
-                        <td className="py-3 px-3.5 align-middle">
-                          <span className="font-medium text-xs text-gray-600 truncate max-w-[100px] lg:max-w-[120px] block" title={bill.customerId?.name || 'Walk-in'}>
-                            {bill.customerId?.name || 'Walk-in'}
+                        <td className="py-3 px-3 align-middle text-center">
+                          <span className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide border ${getPlanBadge(inv.planName || inv.shopId?.subscriptionPlan)}`}>
+                            {inv.planName || inv.shopId?.subscriptionPlan || 'PRO'}
                           </span>
                         </td>
                         <td className="py-3 px-3.5 align-middle text-right font-semibold text-gray-900">
-                          {formatCurrency(bill.grandTotal)}
+                          {formatCurrency(inv.amount)}
                         </td>
                         <td className="py-3 px-3.5 align-middle text-center">
-                          {getBillStatusBadge(bill.paymentStatus)}
+                          {getInvoiceStatusBadge(inv.status)}
                         </td>
                       </tr>
                     ))}
@@ -835,12 +845,8 @@ const AdminDashboard = () => {
               </div>
 
               {/* Bottom Footer */}
-              <div className="p-3 sm:px-4 bg-gray-50/60 border-t border-gray-200 flex items-center justify-between text-xs text-gray-500 font-medium">
-                <span>Showing {recentBills.length} recent customer {recentBills.length === 1 ? 'bill' : 'bills'}</span>
-                <Link to="/admin/bills" className="font-semibold text-[#093C5D] hover:underline inline-flex items-center gap-1">
-                  <span>All Invoices</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
+              <div className="p-3 sm:px-4 bg-gray-50/60 border-t border-gray-200 flex items-center text-xs text-gray-500 font-medium">
+                <span>Showing {recentInvoices.length} recent subscription {recentInvoices.length === 1 ? 'receipt' : 'receipts'}</span>
               </div>
             </>
           )}

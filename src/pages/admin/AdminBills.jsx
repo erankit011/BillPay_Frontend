@@ -73,6 +73,15 @@ const AdminBills = () => {
     setPage(1);
   };
 
+  const getInitials = (name) => {
+    if (!name || typeof name !== 'string') return 'SH';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
+  };
+
   const getStatusBadge = (status) => {
     switch (status) {
       case 'PAID':
@@ -105,22 +114,17 @@ const AdminBills = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 tracking-tight">
-              Customer Invoices & Billing Ledger
-            </h1>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-lg bg-gray-100 text-gray-700 border border-gray-200">
-              {totalCount} Total Invoices
-            </span>
-          </div>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 tracking-tight">
+            Customer Invoices & Billing Ledger
+          </h1>
           <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
             Audit all itemized bills created by merchants across UdharPay. Track payment settlements, cash collections, and pending customer credit.
           </p>
         </div>
       </div>
 
-      {/* KPI Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* KPI Stat Cards (Shopkeeper standard 2x2 on mobile, 4 in row on desktop) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         <AdminStatCard
           title="TOTAL PLATFORM GMV"
           value={formatCurrency(totalGMV)}
@@ -270,98 +274,177 @@ const AdminBills = () => {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse whitespace-nowrap">
-              <thead>
-                <tr className="bg-gray-50/75 border-b border-gray-200 text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  <th className="py-3 px-4">Invoice #</th>
-                  <th className="py-3 px-4">Shop & Store Name</th>
-                  <th className="py-3 px-4">Merchant Owner</th>
-                  <th className="py-3 px-4">Customer Name</th>
-                  <th className="py-3 px-4">Grand Total</th>
-                  <th className="py-3 px-4">Amount Paid</th>
-                  <th className="py-3 px-4">Payment Status</th>
-                  <th className="py-3 px-4">Payment Mode</th>
-                  <th className="py-3 px-4">Issued Date</th>
-                  <th className="py-3 px-4 text-right">Inspect Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 text-sm font-medium text-gray-700">
-                {bills.map((bill) => (
-                  <tr key={bill._id} className="hover:bg-gray-50/80 transition-colors">
-                    {/* Invoice # */}
-                    <td className="py-3.5 px-4 font-semibold text-[#093C5D]">
-                      #{bill.invoiceNumber}
-                    </td>
+          <div>
+            {/* Desktop Table View (md+) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left border-collapse whitespace-nowrap">
+                <thead>
+                  <tr className="bg-gray-50/80 border-b border-gray-200 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    <th className="py-3 px-4">Invoice #</th>
+                    <th className="py-3 px-4">Shop & Store Name</th>
+                    <th className="py-3 px-4">Merchant Owner</th>
+                    <th className="py-3 px-4">Customer Name</th>
+                    <th className="py-3 px-4 text-right">Grand Total</th>
+                    <th className="py-3 px-4 text-right">Amount Paid</th>
+                    <th className="py-3 px-4 text-center">Payment Status</th>
+                    <th className="py-3 px-4 text-center">Payment Mode</th>
+                    <th className="py-3 px-4 text-left">Issued Date</th>
+                    <th className="py-3 px-4 text-right">Inspect Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 text-sm font-medium text-gray-700">
+                  {bills.map((bill) => (
+                    <tr key={bill._id} className="hover:bg-gray-50/60 transition-colors">
+                      {/* Invoice # */}
+                      <td className="py-3.5 px-4 font-semibold text-[#093C5D]">
+                        #{bill.invoiceNumber}
+                      </td>
 
-                    {/* Shop Name */}
-                    <td className="py-3.5 px-4">
-                      <div className="font-semibold text-gray-900 flex items-center gap-1.5">
-                        <Store className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-                        <span>{bill.shopId?.businessName || bill.shopId?.name || 'Shop'}</span>
+                      {/* Shop Name */}
+                      <td className="py-3.5 px-4">
+                        <div className="font-semibold text-gray-900 flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-[11px] font-semibold text-[#093C5D] shrink-0">
+                            {getInitials(bill.shopId?.businessName || bill.shopId?.name)}
+                          </div>
+                          <span className="truncate max-w-[160px]" title={bill.shopId?.businessName || bill.shopId?.name || 'Shop'}>
+                            {bill.shopId?.businessName || bill.shopId?.name || 'Shop'}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Merchant Owner */}
+                      <td className="py-3.5 px-4">
+                        <div className="font-semibold text-gray-900 truncate max-w-[140px]" title={bill.shopId?.name}>
+                          {bill.shopId?.name || 'Merchant'}
+                        </div>
+                        <div className="text-[11px] text-gray-500 font-normal truncate max-w-[140px]">{bill.shopId?.phone || bill.shopId?.email || '—'}</div>
+                      </td>
+
+                      {/* Customer */}
+                      <td className="py-3.5 px-4">
+                        <div className="font-semibold text-gray-900 truncate max-w-[140px]" title={bill.customerId?.name}>
+                          {bill.customerId?.name || 'Walk-in Customer'}
+                        </div>
+                        <div className="text-[11px] text-gray-500 font-normal truncate max-w-[140px]">{bill.customerId?.phone || '—'}</div>
+                      </td>
+
+                      {/* Grand Total */}
+                      <td className="py-3.5 px-4 text-right font-semibold text-gray-900">
+                        {formatCurrency(bill.grandTotal)}
+                      </td>
+
+                      {/* Amount Paid */}
+                      <td className="py-3.5 px-4 text-right text-emerald-700 font-semibold">
+                        {formatCurrency(bill.amountPaid || 0)}
+                      </td>
+
+                      {/* Status */}
+                      <td className="py-3.5 px-4 text-center">
+                        {getStatusBadge(bill.paymentStatus)}
+                      </td>
+
+                      {/* Mode */}
+                      <td className="py-3.5 px-4 text-center">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-100 text-gray-700 border border-gray-200 uppercase">
+                          {bill.paymentMode || 'CASH'}
+                        </span>
+                      </td>
+
+                      {/* Issued On */}
+                      <td className="py-3.5 px-4 text-left text-xs text-gray-500 font-normal">
+                        {formatDate(bill.createdAt)}
+                      </td>
+
+                      {/* Action */}
+                      <td className="py-3.5 px-4 text-right">
+                        <button
+                          onClick={() => setSelectedBill(bill)}
+                          className="cursor-pointer h-8 px-2.5 sm:px-3 text-blue-700 font-semibold bg-blue-50 border border-blue-200 hover:bg-blue-100 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
+                          title="Inspect itemized bill details, products, and payment breakdown"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                          <span>Inspect</span>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Cards View (< md) - Clean layout matching shopkeeper standard */}
+            <div className="md:hidden space-y-3 p-3 bg-gray-50/50">
+              {bills.map((bill) => {
+                const shopName = bill.shopId?.businessName || bill.shopId?.name || 'Shop';
+                const customerName = bill.customerId?.name || 'Walk-in Customer';
+
+                return (
+                  <div
+                    key={bill._id}
+                    className="bg-white border border-gray-200 rounded-lg p-3.5 space-y-3 shadow-none"
+                  >
+                    {/* Header: Shop Avatar, Name, Invoice Number & Status */}
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="w-8 h-8 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#093C5D] shrink-0">
+                          {getInitials(shopName)}
+                        </div>
+                        <div className="min-w-0">
+                          <h3 className="text-xs sm:text-sm font-semibold text-gray-900 truncate" title={shopName}>
+                            {shopName}
+                          </h3>
+                          <span className="font-mono text-[11px] font-semibold text-[#093C5D] block">
+                            #{bill.invoiceNumber}
+                          </span>
+                        </div>
                       </div>
-                    </td>
-
-                    {/* Merchant Owner */}
-                    <td className="py-3.5 px-4">
-                      <div className="font-semibold text-gray-900 flex items-center gap-1.5">
-                        <User className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-                        <span>{bill.shopId?.name || 'Merchant'}</span>
+                      <div className="shrink-0">
+                        {getStatusBadge(bill.paymentStatus)}
                       </div>
-                      <div className="text-[11px] text-gray-500">{bill.shopId?.phone || bill.shopId?.email || '—'}</div>
-                    </td>
+                    </div>
 
-                    {/* Customer */}
-                    <td className="py-3.5 px-4">
-                      <div className="font-semibold text-gray-900 flex items-center gap-1.5">
-                        <User className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-                        <span>{bill.customerId?.name || 'Walk-in Customer'}</span>
+                    {/* Customer & Date Info Strip */}
+                    <div className="bg-gray-50/80 border border-gray-200/80 rounded-lg p-2.5 flex items-center justify-between gap-2 text-xs">
+                      <div className="flex items-center gap-1.5 text-gray-900 font-semibold truncate min-w-0">
+                        <User className="w-3.5 h-3.5 text-[#093C5D] shrink-0" />
+                        <span className="truncate">{customerName}</span>
                       </div>
-                      <div className="text-[11px] text-gray-500">{bill.customerId?.phone || '—'}</div>
-                    </td>
+                      <div className="flex items-center gap-1.5 text-gray-500 font-medium shrink-0 text-[11px]">
+                        <Clock className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                        <span>{formatDate(bill.createdAt)}</span>
+                      </div>
+                    </div>
 
-                    {/* Grand Total */}
-                    <td className="py-3.5 px-4 font-semibold text-gray-900">
-                      {formatCurrency(bill.grandTotal)}
-                    </td>
+                    {/* Financial Figures Grid */}
+                    <div className="grid grid-cols-3 gap-2 text-center">
+                      <div className="bg-gray-50 border border-gray-200 rounded-lg py-2 px-1">
+                        <span className="text-[10px] font-semibold text-gray-500 uppercase block">Grand Total</span>
+                        <span className="text-xs sm:text-sm font-semibold text-gray-900 mt-0.5 block">{formatCurrency(bill.grandTotal)}</span>
+                      </div>
+                      <div className="bg-emerald-50/60 border border-emerald-200 rounded-lg py-2 px-1">
+                        <span className="text-[10px] font-semibold text-emerald-700 uppercase block">Paid</span>
+                        <span className="text-xs sm:text-sm font-semibold text-emerald-700 mt-0.5 block">{formatCurrency(bill.amountPaid || 0)}</span>
+                      </div>
+                      <div className="bg-gray-50 border border-gray-200 rounded-lg py-2 px-1">
+                        <span className="text-[10px] font-semibold text-gray-500 uppercase block">Mode</span>
+                        <span className="text-xs font-semibold text-gray-700 mt-0.5 block uppercase">{bill.paymentMode || 'CASH'}</span>
+                      </div>
+                    </div>
 
-                    {/* Amount Paid */}
-                    <td className="py-3.5 px-4 text-emerald-700 font-semibold">
-                      {formatCurrency(bill.amountPaid || 0)}
-                    </td>
-
-                    {/* Status */}
-                    <td className="py-3.5 px-4">
-                      {getStatusBadge(bill.paymentStatus)}
-                    </td>
-
-                    {/* Mode */}
-                    <td className="py-3.5 px-4">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-700 border border-gray-200">
-                        {bill.paymentMode || 'CASH'}
-                      </span>
-                    </td>
-
-                    {/* Issued On */}
-                    <td className="py-3.5 px-4 text-xs text-gray-500">
-                      {formatDate(bill.createdAt)}
-                    </td>
-
-                    {/* Action */}
-                    <td className="py-3.5 px-4 text-right">
+                    {/* Action Button */}
+                    <div className="pt-2 border-t border-gray-100">
                       <button
                         onClick={() => setSelectedBill(bill)}
-                        className="cursor-pointer inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-[#093C5D] bg-[#093C5D]/10 hover:bg-[#093C5D]/20 rounded-lg transition-colors"
-                        title="Inspect itemized bill details, products, and payment breakdown"
+                        className="cursor-pointer w-full h-8.5 text-blue-700 font-semibold bg-blue-50 border border-blue-200 hover:bg-blue-100 px-3 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
                       >
-                        <Eye className="w-3.5 h-3.5" />
-                        Inspect
+                        <Eye className="w-3.5 h-3.5 shrink-0" />
+                        <span>Inspect Bill Breakdown</span>
                       </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
 

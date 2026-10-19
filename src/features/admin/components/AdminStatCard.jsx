@@ -68,29 +68,29 @@ const AdminStatCard = ({
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.2 }}
-      className={`bg-white rounded-lg p-3.5 sm:p-4 md:p-4.5 flex flex-col justify-between min-h-[125px] sm:min-h-[135px] transition-all duration-200 overflow-hidden cursor-default shadow-none ${style.card}`}
+      className={`bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] transition-all duration-200 overflow-hidden cursor-default shadow-none ${style.card}`}
     >
       {/* Top Left Icon Box */}
       <div className="flex justify-between items-start gap-1">
-        <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center shrink-0 ${style.iconBg}`}>
-          {Icon && <Icon className="w-4 h-4 sm:w-5 sm:h-5" />}
+        <div className={`w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg flex items-center justify-center ${style.iconBg}`}>
+          {Icon && <Icon className="w-4 h-4 md:w-5 md:h-5" />}
         </div>
       </div>
 
       {/* Metric Content */}
-      <div className="mt-auto pt-2.5 sm:pt-3 min-w-0">
+      <div className="mt-auto pt-2 min-w-0">
         <p
-          className={`text-[10px] sm:text-[11px] md:text-xs font-semibold uppercase tracking-wider mb-0.5 sm:mb-1 truncate ${style.titleColor}`}
+          className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate"
           title={title}
         >
           {title}
         </p>
-        <p className={`text-xl sm:text-2xl font-bold tracking-tight truncate ${style.valueColor}`}>
+        <p className={`text-base md:text-lg xl:text-2xl font-semibold truncate ${style.valueColor}`}>
           {value}
         </p>
         {displaySubtext && (
           <p
-            className={`text-[10px] sm:text-xs font-medium truncate mt-0.5 sm:mt-1 ${style.subtextColor}`}
+            className={`text-[10px] md:text-xs font-medium truncate mt-0.5 ${style.subtextColor}`}
             title={displaySubtext}
           >
             {displaySubtext}

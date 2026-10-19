@@ -209,14 +209,9 @@ const AdminShops = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
-              Merchants Directory & Stores
-            </h1>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-lg bg-gray-100 text-gray-700 border border-gray-200">
-              {totalCount} Total Stores
-            </span>
-          </div>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
+            Merchants Directory & Stores
+          </h1>
           <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
             View, search, and manage registered merchant shops. Audit shop data, change subscription plans, or manage account suspension.
           </p>

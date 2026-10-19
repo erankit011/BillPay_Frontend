@@ -146,8 +146,8 @@ const AdminReports = () => {
         </div>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* KPI Cards (Shopkeeper standard 2x2 on mobile, 4 in row on desktop) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         <AdminStatCard
           title="TOTAL PLATFORM GMV"
           value={formatCurrency(totalPlatformGMV)}
