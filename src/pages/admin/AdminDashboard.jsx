@@ -56,12 +56,58 @@ const formatMonthYear = (val) => {
   return val;
 };
 
+// Custom interactive glassmorphic tooltip for growth chart
+const CustomGrowthTooltip = ({ active, payload, label }) => {
+  if (!active || !payload || !payload.length) return null;
+
+  const revenueItem = payload.find((p) => p.dataKey === 'revenue');
+  const shopsItem = payload.find((p) => p.dataKey === 'shops');
+
+  return (
+    <div className="bg-white/95 backdrop-blur-md border border-gray-200/90 rounded-lg shadow-lg p-3 min-w-[210px] select-none animate-in fade-in zoom-in-95 duration-100">
+      <div className="flex items-center justify-between pb-2 mb-2 border-b border-gray-100">
+        <span className="text-xs font-semibold text-[#093C5D]">
+          {formatMonthYear(label)}
+        </span>
+        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 uppercase tracking-wider">
+          Timeline
+        </span>
+      </div>
+
+      <div className="space-y-2">
+        {/* Stores row */}
+        <div className="flex items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#093C5D] shrink-0" />
+            <span className="text-gray-600 font-medium">New Stores:</span>
+          </div>
+          <span className="font-semibold text-gray-900">
+            {shopsItem?.value || 0} {shopsItem?.value === 1 ? 'store' : 'stores'}
+          </span>
+        </div>
+
+        {/* Revenue row */}
+        <div className="flex items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#10B981] shrink-0" />
+            <span className="text-gray-600 font-medium">Subscription Rev:</span>
+          </div>
+          <span className="font-semibold text-emerald-700">
+            {formatCurrency(revenueItem?.value || 0)}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const AdminDashboard = () => {
   const queryClient = useQueryClient();
   const [inspectShop, setInspectShop] = useState(null);
   const [suspendModalShop, setSuspendModalShop] = useState(null);
   const [planModalShop, setPlanModalShop] = useState(null);
   const [logoutModalShop, setLogoutModalShop] = useState(null);
+  const [chartViewMode, setChartViewMode] = useState('ALL'); // 'ALL' | 'REVENUE' | 'STORES'
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['adminOverview'],
@@ -145,6 +191,38 @@ const AdminDashboard = () => {
 
     return Array.from(map.values()).sort((a, b) => a.month.localeCompare(b.month));
   }, [signupTrend, revenueTrend, totalShops, totalRevenue]);
+
+  const { totalStoresInPeriod, totalRevenueInPeriod, revTicks, shopTicks, avgRevPerStore } = useMemo(() => {
+    let stores = 0;
+    let rev = 0;
+    let maxR = 0;
+    let maxS = 0;
+
+    chartData.forEach((d) => {
+      stores += d.shops || 0;
+      rev += d.revenue || 0;
+      if ((d.revenue || 0) > maxR) maxR = d.revenue;
+      if ((d.shops || 0) > maxS) maxS = d.shops;
+    });
+
+    const safeMaxRevenue = Math.max(maxR, 500);
+    const stepRev = Math.ceil(safeMaxRevenue / 4 / 100) * 100 || 250;
+    const rTicks = [0, stepRev, stepRev * 2, stepRev * 3, stepRev * 4];
+
+    const safeMaxShops = Math.max(maxS, 4);
+    const stepShops = Math.max(1, Math.ceil(safeMaxShops / 4));
+    const sTicks = [0, stepShops, stepShops * 2, stepShops * 3, stepShops * 4];
+
+    const avg = stores > 0 ? Math.round(rev / stores) : 0;
+
+    return {
+      totalStoresInPeriod: stores,
+      totalRevenueInPeriod: rev,
+      revTicks: rTicks,
+      shopTicks: sTicks,
+      avgRevPerStore: avg,
+    };
+  }, [chartData]);
 
   const getInitials = (name) => {
     if (!name) return 'SH';
@@ -323,7 +401,7 @@ const AdminDashboard = () => {
               <Store className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-xs font-semibold text-gray-500 uppercase block">Active Merchants</span>
+              <span className="text-xs font-semibold text-gray-500 uppercase block">Active Stores</span>
               <span className="text-base font-semibold text-gray-900">{totalShops} Stores ({activeSubscribers} Pro)</span>
             </div>
           </div>
@@ -332,7 +410,7 @@ const AdminDashboard = () => {
             className="text-xs font-semibold text-purple-700 hover:underline flex items-center gap-1"
             title="Inspect and manage all registered merchant stores"
           >
-            All Merchants <ArrowRight className="w-3 h-3" />
+            All Stores <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
       </div>
@@ -341,46 +419,154 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-5">
         {/* Growth Trends Chart (2 Columns) */}
         <div className="lg:col-span-2 bg-white rounded-lg border border-gray-200 p-4 sm:p-5 shadow-none flex flex-col justify-between">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-4">
-            <div>
-              <h3 className="text-sm sm:text-base font-semibold text-gray-900">
-                Merchant Signups & Platform Growth
-              </h3>
-              <p className="text-xs font-medium text-gray-500 mt-0.5">
-                Monthly trajectory of new shops onboarded & subscription receipts
-              </p>
+          <div>
+            {/* Header: Title + View Switcher */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
+              <div>
+                <h3 className="text-sm sm:text-base font-semibold text-gray-900">
+                  Store Signups & Platform Growth
+                </h3>
+                <p className="text-xs font-medium text-gray-500 mt-0.5">
+                  Monthly trajectory of new stores onboarded & subscription revenue
+                </p>
+              </div>
+
+              {/* Segmented View Switcher */}
+              <div
+                role="tablist"
+                aria-label="Filter chart by series"
+                className="self-start sm:self-auto inline-flex items-center p-1 bg-gray-100 rounded-lg border border-gray-200 gap-1 text-xs shadow-none"
+              >
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={chartViewMode === 'ALL'}
+                  onClick={() => setChartViewMode('ALL')}
+                  className={`cursor-pointer inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all select-none shadow-none active:scale-95 ${
+                    chartViewMode === 'ALL'
+                      ? 'bg-white text-gray-900 border border-gray-200'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/70 border border-transparent'
+                  }`}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full transition-colors ${chartViewMode === 'ALL' ? 'bg-[#093C5D]' : 'bg-gray-400'}`} />
+                  Combined
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={chartViewMode === 'REVENUE'}
+                  onClick={() => setChartViewMode('REVENUE')}
+                  className={`cursor-pointer inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all select-none shadow-none active:scale-95 ${
+                    chartViewMode === 'REVENUE'
+                      ? 'bg-white text-emerald-700 border border-emerald-200'
+                      : 'text-gray-600 hover:text-emerald-700 hover:bg-gray-200/70 border border-transparent'
+                  }`}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full transition-colors ${chartViewMode === 'REVENUE' ? 'bg-[#10B981]' : 'bg-gray-400'}`} />
+                  Revenue
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={chartViewMode === 'STORES'}
+                  onClick={() => setChartViewMode('STORES')}
+                  className={`cursor-pointer inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all select-none shadow-none active:scale-95 ${
+                    chartViewMode === 'STORES'
+                      ? 'bg-white text-[#093C5D] border border-blue-200'
+                      : 'text-gray-600 hover:text-[#093C5D] hover:bg-gray-200/70 border border-transparent'
+                  }`}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full transition-colors ${chartViewMode === 'STORES' ? 'bg-[#093C5D]' : 'bg-gray-400'}`} />
+                  Stores
+                </button>
+              </div>
             </div>
-            <div className="self-start sm:self-auto px-2 py-0.5 rounded bg-gray-50 border border-gray-200 text-[11px] font-medium text-gray-600">
-              Active Timeline
+
+            {/* 3 Executive Stat Tiles */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-3 sm:mb-4">
+              {/* Card 1: New Stores */}
+              <div className="p-2.5 rounded-lg bg-gray-50/90 border border-gray-200/80 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] uppercase font-medium text-gray-500 tracking-wider block">Stores Onboarded</span>
+                  <span className="text-sm sm:text-base font-semibold text-gray-900 mt-0.5 block">
+                    {totalStoresInPeriod} {totalStoresInPeriod === 1 ? 'store' : 'stores'}
+                  </span>
+                </div>
+                <div className="w-8 h-8 rounded-lg bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center shrink-0">
+                  <Store className="w-4 h-4" />
+                </div>
+              </div>
+
+              {/* Card 2: Subscription Revenue */}
+              <div className="p-2.5 rounded-lg bg-emerald-50/50 border border-emerald-200/70 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] uppercase font-medium text-emerald-800 tracking-wider block">Subscription Revenue</span>
+                  <span className="text-sm sm:text-base font-semibold text-emerald-700 mt-0.5 block">
+                    {formatCurrency(totalRevenueInPeriod)}
+                  </span>
+                </div>
+                <div className="w-8 h-8 rounded-lg bg-emerald-100/70 text-emerald-700 flex items-center justify-center shrink-0">
+                  <IndianRupee className="w-4 h-4" />
+                </div>
+              </div>
+
+              {/* Card 3: Avg per Store */}
+              <div className="p-2.5 rounded-lg bg-blue-50/50 border border-blue-200/70 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] uppercase font-medium text-blue-800 tracking-wider block">Avg Revenue / Store</span>
+                  <span className="text-sm sm:text-base font-semibold text-[#093C5D] mt-0.5 block">
+                    {formatCurrency(avgRevPerStore)}
+                  </span>
+                </div>
+                <div className="w-8 h-8 rounded-lg bg-blue-100/70 text-[#093C5D] flex items-center justify-center shrink-0">
+                  <TrendingUp className="w-4 h-4" />
+                </div>
+              </div>
             </div>
           </div>
 
+          {/* Chart Canvas */}
           <div className="h-[270px] sm:h-[310px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={chartData} margin={{ top: 12, right: 10, left: -15, bottom: 0 }}>
+              <ComposedChart data={chartData} margin={{ top: 12, right: 8, left: -10, bottom: 0 }}>
                 <defs>
-                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#10B981" stopOpacity={0.0} />
+                  <linearGradient id="growthRevenueGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.28} />
+                    <stop offset="60%" stopColor="#10B981" stopOpacity={0.06} />
+                    <stop offset="100%" stopColor="#10B981" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="#E2E8F0"
+                />
                 <XAxis
                   dataKey="month"
                   stroke="#9CA3AF"
                   fontSize={11}
                   tickLine={false}
                   tickFormatter={formatMonthYear}
+                  dy={4}
                 />
+                {/* Left Y Axis: Revenue or Stores depending on mode */}
                 <YAxis
                   yAxisId="left"
                   stroke="#9CA3AF"
                   fontSize={11}
                   tickLine={false}
                   axisLine={false}
-                  domain={[0, (dataMax) => Math.max(500, Math.ceil((dataMax * 1.15) / 100) * 100)]}
-                  tickFormatter={(v) => `₹${v.toLocaleString('en-IN')}`}
+                  ticks={chartViewMode === 'STORES' ? shopTicks : revTicks}
+                  domain={[0, chartViewMode === 'STORES' ? shopTicks[4] : revTicks[4]]}
+                  tickFormatter={(v) =>
+                    chartViewMode === 'STORES'
+                      ? `${v}`
+                      : v >= 1000
+                      ? `₹${(v / 1000).toFixed(v % 1000 === 0 ? 0 : 1)}k`
+                      : `₹${v}`
+                  }
                 />
+                {/* Right Y Axis: Stores (only in combined mode) */}
                 <YAxis
                   yAxisId="right"
                   orientation="right"
@@ -388,57 +574,43 @@ const AdminDashboard = () => {
                   fontSize={11}
                   tickLine={false}
                   axisLine={false}
-                  domain={[0, (dataMax) => Math.max(3, dataMax + 1)]}
+                  hide={chartViewMode !== 'ALL'}
+                  ticks={shopTicks}
+                  domain={[0, shopTicks[4]]}
                   allowDecimals={false}
                 />
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E5E7EB',
-                    borderRadius: '8px',
-                    fontSize: '12px',
-                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-                    color: '#111827',
-                  }}
-                  labelStyle={{ color: '#093C5D', fontWeight: 600, marginBottom: '4px' }}
-                  labelFormatter={(label) => formatMonthYear(label)}
-                  formatter={(value, name, item) => {
-                    const isRevenue = item?.dataKey === 'revenue' || name?.toLowerCase().includes('revenue');
-                    return [
-                      isRevenue ? formatCurrency(value) : `${value} ${value === 1 ? 'store' : 'stores'}`,
-                      isRevenue ? 'Subscription Revenue' : 'New Stores Onboarded',
-                    ];
-                  }}
+                  content={<CustomGrowthTooltip />}
+                  cursor={{ fill: 'rgba(9, 60, 93, 0.04)', radius: 6 }}
                 />
-                <Legend
-                  verticalAlign="top"
-                  align="right"
-                  iconType="circle"
-                  wrapperStyle={{ paddingBottom: '12px', fontSize: '11px', fontWeight: '500' }}
-                  formatter={(value) => (value === 'Revenue (₹)' ? 'Subscription Revenue (₹)' : 'New Stores Onboarded')}
-                />
-                <Area
-                  yAxisId="left"
-                  type="monotone"
-                  dataKey="revenue"
-                  name="Revenue (₹)"
-                  stroke="#10B981"
-                  strokeWidth={2.5}
-                  dot={{ r: 4, fill: '#10B981', stroke: '#ffffff', strokeWidth: 2 }}
-                  activeDot={{ r: 6 }}
-                  fillOpacity={1}
-                  fill="url(#colorRevenue)"
-                />
-                <Line
-                  yAxisId="right"
-                  type="monotone"
-                  dataKey="shops"
-                  name="New Shops"
-                  stroke="#093C5D"
-                  strokeWidth={2.5}
-                  dot={{ r: 4, fill: '#093C5D', stroke: '#ffffff', strokeWidth: 2 }}
-                  activeDot={{ r: 6 }}
-                />
+
+                {/* Hybrid: Stores rendered as crisp rounded modern bars */}
+                {(chartViewMode === 'ALL' || chartViewMode === 'STORES') && (
+                  <Bar
+                    yAxisId={chartViewMode === 'STORES' ? 'left' : 'right'}
+                    dataKey="shops"
+                    name="New Stores Onboarded"
+                    fill="#093C5D"
+                    radius={[4, 4, 0, 0]}
+                    maxBarSize={chartViewMode === 'STORES' ? 42 : 32}
+                  />
+                )}
+
+                {/* Hybrid: Revenue rendered as smooth glowing area wave */}
+                {(chartViewMode === 'ALL' || chartViewMode === 'REVENUE') && (
+                  <Area
+                    yAxisId="left"
+                    type="monotone"
+                    dataKey="revenue"
+                    name="Subscription Revenue (₹)"
+                    stroke="#10B981"
+                    strokeWidth={2.5}
+                    dot={{ r: 4.5, fill: '#10B981', stroke: '#ffffff', strokeWidth: 2 }}
+                    activeDot={{ r: 6.5, fill: '#10B981', stroke: '#ffffff', strokeWidth: 2.5 }}
+                    fillOpacity={1}
+                    fill="url(#growthRevenueGrad)"
+                  />
+                )}
               </ComposedChart>
             </ResponsiveContainer>
           </div>
