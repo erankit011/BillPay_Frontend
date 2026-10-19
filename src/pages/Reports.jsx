@@ -183,7 +183,7 @@ const Reports = () => {
             </div>
           </div>
           <div className="w-full h-[220px] md:h-[250px] lg:h-[280px]">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <AreaChart data={salesData} margin={{ top: 20, right: 20, left: -15, bottom: 10 }}>
                 <defs>
                   <linearGradient id="salesGradient" x1="0" y1="0" x2="0" y2="1">
@@ -251,7 +251,7 @@ const Reports = () => {
             </div>
           </div>
           <div className="w-full h-[220px] md:h-[250px] lg:h-[280px]">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <AreaChart data={salesData} margin={{ top: 20, right: 20, left: -15, bottom: 10 }}>
                 <defs>
                   <linearGradient id="collectionsGradient" x1="0" y1="0" x2="0" y2="1">

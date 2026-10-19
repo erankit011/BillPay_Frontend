@@ -38,6 +38,17 @@ const CustomerLedger = ({ customer, onClose }) => {
     };
   }, []);
 
+  const { data: liveCustomer = customer } = useQuery({
+    queryKey: ['customer', customer?._id],
+    queryFn: async () => {
+      const res = await api.get(`/customers/${customer._id}`);
+      return res.data.data;
+    },
+    initialData: customer,
+    enabled: Boolean(customer?._id),
+    staleTime: 30 * 1000,
+  });
+
   const { data: transactions = [], isLoading } = useQuery({
     queryKey: ['transactions', customer._id],
     queryFn: async () => {
@@ -50,10 +61,11 @@ const CustomerLedger = ({ customer, onClose }) => {
     mutationFn: (newTx) => api.post('/transactions', newTx),
     onSuccess: () => {
       queryClient.invalidateQueries(['transactions', customer._id]);
+      queryClient.invalidateQueries(['customer', customer._id]);
       queryClient.invalidateQueries(['customers']);
       setAmount('');
       setRemarks('');
-      toast.success(type === 'GAVE' ? t('Udhar added & WhatsApp sent!') : t('Payment received & WhatsApp receipt sent!'));
+      toast.success(txType === 'UDHAR' ? t('Udhar added & WhatsApp sent!') : t('Payment received & WhatsApp receipt sent!'));
     }
   });
 
@@ -114,20 +126,20 @@ const CustomerLedger = ({ customer, onClose }) => {
 
                 {/* Customer Info */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-lg sm:text-[19px] font-semibold text-gray-900 leading-tight truncate">{customer.name}</h3>
+                  <h3 className="text-lg sm:text-[19px] font-semibold text-gray-900 leading-tight truncate">{liveCustomer.name}</h3>
                   <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
                     <p className="text-gray-500 text-xs sm:text-[13px] flex items-center font-medium">
-                      <Phone className="w-3.5 h-3.5 mr-1.5 text-gray-400" /> {customer.phone}
+                      <Phone className="w-3.5 h-3.5 mr-1.5 text-gray-400" /> {liveCustomer.phone}
                     </p>
                     <span className="text-gray-300 hidden sm:inline-block">|</span>
                     <p className="text-gray-500 text-xs sm:text-[13px] flex items-center font-medium">
                       <Calendar className="w-3.5 h-3.5 mr-1.5 text-gray-400" />
-                      {new Date(customer.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                      {new Date(liveCustomer.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                     </p>
                   </div>
-                  {customer.email && (
+                  {liveCustomer.email && (
                     <p className="text-gray-500 text-xs sm:text-[13px] flex items-center mt-1.5 font-medium">
-                      <Mail className="w-3.5 h-3.5 mr-1.5 text-gray-400" /> {customer.email}
+                      <Mail className="w-3.5 h-3.5 mr-1.5 text-gray-400" /> {liveCustomer.email}
                     </p>
                   )}
                 </div>
@@ -139,11 +151,11 @@ const CustomerLedger = ({ customer, onClose }) => {
                 <div className="sm:text-right flex-shrink-0 min-w-0 max-w-full mt-2 sm:mt-0">
                   <p className="text-[10px] sm:text-[11px] text-gray-500 mb-1.5 font-semibold uppercase tracking-wider">{t('Current Balance')}</p>
                   <div className="flex flex-col items-start sm:items-end gap-1.5">
-                    <p className={`text-2xl sm:text-[28px] leading-none font-semibold tracking-tight break-all ${customer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                      {formatCurrency(Math.abs(customer.balance))}
+                    <p className={`text-2xl sm:text-[28px] leading-none font-semibold tracking-tight break-all ${liveCustomer.balance > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                      {formatCurrency(Math.abs(liveCustomer.balance))}
                     </p>
-                    <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-medium tracking-wider ${customer.balance > 0 ? 'bg-red-50 text-red-600 border border-red-100' : customer.balance < 0 ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-gray-50 text-gray-600 border border-gray-200'}`}>
-                      {customer.balance > 0 ? t('Pending') : customer.balance < 0 ? t('Advance') : t('Settled')}
+                    <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-medium tracking-wider ${liveCustomer.balance > 0 ? 'bg-red-50 text-red-600 border border-red-100' : liveCustomer.balance < 0 ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-gray-50 text-gray-600 border border-gray-200'}`}>
+                      {liveCustomer.balance > 0 ? t('Pending') : liveCustomer.balance < 0 ? t('Advance') : t('Settled')}
                     </span>
                   </div>
                 </div>

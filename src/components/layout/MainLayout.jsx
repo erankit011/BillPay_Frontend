@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import api from '../../api/axios';
 import LanguageSwitcher from '../LanguageSwitcher';
+import { io } from 'socket.io-client';
+import toast from 'react-hot-toast';
 
 const navItems = [
   { path: '/dashboard', labelKey: 'Dashboard', icon: Home },
@@ -46,26 +48,53 @@ const MainLayout = () => {
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
   const BASE_URL = API_URL.replace('/api/v1', '');
 
-  // Fetch notifications count
+  // Fetch notifications count and listen for real-time WebSocket notifications
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
         const res = await api.get('/notifications/unread-count');
-        // Backend sends: { success: true, data: { count: 3 }, message: '...' }
         const count = res.data?.data?.count || res.data?.count || 0;
         setNotificationCount(count);
       } catch (error) {
         console.error('Failed to fetch notifications:', error);
-        // Set to 0 if API fails - no mock data
         setNotificationCount(0);
       }
     };
 
     fetchNotifications();
-    // Poll for new notifications every 60 seconds
+
+    let socket;
+    if (user?._id) {
+      try {
+        socket = io(BASE_URL, {
+          withCredentials: true,
+          transports: ['websocket', 'polling'],
+          reconnectionAttempts: 5,
+        });
+
+        socket.on('new_notification', (newNotif) => {
+          setNotificationCount((prev) => prev + 1);
+          setNotifications((prev) => [
+            { ...newNotif, read: false },
+            ...prev.slice(0, 4)
+          ]);
+          toast(newNotif.title + ': ' + newNotif.message, {
+            icon: '🔔',
+            duration: 4000
+          });
+        });
+      } catch (err) {
+        console.warn('Socket connection error:', err);
+      }
+    }
+
+    // Fallback polling for new notifications every 60 seconds
     const interval = setInterval(fetchNotifications, 60000);
-    return () => clearInterval(interval);
-  }, []);
+    return () => {
+      clearInterval(interval);
+      if (socket) socket.disconnect();
+    };
+  }, [user?._id, BASE_URL]);
 
   // Fetch notification list when panel opens
   const fetchNotificationList = async () => {
