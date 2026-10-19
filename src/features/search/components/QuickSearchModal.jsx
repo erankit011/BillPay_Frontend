@@ -134,21 +134,49 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, filteredPages, selectedIndex, onClose, navigate]);
 
+  // Prevent background page scrolling across all screen sizes
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevTouchAction = document.body.style.touchAction;
+
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+
+    return () => {
+      document.body.style.overflow = prevBodyOverflow;
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.touchAction = prevTouchAction;
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-50 overscroll-contain">
       {/* Backdrop: standardized dark overlay without blur */}
       <div
-        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
         aria-hidden="true"
+        onWheel={(e) => e.preventDefault()}
+        onTouchMove={(e) => e.preventDefault()}
       />
 
       {/* Modal Positioning */}
-      <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-start sm:justify-center sm:pt-20 sm:px-4 z-50 pointer-events-none">
+      <div
+        className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-start sm:justify-center sm:pt-20 sm:px-4 z-50 pointer-events-none overscroll-contain"
+        onWheel={(e) => {
+          if (listRef.current && !listRef.current.contains(e.target)) {
+            e.preventDefault();
+          }
+        }}
+      >
         <div
-          className="relative bg-white w-full sm:max-w-xl rounded-t-lg sm:rounded-lg border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-none flex flex-col max-h-[85vh] sm:max-h-[75vh]"
+          className="relative bg-white w-full sm:max-w-xl rounded-t-lg sm:rounded-lg border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-none flex flex-col max-h-[85vh] sm:max-h-[75vh] overscroll-contain"
           role="dialog"
           aria-modal="true"
           aria-label={t('Quick Search')}
@@ -204,7 +232,7 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
           </div>
 
           {/* Search Results List */}
-          <div ref={listRef} className="overflow-y-auto p-2 pb-3 sm:pb-2.5 space-y-1 flex-1">
+          <div ref={listRef} className="overflow-y-auto overscroll-contain p-2 pb-3 sm:pb-2.5 space-y-1 flex-1">
             {filteredPages.length === 0 ? (
               <div className="py-10 px-4 text-center">
                 <div className="w-10 h-10 rounded-lg bg-gray-50 border border-gray-200 text-gray-400 mx-auto flex items-center justify-center mb-2.5">

@@ -169,15 +169,18 @@ const MainLayout = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [profileDropdownOpen, notificationOpen]);
 
-  // Lock body scroll only when modal or drawer is open
+  // Lock body and html scroll only when modal or drawer is open
   useEffect(() => {
     if (mobileDrawerOpen || logoutModalOpen || searchModalOpen) {
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     }
     return () => {
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     };
   }, [mobileDrawerOpen, logoutModalOpen, searchModalOpen]);
 
