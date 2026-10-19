@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
-import { Home, Users, FileText, Mic, BarChart2, Settings, Bell, Box, Bell as BellIcon, HelpCircle, LogOut, User, Shield, AlertCircle, Gem } from 'lucide-react';
+import { Home, Users, FileText, Mic, BarChart2, Settings, Bell, Box, Bell as BellIcon, HelpCircle, LogOut, User, Shield, AlertCircle, Gem, Activity, LayoutDashboard, Store, CreditCard, Server, Receipt, TrendingUp } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/slices/authSlice';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +10,9 @@ import LanguageSwitcher from '../LanguageSwitcher';
 import { io } from 'socket.io-client';
 import toast from 'react-hot-toast';
 
-const navItems = [
+import { ROLES } from '../../constants/roles';
+
+const shopkeeperNavItems = [
   { path: '/dashboard', labelKey: 'Dashboard', icon: Home },
   { path: '/customers', labelKey: 'Customers', icon: Users },
   { path: '/products', labelKey: 'Products', icon: Box },
@@ -18,6 +20,15 @@ const navItems = [
   { path: '/reminders', labelKey: 'Reminders', icon: BellIcon },
   { path: '/voice', labelKey: 'Voice Entry', icon: Mic },
   { path: '/reports', labelKey: 'Reports', icon: BarChart2 },
+];
+
+const adminNavItems = [
+  { path: '/admin/dashboard', labelKey: 'Dashboard', icon: LayoutDashboard },
+  { path: '/admin/shops', labelKey: 'Merchants', icon: Store },
+  { path: '/admin/bills', labelKey: 'Bills', icon: FileText },
+  { path: '/admin/subscriptions', labelKey: 'Subscriptions', icon: CreditCard },
+  { path: '/admin/reports', labelKey: 'Reports', icon: BarChart2 },
+  { path: '/admin/health', labelKey: 'System Health', icon: Activity },
 ];
 
 const MainLayout = () => {
@@ -44,6 +55,7 @@ const MainLayout = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { t } = useTranslation();
+  const activeNavItems = user?.role === ROLES.ADMIN ? adminNavItems : shopkeeperNavItems;
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
   const BASE_URL = API_URL.replace('/api/v1', '');
@@ -181,6 +193,7 @@ const MainLayout = () => {
       localStorage.removeItem('token');
       localStorage.removeItem('isLoggedIn');
       dispatch(logout());
+      toast.success(t('Logged out successfully'));
       setLogoutModalOpen(false);
       window.location.href = '/login';
     }
@@ -213,7 +226,7 @@ const MainLayout = () => {
 
         {/* Links */}
         <nav className="flex-1 flex flex-col gap-1.5 px-3 pt-10 pb-4 overflow-y-auto">
-          {navItems.map((item) => (
+          {activeNavItems.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
@@ -272,7 +285,7 @@ const MainLayout = () => {
             <div className="flex-1 flex flex-col px-6 pt-8 pb-8 overflow-y-auto">
               {/* Links */}
               <nav className="flex-1 flex flex-col gap-1.5">
-                {navItems.map((item) => (
+                {activeNavItems.map((item) => (
                   <NavLink
                     key={item.path}
                     to={item.path}
@@ -498,21 +511,23 @@ const MainLayout = () => {
 
                   {/* Menu Items */}
                   <div className="flex flex-col pb-1">
-                    <div className="px-3 pt-3 pb-1">
-                      <Link
-                        to="/subscription"
-                        onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2.5 bg-[#093C5D] hover:bg-[#082a42] rounded-lg transition-all active:scale-95 group w-full"
-                      >
-                        <div className="flex items-center justify-center pl-1">
-                          <Gem className="w-5 h-5 text-white/90 group-hover:text-white" strokeWidth={2} />
-                        </div>
-                        <div className="flex flex-col justify-center">
-                          <span className="text-[14px] font-semibold text-white leading-tight">{t('Upgrade Plan')}</span>
-                          <span className="text-[12px] text-white/80 font-medium leading-tight mt-0.5">{t('Get extra benefits')}</span>
-                        </div>
-                      </Link>
-                    </div>
+                    {user?.role !== ROLES.ADMIN && (
+                      <div className="px-3 pt-3 pb-1">
+                        <Link
+                          to="/subscription"
+                          onClick={() => setProfileDropdownOpen(false)}
+                          className="flex items-center gap-3 px-3 py-2.5 bg-[#093C5D] hover:bg-[#082a42] rounded-lg transition-all active:scale-95 group w-full"
+                        >
+                          <div className="flex items-center justify-center pl-1">
+                            <Gem className="w-5 h-5 text-white/90 group-hover:text-white" strokeWidth={2} />
+                          </div>
+                          <div className="flex flex-col justify-center">
+                            <span className="text-[14px] font-semibold text-white leading-tight">{t('Upgrade Plan')}</span>
+                            <span className="text-[12px] text-white/80 font-medium leading-tight mt-0.5">{t('Get extra benefits')}</span>
+                          </div>
+                        </Link>
+                      </div>
+                    )}
 
                     <Link
                       to="/profile"

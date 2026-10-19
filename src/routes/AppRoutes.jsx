@@ -26,6 +26,14 @@ const PlatformReceipt = lazy(() => import('../pages/PlatformReceipt'));
 const PublicInvoice = lazy(() => import('../pages/PublicInvoice'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
+// Admin Feature Pages
+const AdminDashboard = lazy(() => import('../pages/admin/AdminDashboard'));
+const AdminShops = lazy(() => import('../pages/admin/AdminShops'));
+const AdminBills = lazy(() => import('../pages/admin/AdminBills'));
+const AdminSubscriptions = lazy(() => import('../pages/admin/AdminSubscriptions'));
+const AdminReports = lazy(() => import('../pages/admin/AdminReports'));
+const AdminSystemHealth = lazy(() => import('../pages/admin/AdminSystemHealth'));
+
 // Static pages
 const PrivacyPolicy = lazy(() => import('../pages/PrivacyPage'));
 const TermsOfService = lazy(() => import('../pages/TermsOfService'));
@@ -37,8 +45,10 @@ import SwirlingLoader from '../components/common/SwirlingLoader';
 const BusinessSetup = lazy(() => import('../pages/BusinessSetup'));
 const OAuthCallback = lazy(() => import('../pages/OAuthCallback'));
 
-const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
+import { ROLES } from '../constants/roles';
+
+const ProtectedRoute = ({ children, allowedRoles }) => {
+  const { isAuthenticated, isLoading, user } = useSelector((state) => state.auth);
 
   if (isLoading) {
     return (
@@ -52,13 +62,21 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
 
+  if (allowedRoles && allowedRoles.length > 0) {
+    const currentRole = user?.role || ROLES.SHOPKEEPER;
+    if (!allowedRoles.includes(currentRole)) {
+      return <Navigate to={currentRole === ROLES.ADMIN ? '/admin/dashboard' : '/dashboard'} replace />;
+    }
+  }
+
   return children;
 };
 
 const OnboardingRoute = ({ children }) => {
   const { user } = useSelector((state) => state.auth);
 
-  if (user && !user.isBusinessSetupCompleted) {
+  // Only shopkeepers need business setup; admins manage platform
+  if (user?.role === ROLES.SHOPKEEPER && !user.isBusinessSetupCompleted) {
     return <Navigate to="/setup-business" replace />;
   }
 
@@ -66,7 +84,7 @@ const OnboardingRoute = ({ children }) => {
 };
 
 const PublicRoute = ({ children }) => {
-  const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
+  const { isAuthenticated, isLoading, user } = useSelector((state) => state.auth);
 
   if (isLoading) {
     return (
@@ -77,7 +95,7 @@ const PublicRoute = ({ children }) => {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={user?.role === ROLES.ADMIN ? '/admin/dashboard' : '/dashboard'} replace />;
   }
 
   return children;
@@ -131,9 +149,35 @@ const AppRoutes = () => {
         {/* OAuth Callback Route */}
         <Route path="/oauth-callback" element={<OAuthCallback />} />
 
-        {/* Protected Dashboard Routes */}
+        {/* Protected Admin Routes */}
         <Route element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+            <MainLayout />
+          </ProtectedRoute>
+        }>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/shops" element={<AdminShops />} />
+          <Route path="/admin/bills" element={<AdminBills />} />
+          <Route path="/admin/subscriptions" element={<AdminSubscriptions />} />
+          <Route path="/admin/reports" element={<AdminReports />} />
+          <Route path="/admin/health" element={<AdminSystemHealth />} />
+          <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+        </Route>
+
+        {/* Protected Common / Profile Routes */}
+        <Route element={
+          <ProtectedRoute allowedRoles={[ROLES.SHOPKEEPER, ROLES.ADMIN]}>
+            <MainLayout />
+          </ProtectedRoute>
+        }>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/notifications" element={<Notifications />} />
+        </Route>
+
+        {/* Protected Shopkeeper Dashboard Routes */}
+        <Route element={
+          <ProtectedRoute allowedRoles={[ROLES.SHOPKEEPER]}>
             <OnboardingRoute>
               <MainLayout />
             </OnboardingRoute>
@@ -146,9 +190,6 @@ const AppRoutes = () => {
           <Route path="/reminders" element={<Reminders />} />
           <Route path="/voice" element={<VoiceBilling />} />
           <Route path="/reports" element={<Reports />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/notifications" element={<Notifications />} />
           <Route path="/subscription" element={<Subscription />} />
         </Route>
 
