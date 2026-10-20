@@ -47,12 +47,12 @@ const ShopDetailsModal = ({
     FREE: 'bg-blue-50 text-blue-700 border-blue-200',
   };
 
-  const shopName = shop.businessName || shop.name || 'Merchant Shop';
+  const shopName = shop.shopName || shop.businessName || shop.settings?.shopName || shop.name || 'Merchant Shop';
   const ownerName = shop.name || 'N/A';
-  const businessName = shop.shopSettings?.businessName || shop.businessName;
-  const gstNumber = shop.shopSettings?.gstin;
-  const upiId = shop.shopSettings?.upiId;
-  const address = shop.shopSettings?.address;
+  const businessName = shop.shopName || shop.settings?.shopName || shop.shopSettings?.businessName || shop.businessName;
+  const gstNumber = shop.gstNumber || shop.settings?.gstNumber || shop.shopSettings?.gstin;
+  const upiId = shop.upiId || shop.settings?.upiId || shop.shopSettings?.upiId;
+  const address = shop.shopAddress || shop.settings?.shopAddress || shop.shopSettings?.address;
   const shortId = shop._id ? shop._id.slice(-6).toUpperCase() : '';
 
   const getInitials = (name) => {

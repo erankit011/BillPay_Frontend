@@ -130,18 +130,14 @@ const AdminShops = () => {
   const totalPages = data?.totalPages || 1;
   const currentPage = data?.currentPage || urlPage;
 
-  const activeCount = shops.filter((s) => !s.isSuspended).length;
-  const proCount = shops.filter((s) => s.subscriptionPlan && s.subscriptionPlan !== 'FREE').length;
-  const totalUdharSum = shops.reduce((sum, s) => sum + (s.totalUdhar || 0), 0);
-
   // Mutations
   const suspendMutation = useMutation({
     mutationFn: ({ shopId, isSuspended, reason }) =>
       toggleShopSuspension(shopId, { isSuspended, reason }),
     onSuccess: (res) => {
       toast.success(res.message || 'Shop suspension status updated');
-      queryClient.invalidateQueries(['adminShops']);
-      queryClient.invalidateQueries(['adminOverview']);
+      queryClient.invalidateQueries({ queryKey: ['adminShops'] });
+      queryClient.invalidateQueries({ queryKey: ['adminOverview'] });
       setSuspendModalShop(null);
       if (inspectShop) setInspectShop(null);
     },
@@ -154,8 +150,8 @@ const AdminShops = () => {
     mutationFn: ({ shopId, planData }) => overrideShopPlan(shopId, planData),
     onSuccess: () => {
       toast.success('Shop subscription updated successfully');
-      queryClient.invalidateQueries(['adminShops']);
-      queryClient.invalidateQueries(['adminOverview']);
+      queryClient.invalidateQueries({ queryKey: ['adminShops'] });
+      queryClient.invalidateQueries({ queryKey: ['adminOverview'] });
       setPlanModalShop(null);
       if (inspectShop) setInspectShop(null);
     },
@@ -168,8 +164,8 @@ const AdminShops = () => {
     mutationFn: (shopId) => forceLogoutShop(shopId),
     onSuccess: () => {
       toast.success('Shopkeeper logged out across all devices successfully');
-      queryClient.invalidateQueries(['adminShops']);
-      queryClient.invalidateQueries(['adminOverview']);
+      queryClient.invalidateQueries({ queryKey: ['adminShops'] });
+      queryClient.invalidateQueries({ queryKey: ['adminOverview'] });
       setLogoutModalShop(null);
       if (inspectShop) setInspectShop(null);
     },

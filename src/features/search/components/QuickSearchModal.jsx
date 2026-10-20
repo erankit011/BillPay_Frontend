@@ -19,7 +19,12 @@ import {
   X,
   ArrowUp,
   ArrowDown,
-  CornerDownLeft
+  CornerDownLeft,
+  Megaphone,
+  LifeBuoy,
+  Tag,
+  ShieldCheck,
+  Layers
 } from 'lucide-react';
 
 const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
@@ -42,7 +47,12 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
         { title: t('Platform Financial Reports'), desc: 'Financial audit, growth trends & export', path: '/admin/reports', icon: BarChart2, category: 'Reports' },
         { title: t('System Health & Metrics'), desc: 'Server telemetry, memory, latency & uptime', path: '/admin/health', icon: Activity, category: 'System' },
         { title: t('Account Profile'), desc: 'Manage your admin credentials and security', path: '/profile', icon: User, category: 'Account' },
-        { title: t('Platform Settings'), desc: 'System configuration and preferences', path: '/settings', icon: Settings, category: 'Settings' },
+        { title: t('Platform Settings'), desc: 'System configuration, operational switches and preferences', path: '/admin/settings', icon: Settings, category: 'Settings' },
+        { title: t('Broadcast Announcements'), desc: 'Publish banners, notices and alerts to storekeepers', path: '/admin/broadcasts', icon: Megaphone, category: 'Communication' },
+        { title: t('Support & Helpdesk Desk'), desc: 'Triage customer inquiries, complaints and support tickets', path: '/admin/support', icon: LifeBuoy, category: 'Support' },
+        { title: t('Coupons & Promo Codes'), desc: 'Launch and configure discount campaigns for subscription plans', path: '/admin/coupons', icon: Tag, category: 'Billing' },
+        { title: t('SaaS Plan Limits & Pricing'), desc: 'Configure tier quotas, features, prices and billing cycles', path: '/admin/plans', icon: Layers, category: 'Billing' },
+        { title: t('Security & Audit Logs'), desc: 'Immutable audit trail of admin actions and platform mutations', path: '/admin/audit-logs', icon: ShieldCheck, category: 'Security' },
       ];
     }
     return [

@@ -21,7 +21,12 @@ import {
   Menu,
   X,
   Search,
-  ArrowRight
+  ArrowRight,
+  Megaphone,
+  LifeBuoy,
+  Tag,
+  ShieldCheck,
+  Layers
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/slices/authSlice';
@@ -29,6 +34,7 @@ import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
 import LanguageSwitcher from '../LanguageSwitcher';
 import QuickSearchModal from '../../features/search';
+import ActiveBroadcastBanner from '../../features/admin/components/broadcast/ActiveBroadcastBanner';
 import { io } from 'socket.io-client';
 import toast from 'react-hot-toast';
 import { ROLES } from '../../constants/roles';
@@ -325,6 +331,12 @@ const MainLayout = () => {
     if (p.includes('/admin/subscriptions')) return 'Subscriptions';
     if (p.includes('/admin/reports')) return 'Reports';
     if (p.includes('/admin/health')) return 'System Health';
+    if (p.includes('/admin/settings')) return 'Platform Settings';
+    if (p.includes('/admin/broadcasts')) return 'Broadcasts';
+    if (p.includes('/admin/support')) return 'Support Desk';
+    if (p.includes('/admin/coupons')) return 'Coupons';
+    if (p.includes('/admin/plans')) return 'Plan Limits & Pricing';
+    if (p.includes('/admin/audit-logs')) return 'Audit Logs';
     if (p.includes('/dashboard')) return 'Dashboard';
     if (p.includes('/customers')) return 'Customers';
     if (p.includes('/products')) return 'Products';
@@ -348,6 +360,11 @@ const MainLayout = () => {
     if (p.includes('/admin/subscriptions')) return CreditCard;
     if (p.includes('/admin/reports')) return BarChart2;
     if (p.includes('/admin/health')) return Activity;
+    if (p.includes('/admin/broadcasts')) return Megaphone;
+    if (p.includes('/admin/support')) return LifeBuoy;
+    if (p.includes('/admin/coupons')) return Tag;
+    if (p.includes('/admin/plans')) return Layers;
+    if (p.includes('/admin/audit-logs')) return ShieldCheck;
     if (p.includes('/dashboard')) return Home;
     if (p.includes('/customers')) return Users;
     if (p.includes('/products')) return Box;
@@ -556,9 +573,89 @@ const MainLayout = () => {
                 )}
               </NavLink>
 
-              {/* 5. Settings */}
+              {/* 5. Broadcasts & Announcements */}
               <NavLink
-                to="/settings"
+                to="/admin/broadcasts"
+                title={sidebarCollapsed ? 'Broadcasts' : undefined}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                    isActive
+                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
+                }
+              >
+                <Megaphone className="w-4 h-4 shrink-0" />
+                {!sidebarCollapsed && <span>Broadcasts</span>}
+              </NavLink>
+
+              {/* 6. Support & Helpdesk Desk */}
+              <NavLink
+                to="/admin/support"
+                title={sidebarCollapsed ? 'Support Desk' : undefined}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                    isActive
+                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
+                }
+              >
+                <LifeBuoy className="w-4 h-4 shrink-0" />
+                {!sidebarCollapsed && <span>Support Desk</span>}
+              </NavLink>
+
+              {/* 7. Coupons & Promo Codes */}
+              <NavLink
+                to="/admin/coupons"
+                title={sidebarCollapsed ? 'Coupons' : undefined}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                    isActive
+                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
+                }
+              >
+                <Tag className="w-4 h-4 shrink-0" />
+                {!sidebarCollapsed && <span>Coupons</span>}
+              </NavLink>
+
+              {/* 8. Dynamic SaaS Plan Limits & Pricing */}
+              <NavLink
+                to="/admin/plans"
+                title={sidebarCollapsed ? 'Plans & Pricing' : undefined}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                    isActive
+                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
+                }
+              >
+                <Layers className="w-4 h-4 shrink-0" />
+                {!sidebarCollapsed && <span>Plans & Pricing</span>}
+              </NavLink>
+
+              {/* 9. Platform Security & Immutable Audit Logs */}
+              <NavLink
+                to="/admin/audit-logs"
+                title={sidebarCollapsed ? 'Audit Logs' : undefined}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                    isActive
+                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
+                }
+              >
+                <ShieldCheck className="w-4 h-4 shrink-0" />
+                {!sidebarCollapsed && <span>Audit Logs</span>}
+              </NavLink>
+
+              {/* 6. Settings */}
+              <NavLink
+                to="/admin/settings"
                 title={sidebarCollapsed ? 'Settings' : undefined}
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
@@ -942,7 +1039,82 @@ const MainLayout = () => {
                   </NavLink>
 
                   <NavLink
-                    to="/settings"
+                    to="/admin/broadcasts"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
+                        isActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <Megaphone className="w-4 h-4 shrink-0" />
+                    <span>Broadcasts</span>
+                  </NavLink>
+
+                  <NavLink
+                    to="/admin/support"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
+                        isActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <LifeBuoy className="w-4 h-4 shrink-0" />
+                    <span>Support Desk</span>
+                  </NavLink>
+
+                  <NavLink
+                    to="/admin/coupons"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
+                        isActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <Tag className="w-4 h-4 shrink-0" />
+                    <span>Coupons</span>
+                  </NavLink>
+
+                  <NavLink
+                    to="/admin/plans"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
+                        isActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <Layers className="w-4 h-4 shrink-0" />
+                    <span>Plans & Pricing</span>
+                  </NavLink>
+
+                  <NavLink
+                    to="/admin/audit-logs"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
+                        isActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <ShieldCheck className="w-4 h-4 shrink-0" />
+                    <span>Audit Logs</span>
+                  </NavLink>
+
+                  <NavLink
+                    to="/admin/settings"
                     onClick={() => setMobileDrawerOpen(false)}
                     className={({ isActive }) =>
                       `flex items-center gap-3 px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
@@ -1383,7 +1555,7 @@ const MainLayout = () => {
                     type="button"
                     onClick={() => {
                       setProfileDropdownOpen(false);
-                      navigate('/settings');
+                      navigate(isAdmin ? '/admin/settings' : '/settings');
                     }}
                     className="w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100/80 rounded-lg transition-colors cursor-pointer text-left"
                   >
@@ -1433,6 +1605,9 @@ const MainLayout = () => {
               </Link>
             </div>
           )}
+
+          {/* Active Global Broadcast Announcement Banners */}
+          <ActiveBroadcastBanner />
 
           <Outlet />
         </main>

@@ -87,7 +87,23 @@ api.interceptors.response.use(
       }
     }
 
-    // 2. If this session was explicitly logged out remotely or revoked:
+    // 2. Handle account suspension by admin
+    if (
+      error.response?.status === 403 &&
+      error.response?.data?.message?.toLowerCase().includes('suspended')
+    ) {
+      isRefreshing = false;
+      localStorage.removeItem('isLoggedIn');
+      toast.error(error.response.data.message, { duration: 6000 });
+      if (!isPublicPage()) {
+        setTimeout(() => {
+          window.location.href = '/login?suspended=true';
+        }, 1200);
+      }
+      return Promise.reject(error);
+    }
+
+    // 3. If this session was explicitly logged out remotely or revoked:
     if (
       error.response?.status === 401 &&
       (error.response?.data?.message?.includes('logged out remotely') ||

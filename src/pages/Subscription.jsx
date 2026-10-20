@@ -1,17 +1,82 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Shield, Loader2 } from 'lucide-react';
+import { Check, Shield, Loader2, Tag, Percent, X, Sparkles } from 'lucide-react';
 import api from '../api/axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../redux/slices/authSlice';
 import toast from 'react-hot-toast';
+import { validateSubscriptionCoupon, getPublicPlans } from '../features/admin/api/adminApi';
+
+const DEFAULT_PLANS = [
+  {
+    id: 'FREE',
+    name: 'Free Plan',
+    price: 0,
+    duration: '7-Day Trial',
+    features: [
+      'Up to 2 Customers',
+      'Up to 10 Bills',
+      'Email Support',
+    ],
+    color: 'bg-gray-100 text-gray-800',
+    buttonText: 'Current Plan',
+  },
+  {
+    id: 'MONTHLY',
+    name: 'Monthly Pro',
+    price: 299,
+    duration: 'Per Month',
+    features: [
+      'Unlimited Customers',
+      'WhatsApp Reminders',
+      'Advanced Analytics',
+      'Priority Support',
+    ],
+    color: 'bg-blue-50 text-[#093C5D] border-[#093C5D]',
+    buttonText: 'Upgrade to Monthly',
+  },
+  {
+    id: 'QUARTERLY',
+    name: 'Quarterly Pro',
+    price: 799,
+    duration: 'Per 3 Months',
+    features: [
+      'Unlimited Customers',
+      'WhatsApp Reminders',
+      'Advanced Analytics',
+      'Priority Support',
+      'Save 10%',
+    ],
+    color: 'bg-blue-50 text-[#093C5D] border-[#093C5D]',
+    buttonText: 'Upgrade to Quarterly',
+  },
+  {
+    id: 'YEARLY',
+    name: 'Yearly Pro',
+    price: 2999,
+    duration: 'Per Year',
+    features: [
+      'Unlimited Customers',
+      'WhatsApp Reminders',
+      'Advanced Analytics',
+      'Priority Support',
+      'Save 16%',
+    ],
+    color: 'bg-[#093C5D] text-white',
+    buttonText: 'Upgrade to Yearly',
+  },
+];
 
 const Subscription = () => {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const [plans, setPlans] = useState(DEFAULT_PLANS);
   const [loadingPlan, setLoadingPlan] = useState(null);
   const [scriptLoaded, setScriptLoaded] = useState(false);
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [validatingCoupon, setValidatingCoupon] = useState(false);
 
   useEffect(() => {
     // Load Razorpay Script
@@ -32,65 +97,95 @@ const Subscription = () => {
     loadRazorpayScript();
   }, []);
 
-  const plans = [
-    {
-      id: 'FREE',
-      name: t('Free Plan'),
-      price: 0,
-      duration: t('7-Day Trial'),
-      features: [
-        t('Up to 2 Customers'),
-        t('Up to 10 Bills'),
-        t('Email Support'),
-      ],
-      color: 'bg-gray-100 text-gray-800',
-      buttonText: t('Current Plan'),
-    },
-    {
-      id: 'MONTHLY',
-      name: t('Monthly Pro'),
-      price: 299,
-      duration: t('Per Month'),
-      features: [
-        t('Unlimited Customers'),
-        t('WhatsApp Reminders'),
-        t('Advanced Analytics'),
-        t('Priority Support'),
-      ],
-      color: 'bg-blue-50 text-[#093C5D] border-[#093C5D]',
-      buttonText: t('Upgrade to Monthly'),
-    },
-    {
-      id: 'QUARTERLY',
-      name: t('Quarterly Pro'),
-      price: 799,
-      duration: t('Per 3 Months'),
-      features: [
-        t('Unlimited Customers'),
-        t('WhatsApp Reminders'),
-        t('Advanced Analytics'),
-        t('Priority Support'),
-        t('Save 10%'),
-      ],
-      color: 'bg-blue-50 text-[#093C5D] border-[#093C5D]',
-      buttonText: t('Upgrade to Quarterly'),
-    },
-    {
-      id: 'YEARLY',
-      name: t('Yearly Pro'),
-      price: 2999,
-      duration: t('Per Year'),
-      features: [
-        t('Unlimited Customers'),
-        t('WhatsApp Reminders'),
-        t('Advanced Analytics'),
-        t('Priority Support'),
-        t('Save 16%'),
-      ],
-      color: 'bg-[#093C5D] text-white',
-      buttonText: t('Upgrade to Yearly'),
-    },
-  ];
+  useEffect(() => {
+    const fetchLivePlans = async () => {
+      try {
+        const livePlans = await getPublicPlans();
+        if (livePlans && Array.isArray(livePlans) && livePlans.length > 0) {
+          const mapped = livePlans.map((p) => ({
+            id: p.planId,
+            name: p.name,
+            price: p.price,
+            duration:
+              p.planId === 'FREE'
+                ? `${p.trialDays || 7}-Day Trial`
+                : p.billingCycleDays === 365
+                ? t('Per Year')
+                : p.billingCycleDays === 90
+                ? t('Per 3 Months')
+                : t('Per Month'),
+            features:
+              p.features && p.features.length > 0
+                ? p.features
+                : [
+                    p.maxCustomers === -1
+                      ? t('Unlimited Customers')
+                      : `Up to ${p.maxCustomers} Customers`,
+                    p.maxBills === -1 ? t('Unlimited Bills') : `Up to ${p.maxBills} Bills`,
+                    p.hasWhatsAppReminders ? t('WhatsApp Reminders') : t('Standard Reminders'),
+                    p.supportTier === 'PRIORITY' || p.supportTier === 'DEDICATED'
+                      ? t('Priority Support')
+                      : t('Email Support'),
+                  ],
+            color:
+              p.planId === 'YEARLY'
+                ? 'bg-[#093C5D] text-white'
+                : p.planId === 'FREE'
+                ? 'bg-gray-100 text-gray-800'
+                : 'bg-blue-50 text-[#093C5D] border-[#093C5D]',
+            buttonText: p.planId === 'FREE' ? t('Current Plan') : `Upgrade to ${p.name}`,
+            badge: p.badge,
+          }));
+          setPlans(mapped);
+        }
+      } catch (err) {
+        // Graceful fallback to default plans
+      }
+    };
+    fetchLivePlans();
+  }, [t]);
+
+  const handleApplyCoupon = async (e) => {
+    e.preventDefault();
+    if (!couponCode.trim()) {
+      toast.error(t('Please enter a coupon code'));
+      return;
+    }
+    setValidatingCoupon(true);
+    try {
+      const res = await validateSubscriptionCoupon(couponCode.trim().toUpperCase());
+      setAppliedCoupon(res);
+      toast.success(res?.message || t('Coupon applied successfully!'));
+    } catch (err) {
+      toast.error(err?.response?.data?.message || t('Invalid or expired coupon code'));
+      setAppliedCoupon(null);
+    } finally {
+      setValidatingCoupon(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode('');
+    toast(t('Coupon removed'));
+  };
+
+  const getDiscountedPrice = (plan) => {
+    if (!appliedCoupon || plan.id === 'FREE') return null;
+    if (appliedCoupon.applicablePlans && !appliedCoupon.applicablePlans.includes(plan.id)) {
+      return null;
+    }
+    let discount = 0;
+    if (appliedCoupon.discountType === 'PERCENTAGE') {
+      discount = Math.round((plan.price * appliedCoupon.discountValue) / 100);
+      if (appliedCoupon.maxDiscountAmount && discount > appliedCoupon.maxDiscountAmount) {
+        discount = appliedCoupon.maxDiscountAmount;
+      }
+    } else {
+      discount = Math.min(plan.price, appliedCoupon.discountValue);
+    }
+    return Math.max(0, plan.price - discount);
+  };
 
   const handleUpgrade = async (plan) => {
     if (plan.id === 'FREE') return;
@@ -125,7 +220,8 @@ const Subscription = () => {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_subscription_id: response.razorpay_subscription_id,
               razorpay_signature: response.razorpay_signature,
-              plan: plan.id
+              plan: plan.id,
+              couponCode: appliedCoupon?.code,
             });
 
             if (verifyRes.data.success || verifyRes.status === 200) {
@@ -202,33 +298,112 @@ const Subscription = () => {
               </p>
             ) : (
               <p className="text-sm text-slate-500">
-                {t('Free trial expires in')} <span className="font-semibold text-slate-900">{getDaysRemaining(new Date(user?.createdAt || Date.now()).getTime() + 7 * 24 * 60 * 60 * 1000)} {t('days')}</span>
+                {t('Free trial expires in')}{' '}
+                <span className="font-semibold text-slate-900">
+                  {getDaysRemaining(
+                    new Date(user?.createdAt || Date.now()).getTime() +
+                      (plans.find((p) => p.id === 'FREE')?.trialDays || 7) * 24 * 60 * 60 * 1000
+                  )}{' '}
+                  {t('days')}
+                </span>
               </p>
             )}
           </div>
         </div>
       </div>
 
+      {/* Promo Code Input Card */}
+      <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5 shadow-xs">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center shrink-0">
+              <Tag className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 tracking-tight flex items-center gap-1.5">
+                <span>{t('Have a Promo / Discount Code?')}</span>
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              </h3>
+              <p className="text-xs text-gray-500">
+                {t('Enter your coupon to unlock extra savings on Pro subscriptions')}
+              </p>
+            </div>
+          </div>
+
+          {appliedCoupon ? (
+            <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-800 px-3.5 py-1.5 rounded-lg text-xs font-medium">
+              <Check className="w-3.5 h-3.5 text-emerald-600" />
+              <span>
+                Code <strong className="font-mono">{appliedCoupon.code}</strong> applied ({appliedCoupon.discountType === 'PERCENTAGE' ? `${appliedCoupon.discountValue}% OFF` : `₹${appliedCoupon.discountValue} FLAT`})
+              </span>
+              <button
+                type="button"
+                onClick={handleRemoveCoupon}
+                className="cursor-pointer ml-1 text-emerald-600 hover:text-emerald-900 p-0.5 rounded"
+                title="Remove Coupon"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleApplyCoupon} className="flex items-center gap-2 w-full sm:w-auto">
+              <input
+                type="text"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                placeholder={t('PROMO CODE')}
+                className="w-full sm:w-44 text-xs font-mono font-bold tracking-wider px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none uppercase"
+              />
+              <button
+                type="submit"
+                disabled={validatingCoupon}
+                className="cursor-pointer px-4 py-2 bg-[#093C5D] text-white rounded-lg text-xs font-semibold hover:bg-[#072C44] transition-colors whitespace-nowrap disabled:opacity-50"
+              >
+                {validatingCoupon ? t('Checking...') : t('Apply')}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+
       {/* Pricing Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 lg:gap-6">
-        {plans.map((plan) => (
-          <div
-            key={plan.id}
-            className={`relative flex flex-col bg-white rounded-lg border p-5 md:p-6 transition-colors ${plan.id === 'YEARLY' ? 'border-[#093C5D]' : 'border-gray-200 hover:border-gray-300'}`}
-          >
-            {plan.id === 'YEARLY' && (
-              <div className="absolute -top-3 right-4 sm:right-6 bg-yellow-400 text-yellow-900 text-[10px] md:text-xs font-semibold uppercase tracking-wider py-1 px-3 rounded-lg">
-                {t('Best Value')}
-              </div>
-            )}
+        {plans.map((plan) => {
+          const discountedPrice = getDiscountedPrice(plan);
 
-            <div className="mb-5">
-              <h3 className="text-base md:text-lg font-semibold text-gray-900">{plan.name}</h3>
-              <div className="mt-2 md:mt-3 flex items-baseline gap-1">
-                <span className="text-2xl md:text-3xl font-semibold text-gray-900">₹{plan.price}</span>
-                <span className="text-xs md:text-sm text-gray-500 font-medium">/{plan.duration}</span>
+          return (
+            <div
+              key={plan.id}
+              className={`relative flex flex-col bg-white rounded-lg border p-5 md:p-6 transition-colors ${plan.id === 'YEARLY' ? 'border-[#093C5D]' : 'border-gray-200 hover:border-gray-300'}`}
+            >
+              {plan.id === 'YEARLY' && (
+                <div className="absolute -top-3 right-4 sm:right-6 bg-yellow-400 text-yellow-900 text-[10px] md:text-xs font-semibold uppercase tracking-wider py-1 px-3 rounded-lg">
+                  {t('Best Value')}
+                </div>
+              )}
+
+              <div className="mb-5">
+                <h3 className="text-base md:text-lg font-semibold text-gray-900">{plan.name}</h3>
+                <div className="mt-2 md:mt-3 flex items-baseline gap-1.5 flex-wrap">
+                  {discountedPrice !== null ? (
+                    <>
+                      <span className="text-2xl md:text-3xl font-bold text-emerald-600">₹{discountedPrice}</span>
+                      <span className="text-sm text-gray-400 line-through">₹{plan.price}</span>
+                      <span className="text-xs text-gray-500 font-medium">/{plan.duration}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-2xl md:text-3xl font-semibold text-gray-900">₹{plan.price}</span>
+                      <span className="text-xs md:text-sm text-gray-500 font-medium">/{plan.duration}</span>
+                    </>
+                  )}
+                </div>
+                {discountedPrice !== null && (
+                  <p className="text-[11px] font-semibold text-emerald-700 mt-1">
+                    Save ₹{plan.price - discountedPrice} with {appliedCoupon.code}
+                  </p>
+                )}
               </div>
-            </div>
 
             <div className="flex-1 space-y-3.5 md:space-y-4 mb-6">
               {plan.features.map((feature, idx) => (
@@ -262,7 +437,8 @@ const Subscription = () => {
               )}
             </button>
           </div>
-        ))}
+        );
+      })}
       </div>
     </div>
   );
