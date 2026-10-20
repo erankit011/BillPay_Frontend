@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { Store, Save, Loader2, AlertCircle, Upload, X } from 'lucide-react';
+import { Store, Save, Loader2, AlertCircle, Upload, X, LogOut } from 'lucide-react';
 import api from '../api/axios';
 import { setUser, logout } from '../redux/slices/authSlice';
 
@@ -27,6 +27,8 @@ const BusinessSetup = () => {
   const [loading, setLoading] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [errors, setErrors] = useState({});
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   
   // Checking if changes are made to enable the Save button
   const hasChanges = formData.shopName.trim() !== '' && formData.shopPhone.trim() !== '' && formData.shopAddress.trim() !== '';
@@ -43,14 +45,19 @@ const BusinessSetup = () => {
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
-  const handleLogout = async () => {
+  const executeLogout = async () => {
+    setIsLoggingOut(true);
     try {
       await api.post('/auth/logout');
     } catch (e) {
       // ignore
     } finally {
       localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('token');
       dispatch(logout());
+      toast.success(t('Logged out successfully'));
+      setLogoutModalOpen(false);
       window.location.href = '/login';
     }
   };
@@ -361,7 +368,7 @@ const BusinessSetup = () => {
               <div className="flex w-full sm:w-auto items-center gap-2">
                 <button
                   type="button"
-                  onClick={handleLogout}
+                  onClick={() => setLogoutModalOpen(true)}
                   className="cursor-pointer bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 sm:py-2.5 rounded-lg flex items-center justify-center font-semibold text-sm transition-colors duration-300 active:scale-[0.98] whitespace-nowrap"
                 >
                   {t('Logout')}
@@ -390,6 +397,59 @@ const BusinessSetup = () => {
         </form>
 
       </div>
+
+      {/* Logout Confirmation Modal */}
+      {logoutModalOpen && (
+        <div className="fixed inset-0 z-[100]">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity z-[100]"
+            onClick={() => {
+              if (!isLoggingOut) setLogoutModalOpen(false);
+            }}
+          />
+
+          {/* Modal Content */}
+          <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
+            <div
+              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-5 sm:p-6 text-center">
+                <div className="w-12 h-12 rounded-full bg-red-50 mx-auto flex items-center justify-center mb-4 border border-red-100">
+                  <LogOut className="w-6 h-6 text-red-600 ml-0.5" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
+                  {t('Logout')}
+                </h3>
+                <p className="text-gray-500 text-sm mb-6 font-medium">
+                  {t('Are you sure you want to log out?')}
+                </p>
+
+                <div className="flex gap-2 sm:gap-3 justify-center">
+                  <button
+                    type="button"
+                    onClick={() => setLogoutModalOpen(false)}
+                    disabled={isLoggingOut}
+                    className="cursor-pointer flex-1 px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium text-xs sm:text-[13px] transition-colors active:scale-95 disabled:opacity-50"
+                  >
+                    {t('Cancel')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={executeLogout}
+                    disabled={isLoggingOut}
+                    className="cursor-pointer flex-1 px-3 py-1.5 sm:px-4 sm:py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium text-xs sm:text-[13px] transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
+                  >
+                    {isLoggingOut && <Loader2 className="w-4 h-4 animate-spin" />}
+                    <span>{t('Yes, Logout')}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,35 +1,177 @@
-import { useState, useEffect } from 'react';
-import { Outlet, NavLink } from 'react-router-dom';
-import { Home, Users, FileText, Mic, BarChart2, Settings, Bell, Box, Bell as BellIcon, HelpCircle, LogOut, User, Shield, AlertCircle, Gem } from 'lucide-react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { Outlet, NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Home,
+  Users,
+  FileText,
+  Mic,
+  BarChart2,
+  Settings,
+  Bell,
+  Box,
+  HelpCircle,
+  LogOut,
+  User,
+  AlertCircle,
+  Gem,
+  Activity,
+  Store,
+  CreditCard,
+  ChevronDown,
+  Menu,
+  X,
+  Search,
+  ArrowRight
+} from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/slices/authSlice';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import api from '../../api/axios';
 import LanguageSwitcher from '../LanguageSwitcher';
+import QuickSearchModal from '../../features/search';
 import { io } from 'socket.io-client';
 import toast from 'react-hot-toast';
+import { ROLES } from '../../constants/roles';
 
-const navItems = [
-  { path: '/dashboard', labelKey: 'Dashboard', icon: Home },
-  { path: '/customers', labelKey: 'Customers', icon: Users },
-  { path: '/products', labelKey: 'Products', icon: Box },
-  { path: '/bills', labelKey: 'Billing', icon: FileText },
-  { path: '/reminders', labelKey: 'Reminders', icon: BellIcon },
-  { path: '/voice', labelKey: 'Voice Entry', icon: Mic },
-  { path: '/reports', labelKey: 'Reports', icon: BarChart2 },
-];
+// HeroUI-style Sidebar Trigger Icon (Rectangle with left rail bar)
+const SidebarRailIcon = ({ className = "w-4 h-4", strokeWidth = 1.75 }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={strokeWidth}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect width="18" height="18" x="3" y="3" rx="3" />
+    <path d="M9 3v18" />
+  </svg>
+);
 
 const MainLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(0);
-  const [notificationOpen, setNotificationOpen] = useState(false);
-  const [notifications, setNotifications] = useState([]);
-  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const { t } = useTranslation();
+
+  const isAdmin = user?.role === ROLES.ADMIN;
+
+  // Desktop rail collapsible state (persisted in localStorage)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    return localStorage.getItem('app_sidebar_collapsed') === 'true';
+  });
+
+  // Mobile / Tablet offcanvas drawer state
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+
+  // Admin Accordion state for Analytics
+  const isAnalyticsActive = useMemo(() => {
+    return (
+      location.pathname === '/admin/shops' ||
+      location.pathname === '/admin/bills' ||
+      location.pathname === '/admin/reports'
+    );
+  }, [location.pathname]);
+
+  const [analyticsOpen, setAnalyticsOpen] = useState(true);
+
+  // Shopkeeper Accordion state for Billing (Bills, Voice, Reminders)
+  const isShopkeeperBillingActive = useMemo(() => {
+    return (
+      location.pathname === '/bills' ||
+      location.pathname === '/voice' ||
+      location.pathname === '/reminders'
+    );
+  }, [location.pathname]);
+
+  const [shopkeeperBillingOpen, setShopkeeperBillingOpen] = useState(true);
+
+  // Floating menus & modals
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+
+  // Notifications
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [notifications, setNotifications] = useState([]);
+
+  const profileMenuRef = useRef(null);
+  const notificationMenuRef = useRef(null);
+
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+  const BASE_URL = useMemo(() => API_URL.replace('/api/v1', ''), [API_URL]);
+
+  const [profileImageError, setProfileImageError] = useState(false);
 
   useEffect(() => {
-    if (logoutModalOpen || sidebarOpen || notificationOpen || profileDropdownOpen) {
+    setProfileImageError(false);
+  }, [user?.profileImage]);
+
+  const hasProfileImage = useMemo(() => {
+    return Boolean(user?.profileImage && user.profileImage !== 'no-photo.jpg');
+  }, [user?.profileImage]);
+
+  const getImageUrl = useCallback((imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith('http')) return imagePath;
+    return `${BASE_URL}${imagePath}`;
+  }, [BASE_URL]);
+
+  // Toggle sidebar collapse
+  const toggleSidebarCollapse = useCallback(() => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem('app_sidebar_collapsed', String(next));
+      return next;
+    });
+  }, []);
+
+  // Keyboard shortcut listener (Ctrl+B / Cmd+B for sidebar, Ctrl+K for search)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        toggleSidebarCollapse();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setSearchModalOpen((prev) => !prev);
+      }
+      if (e.key === 'Escape') {
+        setProfileDropdownOpen(false);
+        setNotificationOpen(false);
+        setSearchModalOpen(false);
+        setMobileDrawerOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [toggleSidebarCollapse]);
+
+  // Close floating menus on click outside
+  useEffect(() => {
+    if (!profileDropdownOpen && !notificationOpen) return;
+
+    const handleClickOutside = (e) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(e.target)) {
+        setProfileDropdownOpen(false);
+      }
+      if (notificationMenuRef.current && !notificationMenuRef.current.contains(e.target)) {
+        setNotificationOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [profileDropdownOpen, notificationOpen]);
+
+  // Lock body and html scroll only when modal or drawer is open
+  useEffect(() => {
+    if (mobileDrawerOpen || logoutModalOpen || searchModalOpen) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
     } else {
@@ -40,24 +182,29 @@ const MainLayout = () => {
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
     };
-  }, [logoutModalOpen, sidebarOpen, notificationOpen, profileDropdownOpen]);
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
-  const { t } = useTranslation();
+  }, [mobileDrawerOpen, logoutModalOpen, searchModalOpen]);
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
-  const BASE_URL = API_URL.replace('/api/v1', '');
-
-  // Fetch notifications count and listen for real-time WebSocket notifications
+  // Close drawer on route change
   useEffect(() => {
+    setMobileDrawerOpen(false);
+    setProfileDropdownOpen(false);
+    setNotificationOpen(false);
+  }, [location.pathname]);
+
+  // Real-time notifications count & WebSockets
+  useEffect(() => {
+    let isMounted = true;
+
     const fetchNotifications = async () => {
+      if (!user?._id) return;
       try {
         const res = await api.get('/notifications/unread-count');
-        const count = res.data?.data?.count || res.data?.count || 0;
-        setNotificationCount(count);
+        if (isMounted) {
+          const count = res.data?.data?.count || res.data?.count || 0;
+          setNotificationCount(count);
+        }
       } catch (error) {
-        console.error('Failed to fetch notifications:', error);
-        setNotificationCount(0);
+        if (isMounted) setNotificationCount(0);
       }
     };
 
@@ -69,109 +216,81 @@ const MainLayout = () => {
         socket = io(BASE_URL, {
           withCredentials: true,
           transports: ['websocket', 'polling'],
-          reconnectionAttempts: 5,
+          reconnectionAttempts: 3,
         });
 
         socket.on('new_notification', (newNotif) => {
+          if (!isMounted) return;
           setNotificationCount((prev) => prev + 1);
           setNotifications((prev) => [
             { ...newNotif, read: false },
-            ...prev.slice(0, 4)
+            ...prev.slice(0, 4),
           ]);
           toast(newNotif.title + ': ' + newNotif.message, {
             icon: '🔔',
-            duration: 4000
+            duration: 4000,
           });
         });
       } catch (err) {
-        console.warn('Socket connection error:', err);
+        // Fallback
       }
     }
 
-    // Fallback polling for new notifications every 60 seconds
     const interval = setInterval(fetchNotifications, 60000);
     return () => {
+      isMounted = false;
       clearInterval(interval);
       if (socket) socket.disconnect();
     };
   }, [user?._id, BASE_URL]);
 
-  // Fetch notification list when panel opens
-  const fetchNotificationList = async () => {
+  const fetchNotificationList = useCallback(async () => {
+    if (!user?._id) return;
     try {
       const res = await api.get('/notifications?limit=5');
-      // Backend now sends: { success: true, data: { data: [...], totalCount: ... }, message: '...' }
       const notificationsData = res.data?.data?.data || [];
-
-      // Map backend isRead to frontend read
-      const mappedNotifications = notificationsData.map(notif => ({
-        ...notif,
-        read: notif.isRead
-      }));
-
-      setNotifications(mappedNotifications);
+      setNotifications(
+        notificationsData.map((notif) => ({
+          ...notif,
+          read: notif.isRead,
+        }))
+      );
     } catch (error) {
-      console.error('Failed to fetch notification list:', error);
-      // Don't show mock data - show empty state instead
       setNotifications([]);
     }
-  };
+  }, []);
 
-  const handleNotificationClick = () => {
-    setNotificationOpen(!notificationOpen);
-    if (!notificationOpen) {
-      fetchNotificationList();
-    }
-  };
+  const handleNotificationClick = useCallback(() => {
+    setNotificationOpen((prev) => {
+      const next = !prev;
+      if (next) fetchNotificationList();
+      return next;
+    });
+  }, [fetchNotificationList]);
 
-  const markAsRead = async (notificationId) => {
+  const markAsRead = useCallback(async (notificationId) => {
     try {
       await api.patch(`/notifications/${notificationId}/read`);
-      setNotifications(notifications.map(n =>
-        n._id === notificationId ? { ...n, read: true } : n
-      ));
-      setNotificationCount(Math.max(0, notificationCount - 1));
+      setNotifications((prev) =>
+        prev.map((n) => (n._id === notificationId ? { ...n, read: true } : n))
+      );
+      setNotificationCount((prev) => Math.max(0, prev - 1));
     } catch (error) {
-      console.error('Failed to mark as read:', error);
+      console.error(error);
     }
-  };
+  }, []);
 
-  const markAllAsRead = async () => {
+  const markAllAsRead = useCallback(async () => {
     try {
       await api.patch('/notifications/mark-all-read');
-      setNotifications(notifications.map(n => ({ ...n, read: true })));
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
       setNotificationCount(0);
     } catch (error) {
-      console.error('Failed to mark all as read:', error);
+      console.error(error);
     }
-  };
+  }, []);
 
-  const getNotificationIcon = (type) => {
-    switch (type) {
-      case 'PAYMENT': return '💰';
-      case 'CUSTOMER': return '👤';
-      case 'BILL': return '📄';
-      case 'REMINDER': return '🔔';
-      default: return '📢';
-    }
-  };
-
-  const getTimeAgo = (date) => {
-    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-    if (seconds < 60) return 'Just now';
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `${minutes}m ago`;
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours}h ago`;
-    const days = Math.floor(hours / 24);
-    return `${days}d ago`;
-  };
-
-  const handleLogout = () => {
-    setLogoutModalOpen(true);
-  };
-
-  const executeLogout = async () => {
+  const executeLogout = useCallback(async () => {
     try {
       await api.post('/auth/logout');
     } catch (error) {
@@ -181,383 +300,1124 @@ const MainLayout = () => {
       localStorage.removeItem('token');
       localStorage.removeItem('isLoggedIn');
       dispatch(logout());
+      toast.success(t('Logged out successfully'));
       setLogoutModalOpen(false);
       window.location.href = '/login';
     }
-  };
+  }, [dispatch, t]);
 
-  const getInitials = (name) => {
-    if (!name) return 'U';
-    const parts = name.split(' ');
-    return parts.length > 1
-      ? `${parts[0][0]}${parts[1][0]}`
-      : parts[0].substring(0, 2);
-  };
+  // User initials (e.g. JG)
+  const userInitials = useMemo(() => {
+    if (!user?.name) return isAdmin ? 'AD' : 'UP';
+    const parts = user.name.trim().split(' ');
+    if (parts.length > 1) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    return user.name.slice(0, 2).toUpperCase();
+  }, [user?.name, isAdmin]);
 
-  const closeSidebar = () => setSidebarOpen(false);
+  // Dynamic breadcrumb label
+  const breadcrumbTitle = useMemo(() => {
+    const p = location.pathname;
+    if (p.includes('/admin/dashboard') || p === '/admin') return 'Dashboard';
+    if (p.includes('/admin/shops')) return 'Store';
+    if (p.includes('/admin/bills')) return 'Bills Ledger';
+    if (p.includes('/admin/subscriptions')) return 'Subscriptions';
+    if (p.includes('/admin/reports')) return 'Reports';
+    if (p.includes('/admin/health')) return 'System Health';
+    if (p.includes('/dashboard')) return 'Dashboard';
+    if (p.includes('/customers')) return 'Customers';
+    if (p.includes('/products')) return 'Products';
+    if (p.includes('/bills')) return 'Billing';
+    if (p.includes('/reminders')) return 'Reminders';
+    if (p.includes('/voice')) return 'Voice Entry';
+    if (p.includes('/reports')) return 'Reports';
+    if (p.includes('/subscription')) return 'Subscription';
+    if (p.includes('/profile')) return 'Account';
+    if (p.includes('/settings')) return 'Settings';
+    if (p.includes('/notifications')) return 'Notifications';
+    return 'Dashboard';
+  }, [location.pathname]);
 
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) return null;
-    if (imagePath.startsWith('http')) return imagePath;
-    return `${BASE_URL}${imagePath}`;
-  };
+  // Dynamic breadcrumb icon matching the current active page
+  const BreadcrumbIcon = useMemo(() => {
+    const p = location.pathname;
+    if (p.includes('/admin/dashboard') || p === '/admin') return Home;
+    if (p.includes('/admin/shops')) return Store;
+    if (p.includes('/admin/bills')) return FileText;
+    if (p.includes('/admin/subscriptions')) return CreditCard;
+    if (p.includes('/admin/reports')) return BarChart2;
+    if (p.includes('/admin/health')) return Activity;
+    if (p.includes('/dashboard')) return Home;
+    if (p.includes('/customers')) return Users;
+    if (p.includes('/products')) return Box;
+    if (p.includes('/bills')) return FileText;
+    if (p.includes('/reminders')) return Bell;
+    if (p.includes('/voice')) return Mic;
+    if (p.includes('/reports')) return BarChart2;
+    if (p.includes('/subscription')) return Gem;
+    if (p.includes('/profile')) return User;
+    if (p.includes('/settings')) return Settings;
+    if (p.includes('/notifications')) return Bell;
+    return Home;
+  }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5]">
-      {/* Sidebar Desktop */}
-      <aside className="hidden lg:flex flex-col h-screen bg-white lg:w-[220px] min-[1440px]:w-[240px] fixed left-0 top-0 border-r border-gray-100 z-50">
-        {/* Brand - same height as header h-14, aligned */}
-        <div className="h-14 flex items-center px-6 border-b border-gray-100 flex-shrink-0">
-          <span className="text-[22px] font-semibold tracking-tight text-[#093C5D] select-none cursor-default flex items-center">UdharPay<span className="inline-block w-[7px] h-[7px] rounded-full bg-[#2ECC71] ml-[2px]"></span></span>
+    <div className="min-h-screen bg-[#F9FAFB] text-gray-900 flex">
+      {/* =========================================================================
+          DESKTOP SIDEBAR (Pinned full height)
+          Collapsed rail mode: w-[72px] | Expanded mode: w-64
+      ========================================================================= */}
+      <aside
+        className={`hidden lg:flex flex-col fixed inset-y-0 left-0 z-40 bg-white border-r border-gray-100 transition-all duration-200 ease-in-out ${
+          sidebarCollapsed ? 'w-[72px]' : 'w-64'
+        }`}
+      >
+        {/* Brand Header */}
+        <div className="h-14 flex items-center px-4 border-b border-gray-100 shrink-0">
+          <Link
+            to={isAdmin ? '/admin/dashboard' : '/dashboard'}
+            className={`flex items-center gap-3 transition-opacity ${
+              sidebarCollapsed ? 'mx-auto justify-center' : ''
+            }`}
+            title="UdharPay"
+          >
+            <div className="w-8 h-8 rounded-lg bg-[#093C5D] text-white flex items-center justify-center font-medium text-base shadow-sm shrink-0">
+              U
+            </div>
+
+            {!sidebarCollapsed && (
+              <div className="flex items-center gap-2 overflow-hidden">
+                <span className="font-medium text-gray-900 text-[16px] tracking-tight truncate">
+                  UdharPay
+                </span>
+                {isAdmin ? (
+                  <span className="text-[10px] font-medium tracking-wider uppercase px-1.5 py-0.5 rounded-md bg-[#093C5D]/10 text-[#093C5D] shrink-0">
+                    ADMIN
+                  </span>
+                ) : (
+                  <span className="inline-block w-2 h-2 rounded-full bg-[#10B981] ml-0.5" />
+                )}
+              </div>
+            )}
+          </Link>
         </div>
 
-        {/* Links */}
-        <nav className="flex-1 flex flex-col gap-1.5 px-3 pt-10 pb-4 overflow-y-auto">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 active:scale-95 ${isActive
-                  ? 'bg-[#093C5D] text-white font-semibold'
-                  : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 font-medium'
-                }`
-              }
-            >
-              <item.icon className="w-5 h-5" />
-              <span className="text-sm">{t(item.labelKey)}</span>
-            </NavLink>
-          ))}
+        {/* Navigation Links */}
+        <nav className="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto overflow-x-hidden">
+          {isAdmin ? (
+            /* ================= ADMIN NAVIGATION ================= */
+            <>
+              {/* 1. Dashboard */}
+              <NavLink
+                to="/admin/dashboard"
+                title={sidebarCollapsed ? 'Dashboard' : undefined}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                    isActive
+                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
+                }
+              >
+                <Home className="w-4 h-4 shrink-0" />
+                {!sidebarCollapsed && <span>Dashboard</span>}
+              </NavLink>
+
+              {/* 2. Analytics Accordion Group */}
+              <div className="pt-0.5">
+                {sidebarCollapsed ? (
+                  <NavLink
+                    to="/admin/shops"
+                    title="Analytics"
+                    className={({ isActive }) =>
+                      `flex items-center justify-center px-2 py-2.5 rounded-lg border text-sm transition-all ${
+                        isAnalyticsActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <BarChart2 className="w-4 h-4 shrink-0" />
+                  </NavLink>
+                ) : (
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => setAnalyticsOpen((prev) => !prev)}
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border text-sm transition-all cursor-pointer ${
+                        isAnalyticsActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <BarChart2 className="w-4 h-4 shrink-0" />
+                        <span>Analytics</span>
+                      </div>
+                      <ChevronDown
+                        className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
+                          analyticsOpen ? 'rotate-180' : ''
+                        } ${isAnalyticsActive ? 'text-[#093C5D]' : 'text-gray-400'}`}
+                      />
+                    </button>
+
+                    {analyticsOpen && (
+                      <div className="mt-1 space-y-1 relative pl-7 pr-1">
+                        <div className="absolute left-[22px] top-1.5 bottom-2 w-px bg-gray-200/80" />
+
+                        <NavLink
+                          to="/admin/shops"
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          Store
+                        </NavLink>
+
+                        <NavLink
+                          to="/admin/bills"
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          Bills Ledger
+                        </NavLink>
+
+                        <NavLink
+                          to="/admin/reports"
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          Reports
+                        </NavLink>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* 3. Subscriptions (with Live badge) */}
+              <NavLink
+                to="/admin/subscriptions"
+                title={sidebarCollapsed ? 'Subscriptions' : undefined}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                    isActive
+                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
+                }
+              >
+                <CreditCard className="w-4 h-4 shrink-0" />
+                {!sidebarCollapsed && (
+                  <>
+                    <span>Subscriptions</span>
+                    <span className="ml-auto text-[10px] font-medium px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wide">
+                      LIVE
+                    </span>
+                  </>
+                )}
+              </NavLink>
+
+              {/* 4. System Health (with LIVE badge) */}
+              <NavLink
+                to="/admin/health"
+                title={sidebarCollapsed ? 'System Health' : undefined}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                    isActive
+                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
+                }
+              >
+                <Activity className="w-4 h-4 shrink-0" />
+                {!sidebarCollapsed && (
+                  <>
+                    <span>System Health</span>
+                    <span className="ml-auto text-[10px] font-medium px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wide">
+                      LIVE
+                    </span>
+                  </>
+                )}
+              </NavLink>
+
+              {/* 5. Settings */}
+              <NavLink
+                to="/settings"
+                title={sidebarCollapsed ? 'Settings' : undefined}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                    isActive
+                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
+                }
+              >
+                <Settings className="w-4 h-4 shrink-0" />
+                {!sidebarCollapsed && <span>Settings</span>}
+              </NavLink>
+            </>
+          ) : (
+            /* ================= SHOPKEEPER NAVIGATION ================= */
+            <>
+              {/* 1. Dashboard */}
+              <NavLink
+                to="/dashboard"
+                title={sidebarCollapsed ? t('Dashboard') : undefined}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                    isActive
+                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
+                }
+              >
+                <Home className="w-4 h-4 shrink-0" />
+                {!sidebarCollapsed && <span>{t('Dashboard')}</span>}
+              </NavLink>
+
+              {/* 2. Customers */}
+              <NavLink
+                to="/customers"
+                title={sidebarCollapsed ? t('Customers') : undefined}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                    isActive
+                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
+                }
+              >
+                <Users className="w-4 h-4 shrink-0" />
+                {!sidebarCollapsed && <span>{t('Customers')}</span>}
+              </NavLink>
+
+              {/* 3. Products */}
+              <NavLink
+                to="/products"
+                title={sidebarCollapsed ? t('Products') : undefined}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                    isActive
+                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
+                }
+              >
+                <Box className="w-4 h-4 shrink-0" />
+                {!sidebarCollapsed && <span>{t('Products')}</span>}
+              </NavLink>
+
+              {/* 4. Billing Accordion Dropdown (HeroUI Style) */}
+              <div className="pt-0.5">
+                {sidebarCollapsed ? (
+                  <NavLink
+                    to="/bills"
+                    title={t('Billing')}
+                    className={({ isActive }) =>
+                      `flex items-center justify-center px-2 py-2.5 rounded-lg border text-sm transition-all ${
+                        isShopkeeperBillingActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <FileText className="w-4 h-4 shrink-0" />
+                  </NavLink>
+                ) : (
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => setShopkeeperBillingOpen((prev) => !prev)}
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border text-sm transition-all cursor-pointer ${
+                        isShopkeeperBillingActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <FileText className="w-4 h-4 shrink-0" />
+                        <span>{t('Billing')}</span>
+                      </div>
+                      <ChevronDown
+                        className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
+                          shopkeeperBillingOpen ? 'rotate-180' : ''
+                        } ${isShopkeeperBillingActive ? 'text-[#093C5D]' : 'text-gray-400'}`}
+                      />
+                    </button>
+
+                    {shopkeeperBillingOpen && (
+                      <div className="mt-1 space-y-1 relative pl-7 pr-1">
+                        <div className="absolute left-[22px] top-1.5 bottom-2 w-px bg-gray-200/80" />
+
+                        <NavLink
+                          to="/bills"
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          {t('Bills & Invoices')}
+                        </NavLink>
+
+                        <NavLink
+                          to="/voice"
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          {t('Voice Entry')}
+                        </NavLink>
+
+                        <NavLink
+                          to="/reminders"
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          {t('Reminders')}
+                        </NavLink>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* 5. Reports */}
+              <NavLink
+                to="/reports"
+                title={sidebarCollapsed ? t('Reports') : undefined}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                    isActive
+                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
+                }
+              >
+                <BarChart2 className="w-4 h-4 shrink-0" />
+                {!sidebarCollapsed && <span>{t('Reports')}</span>}
+              </NavLink>
+
+              {/* 6. Subscription (with Pro badge) */}
+              <NavLink
+                to="/subscription"
+                title={sidebarCollapsed ? t('Subscription') : undefined}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                    isActive
+                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
+                }
+              >
+                <Gem className="w-4 h-4 shrink-0" />
+                {!sidebarCollapsed && (
+                  <>
+                    <span>{t('Subscription')}</span>
+                    <span className="ml-auto text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      Pro
+                    </span>
+                  </>
+                )}
+              </NavLink>
+
+              {/* 7. Settings */}
+              <NavLink
+                to="/settings"
+                title={sidebarCollapsed ? t('Settings') : undefined}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                    isActive
+                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
+                }
+              >
+                <Settings className="w-4 h-4 shrink-0" />
+                {!sidebarCollapsed && <span>{t('Settings')}</span>}
+              </NavLink>
+            </>
+          )}
         </nav>
 
-        {/* Footer */}
-        <div className="flex flex-col gap-2 px-4 py-4 border-t border-gray-100 flex-shrink-0 mt-auto">
+        {/* Sidebar Footer */}
+        <div className="p-3 border-t border-gray-100 shrink-0">
           <Link
             to="/contact-support"
-            className="flex items-center justify-center gap-2 w-full py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-all font-medium border border-gray-200/60"
+            title={sidebarCollapsed ? 'Help & Support' : undefined}
+            className={`flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg border transition-colors ${
+              location.pathname === '/contact-support'
+                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+            } ${sidebarCollapsed ? 'justify-center px-2' : ''}`}
           >
-            <HelpCircle className="w-4 h-4" />
-            <span className="text-sm">{t('Support')}</span>
+            <HelpCircle className="w-4 h-4 shrink-0" />
+            {!sidebarCollapsed && <span>Help</span>}
           </Link>
         </div>
       </aside>
 
-      {/* Mobile Sidebar */}
-      <div className="lg:hidden">
-        {/* Overlay */}
-        {sidebarOpen && (
+      {/* =========================================================================
+          MOBILE / TABLET OFFCANVAS DRAWER (< 1024px)
+      ========================================================================= */}
+      {mobileDrawerOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/50 z-[100] animate-fade-in"
-            onClick={closeSidebar}
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
+            onClick={() => setMobileDrawerOpen(false)}
           />
-        )}
 
-        {/* Sidebar */}
-        <aside className={`fixed left-0 top-0 h-full w-[280px] sm:w-[320px] bg-white border-r border-gray-100 z-[110] transform transition-transform duration-300 ease-out shadow-2xl ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}>
-          <div className="flex flex-col h-full">
-            {/* Header with Close Button - Same height and padding as main header */}
-            <div className="h-14 flex items-center justify-between pl-8 pr-6 border-b border-gray-100 flex-shrink-0">
-              <span className="text-[22px] font-semibold tracking-tight text-[#093C5D] select-none flex items-center">UdharPay<span className="inline-block w-[7px] h-[7px] rounded-full bg-[#2ECC71] ml-[2px]"></span></span>
+          {/* Drawer Panel */}
+          <aside className="fixed inset-y-0 left-0 w-72 bg-white shadow-2xl flex flex-col z-50 transition-transform">
+            <div className="h-14 flex items-center justify-between px-5 border-b border-gray-100 shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-[#093C5D] text-white flex items-center justify-center font-medium text-base shadow-sm">
+                  U
+                </div>
+                <span className="font-medium text-gray-900 text-[16px]">
+                  UdharPay {isAdmin && <span className="text-[11px] font-medium text-[#093C5D] bg-[#093C5D]/10 px-1.5 py-0.5 rounded">ADMIN</span>}
+                </span>
+              </div>
               <button
-                onClick={closeSidebar}
-                className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200"
-                aria-label="Close menu"
+                type="button"
+                onClick={() => setMobileDrawerOpen(false)}
+                className="p-1.5 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
+                aria-label="Close navigation"
               >
-                <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Sidebar Content */}
-            <div className="flex-1 flex flex-col px-6 pt-8 pb-8 overflow-y-auto">
-              {/* Links */}
-              <nav className="flex-1 flex flex-col gap-1.5">
-                {navItems.map((item) => (
+            <div className="flex-1 px-4 py-4 space-y-1.5 overflow-y-auto">
+              {isAdmin ? (
+                <>
                   <NavLink
-                    key={item.path}
-                    to={item.path}
-                    onClick={closeSidebar}
+                    to="/admin/dashboard"
+                    onClick={() => setMobileDrawerOpen(false)}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 active:scale-95 ${isActive
-                        ? 'bg-[#093C5D] text-white font-medium'
-                        : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 font-medium'
+                      `flex items-center gap-3 px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
+                        isActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
                       }`
                     }
                   >
-                    <item.icon className="w-5 h-5" />
-                    <span className="text-sm">{t(item.labelKey)}</span>
+                    <Home className="w-4 h-4 shrink-0" />
+                    <span>Dashboard</span>
                   </NavLink>
-                ))}
-              </nav>
 
-              {/* Footer */}
-              <div className="mt-auto flex flex-col pt-4 border-t border-gray-100">
-                <Link
-                  to="/contact-support"
-                  onClick={closeSidebar}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 bg-gray-50 hover:bg-gray-100 active:bg-gray-200 text-gray-700 rounded-lg transition-all font-medium border border-gray-200/60"
-                >
-                  <HelpCircle className="w-5 h-5" />
-                  <span className="text-sm">{t('Help & Support')}</span>
-                </Link>
-              </div>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => setAnalyticsOpen((prev) => !prev)}
+                      className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg border text-sm transition-colors cursor-pointer ${
+                        isAnalyticsActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <BarChart2 className="w-4 h-4 shrink-0" />
+                        <span>Analytics</span>
+                      </div>
+                      <ChevronDown
+                        className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
+                          analyticsOpen ? 'rotate-180' : ''
+                        } ${isAnalyticsActive ? 'text-[#093C5D]' : 'text-gray-400'}`}
+                      />
+                    </button>
+
+                    {analyticsOpen && (
+                      <div className="mt-1 space-y-1 pl-8 pr-1 relative">
+                        <div className="absolute left-6 top-1.5 bottom-2 w-px bg-gray-200" />
+                        <NavLink
+                          to="/admin/shops"
+                          onClick={() => setMobileDrawerOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-2 rounded-lg border text-sm transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          Store
+                        </NavLink>
+                        <NavLink
+                          to="/admin/bills"
+                          onClick={() => setMobileDrawerOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-2 rounded-lg border text-sm transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          Bills Ledger
+                        </NavLink>
+                        <NavLink
+                          to="/admin/reports"
+                          onClick={() => setMobileDrawerOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-2 rounded-lg border text-sm transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          Reports
+                        </NavLink>
+                      </div>
+                    )}
+                  </div>
+
+                  <NavLink
+                    to="/admin/subscriptions"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
+                        isActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <div className="flex items-center gap-3">
+                      <CreditCard className="w-4 h-4 shrink-0" />
+                      <span>Subscriptions</span>
+                    </div>
+                    <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wide">
+                      LIVE
+                    </span>
+                  </NavLink>
+
+                  <NavLink
+                    to="/admin/health"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
+                        isActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <div className="flex items-center gap-3">
+                      <Activity className="w-4 h-4 shrink-0" />
+                      <span>System Health</span>
+                    </div>
+                    <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wide">
+                      LIVE
+                    </span>
+                  </NavLink>
+
+                  <NavLink
+                    to="/settings"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
+                        isActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <Settings className="w-4 h-4 shrink-0" />
+                    <span>Settings</span>
+                  </NavLink>
+                </>
+              ) : (
+                <>
+                  <NavLink
+                    to="/dashboard"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
+                        isActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <Home className="w-4 h-4 shrink-0" />
+                    <span>{t('Dashboard')}</span>
+                  </NavLink>
+
+                  <NavLink
+                    to="/customers"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
+                        isActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <Users className="w-4 h-4 shrink-0" />
+                    <span>{t('Customers')}</span>
+                  </NavLink>
+
+                  <NavLink
+                    to="/products"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
+                        isActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <Box className="w-4 h-4 shrink-0" />
+                    <span>{t('Products')}</span>
+                  </NavLink>
+
+                  {/* Billing Accordion in Mobile */}
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => setShopkeeperBillingOpen((prev) => !prev)}
+                      className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg border text-sm transition-colors cursor-pointer ${
+                        isShopkeeperBillingActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <FileText className="w-4 h-4 shrink-0" />
+                        <span>{t('Billing')}</span>
+                      </div>
+                      <ChevronDown
+                        className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
+                          shopkeeperBillingOpen ? 'rotate-180' : ''
+                        } ${isShopkeeperBillingActive ? 'text-[#093C5D]' : 'text-gray-400'}`}
+                      />
+                    </button>
+
+                    {shopkeeperBillingOpen && (
+                      <div className="mt-1 space-y-1 pl-8 pr-1 relative">
+                        <div className="absolute left-6 top-1.5 bottom-2 w-px bg-gray-200" />
+                        <NavLink
+                          to="/bills"
+                          onClick={() => setMobileDrawerOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-2 rounded-lg border text-sm transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          {t('Bills & Invoices')}
+                        </NavLink>
+                        <NavLink
+                          to="/voice"
+                          onClick={() => setMobileDrawerOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-2 rounded-lg border text-sm transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          {t('Voice Entry')}
+                        </NavLink>
+                        <NavLink
+                          to="/reminders"
+                          onClick={() => setMobileDrawerOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-2 rounded-lg border text-sm transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          {t('Reminders')}
+                        </NavLink>
+                      </div>
+                    )}
+                  </div>
+
+                  <NavLink
+                    to="/reports"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
+                        isActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <BarChart2 className="w-4 h-4 shrink-0" />
+                    <span>{t('Reports')}</span>
+                  </NavLink>
+
+                  <NavLink
+                    to="/subscription"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
+                        isActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <div className="flex items-center gap-3">
+                      <Gem className="w-4 h-4 shrink-0" />
+                      <span>{t('Subscription')}</span>
+                    </div>
+                    <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      Pro
+                    </span>
+                  </NavLink>
+
+                  <NavLink
+                    to="/settings"
+                    onClick={() => setMobileDrawerOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
+                        isActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <Settings className="w-4 h-4 shrink-0" />
+                    <span>{t('Settings')}</span>
+                  </NavLink>
+                </>
+              )}
             </div>
-          </div>
-        </aside>
-      </div>
 
-      <header className="fixed top-0 right-0 left-0 lg:left-[220px] min-[1440px]:left-[240px] h-14 bg-white border-b border-gray-100 z-40 flex items-center justify-between px-4 sm:px-6 lg:px-8 min-[1440px]:px-10">
-        {/* Left Side - Hamburger & Page Title */}
-        <div className="flex items-center gap-4">
-          {/* Hamburger Menu Button (Mobile Only) */}
-          {!sidebarOpen && (
+            <div className="p-4 border-t border-gray-100 shrink-0">
+              <Link
+                to="/contact-support"
+                onClick={() => setMobileDrawerOpen(false)}
+                className={`flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg border transition-colors ${
+                  location.pathname === '/contact-support'
+                    ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                }`}
+              >
+                <HelpCircle className="w-4 h-4 shrink-0" />
+                <span>Help & Support</span>
+              </Link>
+            </div>
+          </aside>
+        </div>
+      )}
+
+      {/* =========================================================================
+          MAIN COLUMN (Sticky Navbar + Content Area)
+      ========================================================================= */}
+      <div
+        className={`flex-1 flex flex-col min-w-0 transition-all duration-200 ease-in-out ${
+          sidebarCollapsed ? 'lg:pl-[72px]' : 'lg:pl-64'
+        }`}
+      >
+        {/* Sticky Top Navbar */}
+        <header className="sticky top-0 z-30 h-14 bg-white/95 backdrop-blur-md border-b border-gray-100 flex items-center justify-between px-3 sm:px-6 shrink-0">
+          {/* Left Side: Sidebar Trigger + Breadcrumb */}
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            {/* Desktop: Rail Collapse Trigger Button */}
             <button
-              onClick={() => setSidebarOpen(true)}
-              className="lg:hidden w-8 h-8 -ml-1 border border-transparent hover:border-gray-200 rounded-full transition-colors bg-transparent active:bg-gray-100 hover:bg-gray-100 flex items-center justify-center text-gray-700"
+              type="button"
+              onClick={toggleSidebarCollapse}
+              className="hidden lg:flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 border border-transparent hover:border-gray-200 rounded-full text-gray-600 hover:text-gray-900 bg-transparent active:bg-gray-100 hover:bg-gray-100 transition-colors duration-150 cursor-pointer shrink-0"
+              title="Toggle sidebar (Ctrl+B)"
+              aria-label="Toggle sidebar collapse"
+            >
+              <SidebarRailIcon className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-gray-600" />
+            </button>
+
+            {/* Mobile / Tablet: Hamburger Menu Button */}
+            <button
+              type="button"
+              onClick={() => setMobileDrawerOpen(true)}
+              className="lg:hidden flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 border border-transparent hover:border-gray-200 rounded-full text-gray-600 hover:text-gray-900 bg-transparent active:bg-gray-100 hover:bg-gray-100 transition-colors duration-150 cursor-pointer shrink-0"
               aria-label="Open menu"
             >
-              <svg
-                className="w-6 h-6"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M4 6h16M4 12h10M4 18h16"
-                  stroke="currentColor"
-                  strokeWidth="2.25"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <Menu className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-gray-600" strokeWidth={1.75} />
             </button>
-          )}
-        </div>
 
+            {/* Breadcrumb Trail */}
+            <div aria-label="Breadcrumb" className="flex items-center gap-1.5 sm:gap-2 min-w-0 select-none">
+              <span className="flex items-center justify-center text-gray-600 shrink-0">
+                <BreadcrumbIcon className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-gray-600" strokeWidth={1.75} />
+              </span>
+              <span className="flex items-center justify-center text-gray-300 shrink-0" aria-hidden="true">
+                <svg
+                  className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-300"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                >
+                  <line x1="5" y1="13" x2="11" y2="3" />
+                </svg>
+              </span>
+              <span className="text-gray-900 font-medium text-sm truncate flex items-center leading-none">
+                {breadcrumbTitle}
+              </span>
+            </div>
+          </div>
 
-        {/* Right Side - Actions */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* Language Switcher */}
-          <LanguageSwitcher variant="compact" />
+          {/* Right Side: Language Switcher, Search, Notifications, Separator, Avatar */}
+          <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+            {/* Language Switcher */}
+            <LanguageSwitcher variant="compact" />
 
-          {/* Notification */}
-          <div className="relative flex items-center justify-center">
+            {/* 1. Quick Search Trigger (Ctrl+K) */}
             <button
-              onClick={handleNotificationClick}
-              className="cursor-pointer relative w-7 h-7 sm:w-9 sm:h-9 text-gray-600 border border-transparent hover:border-gray-200 rounded-full bg-transparent active:bg-gray-100 hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center flex-shrink-0"
-              aria-label="Notifications"
+              type="button"
+              onClick={() => setSearchModalOpen(true)}
+              className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center border border-transparent hover:border-gray-200 rounded-full text-gray-600 hover:text-gray-900 bg-transparent active:bg-gray-100 hover:bg-gray-100 transition-colors duration-150 cursor-pointer shrink-0"
+              title="Quick Search (Ctrl+K)"
+              aria-label="Quick search"
             >
-              <div className="relative flex items-center justify-center">
-                <Bell className="w-[22px] h-[22px] sm:w-5 sm:h-5" strokeWidth={1.5} />
+              <Search className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-gray-600" strokeWidth={1.75} />
+            </button>
+
+            {/* 2. Notification Bell Button & Popover */}
+            <div className="relative flex items-center justify-center" ref={notificationMenuRef}>
+              <button
+                type="button"
+                onClick={handleNotificationClick}
+                className="relative w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center border border-transparent hover:border-gray-200 rounded-full text-gray-600 hover:text-gray-900 bg-transparent active:bg-gray-100 hover:bg-gray-100 transition-colors duration-150 cursor-pointer shrink-0"
+                title="Notifications"
+                aria-label="Notifications"
+              >
+                <Bell className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-gray-600" strokeWidth={1.75} />
                 {notificationCount > 0 && (
-                  <span className="absolute -top-0.5 right-0.5 flex h-2 w-2">
+                  <span className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 border border-white"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                   </span>
                 )}
-              </div>
-            </button>
+              </button>
 
-            {/* Notification Dropdown Panel */}
-            {notificationOpen && (
-              <>
-                {/* Backdrop */}
-                <div
-                  className="fixed inset-0 z-30 bg-transparent"
-                  onClick={() => setNotificationOpen(false)}
-                />
-
-                {/* Panel - Mobile: Full width from top, Desktop: Dropdown */}
-                <div className="fixed sm:absolute left-4 right-4 sm:left-auto top-14 sm:top-[calc(100%+8px)] sm:right-0 w-auto sm:w-[380px] bg-white rounded-lg border border-gray-200 shadow-none z-40 max-h-[calc(100vh-3.5rem)] sm:max-h-[500px] flex flex-col animate-fade-in origin-top-right overflow-hidden">
-                  {/* Header */}
-                  <div className="p-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0 bg-white">
+              {/* Notification Popover Panel */}
+              {notificationOpen && (
+                <div className="fixed sm:absolute right-4 sm:right-0 top-14 sm:top-11 w-[calc(100vw-2rem)] sm:w-96 bg-white border border-gray-100 shadow-xl shadow-gray-200/70 rounded-2xl p-0 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+                  <div className="p-4 border-b border-gray-100 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-semibold text-gray-900">{t("Notifications")}</h3>
+                      <h4 className="text-sm font-medium text-gray-900">{t('Notifications')}</h4>
                       {notificationCount > 0 && (
-                        <span className="bg-[#E5E7EB] text-[#082a42] text-xs font-bold px-2 py-0.5 rounded-full">
-                          {notificationCount}
+                        <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-[#093C5D]/10 text-[#093C5D]">
+                          {notificationCount} {t('new')}
                         </span>
                       )}
                     </div>
-                    {notifications.some(n => !n.read) && (
+                    {notifications.some((n) => !n.read) && (
                       <button
+                        type="button"
                         onClick={markAllAsRead}
-                        className="text-xs text-[#093C5D] font-semibold hover:text-[#082a42] transition-colors active:scale-95 px-2 py-1"
+                        className="text-xs font-medium text-[#093C5D] hover:underline cursor-pointer"
                       >
-                        Mark all read
+                        {t('Mark all read')}
                       </button>
                     )}
                   </div>
 
-                  {/* Notification List */}
-                  <div className="flex-1 overflow-y-auto overscroll-contain">
+                  <div className="max-h-80 overflow-y-auto divide-y divide-gray-50">
                     {notifications.length === 0 ? (
-                      <div className="p-12 text-center">
-                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
-                          <Bell className="w-8 h-8 text-gray-400" strokeWidth={2} />
-                        </div>
-                        <p className="text-base text-gray-700 font-semibold mb-1">{t("No notifications")}</p>
-                        <p className="text-sm text-gray-500">{t("You're all caught up!")}</p>
+                      <div className="p-8 text-center text-gray-400 text-sm">
+                        <Bell className="w-8 h-8 mx-auto mb-2 opacity-30" />
+                        <p className="font-medium">{t('No new notifications')}</p>
                       </div>
                     ) : (
-                      <div className="divide-y divide-gray-100">
-                        {notifications.map((notification) => (
-                          <div
-                            key={notification._id}
-                            onClick={() => !notification.read && markAsRead(notification._id)}
-                            className={`p-4 hover:bg-gray-50 active:bg-gray-100 transition-colors cursor-pointer ${!notification.read ? 'bg-[#F5F5F5]/50' : ''
-                              }`}
-                          >
-                            <div className="flex items-start gap-3">
-                              {/* Icon */}
-                              <div className="flex-shrink-0 w-11 h-11 rounded-full bg-gradient-to-br from-[#E5E7EB] to-[#F5F5F5] flex items-center justify-center text-xl shadow-sm">
-                                {getNotificationIcon(notification.type)}
-                              </div>
-
-                              {/* Content */}
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-start justify-between gap-2 mb-1">
-                                  <h4 className={`text-sm font-semibold leading-snug ${!notification.read ? 'text-gray-900' : 'text-gray-700'
-                                    }`}>
-                                    {notification.title}
-                                  </h4>
-                                  {!notification.read && (
-                                    <span className="w-2 h-2 bg-[#093C5D] rounded-full flex-shrink-0 mt-1.5"></span>
-                                  )}
-                                </div>
-                                <p className="text-sm text-gray-600 mb-2 line-clamp-2 leading-relaxed">
-                                  {notification.message}
-                                </p>
-                                <p className="text-xs text-gray-400 font-medium">
-                                  {getTimeAgo(notification.createdAt)}
-                                </p>
-                              </div>
-                            </div>
+                      notifications.map((notif) => (
+                        <div
+                          key={notif._id}
+                          onClick={() => !notif.read && markAsRead(notif._id)}
+                          className={`p-3.5 hover:bg-gray-50 transition-colors cursor-pointer ${
+                            !notif.read ? 'bg-blue-50/30' : ''
+                          }`}
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <p className="text-xs font-medium text-gray-900">{notif.title}</p>
+                            {!notif.read && (
+                              <span className="w-2 h-2 rounded-full bg-[#093C5D] shrink-0 mt-1" />
+                            )}
                           </div>
-                        ))}
-                      </div>
+                          <p className="text-xs text-gray-600 mt-0.5 line-clamp-2">{notif.message}</p>
+                        </div>
+                      ))
                     )}
                   </div>
 
-                  {/* Footer */}
-                  {notifications.length > 0 && (
-                    <div className="p-3 border-t border-gray-100">
-                      <Link
-                        to="/notifications"
-                        onClick={() => setShowNotifications(false)}
-                        className="block w-full text-center text-sm font-semibold text-[#093C5D] hover:text-[#082a42] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 py-2.5 rounded-xl transition-colors"
-                      >
-                        {t('View all notifications →')}
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Separator */}
-          <div className="h-5 w-[1px] bg-gray-200 mx-1 flex-shrink-0"></div>
-
-          {/* Profile Dropdown */}
-          <div className="relative flex items-center justify-center">
-            <button
-              onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-              className="flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 rounded-full border border-gray-200 bg-transparent active:scale-95 active:bg-gray-100 hover:bg-gray-100 hover:border-gray-300 transition-all duration-200 flex-shrink-0 p-[2px] cursor-pointer"
-              aria-label="User menu"
-            >
-              {/* Avatar */}
-              {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
-                <img
-                  src={getImageUrl(user.profileImage)}
-                  alt="Profile"
-                  className="w-full h-full rounded-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              ) : (
-                <div className="w-full h-full rounded-full bg-[#73a841] text-white flex items-center justify-center text-[10px] sm:text-xs font-medium">
-                  {getInitials(user?.name)}
+                  <div className="p-2.5 border-t border-gray-100 bg-gray-50/50 text-center">
+                    <Link
+                      to="/notifications"
+                      onClick={() => setNotificationOpen(false)}
+                      className="text-xs font-medium text-[#093C5D] hover:underline"
+                    >
+                      {t('View all notifications →')}
+                    </Link>
+                  </div>
                 </div>
               )}
-            </button>
+            </div>
 
-            {/* Profile Dropdown Panel */}
-            {profileDropdownOpen && (
-              <>
-                <div
-                  className="fixed inset-0 z-30 bg-transparent"
-                  onClick={() => setProfileDropdownOpen(false)}
-                />
-                <div className="fixed sm:absolute left-4 right-4 sm:left-auto top-14 sm:top-[calc(100%+8px)] sm:right-0 w-auto sm:w-[260px] bg-white rounded-lg border border-gray-200 shadow-none z-40 flex flex-col animate-fade-in origin-top-right overflow-hidden">
+            {/* Vertical Separator */}
+            <div className="h-4 sm:h-5 w-px bg-gray-200 mx-1 sm:mx-1.5 self-center shrink-0" />
 
-                  {/* User Info Header */}
-                  <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/30">
-                    <p className="text-[15px] sm:text-sm font-semibold text-gray-900 truncate mb-0.5">{user?.name || 'User'}</p>
-                    <p className="text-[13px] sm:text-xs font-medium text-gray-500 truncate">{user?.email || 'user@example.com'}</p>
+            {/* 3. User Avatar & Floating Popover Menu */}
+            <div className="relative flex items-center justify-center shrink-0" ref={profileMenuRef}>
+              <button
+                type="button"
+                onClick={() => setProfileDropdownOpen((prev) => !prev)}
+                className={`w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full cursor-pointer transition-colors duration-150 shrink-0 ${
+                  hasProfileImage && !profileImageError
+                    ? 'border border-gray-200 hover:border-gray-300 hover:ring-2 hover:ring-gray-200/60 overflow-hidden'
+                    : 'border border-transparent hover:border-gray-200 text-gray-600 hover:text-gray-900 bg-transparent active:bg-gray-100 hover:bg-gray-100'
+                }`}
+                aria-label="User account menu"
+                aria-expanded={profileDropdownOpen}
+                title={user?.name || 'Account'}
+              >
+                {hasProfileImage && !profileImageError ? (
+                  <img
+                    src={getImageUrl(user.profileImage)}
+                    alt={user?.name || 'Profile'}
+                    onError={() => setProfileImageError(true)}
+                    className="w-full h-full rounded-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <User className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-gray-600" strokeWidth={1.75} />
+                )}
+              </button>
+
+              {/* Popover Dropdown Menu */}
+              {profileDropdownOpen && (
+                <div className="absolute right-0 top-11 w-48 sm:w-52 bg-white border border-gray-100 shadow-xl shadow-gray-200/70 rounded-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="px-3 py-2 border-b border-gray-100 mb-1 flex items-center gap-2.5">
+                    {hasProfileImage && !profileImageError ? (
+                      <img
+                        src={getImageUrl(user.profileImage)}
+                        alt={user?.name || 'Profile'}
+                        className="w-8 h-8 rounded-full object-cover border border-gray-200 shrink-0"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center shrink-0 border border-gray-200/60">
+                        <User className="w-4 h-4 text-gray-600" strokeWidth={1.75} />
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-medium text-gray-900 truncate">
+                        {user?.name || (isAdmin ? 'Administrator' : 'Shopkeeper')}
+                      </p>
+                      <p className="text-[11px] text-gray-500 truncate font-medium">
+                        {user?.email || 'user@udharpay.com'}
+                      </p>
+                    </div>
                   </div>
 
-                  {/* Menu Items */}
-                  <div className="flex flex-col pb-1">
-                    <div className="px-3 pt-3 pb-1">
+                  {!isAdmin && (
+                    <div className="p-1 mb-1">
                       <Link
                         to="/subscription"
                         onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2.5 bg-[#093C5D] hover:bg-[#082a42] rounded-lg transition-all active:scale-95 group w-full"
+                        className="flex items-center gap-2.5 p-2 bg-[#093C5D] text-white hover:bg-[#082a42] rounded-xl transition-colors group"
                       >
-                        <div className="flex items-center justify-center pl-1">
-                          <Gem className="w-5 h-5 text-white/90 group-hover:text-white" strokeWidth={2} />
-                        </div>
-                        <div className="flex flex-col justify-center">
-                          <span className="text-[14px] font-semibold text-white leading-tight">{t('Upgrade Plan')}</span>
-                          <span className="text-[12px] text-white/80 font-medium leading-tight mt-0.5">{t('Get extra benefits')}</span>
+                        <Gem className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform shrink-0" />
+                        <div>
+                          <p className="text-xs font-medium leading-tight">{t('Upgrade Plan')}</p>
+                          <p className="text-[10px] text-white/80 leading-tight mt-0.5">{t('Get extra benefits')}</p>
                         </div>
                       </Link>
                     </div>
+                  )}
 
-                    <Link
-                      to="/profile"
-                      onClick={() => setProfileDropdownOpen(false)}
-                      className="flex items-center gap-3.5 px-5 py-2.5 sm:py-2.5 text-[15px] sm:text-sm text-[#093C5D] font-medium hover:bg-gray-50 transition-colors border-b border-gray-100"
-                    >
-                      <User className="w-[18px] h-[18px] sm:w-[18px] sm:h-[18px]" strokeWidth={2} />
-                      {t('Profile')}
-                    </Link>
-                    <Link
-                      to="/settings"
-                      onClick={() => setProfileDropdownOpen(false)}
-                      className="flex items-center gap-3.5 px-5 py-2.5 sm:py-2.5 text-[15px] sm:text-sm text-gray-700 font-medium hover:bg-gray-50 hover:text-[#093C5D] transition-colors border-b border-gray-100"
-                    >
-                      <Settings className="w-[18px] h-[18px] sm:w-[18px] sm:h-[18px] text-gray-500" strokeWidth={2} />
-                      {t('Settings')}
-                    </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProfileDropdownOpen(false);
+                      navigate('/profile');
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100/80 rounded-lg transition-colors cursor-pointer text-left"
+                  >
+                    <User className="w-4 h-4 text-gray-500 shrink-0" />
+                    <span>{t('Account')}</span>
+                  </button>
 
-                    <button
-                      onClick={() => {
-                        setProfileDropdownOpen(false);
-                        handleLogout();
-                      }}
-                      className="flex items-center gap-3.5 px-5 py-2.5 sm:py-2.5 text-[15px] sm:text-sm text-red-600 font-medium hover:bg-red-50 transition-colors w-full text-left"
-                    >
-                      <LogOut className="w-[18px] h-[18px] sm:w-[18px] sm:h-[18px] text-red-500" strokeWidth={2} />
-                      {t('Logout')}
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProfileDropdownOpen(false);
+                      navigate('/settings');
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100/80 rounded-lg transition-colors cursor-pointer text-left"
+                  >
+                    <Settings className="w-4 h-4 text-gray-500 shrink-0" />
+                    <span>{t('Settings')}</span>
+                  </button>
+
+                  <div className="my-1 border-t border-gray-100" />
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProfileDropdownOpen(false);
+                      setLogoutModalOpen(true);
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors cursor-pointer text-left"
+                  >
+                    <LogOut className="w-4 h-4 text-red-500 shrink-0" />
+                    <span>{t('Log out')}</span>
+                  </button>
                 </div>
-              </>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Main Content */}
-      <main className="lg:ml-[220px] min-[1440px]:ml-[240px] pt-[80px] px-4 md:px-6 lg:px-8 min-[1440px]:px-10 pb-6 md:pb-8 lg:pb-10 min-[1440px]:pb-12 min-h-screen overflow-x-hidden">
-        <div className="max-w-[1440px] mx-auto w-full">
+        {/* Primary Page Content */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1440px] w-full mx-auto">
           {user?.subscriptionStatus === 'past_due' && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-start gap-3 flex-1">
                 <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
                 <div className="flex-1">
-                  <h4 className="text-sm font-semibold text-red-900">
+                  <h4 className="text-sm font-medium text-red-900">
                     {t('Payment Action Required')}
                   </h4>
                   <p className="text-sm font-medium text-red-800/90 mt-0.5 leading-snug">
@@ -567,55 +1427,60 @@ const MainLayout = () => {
               </div>
               <Link
                 to="/subscription"
-                className="w-full sm:w-auto inline-flex justify-center items-center text-sm font-semibold text-white bg-red-600 hover:bg-red-700 active:scale-95 px-5 py-2.5 rounded-lg transition-all shrink-0"
+                className="w-full sm:w-auto inline-flex justify-center items-center text-sm font-medium text-white bg-red-600 hover:bg-red-700 active:scale-95 px-5 py-2.5 rounded-lg transition-all shrink-0"
               >
                 {t('Resolve Now')}
               </Link>
             </div>
           )}
-          <Outlet />
-        </div>
-      </main>
 
-      {/* Logout Confirmation Modal */}
+          <Outlet />
+        </main>
+      </div>
+
+      {/* =========================================================================
+          QUICK SEARCH COMMAND PALETTE MODAL (Ctrl+K / Cmd+K)
+      ========================================================================= */}
+      <QuickSearchModal
+        isOpen={searchModalOpen}
+        onClose={() => setSearchModalOpen(false)}
+        isAdmin={isAdmin}
+      />
+
+      {/* =========================================================================
+          LOGOUT CONFIRMATION MODAL
+      ========================================================================= */}
       {logoutModalOpen && (
-        <div className="fixed inset-0 z-[100]">
-          {/* Backdrop */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
             className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
             onClick={() => setLogoutModalOpen(false)}
           />
 
-          {/* Modal Content */}
-          <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
-            <div
-              className="bg-white rounded-xl shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-5 sm:p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-red-50 mx-auto flex items-center justify-center mb-4 border border-red-100">
-                  <LogOut className="w-6 h-6 text-red-600 ml-0.5" />
-                </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{t('Logout')}</h3>
-                <p className="text-gray-500 text-sm mb-6 font-medium">
-                  {t('Are you sure you want to log out?')}
-                </p>
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center z-10 border border-gray-100 animate-in fade-in zoom-in-95 duration-150">
+            <div className="w-12 h-12 rounded-full bg-red-50 text-red-600 mx-auto flex items-center justify-center mb-4 border border-red-100">
+              <LogOut className="w-6 h-6 ml-0.5" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-1">{t('Logout')}</h3>
+            <p className="text-sm font-medium text-gray-500 mb-6">
+              {t('Are you sure you want to log out?')}
+            </p>
 
-                <div className="flex flex-row gap-3 justify-center w-full mt-4">
-                  <button
-                    onClick={() => setLogoutModalOpen(false)}
-                    className="cursor-pointer flex-1 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-sm transition-colors active:scale-95"
-                  >
-                    {t('Cancel')}
-                  </button>
-                  <button
-                    onClick={executeLogout}
-                    className="cursor-pointer flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 flex items-center justify-center"
-                  >
-                    {t('Yes, Logout')}
-                  </button>
-                </div>
-              </div>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setLogoutModalOpen(false)}
+                className="flex-1 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium text-sm transition-colors cursor-pointer"
+              >
+                {t('Cancel')}
+              </button>
+              <button
+                type="button"
+                onClick={executeLogout}
+                className="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium text-sm transition-colors cursor-pointer"
+              >
+                {t('Yes, Logout')}
+              </button>
             </div>
           </div>
         </div>
@@ -624,4 +1489,4 @@ const MainLayout = () => {
   );
 };
 
-export default MainLayout;
+export default React.memo(MainLayout);
