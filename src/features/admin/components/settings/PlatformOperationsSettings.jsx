@@ -7,8 +7,6 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
   const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
-    isMaintenanceMode: false,
-    maintenanceMessage: '',
     allowNewRegistrations: true,
     defaultFreeTrialDays: 14,
     freePlanMonthlyBillLimit: 50,
@@ -16,8 +14,6 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
   });
 
   const [initialData, setInitialData] = useState({
-    isMaintenanceMode: false,
-    maintenanceMessage: '',
     allowNewRegistrations: true,
     defaultFreeTrialDays: 14,
     freePlanMonthlyBillLimit: 50,
@@ -27,10 +23,6 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
   useEffect(() => {
     if (settings) {
       const data = {
-        isMaintenanceMode: Boolean(settings.isMaintenanceMode),
-        maintenanceMessage:
-          settings.maintenanceMessage ||
-          'Platform is currently undergoing scheduled system maintenance. Please check back shortly.',
         allowNewRegistrations: settings.allowNewRegistrations !== false,
         defaultFreeTrialDays: settings.defaultFreeTrialDays ?? 14,
         freePlanMonthlyBillLimit: settings.freePlanMonthlyBillLimit ?? 50,
@@ -61,55 +53,11 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdate(formData, t('Operations and platform switches updated successfully'));
+    onUpdate(formData, t('Operations and store quota settings updated successfully'));
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
-      {/* ── Platform Maintenance Card ── */}
-      <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
-        <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <div>
-            <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Platform Maintenance')}</h2>
-            <p className="text-xs text-gray-500 mt-0.5">{t('Control maintenance mode and public notice banner')}</p>
-          </div>
-          {formData.isMaintenanceMode && (
-            <span className="text-[10px] sm:text-xs font-semibold uppercase px-2.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200">
-              {t('Active')}
-            </span>
-          )}
-        </div>
-
-        <div className="px-4 sm:px-5 md:px-6 py-4 sm:py-5">
-          <ToggleSwitch
-            name="isMaintenanceMode"
-            checked={formData.isMaintenanceMode}
-            onChange={handleChange}
-            label={t('Platform Maintenance Mode')}
-            description={t('Show maintenance banner to storekeepers during scheduled updates')}
-          />
-
-          {formData.isMaintenanceMode && (
-            <div className="mt-4 pt-4 border-t border-gray-100">
-              <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
-                {t('Public Maintenance Notice Message')}
-              </label>
-              <textarea
-                name="maintenanceMessage"
-                rows={3}
-                value={formData.maintenanceMessage}
-                onChange={handleChange}
-                placeholder={t('Platform is currently undergoing scheduled system maintenance. Please check back shortly.')}
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] resize-none"
-              />
-              <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
-                {t('This message will be visible to all logged-in storekeepers')}
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
-
       {/* ── Merchant Signups & Quotas Card ── */}
       <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
         <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">

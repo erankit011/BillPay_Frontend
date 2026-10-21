@@ -3,7 +3,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Globe,
   SlidersHorizontal,
+  Wrench,
   Lock,
+  Laptop,
   Bell,
   ChevronRight,
 } from 'lucide-react';
@@ -12,7 +14,9 @@ import toast from 'react-hot-toast';
 import { getPlatformSettings, updatePlatformSettings } from '../../features/admin/api/adminApi';
 import GeneralPlatformSettings from '../../features/admin/components/settings/GeneralPlatformSettings';
 import PlatformOperationsSettings from '../../features/admin/components/settings/PlatformOperationsSettings';
+import PlatformMaintenanceSettings from '../../features/admin/components/settings/PlatformMaintenanceSettings';
 import AdminSecuritySettings from '../../features/admin/components/settings/AdminSecuritySettings';
+import AdminActiveDevices from '../../features/admin/components/settings/AdminActiveDevices';
 import PlatformNotificationSettings from '../../features/admin/components/settings/PlatformNotificationSettings';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 
@@ -76,8 +80,10 @@ const AdminSettings = () => {
   const sections = [
     { id: 'general', icon: Globe, label: t('Platform Details') },
     { id: 'operations', icon: SlidersHorizontal, label: t('Operations & Quotas') },
+    { id: 'maintenance', icon: Wrench, label: t('Platform Maintenance') },
     { id: 'notifications', icon: Bell, label: t('Notifications') },
     { id: 'security', icon: Lock, label: t('Password & Security') },
+    { id: 'devices', icon: Laptop, label: t('Active Devices') },
   ];
 
   if (isLoading) {
@@ -165,6 +171,14 @@ const AdminSettings = () => {
             />
           )}
 
+          {activeSection === 'maintenance' && (
+            <PlatformMaintenanceSettings
+              settings={settings}
+              onUpdate={handleUpdate}
+              isUpdating={mutation.isPending}
+            />
+          )}
+
           {activeSection === 'notifications' && (
             <PlatformNotificationSettings
               settings={settings}
@@ -174,6 +188,8 @@ const AdminSettings = () => {
           )}
 
           {activeSection === 'security' && <AdminSecuritySettings />}
+
+          {activeSection === 'devices' && <AdminActiveDevices />}
         </div>
       </div>
     </div>

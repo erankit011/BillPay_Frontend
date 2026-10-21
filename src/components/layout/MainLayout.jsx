@@ -934,20 +934,22 @@ const MainLayout = () => {
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="p-3 border-t border-gray-100 shrink-0">
-          <Link
-            to="/contact-support"
-            title={sidebarCollapsed ? 'Help & Support' : undefined}
-            className={`flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg border transition-colors ${
-              location.pathname === '/contact-support'
-                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
-            } ${sidebarCollapsed ? 'justify-center px-2' : ''}`}
-          >
-            <HelpCircle className="w-4 h-4 shrink-0" />
-            {!sidebarCollapsed && <span>Help</span>}
-          </Link>
-        </div>
+        {!isAdmin && (
+          <div className="p-3 border-t border-gray-100 shrink-0">
+            <Link
+              to="/contact-support"
+              title={sidebarCollapsed ? 'Help & Support' : undefined}
+              className={`flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg border transition-colors ${
+                location.pathname === '/contact-support'
+                  ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+              } ${sidebarCollapsed ? 'justify-center px-2' : ''}`}
+            >
+              <HelpCircle className="w-4 h-4 shrink-0" />
+              {!sidebarCollapsed && <span>{t('Help')}</span>}
+            </Link>
+          </div>
+        )}
       </aside>
 
       {/* =========================================================================
@@ -1408,20 +1410,22 @@ const MainLayout = () => {
               )}
             </div>
 
-            <div className="p-4 border-t border-gray-100 shrink-0">
-              <Link
-                to="/contact-support"
-                onClick={() => setMobileDrawerOpen(false)}
-                className={`flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg border transition-colors ${
-                  location.pathname === '/contact-support'
-                    ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
-                }`}
-              >
-                <HelpCircle className="w-4 h-4 shrink-0" />
-                <span>Help & Support</span>
-              </Link>
-            </div>
+            {!isAdmin && (
+              <div className="p-4 border-t border-gray-100 shrink-0">
+                <Link
+                  to="/contact-support"
+                  onClick={() => setMobileDrawerOpen(false)}
+                  className={`flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg border transition-colors ${
+                    location.pathname === '/contact-support'
+                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  }`}
+                >
+                  <HelpCircle className="w-4 h-4 shrink-0" />
+                  <span>{t('Help & Support')}</span>
+                </Link>
+              </div>
+            )}
           </aside>
         </div>
       )}

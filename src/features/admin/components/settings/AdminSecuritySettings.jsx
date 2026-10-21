@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, Eye, EyeOff, LogOut, CheckCircle2 } from 'lucide-react';
+import { Lock, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import api from '../../../../api/axios';
 import toast from 'react-hot-toast';
@@ -15,7 +15,6 @@ const AdminSecuritySettings = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const [isRevokingSessions, setIsRevokingSessions] = useState(false);
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
@@ -55,22 +54,6 @@ const AdminSecuritySettings = () => {
       toast.error(err.response?.data?.message || t('Failed to update password'));
     } finally {
       setIsChangingPassword(false);
-    }
-  };
-
-  const handleRevokeOtherSessions = async () => {
-    if (!window.confirm(t('Are you sure you want to log out all other active admin devices?'))) {
-      return;
-    }
-
-    setIsRevokingSessions(true);
-    try {
-      const res = await api.delete('/auth/devices/others');
-      toast.success(res.data?.message || t('All other active sessions revoked successfully'));
-    } catch (err) {
-      toast.error(err.response?.data?.message || t('Failed to revoke other sessions'));
-    } finally {
-      setIsRevokingSessions(false);
     }
   };
 
@@ -187,40 +170,6 @@ const AdminSecuritySettings = () => {
               </button>
             </div>
           </form>
-        </div>
-      </section>
-
-      {/* ── Active Sessions & Device Security Card ── */}
-      <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
-        <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <div>
-            <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Active Sessions & Device Security')}</h2>
-            <p className="text-xs text-gray-500 mt-0.5">{t('Manage and review active administrative login sessions')}</p>
-          </div>
-        </div>
-
-        <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg bg-gray-50/70 border border-gray-200">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-                <span className="text-xs sm:text-sm font-semibold text-gray-900">{t('Current Active Session Verified')}</span>
-              </div>
-              <p className="text-xs text-gray-500 mt-1 font-medium leading-relaxed">
-                {t('If you worked from a public browser or shared computer, log out all other devices immediately.')}
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleRevokeOtherSessions}
-              disabled={isRevokingSessions}
-              className="cursor-pointer bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition-all active:scale-95 shadow-none whitespace-nowrap shrink-0 disabled:opacity-50"
-            >
-              <LogOut className="w-4 h-4 shrink-0" />
-              <span>{isRevokingSessions ? t('Logging out...') : t('Logout Other Devices')}</span>
-            </button>
-          </div>
         </div>
       </section>
     </div>

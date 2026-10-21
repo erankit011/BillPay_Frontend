@@ -56,7 +56,6 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
         { title: t('Security & Audit Logs'), desc: 'Immutable audit trail of admin actions and platform mutations', path: '/admin/audit-logs', icon: ShieldCheck, category: 'Security' },
         { title: t('Platform Settings'), desc: 'System configuration, operational switches and preferences', path: '/admin/settings', icon: Settings, category: 'Settings' },
         { title: t('Notifications'), desc: 'Real-time alerts, broadcast triggers & activity updates', path: '/notifications', icon: Bell, category: 'System' },
-        { title: t('Help & Support'), desc: 'Contact platform support desk and customer care', path: '/contact-support', icon: HelpCircle, category: 'Support' },
         { title: t('Account Profile'), desc: 'Manage your admin credentials, security & photo', path: '/profile', icon: User, category: 'Account' },
       ];
     }

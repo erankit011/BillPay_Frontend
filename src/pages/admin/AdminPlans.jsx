@@ -2,15 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   Layers,
-  RefreshCw,
   RotateCcw,
   Users,
   CreditCard,
   Crown,
-  CheckCircle2,
-  TrendingUp,
-  AlertCircle,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import {
   getAdminPlans,
@@ -19,9 +16,11 @@ import {
 } from '../../features/admin/api/adminApi';
 import PlanCard from '../../features/admin/components/plans/PlanCard';
 import EditPlanModal from '../../features/admin/components/plans/EditPlanModal';
+import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 
 const AdminPlans = () => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,11 +34,11 @@ const AdminPlans = () => {
       const data = await getAdminPlans();
       if (data) setPlans(data);
     } catch (err) {
-      toast.error('Failed to load SaaS plan tiers');
+      toast.error(t('Failed to load SaaS plan tiers'));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchPlans();
@@ -51,21 +50,18 @@ const AdminPlans = () => {
       queryClient.invalidateQueries({ queryKey: ['platformSettings'] });
       queryClient.invalidateQueries({ queryKey: ['publicPlans'] });
       queryClient.invalidateQueries({ queryKey: ['adminPlans'] });
-      toast.success('Plan configuration updated successfully');
+      toast.success(t('Plan configuration updated successfully'));
       fetchPlans();
     } catch (err) {
-      const msg = err.response?.data?.message || 'Failed to update plan';
+      const msg = err.response?.data?.message || t('Failed to update plan');
       toast.error(msg);
       throw err;
     }
   };
 
-  const handleResetDefaults = async () => {
-    const confirmed = window.confirm(
-      'Are you sure you want to reset all 4 plan tiers to platform factory default quotas and pricing?'
-    );
-    if (!confirmed) return;
+  const [confirmResetModal, setConfirmResetModal] = useState(false);
 
+  const executeResetDefaults = async () => {
     try {
       setResetting(true);
       const data = await resetAdminPlans();
@@ -74,10 +70,11 @@ const AdminPlans = () => {
         queryClient.invalidateQueries({ queryKey: ['platformSettings'] });
         queryClient.invalidateQueries({ queryKey: ['publicPlans'] });
         queryClient.invalidateQueries({ queryKey: ['adminPlans'] });
-        toast.success('All plans reset to factory defaults');
+        toast.success(t('All plans reset to factory defaults'));
+        setConfirmResetModal(false);
       }
     } catch (err) {
-      toast.error('Failed to reset plans to defaults');
+      toast.error(t('Failed to reset plans to defaults'));
     } finally {
       setResetting(false);
     }
@@ -92,134 +89,85 @@ const AdminPlans = () => {
   const totalSubscribers = plans.reduce((acc, p) => acc + (p.subscriberCount || 0), 0);
   const paidPlans = plans.filter((p) => p.price > 0);
   const activeTiersCount = plans.filter((p) => p.isActive).length;
+  const freePlan = plans.find((p) => p.planId === 'FREE');
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 pb-24 lg:pb-0">
-      {/* Executive Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* ── Page Header (Standardized with App Theme) ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
-            SaaS Plan Limits & Pricing
+            {t('SaaS Plan Limits & Pricing')}
           </h1>
-          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
-            Configure live subscription plan pricing, customer quotas, monthly invoice allowances, and feature entitlements.
+          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-normal">
+            {t('Configure live subscription plan pricing, customer quotas, monthly invoice allowances, and feature entitlements.')}
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 self-start sm:self-auto">
+        <div className="flex items-center gap-2.5 self-start sm:self-auto shrink-0">
           <button
-            onClick={handleResetDefaults}
+            type="button"
+            onClick={() => setConfirmResetModal(true)}
             disabled={resetting || loading}
-            className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium text-rose-600 bg-white border border-rose-200 rounded-lg hover:bg-rose-50 transition-colors h-10 disabled:opacity-60"
-            title="Reset all tiers to factory defaults"
+            className="cursor-pointer inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 h-9 sm:h-10 text-xs sm:text-sm font-medium text-rose-600 bg-white border border-rose-200 hover:bg-rose-50 rounded-lg transition-all active:scale-95 shadow-none disabled:opacity-50"
+            title={t('Reset all tiers to factory defaults')}
           >
-            <RotateCcw className={`w-4 h-4 ${resetting ? 'animate-spin' : ''}`} />
-            <span>{resetting ? 'Resetting...' : 'Reset Defaults'}</span>
+            <RotateCcw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-600 ${resetting ? 'animate-spin' : ''}`} />
+            <span>{resetting ? t('Resetting...') : t('Reset Defaults')}</span>
           </button>
         </div>
       </div>
 
-      {/* KPI Stats Grid */}
+      {/* ── KPI Stat Cards Grid (Standardized with AdminStatCard) ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
-        {/* Total Active Tiers */}
-        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
-          <div className="flex justify-between items-start gap-1">
-            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200 shrink-0">
-              <Layers className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="mt-3 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
-              Configured Tiers
-            </p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
-              {loading ? '...' : `${activeTiersCount} Active`}
-            </p>
-            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">
-              {plans.length} total tiers defined
-            </p>
-          </div>
-        </div>
+        <AdminStatCard
+          title={t('CONFIGURED TIERS')}
+          value={loading ? '...' : `${activeTiersCount} Active`}
+          subtext={`${plans.length} total tiers defined`}
+          icon={Layers}
+          variant="primary"
+        />
 
-        {/* Total Subscribed Stores */}
-        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
-          <div className="flex justify-between items-start gap-1">
-            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-emerald-700 border border-gray-200 shrink-0">
-              <Users className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="mt-3 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
-              Subscribed Stores
-            </p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-emerald-700 truncate">
-              {loading ? '...' : totalSubscribers}
-            </p>
-            <p className="text-[10px] md:text-xs text-emerald-700 font-medium truncate mt-0.5">
-              Across all merchant tiers
-            </p>
-          </div>
-        </div>
+        <AdminStatCard
+          title={t('SUBSCRIBED STORES')}
+          value={loading ? '...' : totalSubscribers}
+          subtext={t('Across all merchant tiers')}
+          icon={Users}
+          variant="success"
+        />
 
-        {/* Paid Tiers Available */}
-        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
-          <div className="flex justify-between items-start gap-1">
-            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-purple-700 border border-gray-200 shrink-0">
-              <CreditCard className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="mt-3 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
-              Paid Pro Plans
-            </p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
-              {loading ? '...' : `${paidPlans.length} Tiers`}
-            </p>
-            <p className="text-[10px] md:text-xs text-purple-700 font-medium truncate mt-0.5">
-              Monthly, Quarterly, Yearly
-            </p>
-          </div>
-        </div>
+        <AdminStatCard
+          title={t('PAID PRO PLANS')}
+          value={loading ? '...' : `${paidPlans.length} Tiers`}
+          subtext="Monthly, Quarterly, Yearly"
+          icon={CreditCard}
+          variant="default"
+        />
 
-        {/* Free Starter Status */}
-        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
-          <div className="flex justify-between items-start gap-1">
-            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-amber-600 border border-gray-200 shrink-0">
-              <Crown className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="mt-3 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
-              Free Starter Quota
-            </p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-amber-600 truncate">
-              {loading
-                ? '...'
-                : `${plans.find((p) => p.planId === 'FREE')?.trialDays || 7} Days`}
-            </p>
-            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">
-              {plans.find((p) => p.planId === 'FREE')?.maxBills || 10} Bills /{' '}
-              {plans.find((p) => p.planId === 'FREE')?.maxCustomers || 2} Cust
-            </p>
-          </div>
-        </div>
+        <AdminStatCard
+          title={t('FREE STARTER QUOTA')}
+          value={loading ? '...' : `${freePlan?.trialDays || 7} Days`}
+          subtext={`${freePlan?.maxBills || 10} Bills / ${freePlan?.maxCustomers || 2} Cust`}
+          icon={Crown}
+          variant="warning"
+        />
       </div>
 
-      {/* Plan Cards Grid */}
+      {/* ── Plan Cards Grid ── */}
       {loading ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-16 text-center">
+        <div className="bg-white rounded-lg border border-gray-200 p-16 text-center shadow-none">
           <SwirlingLoader className="w-10 h-10 text-[#093C5D] mx-auto mb-3" />
-          <p className="text-sm font-medium text-gray-600">Loading SaaS plans configuration...</p>
+          <p className="text-sm font-medium text-gray-600">{t('Loading SaaS plans configuration...')}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 items-stretch">
           {plans.map((plan) => (
             <PlanCard key={plan.planId} plan={plan} onEdit={handleOpenEdit} />
           ))}
         </div>
       )}
 
-      {/* Edit Modal */}
+      {/* ── Edit Modal ── */}
       <EditPlanModal
         isOpen={isEditModalOpen}
         plan={selectedPlan}
@@ -229,6 +177,63 @@ const AdminPlans = () => {
         }}
         onSave={handleUpdatePlan}
       />
+
+      {/* ── Reset Defaults Confirmation Modal (Yes / No) ── */}
+      {confirmResetModal && (
+        <div className="fixed inset-0 z-50 overscroll-contain">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+            onClick={() => !resetting && setConfirmResetModal(false)}
+          />
+
+          {/* Modal Content */}
+          <div className="fixed inset-0 flex items-center justify-center p-4 z-50 pointer-events-none">
+            <div
+              className="bg-white rounded-lg w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-200 shadow-none"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-5 sm:p-6 text-center">
+                <div className="w-12 h-12 rounded-full bg-rose-50 mx-auto flex items-center justify-center mb-3.5 border border-rose-100">
+                  <RotateCcw className="w-6 h-6 text-rose-600" />
+                </div>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1.5">
+                  {t('Reset All Plan Tiers?')}
+                </h3>
+                <p className="text-gray-500 text-xs sm:text-sm mb-6 font-medium leading-relaxed">
+                  {t('Are you sure you want to reset all 4 plan tiers to platform factory default quotas and pricing? This will overwrite custom limits.')}
+                </p>
+
+                <div className="flex gap-2.5 sm:gap-3 justify-center">
+                  <button
+                    type="button"
+                    onClick={() => setConfirmResetModal(false)}
+                    disabled={resetting}
+                    className="cursor-pointer flex-1 px-4 py-2 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium text-xs sm:text-sm transition-colors active:scale-95 disabled:opacity-50"
+                  >
+                    {t('No, Cancel')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={executeResetDefaults}
+                    disabled={resetting}
+                    className="cursor-pointer flex-1 px-4 py-2 sm:py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-medium text-xs sm:text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
+                  >
+                    {resetting ? (
+                      <>
+                        <RotateCcw className="w-4 h-4 animate-spin" />
+                        <span>{t('Resetting...')}</span>
+                      </>
+                    ) : (
+                      <span>{t('Yes, Reset')}</span>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

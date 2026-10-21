@@ -5,14 +5,20 @@ import {
   Save,
   Plus,
   Trash2,
-  AlertCircle,
   Crown,
-  Check,
-  Tag,
-  Clock,
   Users,
   FileText,
+  MessageCircle,
+  Mic,
+  BarChart2,
+  Headphones,
+  IndianRupee,
+  ShieldCheck,
+  CheckCircle2,
+  Sparkles,
+  Check,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 
 const SUPPORT_TIERS = [
@@ -22,7 +28,40 @@ const SUPPORT_TIERS = [
   { value: 'DEDICATED', label: '24/7 Dedicated Account Manager' },
 ];
 
+const ThemeCheckbox = ({ checked, onChange, size = 'md', className = '' }) => {
+  const isSm = size === 'sm';
+  return (
+    <div
+      role="checkbox"
+      aria-checked={checked}
+      onClick={(e) => {
+        if (onChange) {
+          e.stopPropagation();
+          onChange(!checked);
+        }
+      }}
+      className={`${
+        isSm ? 'w-4 h-4 rounded' : 'w-5 h-5 rounded-md'
+      } flex items-center justify-center transition-all duration-150 shrink-0 border-2 select-none cursor-pointer ${
+        checked
+          ? 'bg-[#093C5D] border-[#093C5D] text-white shadow-none'
+          : 'bg-white border-gray-300 hover:border-[#093C5D]/70'
+      } ${className}`}
+    >
+      <Check
+        className={`${
+          isSm ? 'w-3 h-3 stroke-[3]' : 'w-3.5 h-3.5 stroke-[3]'
+        } transition-all duration-150 ${
+          checked ? 'opacity-100 scale-100 text-white' : 'opacity-0 scale-50'
+        }`}
+      />
+    </div>
+  );
+};
+
 const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
+  const { t } = useTranslation();
+
   const [name, setName] = useState(plan?.name || '');
   const [description, setDescription] = useState(plan?.description || '');
   const [price, setPrice] = useState(plan?.price ?? 0);
@@ -42,33 +81,77 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
   const [features, setFeatures] = useState(plan?.features || []);
   const [newFeatureText, setNewFeatureText] = useState('');
   const [saving, setSaving] = useState(false);
+  const [initialData, setInitialData] = useState(null);
 
   useEffect(() => {
     if (!isOpen || !plan) return;
-    setName(plan.name || '');
-    setDescription(plan.description || '');
-    setPrice(plan.price ?? 0);
-    setBillingCycleDays(plan.billingCycleDays || 30);
-    setUnlimitedCustomers(plan.maxCustomers === -1);
-    setMaxCustomers(plan.maxCustomers === -1 ? 100 : plan.maxCustomers);
-    setUnlimitedBills(plan.maxBills === -1);
-    setMaxBills(plan.maxBills === -1 ? 500 : plan.maxBills);
-    setTrialDays(plan.trialDays || 0);
-    setBadge(plan.badge || '');
-    setIsRecommended(Boolean(plan.isRecommended));
-    setIsActive(Boolean(plan.isActive));
-    setSupportTier(plan.supportTier || 'PRIORITY');
-    setHasWhatsAppReminders(Boolean(plan.hasWhatsAppReminders));
-    setHasVoiceBilling(Boolean(plan.hasVoiceBilling));
-    setHasAdvancedAnalytics(Boolean(plan.hasAdvancedAnalytics));
-    setFeatures(plan.features || []);
+    const initial = {
+      name: plan.name || '',
+      description: plan.description || '',
+      price: plan.price ?? 0,
+      billingCycleDays: plan.billingCycleDays || 30,
+      unlimitedCustomers: plan.maxCustomers === -1,
+      maxCustomers: plan.maxCustomers === -1 ? 100 : (plan.maxCustomers || 100),
+      unlimitedBills: plan.maxBills === -1,
+      maxBills: plan.maxBills === -1 ? 500 : (plan.maxBills || 500),
+      trialDays: plan.trialDays || 0,
+      badge: plan.badge || '',
+      isRecommended: Boolean(plan.isRecommended),
+      isActive: Boolean(plan.isActive),
+      supportTier: plan.supportTier || 'PRIORITY',
+      hasWhatsAppReminders: Boolean(plan.hasWhatsAppReminders),
+      hasVoiceBilling: Boolean(plan.hasVoiceBilling),
+      hasAdvancedAnalytics: Boolean(plan.hasAdvancedAnalytics),
+      features: Array.isArray(plan.features) ? [...plan.features] : [],
+    };
+
+    setName(initial.name);
+    setDescription(initial.description);
+    setPrice(initial.price);
+    setBillingCycleDays(initial.billingCycleDays);
+    setUnlimitedCustomers(initial.unlimitedCustomers);
+    setMaxCustomers(initial.maxCustomers);
+    setUnlimitedBills(initial.unlimitedBills);
+    setMaxBills(initial.maxBills);
+    setTrialDays(initial.trialDays);
+    setBadge(initial.badge);
+    setIsRecommended(initial.isRecommended);
+    setIsActive(initial.isActive);
+    setSupportTier(initial.supportTier);
+    setHasWhatsAppReminders(initial.hasWhatsAppReminders);
+    setHasVoiceBilling(initial.hasVoiceBilling);
+    setHasAdvancedAnalytics(initial.hasAdvancedAnalytics);
+    setFeatures(initial.features);
     setNewFeatureText('');
+    setInitialData(initial);
   }, [plan, isOpen]);
+
+  const hasChanges = Boolean(
+    initialData && (
+      name.trim() !== initialData.name.trim() ||
+      description.trim() !== initialData.description.trim() ||
+      Number(price) !== Number(initialData.price) ||
+      Number(billingCycleDays) !== Number(initialData.billingCycleDays) ||
+      unlimitedCustomers !== initialData.unlimitedCustomers ||
+      (!unlimitedCustomers && Number(maxCustomers) !== Number(initialData.maxCustomers)) ||
+      unlimitedBills !== initialData.unlimitedBills ||
+      (!unlimitedBills && Number(maxBills) !== Number(initialData.maxBills)) ||
+      Number(trialDays) !== Number(initialData.trialDays) ||
+      badge.trim() !== initialData.badge.trim() ||
+      isRecommended !== initialData.isRecommended ||
+      isActive !== initialData.isActive ||
+      supportTier !== initialData.supportTier ||
+      hasWhatsAppReminders !== initialData.hasWhatsAppReminders ||
+      hasVoiceBilling !== initialData.hasVoiceBilling ||
+      hasAdvancedAnalytics !== initialData.hasAdvancedAnalytics ||
+      JSON.stringify(features) !== JSON.stringify(initialData.features)
+    )
+  );
 
   const handleAddFeature = () => {
     if (!newFeatureText.trim()) return;
     if (features.length >= 10) {
-      toast.error('Maximum 10 feature bulletpoints allowed');
+      toast.error(t('Maximum 10 feature bulletpoints allowed'));
       return;
     }
     setFeatures([...features, newFeatureText.trim()]);
@@ -81,12 +164,15 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!hasChanges) {
+      return;
+    }
     if (!name.trim()) {
-      toast.error('Plan name is required');
+      toast.error(t('Plan name is required'));
       return;
     }
     if (price < 0) {
-      toast.error('Price cannot be negative');
+      toast.error(t('Price cannot be negative'));
       return;
     }
 
@@ -142,7 +228,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
 
   return (
     <div className="fixed inset-0 z-50 overscroll-contain">
-      {/* Backdrop */}
+      {/* ── Backdrop ── */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
@@ -150,285 +236,431 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
         onTouchMove={(e) => e.preventDefault()}
       />
 
-      {/* Modal Container: Bottom Sheet on Mobile, Centered on sm+ */}
-      <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
+      {/* ── Modal Container ── */}
+      <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-6 z-50 pointer-events-none overscroll-contain">
         <div
-          className="relative bg-white w-full sm:max-w-2xl rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl"
+          className="relative bg-white w-full sm:max-w-2xl lg:max-w-3xl rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-none"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Mobile Drag Handle */}
-          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-gray-50/70">
-            <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
+          <div className="sm:hidden flex justify-center pt-2.5 pb-1 flex-shrink-0 bg-white">
+            <div className="w-10 h-1 bg-gray-300 rounded-full" />
           </div>
 
-          {/* Header */}
-          <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-gray-200 bg-gray-50/70 flex-shrink-0 gap-3">
+          {/* ── Modal Header (App Theme Standard) ── */}
+          <div className="px-5 sm:px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-white flex-shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
-              <div className="w-10 h-10 rounded bg-[#093C5D]/10 border border-[#093C5D]/20 text-[#093C5D] flex items-center justify-center shrink-0">
-                <Layers className="w-5 h-5" />
+              <div className="w-10 h-10 rounded-lg bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center border border-[#093C5D]/20 shrink-0">
+                <Layers className="w-5 h-5 text-[#093C5D]" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-snug truncate">
-                    Configure Tier: {plan.name}
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-snug">
+                    {t('Configure Tier: {{name}}', { name: plan.name })}
                   </h3>
-                  <span className="font-mono text-xs px-2 py-0.5 rounded bg-blue-50 text-[#093C5D] font-semibold border border-blue-200">
+                  <span className="font-mono text-[10px] uppercase px-1.5 py-0.5 rounded bg-gray-100 text-gray-700 font-medium border border-gray-200">
                     {plan.planId}
                   </span>
                 </div>
-                <p className="text-xs text-gray-500 mt-0.5 font-medium truncate">
-                  Set live pricing, customer quotas, and merchant feature entitlements.
+                <p className="text-xs text-gray-500 font-medium truncate mt-0.5">
+                  {t('Set live pricing, customer quotas, and merchant feature entitlements.')}
                 </p>
               </div>
             </div>
+
             <button
               type="button"
               onClick={onClose}
               className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200 ml-auto"
-              title="Close"
+              title={t('Close')}
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
 
-          {/* Form Body */}
-          <form onSubmit={handleSubmit}>
-            <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
-              {/* Basic Info */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Plan Display Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all font-medium"
-                    required
-                  />
+          {/* ── Form Body (Properly Scrollable with min-h-0 and ample bottom padding) ── */}
+          <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+            <div className="p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto flex-1 min-h-0 overscroll-contain pb-10">
+              
+              {/* 1. Plan Basic Information Card */}
+              <div className="p-4 sm:p-5 rounded-lg border border-gray-200 bg-white space-y-4 shadow-none">
+                <div className="flex items-center gap-2 pb-2.5 border-b border-gray-100">
+                  <Sparkles className="w-4 h-4 text-[#093C5D]" />
+                  <h4 className="text-xs sm:text-sm font-semibold text-gray-900">
+                    {t('Plan Identity & Branding')}
+                  </h4>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Badge Label (e.g. Save 16%, Starter)
-                  </label>
-                  <input
-                    type="text"
-                    value={badge}
-                    onChange={(e) => setBadge(e.target.value)}
-                    placeholder="Leave empty for no badge"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Subtitle Description
-                  </label>
-                  <input
-                    type="text"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Short tagline shown below the title"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
-                  />
-                </div>
-              </div>
-
-              {/* Pricing & Cycle */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-xl border border-gray-100 bg-gray-50/60">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Base Price (₹) *
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={price}
-                    onChange={(e) => setPrice(Math.max(0, Number(e.target.value)))}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-bold text-gray-900"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Billing Cycle (Days) *
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    value={billingCycleDays}
-                    onChange={(e) => setBillingCycleDays(Math.max(1, Number(e.target.value)))}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Trial Period (Days)
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={trialDays}
-                    onChange={(e) => setTrialDays(Math.max(0, Number(e.target.value)))}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
-                  />
-                </div>
-              </div>
-
-              {/* Operational Quotas */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Customer Quota */}
-                <div className="p-4 rounded-xl border border-gray-200 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-gray-700 flex items-center gap-1.5">
-                      <Users className="w-3.5 h-3.5 text-indigo-500" />
-                      <span>Customer Limit</span>
-                    </span>
-                    <label className="flex items-center gap-1.5 cursor-pointer text-xs font-medium text-gray-600">
-                      <input
-                        type="checkbox"
-                        checked={unlimitedCustomers}
-                        onChange={(e) => setUnlimitedCustomers(e.target.checked)}
-                        className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
-                      />
-                      <span>Unlimited</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                      {t('Plan Display Name')} <span className="text-red-500">*</span>
                     </label>
-                  </div>
-                  {!unlimitedCustomers && (
                     <input
-                      type="number"
-                      min="1"
-                      value={maxCustomers}
-                      onChange={(e) => setMaxCustomers(Math.max(1, Number(e.target.value)))}
-                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"
-                      placeholder="Max allowed customers"
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Monthly Pro"
+                      className="block w-full rounded-lg border border-gray-300 px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      required
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                      {t('Badge Label (e.g. Save 16%, Starter)')}
+                    </label>
+                    <input
+                      type="text"
+                      value={badge}
+                      onChange={(e) => setBadge(e.target.value)}
+                      placeholder={t('Leave empty for no badge')}
+                      className="block w-full rounded-lg border border-gray-300 px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                      {t('Subtitle Description')}
+                    </label>
+                    <input
+                      type="text"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      placeholder={t('Short tagline shown below the title')}
+                      className="block w-full rounded-lg border border-gray-300 px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. Pricing & Validity Card */}
+              <div className="p-4 sm:p-5 rounded-lg border border-gray-200 bg-white space-y-4 shadow-none">
+                <div className="flex items-center gap-2 pb-2.5 border-b border-gray-100">
+                  <IndianRupee className="w-4 h-4 text-[#093C5D]" />
+                  <h4 className="text-xs sm:text-sm font-semibold text-gray-900">
+                    {t('Pricing & Billing Cycle')}
+                  </h4>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                  <div>
+                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                      {t('Base Price (₹)')} <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500 text-xs sm:text-sm font-semibold">
+                        ₹
+                      </span>
+                      <input
+                        type="number"
+                        min="0"
+                        value={price}
+                        onChange={(e) => setPrice(Math.max(0, Number(e.target.value)))}
+                        className="block w-full rounded-lg border border-gray-300 pl-7 pr-3 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-gray-900 bg-white transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                      {t('Billing Cycle (Days)')} <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="number"
+                        min="1"
+                        value={billingCycleDays}
+                        onChange={(e) => setBillingCycleDays(Math.max(1, Number(e.target.value)))}
+                        className="block w-full rounded-lg border border-gray-300 px-3 pr-12 py-2 sm:py-2.5 text-xs sm:text-sm font-medium bg-white transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                        required
+                      />
+                      <span className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400 text-xs font-medium">
+                        {t('Days')}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                      {t('Trial Period (Days)')}
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="number"
+                        min="0"
+                        value={trialDays}
+                        onChange={(e) => setTrialDays(Math.max(0, Number(e.target.value)))}
+                        className="block w-full rounded-lg border border-gray-300 px-3 pr-12 py-2 sm:py-2.5 text-xs sm:text-sm font-medium bg-white transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      />
+                      <span className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400 text-xs font-medium">
+                        {t('Days')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 3. Operational Limits (Side by side cards) */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                {/* Customer Limit Card */}
+                <div className="p-4 rounded-lg border border-gray-200 bg-white space-y-3 shadow-none">
+                  <div className="flex items-center justify-between pb-2 border-b border-gray-100">
+                    <span className="text-xs sm:text-sm font-semibold text-gray-900 flex items-center gap-1.5">
+                      <Users className="w-4 h-4 text-[#093C5D]" />
+                      <span>{t('Customer Limit')}</span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setUnlimitedCustomers(!unlimitedCustomers)}
+                      className="inline-flex items-center gap-1.5 cursor-pointer text-xs font-semibold text-[#093C5D] select-none hover:opacity-85 transition-opacity"
+                    >
+                      <ThemeCheckbox checked={unlimitedCustomers} size="sm" />
+                      <span>{t('Unlimited')}</span>
+                    </button>
+                  </div>
+                  {!unlimitedCustomers ? (
+                    <div>
+                      <label className="block text-[11px] font-medium text-gray-500 mb-1">
+                        {t('Max customers allowed')}
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={maxCustomers}
+                        onChange={(e) => setMaxCustomers(Math.max(1, Number(e.target.value)))}
+                        className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-xs sm:text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                        placeholder={t('Max allowed customers')}
+                      />
+                    </div>
+                  ) : (
+                    <p className="text-xs text-gray-500 font-medium py-1">
+                      {t('Storekeepers can create unlimited customer ledgers.')}
+                    </p>
                   )}
                 </div>
 
-                {/* Bill Quota */}
-                <div className="p-4 rounded-xl border border-gray-200 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-gray-700 flex items-center gap-1.5">
-                      <FileText className="w-3.5 h-3.5 text-emerald-500" />
-                      <span>Invoices / Bills Limit</span>
+                {/* Bill Limit Card */}
+                <div className="p-4 rounded-lg border border-gray-200 bg-white space-y-3 shadow-none">
+                  <div className="flex items-center justify-between pb-2 border-b border-gray-100">
+                    <span className="text-xs sm:text-sm font-semibold text-gray-900 flex items-center gap-1.5">
+                      <FileText className="w-4 h-4 text-emerald-600" />
+                      <span>{t('Invoices / Bills Limit')}</span>
                     </span>
-                    <label className="flex items-center gap-1.5 cursor-pointer text-xs font-medium text-gray-600">
-                      <input
-                        type="checkbox"
-                        checked={unlimitedBills}
-                        onChange={(e) => setUnlimitedBills(e.target.checked)}
-                        className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
-                      />
-                      <span>Unlimited</span>
-                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setUnlimitedBills(!unlimitedBills)}
+                      className="inline-flex items-center gap-1.5 cursor-pointer text-xs font-semibold text-[#093C5D] select-none hover:opacity-85 transition-opacity"
+                    >
+                      <ThemeCheckbox checked={unlimitedBills} size="sm" />
+                      <span>{t('Unlimited')}</span>
+                    </button>
                   </div>
-                  {!unlimitedBills && (
-                    <input
-                      type="number"
-                      min="1"
-                      value={maxBills}
-                      onChange={(e) => setMaxBills(Math.max(1, Number(e.target.value)))}
-                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"
-                      placeholder="Max allowed bills"
-                    />
+                  {!unlimitedBills ? (
+                    <div>
+                      <label className="block text-[11px] font-medium text-gray-500 mb-1">
+                        {t('Max bills per cycle')}
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={maxBills}
+                        onChange={(e) => setMaxBills(Math.max(1, Number(e.target.value)))}
+                        className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-xs sm:text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                        placeholder={t('Max allowed bills')}
+                      />
+                    </div>
+                  ) : (
+                    <p className="text-xs text-gray-500 font-medium py-1">
+                      {t('Storekeepers can generate unlimited invoices per cycle.')}
+                    </p>
                   )}
                 </div>
               </div>
 
-              {/* Feature Entitlements & Switches */}
-              <div className="space-y-3">
-                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                  Feature Entitlements & Switches
-                </label>
+              {/* 4. Feature Entitlements & Switches Card */}
+              <div className="p-4 sm:p-5 rounded-lg border border-gray-200 bg-white space-y-3.5 shadow-none">
+                <div className="flex items-center justify-between pb-2.5 border-b border-gray-100">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-[#093C5D]" />
+                    <h4 className="text-xs sm:text-sm font-semibold text-gray-900">
+                      {t('Feature Entitlements & Switches')}
+                    </h4>
+                  </div>
+                  <span className="text-[11px] font-medium text-gray-500 hidden sm:inline">
+                    {t('Toggle features enabled for this tier')}
+                  </span>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <label className="flex items-center gap-2.5 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer transition-colors text-xs font-medium text-gray-800">
-                    <input
-                      type="checkbox"
-                      checked={hasWhatsAppReminders}
-                      onChange={(e) => setHasWhatsAppReminders(e.target.checked)}
-                      className="rounded border-gray-300 text-[#093C5D] focus:ring-[#093C5D] w-4 h-4"
-                    />
-                    <span>WhatsApp Alerts</span>
-                  </label>
-
-                  <label className="flex items-center gap-2.5 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer transition-colors text-xs font-medium text-gray-800">
-                    <input
-                      type="checkbox"
-                      checked={hasVoiceBilling}
-                      onChange={(e) => setHasVoiceBilling(e.target.checked)}
-                      className="rounded border-gray-300 text-[#093C5D] focus:ring-[#093C5D] w-4 h-4"
-                    />
-                    <span>Voice Billing</span>
-                  </label>
-
-                  <label className="flex items-center gap-2.5 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer transition-colors text-xs font-medium text-gray-800">
-                    <input
-                      type="checkbox"
-                      checked={hasAdvancedAnalytics}
-                      onChange={(e) => setHasAdvancedAnalytics(e.target.checked)}
-                      className="rounded border-gray-300 text-[#093C5D] focus:ring-[#093C5D] w-4 h-4"
-                    />
-                    <span>Advanced Analytics</span>
-                  </label>
-                </div>
-              </div>
-
-              {/* Visibility & Badges */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Support Level Tier
-                  </label>
-                  <select
-                    value={supportTier}
-                    onChange={(e) => setSupportTier(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] transition-all cursor-pointer"
+                  {/* WhatsApp Alerts Tile */}
+                  <div
+                    onClick={() => setHasWhatsAppReminders(!hasWhatsAppReminders)}
+                    className={`group flex items-start gap-3 p-3.5 rounded-lg border transition-all duration-150 cursor-pointer select-none ${
+                      hasWhatsAppReminders
+                        ? 'border-[#093C5D] bg-[#093C5D]/[0.05]'
+                        : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/60'
+                    }`}
                   >
-                    {SUPPORT_TIERS.map((tier) => (
-                      <option key={tier.value} value={tier.value}>
-                        {tier.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                    <ThemeCheckbox checked={hasWhatsAppReminders} />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <MessageCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span className="text-xs sm:text-[13px] font-semibold text-gray-900 truncate">
+                          {t('WhatsApp Alerts')}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-gray-500 font-medium mt-1 leading-snug">
+                        {t('Automated reminder messages & receipt delivery')}
+                      </p>
+                    </div>
+                  </div>
 
-                <div className="flex flex-col justify-end space-y-2">
-                  <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-gray-800">
-                    <input
-                      type="checkbox"
-                      checked={isRecommended}
-                      onChange={(e) => setIsRecommended(e.target.checked)}
-                      className="rounded border-gray-300 text-[#093C5D] focus:ring-[#093C5D] w-4 h-4"
-                    />
-                    <span className="flex items-center gap-1 font-semibold text-[#093C5D]">
-                      <Crown className="w-3.5 h-3.5" />
-                      <span>Highlight as Recommended Tier</span>
-                    </span>
-                  </label>
+                  {/* Voice Billing Tile */}
+                  <div
+                    onClick={() => setHasVoiceBilling(!hasVoiceBilling)}
+                    className={`group flex items-start gap-3 p-3.5 rounded-lg border transition-all duration-150 cursor-pointer select-none ${
+                      hasVoiceBilling
+                        ? 'border-[#093C5D] bg-[#093C5D]/[0.05]'
+                        : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/60'
+                    }`}
+                  >
+                    <ThemeCheckbox checked={hasVoiceBilling} />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <Mic className="w-3.5 h-3.5 text-[#093C5D] shrink-0" />
+                        <span className="text-xs sm:text-[13px] font-semibold text-gray-900 truncate">
+                          {t('Voice Billing')}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-gray-500 font-medium mt-1 leading-snug">
+                        {t('Speech-to-bill AI recognition engine')}
+                      </p>
+                    </div>
+                  </div>
 
-                  <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-gray-800">
-                    <input
-                      type="checkbox"
-                      checked={isActive}
-                      onChange={(e) => setIsActive(e.target.checked)}
-                      className="rounded border-gray-300 text-[#093C5D] focus:ring-[#093C5D] w-4 h-4"
-                    />
-                    <span>Active & Purchasable by Storekeepers</span>
-                  </label>
+                  {/* Advanced Analytics Tile */}
+                  <div
+                    onClick={() => setHasAdvancedAnalytics(!hasAdvancedAnalytics)}
+                    className={`group flex items-start gap-3 p-3.5 rounded-lg border transition-all duration-150 cursor-pointer select-none ${
+                      hasAdvancedAnalytics
+                        ? 'border-[#093C5D] bg-[#093C5D]/[0.05]'
+                        : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/60'
+                    }`}
+                  >
+                    <ThemeCheckbox checked={hasAdvancedAnalytics} />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <BarChart2 className="w-3.5 h-3.5 text-[#093C5D] shrink-0" />
+                        <span className="text-xs sm:text-[13px] font-semibold text-gray-900 truncate">
+                          {t('Advanced Analytics')}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-gray-500 font-medium mt-1 leading-snug">
+                        {t('Profit margins & business growth trends')}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Bulletpoints List */}
-              <div className="space-y-2">
-                <label className="block text-xs font-semibold text-gray-700">
-                  Marketing Feature Highlights ({features.length}/10)
-                </label>
+              {/* 5. Support Level Tier & Visibility Card */}
+              <div className="p-4 sm:p-5 rounded-lg border border-gray-200 bg-white space-y-4 shadow-none">
+                <div className="flex items-center gap-2 pb-2.5 border-b border-gray-100">
+                  <Headphones className="w-4 h-4 text-[#093C5D]" />
+                  <h4 className="text-xs sm:text-sm font-semibold text-gray-900">
+                    {t('Support & Visibility')}
+                  </h4>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                      {t('Support Level Tier')}
+                    </label>
+                    <select
+                      value={supportTier}
+                      onChange={(e) => setSupportTier(e.target.value)}
+                      className="block w-full rounded-lg border border-gray-300 px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] appearance-none bg-white cursor-pointer"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                        backgroundPosition: 'right 0.75rem center',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: '1.5em 1.5em',
+                        paddingRight: '2.5rem',
+                      }}
+                    >
+                      {SUPPORT_TIERS.map((tier) => (
+                        <option key={tier.value} value={tier.value}>
+                          {tier.label}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="text-[11px] text-gray-500 font-medium mt-1.5">
+                      {t('SLA & assistance level provided to store merchants')}
+                    </p>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    {/* Recommended Tier Tile */}
+                    <div
+                      onClick={() => setIsRecommended(!isRecommended)}
+                      className={`flex items-start gap-3 p-3 rounded-lg border transition-all duration-150 cursor-pointer select-none ${
+                        isRecommended
+                          ? 'border-[#093C5D] bg-[#093C5D]/[0.05]'
+                          : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/60'
+                      }`}
+                    >
+                      <ThemeCheckbox checked={isRecommended} />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5 text-xs sm:text-[13px] font-semibold text-[#093C5D]">
+                          <Crown className="w-3.5 h-3.5 text-amber-500 fill-amber-100" />
+                          <span>{t('Highlight as Recommended Tier')}</span>
+                        </div>
+                        <p className="text-[11px] text-gray-500 font-medium mt-0.5 leading-snug">
+                          {t('Displays top banner and highlights card on pricing tables')}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Active Tier Tile */}
+                    <div
+                      onClick={() => setIsActive(!isActive)}
+                      className={`flex items-start gap-3 p-3 rounded-lg border transition-all duration-150 cursor-pointer select-none ${
+                        isActive
+                          ? 'border-[#093C5D] bg-[#093C5D]/[0.05]'
+                          : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/60'
+                      }`}
+                    >
+                      <ThemeCheckbox checked={isActive} />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5 text-xs sm:text-[13px] font-semibold text-gray-900">
+                          <span>{t('Active & Purchasable by Storekeepers')}</span>
+                        </div>
+                        <p className="text-[11px] text-gray-500 font-medium mt-0.5 leading-snug">
+                          {t('Available for stores to upgrade or subscribe')}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 6. Feature Highlights List Card */}
+              <div className="p-4 sm:p-5 rounded-lg border border-gray-200 bg-white space-y-3.5 shadow-none">
+                <div className="flex items-center justify-between pb-2.5 border-b border-gray-100">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#093C5D]" />
+                    <h4 className="text-xs sm:text-sm font-semibold text-gray-900">
+                      {t('Marketing Feature Highlights')}
+                    </h4>
+                  </div>
+                  <span className="text-xs font-medium text-gray-500">
+                    ({features.length}/10)
+                  </span>
+                </div>
+
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
@@ -440,57 +672,93 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                         handleAddFeature();
                       }
                     }}
-                    placeholder="e.g. Priority WhatsApp Gateway"
-                    className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D]"
+                    placeholder={t('e.g. Priority WhatsApp Gateway')}
+                    className="flex-1 block w-full rounded-lg border border-gray-300 px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                   />
                   <button
                     type="button"
                     onClick={handleAddFeature}
-                    className="cursor-pointer px-3 py-2 bg-[#093C5D]/10 text-[#093C5D] hover:bg-[#093C5D]/20 rounded text-xs font-semibold transition-colors flex items-center gap-1"
+                    className="cursor-pointer h-9 sm:h-10 px-4 bg-[#093C5D] text-white hover:bg-[#072d46] rounded-lg text-xs sm:text-sm font-medium transition-all active:scale-95 flex items-center gap-1.5 shrink-0 shadow-none"
                   >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Add</span>
+                    <Plus className="w-4 h-4" />
+                    <span>{t('Add')}</span>
                   </button>
                 </div>
 
-                <div className="space-y-1.5 pt-1">
-                  {features.map((feat, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center justify-between px-3 py-1.5 rounded bg-gray-50 border border-gray-100 text-xs text-gray-700 font-medium"
-                    >
-                      <span>{feat}</span>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveFeature(idx)}
-                        className="cursor-pointer p-1 text-gray-400 hover:text-rose-600 rounded transition-colors"
+                {features.length > 0 && (
+                  <div className="space-y-2 pt-1">
+                    {features.map((feat, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between px-3 py-2 rounded-lg bg-gray-50 border border-gray-200 text-xs sm:text-[13px] text-gray-700 font-medium"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                        <div className="flex items-center gap-2 min-w-0 pr-2">
+                          <Check className="w-3.5 h-3.5 text-[#093C5D] shrink-0" />
+                          <span className="truncate">{feat}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveFeature(idx)}
+                          className="cursor-pointer p-1 text-gray-400 hover:text-red-600 rounded transition-colors shrink-0"
+                          title={t('Remove')}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
+
             </div>
 
-            {/* Footer */}
-            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-end gap-3">
-              <button
-                type="button"
-                onClick={onClose}
-                disabled={saving}
-                className="cursor-pointer px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-100 rounded transition-colors disabled:opacity-60"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={saving}
-                className="cursor-pointer flex items-center gap-2 px-5 py-2 text-xs font-semibold text-white bg-[#093C5D] rounded hover:bg-[#072d46] transition-colors disabled:opacity-60"
-              >
-                <Save className="w-4 h-4" />
-                <span>{saving ? 'Updating Tier...' : 'Save Plan Settings'}</span>
-              </button>
+            {/* ── Modal Footer (Pinned at Bottom, Never Overlaps) ── */}
+            <div className="px-4 sm:px-6 py-3 sm:py-3.5 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 flex-shrink-0">
+              {/* Changes Status Indicator (Same as Settings Page) */}
+              <div className="flex items-center gap-2 text-xs sm:text-sm">
+                <div
+                  className={`w-2 h-2 rounded-full shrink-0 ${
+                    hasChanges ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'
+                  }`}
+                />
+                <span
+                  className={
+                    hasChanges
+                      ? 'text-amber-700 font-medium'
+                      : 'text-gray-500 font-medium'
+                  }
+                >
+                  {hasChanges
+                    ? t('You have unsaved changes')
+                    : t('All changes saved')}
+                </span>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end gap-2.5 sm:gap-3 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  disabled={saving}
+                  className="cursor-pointer h-10 px-4 sm:px-5 rounded-lg border border-gray-300 text-gray-700 bg-white hover:bg-gray-100 text-xs sm:text-sm font-medium transition-all active:scale-95 shadow-none disabled:opacity-50 flex-1 sm:flex-initial inline-flex items-center justify-center"
+                >
+                  {t('Cancel')}
+                </button>
+                <button
+                  type="submit"
+                  disabled={!hasChanges || saving}
+                  className={`h-10 px-5 sm:px-6 rounded-lg bg-[#093C5D] text-white text-xs sm:text-sm font-medium transition-all shadow-none flex items-center justify-center gap-2 flex-1 sm:flex-initial ${
+                    !hasChanges || saving
+                      ? 'opacity-50 cursor-not-allowed'
+                      : 'cursor-pointer hover:bg-[#072d46] active:scale-95'
+                  }`}
+                >
+                  <Save className="w-4 h-4 shrink-0" />
+                  <span>
+                    {saving ? t('Updating Tier...') : t('Save Plan Settings')}
+                  </span>
+                </button>
+              </div>
             </div>
           </form>
         </div>
@@ -500,3 +768,4 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
 };
 
 export default EditPlanModal;
+
