@@ -26,7 +26,8 @@ import {
   LifeBuoy,
   Tag,
   ShieldCheck,
-  Layers
+  Layers,
+  Crown
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/slices/authSlice';
@@ -82,6 +83,18 @@ const MainLayout = () => {
   }, [location.pathname]);
 
   const [analyticsOpen, setAnalyticsOpen] = useState(true);
+
+  // Admin Accordion state for Subscriptions
+  const isSubscriptionsActive = useMemo(() => {
+    return (
+      location.pathname === '/admin/subscriptions' ||
+      location.pathname === '/admin/subscriptions/store-plans' ||
+      location.pathname === '/admin/subscriptions/plans' ||
+      location.pathname === '/admin/plans'
+    );
+  }, [location.pathname]);
+
+  const [subscriptionsOpen, setSubscriptionsOpen] = useState(true);
 
   // Shopkeeper Accordion state for Billing (Bills, Voice, Reminders)
   const isShopkeeperBillingActive = useMemo(() => {
@@ -328,7 +341,8 @@ const MainLayout = () => {
     if (p.includes('/admin/dashboard') || p === '/admin') return 'Dashboard';
     if (p.includes('/admin/shops')) return 'Store';
     if (p.includes('/admin/bills')) return 'Bills Ledger';
-    if (p.includes('/admin/subscriptions')) return 'Subscriptions';
+    if (p.includes('/admin/subscriptions/store-plans') || p.includes('/admin/subscriptions/plans')) return 'Store Plans';
+    if (p.includes('/admin/subscriptions')) return 'Billing Receipts';
     if (p.includes('/admin/reports')) return 'Reports';
     if (p.includes('/admin/health')) return 'System Health';
     if (p.includes('/admin/settings')) return 'Platform Settings';
@@ -357,6 +371,7 @@ const MainLayout = () => {
     if (p.includes('/admin/dashboard') || p === '/admin') return Home;
     if (p.includes('/admin/shops')) return Store;
     if (p.includes('/admin/bills')) return FileText;
+    if (p.includes('/admin/subscriptions/store-plans') || p.includes('/admin/subscriptions/plans')) return Crown;
     if (p.includes('/admin/subscriptions')) return CreditCard;
     if (p.includes('/admin/reports')) return BarChart2;
     if (p.includes('/admin/health')) return Activity;
@@ -527,28 +542,97 @@ const MainLayout = () => {
                 )}
               </div>
 
-              {/* 3. Subscriptions (with Live badge) */}
-              <NavLink
-                to="/admin/subscriptions"
-                title={sidebarCollapsed ? 'Subscriptions' : undefined}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
-                    isActive
-                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
-                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
-                }
-              >
-                <CreditCard className="w-4 h-4 shrink-0" />
-                {!sidebarCollapsed && (
-                  <>
-                    <span>Subscriptions</span>
-                    <span className="ml-auto text-[10px] font-medium px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wide">
-                      LIVE
-                    </span>
-                  </>
+              {/* 3. Subscriptions Accordion Group (with LIVE badge) */}
+              <div className="pt-0.5">
+                {sidebarCollapsed ? (
+                  <NavLink
+                    to="/admin/subscriptions"
+                    title="Subscriptions"
+                    className={({ isActive }) =>
+                      `flex items-center justify-center px-2 py-2.5 rounded-lg border text-sm transition-all ${
+                        isSubscriptionsActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`
+                    }
+                  >
+                    <CreditCard className="w-4 h-4 shrink-0" />
+                  </NavLink>
+                ) : (
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => setSubscriptionsOpen((prev) => !prev)}
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border text-sm transition-all cursor-pointer ${
+                        isSubscriptionsActive
+                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <CreditCard className="w-4 h-4 shrink-0" />
+                        <span>Subscriptions</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wide">
+                          LIVE
+                        </span>
+                        <ChevronDown
+                          className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
+                            subscriptionsOpen ? 'rotate-180' : ''
+                          } ${isSubscriptionsActive ? 'text-[#093C5D]' : 'text-gray-400'}`}
+                        />
+                      </div>
+                    </button>
+
+                    {subscriptionsOpen && (
+                      <div className="mt-1 space-y-1 relative pl-7 pr-1">
+                        <div className="absolute left-[22px] top-1.5 bottom-2 w-px bg-gray-200/80" />
+
+                        <NavLink
+                          to="/admin/subscriptions"
+                          end
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          Billing Receipts
+                        </NavLink>
+
+                        <NavLink
+                          to="/admin/subscriptions/store-plans"
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          Store Plans
+                        </NavLink>
+
+                        <NavLink
+                          to="/admin/plans"
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          Plans & Pricing
+                        </NavLink>
+                      </div>
+                    )}
+                  </div>
                 )}
-              </NavLink>
+              </div>
 
               {/* 4. System Health (with LIVE badge) */}
               <NavLink
@@ -621,21 +705,6 @@ const MainLayout = () => {
                 {!sidebarCollapsed && <span>Coupons</span>}
               </NavLink>
 
-              {/* 8. Dynamic SaaS Plan Limits & Pricing */}
-              <NavLink
-                to="/admin/plans"
-                title={sidebarCollapsed ? 'Plans & Pricing' : undefined}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
-                    isActive
-                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
-                  } ${sidebarCollapsed ? 'justify-center px-2' : ''}`
-                }
-              >
-                <Layers className="w-4 h-4 shrink-0" />
-                {!sidebarCollapsed && <span>Plans & Pricing</span>}
-              </NavLink>
 
               {/* 9. Platform Security & Immutable Audit Logs */}
               <NavLink
@@ -998,25 +1067,82 @@ const MainLayout = () => {
                     )}
                   </div>
 
-                  <NavLink
-                    to="/admin/subscriptions"
-                    onClick={() => setMobileDrawerOpen(false)}
-                    className={({ isActive }) =>
-                      `flex items-center justify-between px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
-                        isActive
+                  {/* Subscriptions Accordion Group */}
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => setSubscriptionsOpen((prev) => !prev)}
+                      className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg border text-sm transition-colors cursor-pointer ${
+                        isSubscriptionsActive
                           ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
                           : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
-                      }`
-                    }
-                  >
-                    <div className="flex items-center gap-3">
-                      <CreditCard className="w-4 h-4 shrink-0" />
-                      <span>Subscriptions</span>
-                    </div>
-                    <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wide">
-                      LIVE
-                    </span>
-                  </NavLink>
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <CreditCard className="w-4 h-4 shrink-0" />
+                        <span>Subscriptions</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wide">
+                          LIVE
+                        </span>
+                        <ChevronDown
+                          className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
+                            subscriptionsOpen ? 'rotate-180' : ''
+                          } ${isSubscriptionsActive ? 'text-[#093C5D]' : 'text-gray-400'}`}
+                        />
+                      </div>
+                    </button>
+
+                    {subscriptionsOpen && (
+                      <div className="mt-1 space-y-1 relative pl-7 pr-1">
+                        <div className="absolute left-[22px] top-1.5 bottom-2 w-px bg-gray-200/80" />
+
+                        <NavLink
+                          to="/admin/subscriptions"
+                          end
+                          onClick={() => setMobileDrawerOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          Billing Receipts
+                        </NavLink>
+
+                        <NavLink
+                          to="/admin/subscriptions/store-plans"
+                          onClick={() => setMobileDrawerOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          Store Plans
+                        </NavLink>
+
+                        <NavLink
+                          to="/admin/plans"
+                          onClick={() => setMobileDrawerOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
+                              isActive
+                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            }`
+                          }
+                        >
+                          Plans & Pricing
+                        </NavLink>
+                      </div>
+                    )}
+                  </div>
 
                   <NavLink
                     to="/admin/health"
@@ -1083,20 +1209,6 @@ const MainLayout = () => {
                     <span>Coupons</span>
                   </NavLink>
 
-                  <NavLink
-                    to="/admin/plans"
-                    onClick={() => setMobileDrawerOpen(false)}
-                    className={({ isActive }) =>
-                      `flex items-center gap-3 px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
-                        isActive
-                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
-                      }`
-                    }
-                  >
-                    <Layers className="w-4 h-4 shrink-0" />
-                    <span>Plans & Pricing</span>
-                  </NavLink>
 
                   <NavLink
                     to="/admin/audit-logs"

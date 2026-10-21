@@ -288,14 +288,16 @@ const ShopDetailsModal = ({
                     Subscription Status & Plan
                   </h4>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => onOpenPlanModal(shop)}
-                  className="cursor-pointer px-3 py-1.5 text-xs font-semibold text-[#093C5D] bg-[#093C5D]/10 hover:bg-[#093C5D]/15 border border-[#093C5D]/20 rounded-lg inline-flex items-center gap-1.5 transition-all active:scale-95 shadow-none shrink-0"
-                >
-                  <Crown className="w-3.5 h-3.5 text-amber-600 shrink-0" strokeWidth={2} />
-                  <span>Change Plan / Extend</span>
-                </button>
+                {onOpenPlanModal && (
+                  <button
+                    type="button"
+                    onClick={() => onOpenPlanModal(shop)}
+                    className="cursor-pointer px-3 py-1.5 text-xs font-semibold text-[#093C5D] bg-[#093C5D]/10 hover:bg-[#093C5D]/15 border border-[#093C5D]/20 rounded-lg inline-flex items-center gap-1.5 transition-all active:scale-95 shadow-none shrink-0"
+                  >
+                    <Crown className="w-3.5 h-3.5 text-amber-600 shrink-0" strokeWidth={2} />
+                    <span>Change Plan / Extend</span>
+                  </button>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

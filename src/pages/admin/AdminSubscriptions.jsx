@@ -103,6 +103,7 @@ const AdminSubscriptions = () => {
   const currentPage = data?.currentPage || urlPage;
   const pendingOrFailed = Math.max(0, totalCount - paidCount);
 
+
   const getInitials = (name) => {
     if (!name) return 'SH';
     const parts = name.trim().split(/\s+/);
