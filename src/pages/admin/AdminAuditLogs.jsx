@@ -26,6 +26,7 @@ import {
 import AuditCategoryBadge from '../../features/admin/components/audit/AuditCategoryBadge';
 import AuditDetailsModal from '../../features/admin/components/audit/AuditDetailsModal';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
+import { formatDate } from '../../utils/dateUtils';
 
 const CATEGORY_OPTIONS = [
   { value: 'ALL', label: 'All Categories' },
@@ -395,17 +396,7 @@ const AdminAuditLogs = () => {
                 </tr>
               ) : (
                 logs.map((log) => {
-                  const dObj = log.createdAt ? new Date(log.createdAt) : null;
-                  const dateStr = dObj && !isNaN(dObj.getTime())
-                    ? dObj.toLocaleString('en-IN', {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                      })
-                    : 'N/A';
+                  const dateStr = formatDate(log.createdAt) || 'N/A';
 
                   return (
                     <tr

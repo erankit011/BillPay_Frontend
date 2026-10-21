@@ -14,7 +14,7 @@ import UpgradeModal from '../components/common/UpgradeModal';
 import toast from 'react-hot-toast';
 
 import { formatCurrency } from '../utils/currency';
-import { formatDate } from '../utils/dateUtils';
+import { formatDate, isSubscriptionExpired, isTrialExpired } from '../utils/dateUtils';
 
 const getInitials = (name) => {
     if (!name) return 'CS';
@@ -327,16 +327,18 @@ const Bills = () => {
     };
 
     const handleNewBillClick = () => {
-        if (!shopDetails?.subscriptionPlan || shopDetails?.subscriptionPlan === 'FREE' || shopDetails?.subscriptionStatus === 'none') {
-            const trialEnd = shopDetails?.currentPeriodEnd 
-                ? new Date(shopDetails.currentPeriodEnd)
-                : (() => {
-                    const d = new Date(shopDetails?.createdAt || Date.now());
-                    d.setDate(d.getDate() + 7);
-                    return d;
-                })();
-            
-            if (new Date() > trialEnd) {
+        if (isSubscriptionExpired(shopDetails)) {
+            setUpgradeModal({
+                isOpen: true,
+                title: t('Subscription Expired'),
+                message: t('Your subscription has expired. Please renew your plan to continue creating bills.')
+            });
+            return;
+        }
+
+        const isPaid = shopDetails?.subscriptionPlan && shopDetails?.subscriptionPlan !== 'FREE';
+        if (!isPaid || shopDetails?.subscriptionStatus === 'none') {
+            if (isTrialExpired(shopDetails)) {
                 setUpgradeModal({
                     isOpen: true,
                     title: t('Trial Expired'),

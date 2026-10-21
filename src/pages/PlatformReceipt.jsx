@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import { Printer, ArrowLeft, CheckCircle } from 'lucide-react';
 import SwirlingLoader from '../components/common/SwirlingLoader';
+import { formatShortDate } from '../utils/dateUtils';
 
 const PlatformReceipt = () => {
   const { id } = useParams();
@@ -30,15 +31,6 @@ const PlatformReceipt = () => {
 
   const handlePrint = () => {
     window.print();
-  };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('en-IN', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    });
   };
 
   if (loading) {
@@ -114,7 +106,7 @@ const PlatformReceipt = () => {
             <div className="flex flex-col sm:flex-row justify-between gap-6 pb-8 border-b border-gray-100 text-center sm:text-left">
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t('Invoice Date')}</p>
-                <p className="text-gray-900 font-medium">{formatDate(invoice.createdAt)}</p>
+                <p className="text-gray-900 font-medium">{formatShortDate(invoice.createdAt)}</p>
               </div>
               <div className="sm:text-right">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t('Payment Status')}</p>
@@ -163,7 +155,7 @@ const PlatformReceipt = () => {
                     <td className="py-4">
                       <p className="font-semibold text-gray-900 text-base mb-1">UdharPay {invoice.planName} Subscription</p>
                       <p className="text-sm text-gray-500">
-                        {t('Validity:')} {formatDate(invoice.billingPeriodStart)} - {formatDate(invoice.billingPeriodEnd)}
+                        {t('Validity:')} {formatShortDate(invoice.billingPeriodStart)} - {formatShortDate(invoice.billingPeriodEnd)}
                       </p>
                     </td>
                     <td className="py-4 text-right font-medium text-gray-900 text-base">

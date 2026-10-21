@@ -11,7 +11,7 @@ import {
   Crown
 } from 'lucide-react';
 import { formatCurrency } from '../../../utils/currency';
-import { formatDate } from '../../../utils/dateUtils';
+import { formatDate, isDateExpired } from '../../../utils/dateUtils';
 
 const ShopDetailsModal = ({
   isOpen,
@@ -69,7 +69,7 @@ const ShopDetailsModal = ({
   };
 
   const expiryDate = shop.currentPeriodEnd || shop.subscriptionExpiresAt;
-  const isPlanExpired = expiryDate ? new Date(expiryDate) < new Date() : false;
+  const isPlanExpired = isDateExpired(expiryDate);
 
   const getExpiryDisplay = () => {
     if (plan === 'FREE') {

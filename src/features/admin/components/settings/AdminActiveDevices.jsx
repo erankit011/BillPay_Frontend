@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import api from '../../../../api/axios';
 import { logout } from '../../../../redux/slices/authSlice';
 import toast from 'react-hot-toast';
+import { formatShortDate } from '../../../../utils/dateUtils';
 
 const AdminActiveDevices = () => {
   const { t } = useTranslation();
@@ -112,18 +113,7 @@ const AdminActiveDevices = () => {
     }
   };
 
-  const formatDeviceDate = (dateStr) => {
-    if (!dateStr) return '-';
-    try {
-      const date = new Date(dateStr);
-      const day = date.getDate();
-      const month = date.toLocaleDateString('en-US', { month: 'short' });
-      const year = date.getFullYear();
-      return `${day} ${month} ${year}`;
-    } catch (e) {
-      return '-';
-    }
-  };
+  const formatDeviceDate = (dateStr) => formatShortDate(dateStr);
 
   const getDeviceIcon = (device) => {
     if (!device) return Monitor;

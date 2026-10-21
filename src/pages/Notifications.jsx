@@ -4,6 +4,7 @@ import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
 import LoadMoreButton from '../components/common/LoadMoreButton';
 import SwirlingLoader from '../components/common/SwirlingLoader';
+import { formatRelativeTime } from '../utils/dateUtils';
 
 const Notifications = () => {
   const { t } = useTranslation();
@@ -86,17 +87,6 @@ const Notifications = () => {
       case 'UDHAR': return '💳';
       default: return '📢';
     }
-  };
-
-  const getTimeAgo = (date) => {
-    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-    if (seconds < 60) return 'Just now';
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `${minutes}m ago`;
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours}h ago`;
-    const days = Math.floor(hours / 24);
-    return `${days}d ago`;
   };
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
@@ -189,7 +179,7 @@ const Notifications = () => {
                       {notification.message}
                     </p>
                     <div className="flex items-center gap-2 md:gap-3 text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wide">
-                      <span>{getTimeAgo(notification.createdAt)}</span>
+                      <span>{formatRelativeTime(notification.createdAt)}</span>
                       <span className="w-1 h-1 rounded-full bg-gray-300"></span>
                       <span>{notification.type}</span>
                     </div>
