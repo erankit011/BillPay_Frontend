@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Globe,
@@ -6,10 +6,8 @@ import {
   Lock,
   Bell,
   ChevronRight,
-  ShieldCheck,
-  RefreshCw,
-  Sliders,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { getPlatformSettings, updatePlatformSettings } from '../../features/admin/api/adminApi';
 import GeneralPlatformSettings from '../../features/admin/components/settings/GeneralPlatformSettings';
@@ -18,69 +16,38 @@ import AdminSecuritySettings from '../../features/admin/components/settings/Admi
 import PlatformNotificationSettings from '../../features/admin/components/settings/PlatformNotificationSettings';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 
-const SECTIONS = [
-  {
-    id: 'GENERAL',
-    label: 'Brand & Localization',
-    desc: 'Platform name, support contacts & currency',
-    icon: Globe,
-  },
-  {
-    id: 'OPERATIONS',
-    label: 'Operations & Switches',
-    desc: 'Maintenance mode & free tier allowances',
-    icon: SlidersHorizontal,
-  },
-  {
-    id: 'SECURITY',
-    label: 'Admin Security',
-    desc: 'Master credentials & active sessions',
-    icon: Lock,
-  },
-  {
-    id: 'NOTIFICATIONS',
-    label: 'Alert Preferences',
-    desc: 'Email, SMS & WhatsApp notifications',
-    icon: Bell,
-  },
-];
-
-const SectionNavItem = ({ icon: Icon, label, desc, sectionId, activeSection, onClick }) => (
+// ── Section Nav Item (Exact pattern from Shopkeeper Settings) ──
+const SectionNavItem = ({ icon: Icon, label, sectionId, activeSection, onClick }) => (
   <button
     type="button"
     onClick={() => onClick(sectionId)}
-    className={`cursor-pointer w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 text-left ${
+    className={`cursor-pointer w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 text-left ${
       activeSection === sectionId
-        ? 'bg-[#093C5D]/5 text-[#093C5D] border border-[#093C5D]/15 font-semibold'
+        ? 'bg-[#093C5D]/5 text-[#093C5D] border border-[#093C5D]/15'
         : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border border-transparent'
     }`}
   >
-    <div
-      className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-        activeSection === sectionId
-          ? 'bg-[#093C5D] text-white'
-          : 'bg-gray-100 text-gray-500'
-      }`}
-    >
-      <Icon className="w-4 h-4 shrink-0" />
-    </div>
-    <div className="min-w-0 flex-1">
-      <span className="truncate block leading-tight">{label}</span>
-      <span className="text-[11px] text-gray-400 font-normal truncate block mt-0.5">
-        {desc}
-      </span>
-    </div>
+    <Icon className="w-4 h-4 shrink-0" />
+    <span className="truncate">{label}</span>
     <ChevronRight
       className={`w-3.5 h-3.5 ml-auto shrink-0 transition-transform ${
-        activeSection === sectionId ? 'rotate-90 text-[#093C5D]' : 'text-gray-400'
+        activeSection === sectionId ? 'rotate-90' : ''
       }`}
     />
   </button>
 );
 
 const AdminSettings = () => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const [activeSection, setActiveSection] = useState('GENERAL');
+
+  const [activeSection, setActiveSection] = useState(() => {
+    return localStorage.getItem('udharpay_admin_settings_tab') || 'general';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('udharpay_admin_settings_tab', activeSection);
+  }, [activeSection]);
 
   const { data: settings, isLoading, isError, refetch } = useQuery({
     queryKey: ['platformSettings'],
@@ -95,10 +62,10 @@ const AdminSettings = () => {
       queryClient.invalidateQueries({ queryKey: ['activeBroadcasts'] });
       queryClient.invalidateQueries({ queryKey: ['publicContactInfo'] });
       queryClient.invalidateQueries({ queryKey: ['adminPlans'] });
-      toast.success(variables?.customMessage || 'Platform settings updated successfully');
+      toast.success(variables?.customMessage || t('Platform settings updated successfully'));
     },
     onError: (err) => {
-      toast.error(err.response?.data?.message || 'Failed to update platform settings');
+      toast.error(err.response?.data?.message || t('Failed to update platform settings'));
     },
   });
 
@@ -106,10 +73,17 @@ const AdminSettings = () => {
     mutation.mutate({ formData, customMessage });
   };
 
+  const sections = [
+    { id: 'general', icon: Globe, label: t('Platform Details') },
+    { id: 'operations', icon: SlidersHorizontal, label: t('Operations & Quotas') },
+    { id: 'notifications', icon: Bell, label: t('Notifications') },
+    { id: 'security', icon: Lock, label: t('Password & Security') },
+  ];
+
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[75vh]">
-        <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#093C5D]" />
+      <div className="flex items-center justify-center min-h-[80vh]">
+        <SwirlingLoader />
       </div>
     );
   }
@@ -117,12 +91,12 @@ const AdminSettings = () => {
   if (isError) {
     return (
       <div className="p-8 text-center bg-white rounded-lg border border-red-200 text-red-700 shadow-none my-6">
-        <p className="font-semibold text-sm sm:text-base">Failed to load platform settings.</p>
+        <p className="font-semibold text-sm sm:text-base">{t('Failed to load platform settings.')}</p>
         <button
           onClick={() => refetch()}
           className="mt-3 px-4 py-2 bg-red-50 text-red-700 border border-red-200 rounded text-xs font-semibold hover:bg-red-100 transition-colors cursor-pointer"
         >
-          Try Again
+          {t('Try Again')}
         </button>
       </div>
     );
@@ -130,35 +104,24 @@ const AdminSettings = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 pb-24 lg:pb-0">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
-            Platform & System Settings
-          </h1>
-          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
-            Manage global branding, support channels, live operational switches, and default SaaS quotas.
-          </p>
-        </div>
+      {/* ── Page Header (Identical to Shopkeeper Settings) ── */}
+      <div>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Platform Settings')}</h1>
+        <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-normal">
+          {t('Manage global branding, support channels, operational switches and security')}
+        </p>
       </div>
 
-      {/* Main Layout Grid: Left Sidebar (Desktop) + Right Content */}
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-        {/* ── Left Sidebar Nav (Desktop) ── */}
-        <div className="hidden lg:block w-64 xl:w-72 shrink-0">
-          <nav className="sticky top-20 space-y-1.5 bg-white p-2.5 rounded-lg border border-gray-200">
-            <div className="px-3 py-2 border-b border-gray-100 mb-1">
-              <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block">
-                Configuration Sections
-              </span>
-            </div>
-            {SECTIONS.map((sec) => (
+        {/* ── Left Nav (Desktop) ── */}
+        <div className="hidden lg:block w-56 xl:w-60 shrink-0">
+          <nav className="sticky top-24 space-y-1">
+            {sections.map(({ id, icon: Icon, label }) => (
               <SectionNavItem
-                key={sec.id}
-                icon={sec.icon}
-                label={sec.label}
-                desc={sec.desc}
-                sectionId={sec.id}
+                key={id}
+                icon={Icon}
+                label={label}
+                sectionId={id}
                 activeSection={activeSection}
                 onClick={setActiveSection}
               />
@@ -166,32 +129,27 @@ const AdminSettings = () => {
           </nav>
         </div>
 
-        {/* ── Mobile Horizontal Scroll Nav (Mobile / Tablet) ── */}
+        {/* ── Mobile Nav (Horizontal Scroll) ── */}
         <div className="lg:hidden flex items-center gap-2 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide">
-          {SECTIONS.map((sec) => {
-            const Icon = sec.icon;
-            const isActive = activeSection === sec.id;
-            return (
-              <button
-                key={sec.id}
-                type="button"
-                onClick={() => setActiveSection(sec.id)}
-                className={`cursor-pointer flex items-center justify-center gap-2 px-3.5 py-2 rounded text-xs font-semibold whitespace-nowrap border transition-all shrink-0 ${
-                  isActive
-                    ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/20'
-                    : 'text-gray-600 hover:text-gray-900 border-gray-200 hover:bg-gray-50 bg-white'
-                }`}
-              >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#093C5D]' : 'text-gray-400'}`} />
-                <span>{sec.label}</span>
-              </button>
-            );
-          })}
+          {sections.map(({ id, icon: Icon, label }) => (
+            <div
+              key={id}
+              onClick={() => setActiveSection(id)}
+              className={`cursor-pointer flex items-center justify-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-semibold whitespace-nowrap border transition-colors shrink-0 ${
+                activeSection === id
+                  ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15'
+                  : 'text-gray-600 hover:text-gray-900 border-gray-200 hover:bg-gray-50'
+              }`}
+            >
+              <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              {label}
+            </div>
+          ))}
         </div>
 
         {/* ── Right Content Panels ── */}
         <div className="flex-1 min-w-0">
-          {activeSection === 'GENERAL' && (
+          {activeSection === 'general' && (
             <GeneralPlatformSettings
               settings={settings}
               onUpdate={handleUpdate}
@@ -199,7 +157,7 @@ const AdminSettings = () => {
             />
           )}
 
-          {activeSection === 'OPERATIONS' && (
+          {activeSection === 'operations' && (
             <PlatformOperationsSettings
               settings={settings}
               onUpdate={handleUpdate}
@@ -207,15 +165,15 @@ const AdminSettings = () => {
             />
           )}
 
-          {activeSection === 'SECURITY' && <AdminSecuritySettings />}
-
-          {activeSection === 'NOTIFICATIONS' && (
+          {activeSection === 'notifications' && (
             <PlatformNotificationSettings
               settings={settings}
               onUpdate={handleUpdate}
               isUpdating={mutation.isPending}
             />
           )}
+
+          {activeSection === 'security' && <AdminSecuritySettings />}
         </div>
       </div>
     </div>

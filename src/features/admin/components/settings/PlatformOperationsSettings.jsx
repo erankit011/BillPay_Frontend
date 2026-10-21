@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldAlert, UserPlus, Gift, FileText, Users } from 'lucide-react';
-import SettingCardHeader from './SettingCardHeader';
+import { useTranslation } from 'react-i18next';
+import ToggleSwitch from './ToggleSwitch';
 import SettingSaveButton from './SettingSaveButton';
 
 const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
+  const { t } = useTranslation();
+
   const [formData, setFormData] = useState({
+    isMaintenanceMode: false,
+    maintenanceMessage: '',
+    allowNewRegistrations: true,
+    defaultFreeTrialDays: 14,
+    freePlanMonthlyBillLimit: 50,
+    freePlanCustomerLimit: 30,
+  });
+
+  const [initialData, setInitialData] = useState({
     isMaintenanceMode: false,
     maintenanceMessage: '',
     allowNewRegistrations: true,
@@ -15,7 +26,7 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
 
   useEffect(() => {
     if (settings) {
-      setFormData({
+      const data = {
         isMaintenanceMode: Boolean(settings.isMaintenanceMode),
         maintenanceMessage:
           settings.maintenanceMessage ||
@@ -24,7 +35,9 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
         defaultFreeTrialDays: settings.defaultFreeTrialDays ?? 14,
         freePlanMonthlyBillLimit: settings.freePlanMonthlyBillLimit ?? 50,
         freePlanCustomerLimit: settings.freePlanCustomerLimit ?? 30,
-      });
+      };
+      setFormData(data);
+      setInitialData(data);
     }
   }, [settings]);
 
@@ -44,163 +57,145 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
     }));
   };
 
+  const hasChanges = JSON.stringify(formData) !== JSON.stringify(initialData);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdate(formData, 'Operations and platform switches updated successfully');
+    onUpdate(formData, t('Operations and platform switches updated successfully'));
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* 1. Maintenance Mode Master Switch */}
-      <div className={`border rounded-lg p-5 sm:p-6 transition-colors ${
-        formData.isMaintenanceMode ? 'bg-amber-50/60 border-amber-300' : 'bg-white border-gray-200'
-      }`}>
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
-              formData.isMaintenanceMode ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'
-            }`}>
-              <ShieldAlert className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-sm sm:text-base font-semibold text-gray-900">
-                  Platform Maintenance Mode
-                </h3>
-                {formData.isMaintenanceMode && (
-                  <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300">
-                    Active
-                  </span>
-                )}
-              </div>
-              <p className="text-xs text-gray-500 font-medium mt-0.5">
-                When active, store keepers see an informative maintenance banner during scheduled upgrades.
+    <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
+      {/* ── Platform Maintenance Card ── */}
+      <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
+        <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+          <div>
+            <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Platform Maintenance')}</h2>
+            <p className="text-xs text-gray-500 mt-0.5">{t('Control maintenance mode and public notice banner')}</p>
+          </div>
+          {formData.isMaintenanceMode && (
+            <span className="text-[10px] sm:text-xs font-semibold uppercase px-2.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200">
+              {t('Active')}
+            </span>
+          )}
+        </div>
+
+        <div className="px-4 sm:px-5 md:px-6 py-4 sm:py-5">
+          <ToggleSwitch
+            name="isMaintenanceMode"
+            checked={formData.isMaintenanceMode}
+            onChange={handleChange}
+            label={t('Platform Maintenance Mode')}
+            description={t('Show maintenance banner to storekeepers during scheduled updates')}
+          />
+
+          {formData.isMaintenanceMode && (
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                {t('Public Maintenance Notice Message')}
+              </label>
+              <textarea
+                name="maintenanceMessage"
+                rows={3}
+                value={formData.maintenanceMessage}
+                onChange={handleChange}
+                placeholder={t('Platform is currently undergoing scheduled system maintenance. Please check back shortly.')}
+                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] resize-none"
+              />
+              <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
+                {t('This message will be visible to all logged-in storekeepers')}
               </p>
             </div>
-          </div>
+          )}
+        </div>
+      </section>
 
-          {/* Toggle Switch */}
-          <label className="relative inline-flex items-center cursor-pointer shrink-0">
-            <input
-              type="checkbox"
-              name="isMaintenanceMode"
-              checked={formData.isMaintenanceMode}
-              onChange={handleChange}
-              className="sr-only peer"
-            />
-            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
-          </label>
+      {/* ── Merchant Signups & Quotas Card ── */}
+      <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
+        <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
+          <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Store Onboarding & Default Quotas')}</h2>
+          <p className="text-xs text-gray-500 mt-0.5">{t('Control new signups and default free tier usage allowances')}</p>
         </div>
 
-        {formData.isMaintenanceMode && (
-          <div className="mt-4 pt-4 border-t border-amber-200/80 space-y-2">
-            <label className="block text-xs font-semibold text-amber-900 uppercase tracking-wider">
-              Public Maintenance Notice Message
-            </label>
-            <textarea
-              name="maintenanceMessage"
-              rows={2}
-              value={formData.maintenanceMessage}
-              onChange={handleChange}
-              placeholder="Enter message visible to merchants..."
-              className="w-full p-3 text-xs sm:text-sm bg-white border border-amber-300 rounded-lg focus:outline-none focus:border-amber-500 text-gray-900 font-medium leading-relaxed"
-            />
-          </div>
-        )}
-      </div>
+        <div className="px-4 sm:px-5 md:px-6 py-4 sm:py-5 space-y-5">
+          <ToggleSwitch
+            name="allowNewRegistrations"
+            checked={formData.allowNewRegistrations}
+            onChange={handleChange}
+            label={t('Allow New Store Registrations')}
+            description={t('Keep ON to allow public merchant signups; turn OFF to pause new store onboarding')}
+          />
 
-      {/* 2. Merchant Signups & Trial Policy */}
-      <div className="bg-white border border-gray-200 rounded-lg p-5 sm:p-6 shadow-none">
-        <SettingCardHeader
-          icon={UserPlus}
-          title="Onboarding & Registration Control"
-          subtitle="Configure store registration eligibility and default trial allowances"
-          iconBg="bg-blue-50"
-          iconColor="text-[#093C5D]"
-        />
+          <div className="pt-2 border-t border-gray-100">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5">
+              {/* Default Free Trial */}
+              <div>
+                <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                  {t('Default Free Trial (Days)')}
+                </label>
+                <input
+                  type="number"
+                  name="defaultFreeTrialDays"
+                  value={formData.defaultFreeTrialDays}
+                  onChange={handleNumberChange}
+                  min={0}
+                  max={90}
+                  placeholder="14"
+                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                />
+                <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
+                  {t('Free Pro trial granted to new merchants upon signup')}
+                </p>
+              </div>
 
-        <div className="space-y-4">
-          {/* Allow Registrations Switch */}
-          <div className="flex items-center justify-between p-3.5 rounded-lg bg-gray-50/70 border border-gray-200/80">
-            <div>
-              <span className="text-sm font-semibold text-gray-900 block">Allow New Store Registrations</span>
-              <span className="text-xs text-gray-500 font-medium">
-                Keep ON to allow public merchant signups; turn OFF to temporarily pause new store onboarding.
-              </span>
-            </div>
-            <label className="relative inline-flex items-center cursor-pointer shrink-0 ml-4">
-              <input
-                type="checkbox"
-                name="allowNewRegistrations"
-                checked={formData.allowNewRegistrations}
-                onChange={handleChange}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#093C5D]"></div>
-            </label>
-          </div>
+              {/* Free Monthly Bills */}
+              <div>
+                <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                  {t('Free Plan Monthly Bills')}
+                </label>
+                <input
+                  type="number"
+                  name="freePlanMonthlyBillLimit"
+                  value={formData.freePlanMonthlyBillLimit}
+                  onChange={handleNumberChange}
+                  min={0}
+                  placeholder="50"
+                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                />
+                <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
+                  {t('Maximum bills allowed per month on Free tier')}
+                </p>
+              </div>
 
-          {/* Trial Duration & Limits */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                <Gift className="w-3.5 h-3.5 text-emerald-600" />
-                Default Free Trial (Days)
-              </label>
-              <input
-                type="number"
-                name="defaultFreeTrialDays"
-                value={formData.defaultFreeTrialDays}
-                onChange={handleNumberChange}
-                min={0}
-                max={90}
-                className="w-full h-10 px-3.5 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium"
-              />
-              <span className="text-[11px] text-gray-400 mt-1 block">Granted to new accounts upon signup</span>
-            </div>
-
-            {/* Free Monthly Bill Limit */}
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                <FileText className="w-3.5 h-3.5 text-blue-600" />
-                Free Plan Monthly Bills
-              </label>
-              <input
-                type="number"
-                name="freePlanMonthlyBillLimit"
-                value={formData.freePlanMonthlyBillLimit}
-                onChange={handleNumberChange}
-                min={0}
-                className="w-full h-10 px-3.5 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium"
-              />
-              <span className="text-[11px] text-gray-400 mt-1 block">Maximum bills allowed per month on Free tier</span>
-            </div>
-
-            {/* Free Customer Limit */}
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-purple-600" />
-                Free Plan Customer Quota
-              </label>
-              <input
-                type="number"
-                name="freePlanCustomerLimit"
-                value={formData.freePlanCustomerLimit}
-                onChange={handleNumberChange}
-                min={0}
-                className="w-full h-10 px-3.5 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium"
-              />
-              <span className="text-[11px] text-gray-400 mt-1 block">Maximum customer profiles on Free tier</span>
+              {/* Free Plan Customer Limit */}
+              <div>
+                <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                  {t('Free Plan Customer Quota')}
+                </label>
+                <input
+                  type="number"
+                  name="freePlanCustomerLimit"
+                  value={formData.freePlanCustomerLimit}
+                  onChange={handleNumberChange}
+                  min={0}
+                  placeholder="30"
+                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                />
+                <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
+                  {t('Maximum customer profiles allowed on Free tier')}
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Save Button */}
+      {/* Floating Sticky Save Button Bar */}
       <SettingSaveButton
         isUpdating={isUpdating}
+        hasChanges={hasChanges}
         label="Save Operations Config"
-        loadingLabel="Updating Switches..."
+        loadingLabel="Saving Changes..."
       />
     </form>
   );

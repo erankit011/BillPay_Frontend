@@ -73,8 +73,8 @@ const MainLayout = () => {
   // Mobile / Tablet offcanvas drawer state
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
-  // Admin Accordion state for Analytics
-  const isAnalyticsActive = useMemo(() => {
+  // Admin Accordion state for Stores
+  const isStoresActive = useMemo(() => {
     return (
       location.pathname === '/admin/shops' ||
       location.pathname === '/admin/bills' ||
@@ -82,7 +82,7 @@ const MainLayout = () => {
     );
   }, [location.pathname]);
 
-  const [analyticsOpen, setAnalyticsOpen] = useState(true);
+  const [storesOpen, setStoresOpen] = useState(true);
 
   // Admin Accordion state for Subscriptions
   const isSubscriptionsActive = useMemo(() => {
@@ -340,10 +340,10 @@ const MainLayout = () => {
     const p = location.pathname;
     if (p.includes('/admin/dashboard') || p === '/admin') return 'Dashboard';
     if (p.includes('/admin/shops')) return 'Store';
-    if (p.includes('/admin/bills')) return 'Bills Ledger';
+    if (p.includes('/admin/bills')) return 'Store Bill';
     if (p.includes('/admin/subscriptions/store-plans') || p.includes('/admin/subscriptions/plans')) return 'Store Plans';
     if (p.includes('/admin/subscriptions')) return 'Billing Receipts';
-    if (p.includes('/admin/reports')) return 'Reports';
+    if (p.includes('/admin/reports')) return 'Store Reports';
     if (p.includes('/admin/health')) return 'System Health';
     if (p.includes('/admin/settings')) return 'Platform Settings';
     if (p.includes('/admin/broadcasts')) return 'Broadcasts';
@@ -456,45 +456,45 @@ const MainLayout = () => {
                 {!sidebarCollapsed && <span>Dashboard</span>}
               </NavLink>
 
-              {/* 2. Analytics Accordion Group */}
+              {/* 2. Stores Accordion Group */}
               <div className="pt-0.5">
                 {sidebarCollapsed ? (
                   <NavLink
                     to="/admin/shops"
-                    title="Analytics"
+                    title="Stores"
                     className={({ isActive }) =>
                       `flex items-center justify-center px-2 py-2.5 rounded-lg border text-sm transition-all ${
-                        isAnalyticsActive
+                        isStoresActive
                           ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
                           : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
                       }`
                     }
                   >
-                    <BarChart2 className="w-4 h-4 shrink-0" />
+                    <Store className="w-4 h-4 shrink-0" />
                   </NavLink>
                 ) : (
                   <div>
                     <button
                       type="button"
-                      onClick={() => setAnalyticsOpen((prev) => !prev)}
+                      onClick={() => setStoresOpen((prev) => !prev)}
                       className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border text-sm transition-all cursor-pointer ${
-                        isAnalyticsActive
+                        isStoresActive
                           ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
                           : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <BarChart2 className="w-4 h-4 shrink-0" />
-                        <span>Analytics</span>
+                        <Store className="w-4 h-4 shrink-0" />
+                        <span>Stores</span>
                       </div>
                       <ChevronDown
                         className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
-                          analyticsOpen ? 'rotate-180' : ''
-                        } ${isAnalyticsActive ? 'text-[#093C5D]' : 'text-gray-400'}`}
+                          storesOpen ? 'rotate-180' : ''
+                        } ${isStoresActive ? 'text-[#093C5D]' : 'text-gray-400'}`}
                       />
                     </button>
 
-                    {analyticsOpen && (
+                    {storesOpen && (
                       <div className="mt-1 space-y-1 relative pl-7 pr-1">
                         <div className="absolute left-[22px] top-1.5 bottom-2 w-px bg-gray-200/80" />
 
@@ -521,7 +521,7 @@ const MainLayout = () => {
                             }`
                           }
                         >
-                          Bills Ledger
+                          Store Bill
                         </NavLink>
 
                         <NavLink
@@ -1003,25 +1003,25 @@ const MainLayout = () => {
                   <div>
                     <button
                       type="button"
-                      onClick={() => setAnalyticsOpen((prev) => !prev)}
+                      onClick={() => setStoresOpen((prev) => !prev)}
                       className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg border text-sm transition-colors cursor-pointer ${
-                        isAnalyticsActive
+                        isStoresActive
                           ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
                           : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <BarChart2 className="w-4 h-4 shrink-0" />
-                        <span>Analytics</span>
+                        <Store className="w-4 h-4 shrink-0" />
+                        <span>Stores</span>
                       </div>
                       <ChevronDown
                         className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
-                          analyticsOpen ? 'rotate-180' : ''
-                        } ${isAnalyticsActive ? 'text-[#093C5D]' : 'text-gray-400'}`}
+                          storesOpen ? 'rotate-180' : ''
+                        } ${isStoresActive ? 'text-[#093C5D]' : 'text-gray-400'}`}
                       />
                     </button>
 
-                    {analyticsOpen && (
+                    {storesOpen && (
                       <div className="mt-1 space-y-1 pl-8 pr-1 relative">
                         <div className="absolute left-6 top-1.5 bottom-2 w-px bg-gray-200" />
                         <NavLink
@@ -1048,7 +1048,7 @@ const MainLayout = () => {
                             }`
                           }
                         >
-                          Bills Ledger
+                          Store Bill
                         </NavLink>
                         <NavLink
                           to="/admin/reports"

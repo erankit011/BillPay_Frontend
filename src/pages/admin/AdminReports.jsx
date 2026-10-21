@@ -1,11 +1,13 @@
 import React, { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
-  TrendingUp,
+  ChartNoAxesCombined,
+  Wallet,
   IndianRupee,
+  TrendingUp,
+  Receipt,
+  Store,
   CreditCard,
-  CheckCircle2,
-  Clock,
   AlertCircle
 } from 'lucide-react';
 import {
@@ -77,15 +79,47 @@ const getPaymentModeColor = (mode) => {
   }
 };
 
-const formatMonthYear = (val) => {
+const MONTH_NAMES = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+];
+
+const FULL_MONTH_NAMES = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
+const formatMonthShort = (val) => {
   if (!val || typeof val !== 'string') return val;
   const parts = val.split('-');
   if (parts.length === 2) {
     const yyyy = parts[0];
-    const mm = parts[1].padStart(2, '0');
-    return `${mm}-${yyyy}`;
+    const monthIndex = parseInt(parts[1], 10) - 1;
+    if (monthIndex >= 0 && monthIndex < 12) {
+      return `${MONTH_NAMES[monthIndex]} ${yyyy}`;
+    }
   }
   return val;
+};
+
+const formatMonthFull = (val) => {
+  if (!val || typeof val !== 'string') return val;
+  const parts = val.split('-');
+  if (parts.length === 2) {
+    const yyyy = parts[0];
+    const monthIndex = parseInt(parts[1], 10) - 1;
+    if (monthIndex >= 0 && monthIndex < 12) {
+      return `${FULL_MONTH_NAMES[monthIndex]} ${yyyy}`;
+    }
+  }
+  return val;
+};
+
+const formatYAxisCurrency = (val) => {
+  if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)}Cr`;
+  if (val >= 100000) return `₹${(val / 100000).toFixed(1)}L`;
+  if (val >= 1000) return `₹${Math.round(val / 1000)}K`;
+  return `₹${val}`;
 };
 
 const AdminReports = () => {
@@ -96,14 +130,13 @@ const AdminReports = () => {
   });
 
   const monthlyGMV = data?.monthlyGMV || [];
-  const monthlySubscriptions = data?.monthlySubscriptions || [];
   const topShops = data?.topShops || [];
   const paymentModes = data?.paymentModes || [];
   const creditStats = data?.creditStats || { totalUdhar: 0, totalPaid: 0, currentOutstanding: 0 };
 
-  // Real all-time calculations from platform
+  // Real store-only all-time calculations from platform
   const totalPlatformGMV = data?.totalPlatformGMV ?? monthlyGMV.reduce((acc, curr) => acc + (curr.totalGMV || 0), 0);
-  const totalSaaSSubscriptions = data?.totalSaaSSubscriptions ?? monthlySubscriptions.reduce((acc, curr) => acc + (curr.totalRevenue || 0), 0);
+  const totalPlatformPaid = data?.totalPlatformPaid ?? monthlyGMV.reduce((acc, curr) => acc + (curr.totalPaid || 0), 0);
   const totalPlatformBills = data?.totalPlatformBills ?? monthlyGMV.reduce((acc, curr) => acc + (curr.billsCount || 0), 0);
 
   const recoveryRate =
@@ -122,26 +155,16 @@ const AdminReports = () => {
     }));
   }, [monthlyGMV]);
 
-  // Active months subscriptions for chart
-  const subscriptionChartData = useMemo(() => {
-    if (!monthlySubscriptions || monthlySubscriptions.length === 0) return [];
-    return monthlySubscriptions.map((item) => ({
-      month: item._id,
-      Revenue: item.totalRevenue || 0,
-      Invoices: item.count || 0,
-    }));
-  }, [monthlySubscriptions]);
-
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 tracking-tight">
-            Financial & Merchant Analytics Reports
+            Merchant Store Analytics & Performance Reports
           </h1>
           <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
-            In-depth breakdown of platform turnover, SaaS subscription earnings, customer credit recovery, and top performing merchant stores.
+            In-depth breakdown of merchant store sales turnover, bills issued, customer udhar credit recovery, settlement modes, and top performing stores.
           </p>
         </div>
       </div>
@@ -149,31 +172,31 @@ const AdminReports = () => {
       {/* KPI Cards (Shopkeeper standard 2x2 on mobile, 4 in row on desktop) */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         <AdminStatCard
-          title="TOTAL PLATFORM GMV"
+          title="TOTAL STORE SALES"
           value={formatCurrency(totalPlatformGMV)}
-          subtext={`${totalPlatformBills} total bills generated across all stores`}
-          icon={IndianRupee}
+          subtext={`${totalPlatformBills} bills generated across stores`}
+          icon={ChartNoAxesCombined}
           variant="primary"
         />
         <AdminStatCard
-          title="SAAS SUBSCRIPTIONS"
-          value={formatCurrency(totalSaaSSubscriptions)}
-          subtext="Merchant membership fee revenue"
-          icon={CreditCard}
+          title="BILLED COLLECTIONS"
+          value={formatCurrency(totalPlatformPaid)}
+          subtext="Direct payments on invoices"
+          icon={Wallet}
           variant="success"
         />
         <AdminStatCard
-          title="KIRANA CREDIT OUTSTANDING"
+          title="PENDING CUSTOMER UDHAR"
           value={formatCurrency(creditStats.currentOutstanding)}
           subtext="Active unpaid credit across stores"
-          icon={Clock}
+          icon={IndianRupee}
           variant="danger"
         />
         <AdminStatCard
           title="UDHAR RECOVERY RATE"
           value={`${recoveryRate}%`}
           subtext={`${formatCurrency(creditStats.totalPaid)} collected of ${formatCurrency(creditStats.totalUdhar)} total udhar`}
-          icon={CheckCircle2}
+          icon={TrendingUp}
           variant="primary"
         />
       </div>
@@ -181,26 +204,26 @@ const AdminReports = () => {
       {isLoading ? (
         <div className="py-24 flex flex-col items-center justify-center text-gray-500 gap-3 bg-white border border-gray-200 rounded-lg shadow-none">
           <SwirlingLoader className="w-8 h-8 text-[#093C5D]" />
-          <p className="text-xs sm:text-sm font-medium">Generating financial reports...</p>
+          <p className="text-xs sm:text-sm font-medium">Generating store financial reports...</p>
         </div>
       ) : isError ? (
         <div className="py-16 text-center text-rose-600 bg-white border border-gray-200 rounded-lg shadow-none">
           <AlertCircle className="w-8 h-8 mx-auto mb-2" />
-          <p className="text-sm font-semibold">Failed to generate platform reports</p>
+          <p className="text-sm font-semibold">Failed to generate store reports</p>
         </div>
       ) : (
         <>
           {/* Charts Row */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Monthly GMV Growth Trend */}
+            {/* Monthly Store Sales & Collections Trend */}
             <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-none">
               <div className="mb-4">
                 <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
                   <TrendingUp className="w-4 h-4 text-[#093C5D]" />
-                  Monthly Platform GMV & Collections Trend (₹)
+                  Monthly Store Sales & Collections Trend
                 </h3>
                 <p className="text-xs font-medium text-gray-500 mt-0.5">
-                  Gross billed invoice turnover compared with customer collections across all merchant stores
+                  Gross billed sales turnover compared with direct invoice collections across stores
                 </p>
               </div>
 
@@ -218,17 +241,29 @@ const AdminReports = () => {
                           <stop offset="95%" stopColor="#093C5D" stopOpacity={0} />
                         </linearGradient>
                         <linearGradient id="paidGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#00A86B" stopOpacity={0.25} />
-                          <stop offset="95%" stopColor="#00A86B" stopOpacity={0} />
+                          <stop offset="5%" stopColor="#10B981" stopOpacity={0.25} />
+                          <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
-                      <XAxis dataKey="month" stroke="#9CA3AF" fontSize={11} tickLine={false} tickFormatter={formatMonthYear} />
-                      <YAxis stroke="#9CA3AF" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${v}`} />
+                      <XAxis
+                        dataKey="month"
+                        stroke="#9CA3AF"
+                        fontSize={11}
+                        tickLine={false}
+                        tickFormatter={formatMonthShort}
+                      />
+                      <YAxis
+                        stroke="#9CA3AF"
+                        fontSize={11}
+                        tickLine={false}
+                        axisLine={false}
+                        tickFormatter={formatYAxisCurrency}
+                      />
                       <Tooltip
                         formatter={(val, name) => [
                           formatCurrency(val),
-                          name === 'Paid' || name?.includes('Collection') ? 'Customer Collections' : 'Billed GMV Turnover'
+                          name === 'Paid' ? 'Payments Collected' : 'Billed Store Sales'
                         ]}
                         contentStyle={{
                           backgroundColor: '#FFFFFF',
@@ -239,11 +274,11 @@ const AdminReports = () => {
                           color: '#111827'
                         }}
                         labelStyle={{ color: '#093C5D', fontWeight: 600, marginBottom: '4px' }}
-                        labelFormatter={(label) => formatMonthYear(label)}
+                        labelFormatter={(label) => formatMonthFull(label)}
                       />
                       <Legend
                         wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }}
-                        formatter={(value) => (value === 'GMV' ? 'Billed GMV Turnover' : 'Customer Collections')}
+                        formatter={(value) => (value === 'GMV' ? 'Billed Store Sales' : 'Payments Collected')}
                       />
                       <Area
                         type="monotone"
@@ -260,9 +295,9 @@ const AdminReports = () => {
                         type="monotone"
                         dataKey="Paid"
                         name="Paid"
-                        stroke="#00A86B"
+                        stroke="#10B981"
                         strokeWidth={2.5}
-                        dot={{ r: 3, fill: '#00A86B' }}
+                        dot={{ r: 3, fill: '#10B981' }}
                         activeDot={{ r: 5 }}
                         fillOpacity={1}
                         fill="url(#paidGradient)"
@@ -273,31 +308,45 @@ const AdminReports = () => {
               </div>
             </div>
 
-            {/* SaaS Subscription Collections */}
+            {/* Monthly Store Bills Issued Trend */}
             <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-none">
               <div className="mb-4">
                 <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                  <CreditCard className="w-4 h-4 text-emerald-600" />
-                  SaaS Subscription Earnings Trend (₹)
+                  <Receipt className="w-4 h-4 text-[#093C5D]" />
+                  Monthly Store Bills Issued
                 </h3>
                 <p className="text-xs font-medium text-gray-500 mt-0.5">
-                  Platform revenue captured from merchant subscription plan upgrades & renewals
+                  Total count of customer invoice bills generated each month across stores
                 </p>
               </div>
 
               <div className="h-64 w-full">
-                {subscriptionChartData.length === 0 ? (
+                {gmvChartData.length === 0 ? (
                   <div className="h-full flex items-center justify-center text-xs text-gray-400">
-                    No subscription receipts recorded in this period
+                    No billing records recorded in this period
                   </div>
                 ) : (
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={subscriptionChartData} margin={{ top: 12, right: 10, left: -10, bottom: 0 }}>
+                    <BarChart data={gmvChartData} margin={{ top: 12, right: 10, left: -10, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
-                      <XAxis dataKey="month" stroke="#9CA3AF" fontSize={11} tickLine={false} tickFormatter={formatMonthYear} />
-                      <YAxis stroke="#9CA3AF" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${v}`} />
+                      <XAxis
+                        dataKey="month"
+                        stroke="#9CA3AF"
+                        fontSize={11}
+                        tickLine={false}
+                        tickFormatter={formatMonthShort}
+                      />
+                      <YAxis
+                        stroke="#9CA3AF"
+                        fontSize={11}
+                        tickLine={false}
+                        axisLine={false}
+                        allowDecimals={false}
+                        tickFormatter={(v) => `${v}`}
+                      />
                       <Tooltip
-                        formatter={(val) => [formatCurrency(val), 'SaaS Membership Revenue']}
+                        cursor={{ fill: 'rgba(9, 60, 93, 0.04)', radius: 6 }}
+                        formatter={(val) => [`${val} bills issued`, 'Total Invoices']}
                         contentStyle={{
                           backgroundColor: '#FFFFFF',
                           borderColor: '#E5E7EB',
@@ -307,9 +356,15 @@ const AdminReports = () => {
                           color: '#111827'
                         }}
                         labelStyle={{ color: '#093C5D', fontWeight: 600, marginBottom: '4px' }}
-                        labelFormatter={(label) => formatMonthYear(label)}
+                        labelFormatter={(label) => formatMonthFull(label)}
                       />
-                      <Bar dataKey="Revenue" name="SaaS Revenue" fill="#00A86B" radius={[4, 4, 0, 0]} maxBarSize={44} />
+                      <Bar
+                        dataKey="Bills"
+                        name="Bills Issued"
+                        fill="#093C5D"
+                        radius={[6, 6, 0, 0]}
+                        maxBarSize={44}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 )}
@@ -323,11 +378,12 @@ const AdminReports = () => {
             <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-5 lg:col-span-1 shadow-none flex flex-col justify-between">
               <div>
                 <div className="mb-3.5">
-                  <h3 className="text-sm sm:text-base font-semibold text-gray-900">
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-900 flex items-center gap-2">
+                    <CreditCard className="w-4 h-4 text-[#093C5D]" />
                     Settlement Modes Breakdown
                   </h3>
                   <p className="text-xs text-gray-500 mt-0.5 font-medium">
-                    Distribution by bill settlement method (Cash, UPI, Credit)
+                    Distribution of store sales by payment method (Cash, UPI, Credit)
                   </p>
                 </div>
 
@@ -366,11 +422,12 @@ const AdminReports = () => {
             {/* Top 5 High-Volume Merchants Table */}
             <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-5 lg:col-span-2 shadow-none">
               <div className="mb-3.5">
-                <h3 className="text-sm sm:text-base font-semibold text-gray-900">
-                  Top Performing Stores by GMV
+                <h3 className="text-sm sm:text-base font-semibold text-gray-900 flex items-center gap-2">
+                  <Store className="w-4 h-4 text-[#093C5D]" />
+                  Top Performing Stores by Sales
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5 font-medium">
-                  Merchant businesses driving highest transaction volume across UdharPay
+                  Merchant businesses driving highest sales volume across UdharPay
                 </p>
               </div>
 

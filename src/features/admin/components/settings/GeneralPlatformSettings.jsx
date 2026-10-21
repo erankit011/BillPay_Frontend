@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Globe, Mail, Phone, MapPin, DollarSign, Clock } from 'lucide-react';
-import SettingCardHeader from './SettingCardHeader';
+import { useTranslation } from 'react-i18next';
 import SettingSaveButton from './SettingSaveButton';
 
 const GeneralPlatformSettings = ({ settings, onUpdate, isUpdating }) => {
+  const { t } = useTranslation();
+
   const [formData, setFormData] = useState({
+    platformName: '',
+    supportEmail: '',
+    supportPhone: '',
+    companyAddress: '',
+    defaultCurrency: 'INR',
+    currencySymbol: '₹',
+    timezone: 'Asia/Kolkata',
+  });
+
+  const [initialData, setInitialData] = useState({
     platformName: '',
     supportEmail: '',
     supportPhone: '',
@@ -16,7 +27,7 @@ const GeneralPlatformSettings = ({ settings, onUpdate, isUpdating }) => {
 
   useEffect(() => {
     if (settings) {
-      setFormData({
+      const data = {
         platformName: settings.platformName || 'UdharPay',
         supportEmail: settings.supportEmail || 'support@udharpay.in',
         supportPhone: settings.supportPhone || '+91 9876543210',
@@ -24,7 +35,9 @@ const GeneralPlatformSettings = ({ settings, onUpdate, isUpdating }) => {
         defaultCurrency: settings.defaultCurrency || 'INR',
         currencySymbol: settings.currencySymbol || '₹',
         timezone: settings.timezone || 'Asia/Kolkata',
-      });
+      };
+      setFormData(data);
+      setInitialData(data);
     }
   }, [settings]);
 
@@ -33,81 +46,94 @@ const GeneralPlatformSettings = ({ settings, onUpdate, isUpdating }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const hasChanges = JSON.stringify(formData) !== JSON.stringify(initialData);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdate(formData, 'General platform settings updated successfully');
+    onUpdate(formData, t('General platform settings updated successfully'));
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-white border border-gray-200 rounded-lg p-5 sm:p-6 shadow-none">
-        <SettingCardHeader
-          icon={Globe}
-          title="Platform Brand & Locale"
-          subtitle="Core platform identification and localization parameters"
-          iconBg="bg-[#093C5D]/10"
-          iconColor="text-[#093C5D]"
-        />
+    <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
+      {/* ── Platform Brand & Locale Card ── */}
+      <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
+        <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
+          <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Platform Brand & Locale')}</h2>
+          <p className="text-xs text-gray-500 mt-0.5">{t('Core platform branding, identification and localization')}</p>
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-          {/* Platform Name */}
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-              Platform Display Name <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="platformName"
-              value={formData.platformName}
-              onChange={handleChange}
-              required
-              placeholder="e.g. UdharPay"
-              className="w-full h-10 px-3.5 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium"
-            />
-          </div>
+        <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+            {/* Platform Display Name */}
+            <div>
+              <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                {t('Platform Display Name')} <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="platformName"
+                value={formData.platformName}
+                onChange={handleChange}
+                required
+                placeholder="UdharPay"
+                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+              />
+              <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
+                {t('Shown in emails, invoices and dashboard branding')}
+              </p>
+            </div>
 
-          {/* Timezone */}
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-              Default System Timezone
-            </label>
-            <div className="relative">
+            {/* Default System Timezone */}
+            <div>
+              <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                {t('Default System Timezone')}
+              </label>
               <input
                 type="text"
                 name="timezone"
                 value={formData.timezone}
                 onChange={handleChange}
                 placeholder="Asia/Kolkata"
-                className="w-full h-10 px-3.5 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium"
+                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
               />
-              <Clock className="w-4 h-4 text-gray-400 absolute right-3.5 top-3 pointer-events-none" />
+              <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
+                {t('Used for billing cycle dates, midnight settlement and reports')}
+              </p>
             </div>
-          </div>
 
-          {/* Currency Code */}
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-              Base Currency Code
-            </label>
-            <select
-              name="defaultCurrency"
-              value={formData.defaultCurrency}
-              onChange={handleChange}
-              className="w-full h-10 px-3 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium cursor-pointer"
-            >
-              <option value="INR">INR — Indian Rupee (₹)</option>
-              <option value="USD">USD — US Dollar ($)</option>
-              <option value="EUR">EUR — Euro (€)</option>
-              <option value="AED">AED — UAE Dirham</option>
-            </select>
-          </div>
+            {/* Base Currency Code */}
+            <div>
+              <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                {t('Base Currency')}
+              </label>
+              <select
+                name="defaultCurrency"
+                value={formData.defaultCurrency}
+                onChange={handleChange}
+                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] appearance-none bg-white cursor-pointer"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                  backgroundPosition: 'right 0.75rem center',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: '1.5em 1.5em',
+                  paddingRight: '2.5rem',
+                }}
+              >
+                <option value="INR">INR — Indian Rupee (₹)</option>
+                <option value="USD">USD — US Dollar ($)</option>
+                <option value="EUR">EUR — Euro (€)</option>
+                <option value="AED">AED — UAE Dirham (د.إ)</option>
+              </select>
+              <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
+                {t('Default currency used for store plans and billing')}
+              </p>
+            </div>
 
-          {/* Currency Symbol */}
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-              Currency Symbol Prefix
-            </label>
-            <div className="relative">
+            {/* Currency Symbol Prefix */}
+            <div>
+              <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                {t('Currency Symbol Prefix')}
+              </label>
               <input
                 type="text"
                 name="currencySymbol"
@@ -115,31 +141,30 @@ const GeneralPlatformSettings = ({ settings, onUpdate, isUpdating }) => {
                 onChange={handleChange}
                 maxLength={4}
                 placeholder="₹"
-                className="w-full h-10 px-3.5 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium"
+                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
               />
-              <DollarSign className="w-4 h-4 text-gray-400 absolute right-3.5 top-3 pointer-events-none" />
+              <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
+                {t('Symbol displayed before monetary figures (e.g. ₹ or $)')}
+              </p>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Support & Corporate Information */}
-      <div className="bg-white border border-gray-200 rounded-lg p-5 sm:p-6 shadow-none">
-        <SettingCardHeader
-          icon={Mail}
-          title="Official Support & Legal Details"
-          subtitle="Customer-facing contacts displayed on public invoices and receipts"
-          iconBg="bg-emerald-50"
-          iconColor="text-emerald-700"
-        />
+      {/* ── Support & Legal Details Card ── */}
+      <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
+        <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
+          <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Official Support & Legal Details')}</h2>
+          <p className="text-xs text-gray-500 mt-0.5">{t('Customer-facing contacts displayed on public invoices and receipts')}</p>
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-          {/* Support Email */}
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-              Official Support Email <span className="text-red-500">*</span>
-            </label>
-            <div className="relative">
+        <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+            {/* Support Email */}
+            <div>
+              <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                {t('Official Support Email')} <span className="text-red-500">*</span>
+              </label>
               <input
                 type="email"
                 name="supportEmail"
@@ -147,54 +172,57 @@ const GeneralPlatformSettings = ({ settings, onUpdate, isUpdating }) => {
                 onChange={handleChange}
                 required
                 placeholder="support@udharpay.in"
-                className="w-full h-10 pl-9 pr-3.5 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium"
+                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
               />
-              <Mail className="w-4 h-4 text-gray-400 absolute left-3 top-3 pointer-events-none" />
+              <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
+                {t('Merchants will receive notifications and reach out on this email')}
+              </p>
             </div>
-          </div>
 
-          {/* Support Phone */}
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-              Helpline Phone Number <span className="text-red-500">*</span>
-            </label>
-            <div className="relative">
+            {/* Support Phone */}
+            <div>
+              <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                {t('Helpline Phone Number')} <span className="text-red-500">*</span>
+              </label>
               <input
                 type="text"
                 name="supportPhone"
                 value={formData.supportPhone}
                 onChange={handleChange}
                 required
-                placeholder="+91 9876543210"
-                className="w-full h-10 pl-9 pr-3.5 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium"
+                placeholder="+91 98765 43210"
+                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
               />
-              <Phone className="w-4 h-4 text-gray-400 absolute left-3 top-3 pointer-events-none" />
+              <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
+                {t('Customer support phone number for merchant queries')}
+              </p>
             </div>
-          </div>
 
-          {/* Company Address */}
-          <div className="sm:col-span-2">
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
-              Official Registered Address
-            </label>
-            <div className="relative">
-              <input
-                type="text"
+            {/* Company Address */}
+            <div className="md:col-span-2">
+              <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                {t('Official Registered Address')}
+              </label>
+              <textarea
                 name="companyAddress"
                 value={formData.companyAddress}
                 onChange={handleChange}
-                placeholder="HQ Building, Cyber City, Gurugram, India"
-                className="w-full h-10 pl-9 pr-3.5 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium"
+                rows={3}
+                placeholder="123, Cyber City, Phase 2, Gurugram, Haryana - 122002"
+                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] resize-none"
               />
-              <MapPin className="w-4 h-4 text-gray-400 absolute left-3 top-3 pointer-events-none" />
+              <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
+                {t('Official legal address printed on public invoices and receipts')}
+              </p>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Save Button */}
+      {/* Floating Sticky Save Button Bar */}
       <SettingSaveButton
         isUpdating={isUpdating}
+        hasChanges={hasChanges}
         label="Save Platform Settings"
         loadingLabel="Saving Changes..."
       />

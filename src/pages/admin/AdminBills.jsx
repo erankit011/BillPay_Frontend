@@ -119,10 +119,10 @@ const AdminBills = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 tracking-tight">
-            Customer Invoices & Billing Ledger
+            Store Bills & Invoices
           </h1>
           <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
-            Audit all itemized bills created by merchants across UdharPay. Track payment settlements, cash collections, and pending customer credit.
+            Audit all itemized bills created by merchant stores across UdharPay. Track payment settlements, cash collections, and pending customer credit.
           </p>
         </div>
       </div>
@@ -260,7 +260,7 @@ const AdminBills = () => {
         {isLoading ? (
           <div className="py-20 flex flex-col items-center justify-center text-gray-500 gap-3">
             <SwirlingLoader className="w-8 h-8 text-[#093C5D]" />
-            <p className="text-xs sm:text-sm font-medium">Loading bills ledger...</p>
+            <p className="text-xs sm:text-sm font-medium">Loading store bills...</p>
           </div>
         ) : isError ? (
           <div className="py-16 text-center text-rose-600">
