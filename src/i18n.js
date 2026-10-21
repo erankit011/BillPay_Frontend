@@ -1448,6 +1448,7 @@ const resources = {
       "Your 7-day free trial has expired. Please upgrade your plan to continue creating bills.": "आपका 7 दिन का फ्री ट्रायल समाप्त हो गया है। कृपया बिल बनाना जारी रखने के लिए अपना प्लान अपग्रेड करें।",
       "Limit Reached": "लिमिट पूरी हुई",
       "Free trial limit reached: You can only add up to 2 customers on the free plan. Please upgrade your subscription.": "फ्री ट्रायल की लिमिट पूरी हुई: आप फ्री प्लान पर केवल 2 ग्राहक जोड़ सकते हैं। कृपया अपना सब्सक्रिप्शन अपग्रेड करें।",
+      "Free trial limit reached: You can only create up to 5 bills on the free plan. Please upgrade your subscription.": "फ्री ट्रायल की लिमिट पूरी हुई: आप फ्री प्लान पर केवल 5 बिल बना सकते हैं। कृपया अपना सब्सक्रिप्शन अपग्रेड करें।",
       "Free trial limit reached: You can only create up to 10 bills on the free plan. Please upgrade your subscription.": "फ्री ट्रायल की लिमिट पूरी हुई: आप फ्री प्लान पर केवल 10 बिल बना सकते हैं। कृपया अपना सब्सक्रिप्शन अपग्रेड करें।",
       "Unlock Unlimited Access": "अनलिमिटेड एक्सेस पाएँ",
       "Upgrade your plan to remove all limits and get access to premium features.": "सभी लिमिट्स हटाने और प्रीमियम फीचर्स पाने के लिए अपना प्लान अपग्रेड करें।",

@@ -654,7 +654,7 @@ const AdminDashboard = () => {
                   <span className="flex items-center gap-1.5 text-[#093C5D]">
                     <span className="w-2 h-2 rounded-full bg-[#093C5D]"></span>
                     <span>Free Plan (Trial)</span>
-                    <span className="text-[10px] font-medium text-gray-600 bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded">14-day</span>
+                    <span className="text-[10px] font-medium text-gray-600 bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded">7-day</span>
                   </span>
                   <span className="font-semibold text-gray-900">
                     {planBreakdown.FREE || 0} {planBreakdown.FREE === 1 ? 'shop' : 'shops'}

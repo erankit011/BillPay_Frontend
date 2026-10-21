@@ -15,7 +15,7 @@ const DEFAULT_PLANS = [
     duration: '7-Day Trial',
     features: [
       'Up to 2 Customers',
-      'Up to 10 Bills',
+      'Up to 5 Bills',
       'Email Support',
     ],
     color: 'bg-gray-100 text-gray-800',

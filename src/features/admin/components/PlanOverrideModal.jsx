@@ -6,7 +6,7 @@ const PLAN_OPTIONS = [
   {
     id: 'FREE',
     label: 'Free Plan (₹0)',
-    desc: 'Basic Starter • 2 Customers & 10 Bills Trial Limit',
+    desc: 'Basic Starter • 2 Customers & 5 Bills Trial Limit',
     badge: null,
     days: 0,
   },

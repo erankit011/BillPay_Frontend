@@ -211,8 +211,13 @@ const Customers = () => {
 
   const handleAddCustomerClick = () => {
     if (!user?.subscriptionPlan || user?.subscriptionPlan === 'FREE' || user?.subscriptionStatus === 'none') {
-      const trialEnd = new Date(user?.createdAt);
-      trialEnd.setDate(trialEnd.getDate() + 7);
+      const trialEnd = user?.currentPeriodEnd
+        ? new Date(user.currentPeriodEnd)
+        : (() => {
+            const d = new Date(user?.createdAt || Date.now());
+            d.setDate(d.getDate() + 7);
+            return d;
+          })();
       
       if (new Date() > trialEnd) {
         setUpgradeModal({
@@ -223,7 +228,8 @@ const Customers = () => {
         return;
       }
       
-      if (totalCount >= 2) {
+      const customerLimit = user?.freePlanCustomerLimit || 2;
+      if (totalCount >= customerLimit) {
         setUpgradeModal({
           isOpen: true,
           title: t('Limit Reached'),

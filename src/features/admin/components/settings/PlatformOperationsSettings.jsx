@@ -8,25 +8,25 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
 
   const [formData, setFormData] = useState({
     allowNewRegistrations: true,
-    defaultFreeTrialDays: 14,
-    freePlanMonthlyBillLimit: 50,
-    freePlanCustomerLimit: 30,
+    defaultFreeTrialDays: 7,
+    freePlanMonthlyBillLimit: 5,
+    freePlanCustomerLimit: 2,
   });
 
   const [initialData, setInitialData] = useState({
     allowNewRegistrations: true,
-    defaultFreeTrialDays: 14,
-    freePlanMonthlyBillLimit: 50,
-    freePlanCustomerLimit: 30,
+    defaultFreeTrialDays: 7,
+    freePlanMonthlyBillLimit: 5,
+    freePlanCustomerLimit: 2,
   });
 
   useEffect(() => {
     if (settings) {
       const data = {
         allowNewRegistrations: settings.allowNewRegistrations !== false,
-        defaultFreeTrialDays: settings.defaultFreeTrialDays ?? 14,
-        freePlanMonthlyBillLimit: settings.freePlanMonthlyBillLimit ?? 50,
-        freePlanCustomerLimit: settings.freePlanCustomerLimit ?? 30,
+        defaultFreeTrialDays: settings.defaultFreeTrialDays ?? 7,
+        freePlanMonthlyBillLimit: settings.freePlanMonthlyBillLimit ?? 5,
+        freePlanCustomerLimit: settings.freePlanCustomerLimit ?? 2,
       };
       setFormData(data);
       setInitialData(data);
@@ -88,7 +88,7 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
                   onChange={handleNumberChange}
                   min={0}
                   max={90}
-                  placeholder="14"
+                  placeholder="7"
                   className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                 />
                 <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
@@ -107,7 +107,7 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
                   value={formData.freePlanMonthlyBillLimit}
                   onChange={handleNumberChange}
                   min={0}
-                  placeholder="50"
+                  placeholder="5"
                   className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                 />
                 <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
@@ -126,7 +126,7 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
                   value={formData.freePlanCustomerLimit}
                   onChange={handleNumberChange}
                   min={0}
-                  placeholder="30"
+                  placeholder="2"
                   className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
                 />
                 <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">

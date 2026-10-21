@@ -10,9 +10,6 @@ const GeneralPlatformSettings = ({ settings, onUpdate, isUpdating }) => {
     supportEmail: '',
     supportPhone: '',
     companyAddress: '',
-    defaultCurrency: 'INR',
-    currencySymbol: '₹',
-    timezone: 'Asia/Kolkata',
   });
 
   const [initialData, setInitialData] = useState({
@@ -20,9 +17,6 @@ const GeneralPlatformSettings = ({ settings, onUpdate, isUpdating }) => {
     supportEmail: '',
     supportPhone: '',
     companyAddress: '',
-    defaultCurrency: 'INR',
-    currencySymbol: '₹',
-    timezone: 'Asia/Kolkata',
   });
 
   useEffect(() => {
@@ -32,9 +26,6 @@ const GeneralPlatformSettings = ({ settings, onUpdate, isUpdating }) => {
         supportEmail: settings.supportEmail || 'support@udharpay.in',
         supportPhone: settings.supportPhone || '+91 9876543210',
         companyAddress: settings.companyAddress || 'New Delhi, India',
-        defaultCurrency: settings.defaultCurrency || 'INR',
-        currencySymbol: settings.currencySymbol || '₹',
-        timezone: settings.timezone || 'Asia/Kolkata',
       };
       setFormData(data);
       setInitialData(data);
@@ -55,103 +46,35 @@ const GeneralPlatformSettings = ({ settings, onUpdate, isUpdating }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
-      {/* ── Platform Brand & Locale Card ── */}
+      {/* ── Platform Details Card ── */}
       <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
         <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
-          <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Platform Brand & Locale')}</h2>
-          <p className="text-xs text-gray-500 mt-0.5">{t('Core platform branding, identification and localization')}</p>
+          <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Platform Details')}</h2>
+          <p className="text-xs text-gray-500 mt-0.5">{t('Core platform branding and identification')}</p>
         </div>
 
         <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-            {/* Platform Display Name */}
-            <div>
-              <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
-                {t('Platform Display Name')} <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="platformName"
-                value={formData.platformName}
-                onChange={handleChange}
-                required
-                placeholder="UdharPay"
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
-              />
-              <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
-                {t('Shown in emails, invoices and dashboard branding')}
-              </p>
-            </div>
-
-            {/* Default System Timezone */}
-            <div>
-              <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
-                {t('Default System Timezone')}
-              </label>
-              <input
-                type="text"
-                name="timezone"
-                value={formData.timezone}
-                onChange={handleChange}
-                placeholder="Asia/Kolkata"
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
-              />
-              <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
-                {t('Used for billing cycle dates, midnight settlement and reports')}
-              </p>
-            </div>
-
-            {/* Base Currency Code */}
-            <div>
-              <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
-                {t('Base Currency')}
-              </label>
-              <select
-                name="defaultCurrency"
-                value={formData.defaultCurrency}
-                onChange={handleChange}
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] appearance-none bg-white cursor-pointer"
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-                  backgroundPosition: 'right 0.75rem center',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: '1.5em 1.5em',
-                  paddingRight: '2.5rem',
-                }}
-              >
-                <option value="INR">INR — Indian Rupee (₹)</option>
-                <option value="USD">USD — US Dollar ($)</option>
-                <option value="EUR">EUR — Euro (€)</option>
-                <option value="AED">AED — UAE Dirham (د.إ)</option>
-              </select>
-              <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
-                {t('Default currency used for store plans and billing')}
-              </p>
-            </div>
-
-            {/* Currency Symbol Prefix */}
-            <div>
-              <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
-                {t('Currency Symbol Prefix')}
-              </label>
-              <input
-                type="text"
-                name="currencySymbol"
-                value={formData.currencySymbol}
-                onChange={handleChange}
-                maxLength={4}
-                placeholder="₹"
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
-              />
-              <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
-                {t('Symbol displayed before monetary figures (e.g. ₹ or $)')}
-              </p>
-            </div>
+          <div className="max-w-xl">
+            <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+              {t('Platform Display Name')} <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="platformName"
+              value={formData.platformName}
+              onChange={handleChange}
+              required
+              placeholder="UdharPay"
+              className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+            />
+            <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
+              {t('Shown in emails, invoices, receipts and dashboard branding')}
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ── Support & Legal Details Card ── */}
+      {/* ── Official Support & Legal Details Card ── */}
       <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
         <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
           <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Official Support & Legal Details')}</h2>

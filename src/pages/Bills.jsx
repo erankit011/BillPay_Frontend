@@ -328,8 +328,13 @@ const Bills = () => {
 
     const handleNewBillClick = () => {
         if (!shopDetails?.subscriptionPlan || shopDetails?.subscriptionPlan === 'FREE' || shopDetails?.subscriptionStatus === 'none') {
-            const trialEnd = new Date(shopDetails?.createdAt);
-            trialEnd.setDate(trialEnd.getDate() + 7);
+            const trialEnd = shopDetails?.currentPeriodEnd 
+                ? new Date(shopDetails.currentPeriodEnd)
+                : (() => {
+                    const d = new Date(shopDetails?.createdAt || Date.now());
+                    d.setDate(d.getDate() + 7);
+                    return d;
+                })();
             
             if (new Date() > trialEnd) {
                 setUpgradeModal({
@@ -341,11 +346,12 @@ const Bills = () => {
             }
             
             const totalBills = stats.billCounts.lifetime || 0;
-            if (totalBills >= 10) {
+            const maxBills = shopDetails?.freePlanMonthlyBillLimit || 5;
+            if (totalBills >= maxBills) {
                 setUpgradeModal({
                     isOpen: true,
                     title: t('Limit Reached'),
-                    message: t('Free trial limit reached: You can only create up to 10 bills on the free plan. Please upgrade your subscription.')
+                    message: t('Free trial limit reached: You can only create up to 5 bills on the free plan. Please upgrade your subscription.')
                 });
                 return;
             }

@@ -17,16 +17,30 @@ const Login = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [maintenanceMessage, setMaintenanceMessage] = useState(null);
 
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   useEffect(() => {
+    let isMounted = true;
+    api.get('/support/contact-info')
+      .then((res) => {
+        if (isMounted && res.data?.data?.isMaintenanceMode && res.data?.data?.maintenanceMessage) {
+          setMaintenanceMessage(res.data.data.maintenanceMessage);
+        }
+      })
+      .catch(() => {});
+
     const params = new URLSearchParams(window.location.search);
     if (params.get('session_expired')) {
       toast.error(t('This device was logged out remotely. Please sign in again.'));
       window.history.replaceState({}, document.title, window.location.pathname);
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [t]);
 
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -66,6 +80,17 @@ const Login = () => {
           {t('Please enter your details to sign in.')}
         </p>
       </div>
+
+      {/* Maintenance Notice Banner */}
+      {maintenanceMessage && (
+        <div className="mb-5 p-3.5 rounded-lg bg-amber-50/90 border border-amber-300 text-amber-950 text-xs sm:text-sm font-medium flex items-start gap-2.5 text-left">
+          <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-xs sm:text-sm text-amber-900">{t('Platform Maintenance Active')}</p>
+            <p className="mt-0.5 text-xs text-amber-800 leading-relaxed font-normal">{maintenanceMessage}</p>
+          </div>
+        </div>
+      )}
 
       {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
