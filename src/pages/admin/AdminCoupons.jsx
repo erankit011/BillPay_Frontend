@@ -24,6 +24,7 @@ import {
 } from '../../features/admin/api/adminApi';
 import CouponCard from '../../features/admin/components/coupons/CouponCard';
 import CouponModal from '../../features/admin/components/coupons/CouponModal';
+import SwirlingLoader from '../../components/common/SwirlingLoader';
 
 const STATUS_OPTIONS = [
   { value: 'ALL', label: 'All Statuses' },
@@ -182,126 +183,124 @@ const AdminCoupons = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="w-full min-w-0 space-y-6 md:space-y-8 pb-24 lg:pb-0">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
-              Coupons & Promo Codes
-            </h1>
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-              Discounts Engine
-            </span>
-          </div>
-          <p className="text-sm text-gray-500 mt-1">
-            Create, monitor, and configure promotional campaigns for storekeeper subscription tiers
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
+            Coupons & Promo Codes
+          </h1>
+          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
+            Create, monitor, and configure promotional campaigns for storekeeper subscription tiers.
           </p>
         </div>
 
         <div className="flex items-center gap-2.5 self-start sm:self-auto">
           <button
-            onClick={() => {
-              fetchStats();
-              fetchCoupons();
-              toast.success('Coupons refreshed');
-            }}
-            disabled={loading}
-            className="cursor-pointer inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors shadow-xs"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-            Refresh
-          </button>
-
-          <button
             onClick={handleOpenCreate}
-            className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#093C5D] hover:bg-[#072C44] rounded-lg transition-colors shadow-xs"
+            className="cursor-pointer h-10 px-4 sm:px-5 rounded-lg bg-[#093C5D] hover:bg-[#072d46] text-white text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition-all active:scale-95 shrink-0"
           >
             <Plus className="w-4 h-4" />
-            Create Promo Code
+            <span>Create Promo Code</span>
           </button>
         </div>
       </div>
 
       {/* KPI Stat Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         {/* Active Coupons */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-emerald-600 uppercase tracking-wider">
-              Active Coupons
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
-              <CheckCircle2 className="w-4 h-4" />
+        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-emerald-700 border border-gray-200 shrink-0">
+              <CheckCircle2 className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-gray-900 mt-2 tracking-tight">
-            {statsLoading ? '...' : stats.active}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">Ready for merchant checkout</p>
+          <div className="mt-3 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
+              Active Coupons
+            </p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-emerald-700 truncate">
+              {statsLoading ? '...' : stats.active}
+            </p>
+            <p className="text-[10px] md:text-xs text-emerald-700 font-medium truncate mt-0.5">
+              Ready for merchant checkout
+            </p>
+          </div>
         </div>
 
         {/* Total Redemptions */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-blue-600 uppercase tracking-wider">
-              Total Redemptions
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
-              <Users className="w-4 h-4" />
+        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200 shrink-0">
+              <Users className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-blue-600 mt-2 tracking-tight">
-            {statsLoading ? '...' : stats.totalRedemptions}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">Times coupons used</p>
+          <div className="mt-3 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
+              Total Redemptions
+            </p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
+              {statsLoading ? '...' : stats.totalRedemptions}
+            </p>
+            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">
+              Times coupons used
+            </p>
+          </div>
         </div>
 
         {/* Total Discounts Disbursed */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-purple-600 uppercase tracking-wider">
-              Discounts Given
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600">
-              <Coins className="w-4 h-4" />
+        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-purple-700 border border-gray-200 shrink-0">
+              <Coins className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-gray-900 mt-2 tracking-tight">
-            {statsLoading ? '...' : `₹${stats.totalDiscountsGiven.toLocaleString('en-IN')}`}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">Total revenue discounted</p>
+          <div className="mt-3 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
+              Discounts Given
+            </p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
+              {statsLoading ? '...' : `₹${stats.totalDiscountsGiven.toLocaleString('en-IN')}`}
+            </p>
+            <p className="text-[10px] md:text-xs text-purple-700 font-medium truncate mt-0.5">
+              Total savings passed to stores
+            </p>
+          </div>
         </div>
 
         {/* Expired / Inactive */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Expired / Inactive
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500">
-              <Tag className="w-4 h-4" />
+        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-gray-600 border border-gray-200 shrink-0">
+              <Tag className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-gray-900 mt-2 tracking-tight">
-            {statsLoading ? '...' : stats.expired + (stats.total - stats.active - stats.expired)}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">Past campaigns & paused codes</p>
+          <div className="mt-3 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
+              Expired / Paused
+            </p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
+              {statsLoading ? '...' : stats.expired + (stats.total - stats.active - stats.expired)}
+            </p>
+            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">
+              Past campaigns & paused codes
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs">
+      <div className="bg-white rounded-lg border border-gray-200 p-3.5 md:p-4">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
           {/* Search Input */}
           <div className="md:col-span-6 relative">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by code (e.g. DIWALI50) or description..."
-              className="w-full pl-9 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+              className="w-full h-10 pl-9 pr-4 text-xs sm:text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] text-gray-900 font-medium transition-all"
             />
           </div>
 
@@ -313,7 +312,7 @@ const AdminCoupons = () => {
                 setStatusFilter(e.target.value);
                 setPagination((prev) => ({ ...prev, page: 1 }));
               }}
-              className="w-full text-sm border border-gray-300 rounded-lg p-2 bg-white focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+              className="w-full h-10 text-xs sm:text-sm font-medium border border-gray-200 rounded-lg px-3 bg-white focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] text-gray-700 cursor-pointer"
             >
               {STATUS_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -331,7 +330,7 @@ const AdminCoupons = () => {
                 setDiscountTypeFilter(e.target.value);
                 setPagination((prev) => ({ ...prev, page: 1 }));
               }}
-              className="w-full text-sm border border-gray-300 rounded-lg p-2 bg-white focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+              className="w-full h-10 text-xs sm:text-sm font-medium border border-gray-200 rounded-lg px-3 bg-white focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] text-gray-700 cursor-pointer"
             >
               {DISCOUNT_TYPE_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -345,19 +344,19 @@ const AdminCoupons = () => {
 
       {/* Coupons Grid */}
       {loading ? (
-        <div className="py-20 text-center bg-white rounded-xl border border-gray-200">
-          <RefreshCw className="w-8 h-8 text-[#093C5D] animate-spin mx-auto mb-2" />
-          <p className="text-sm text-gray-500">Loading promo codes...</p>
+        <div className="py-20 text-center bg-white rounded-lg border border-gray-200">
+          <SwirlingLoader className="w-10 h-10 text-[#093C5D] mx-auto mb-3" />
+          <p className="text-sm font-medium text-gray-600">Loading promo codes...</p>
         </div>
       ) : coupons.length === 0 ? (
-        <div className="py-20 text-center bg-white rounded-xl border border-gray-200 px-4">
-          <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 mx-auto mb-3">
+        <div className="py-16 text-center bg-white rounded-lg border border-gray-200 px-4">
+          <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 mx-auto mb-3">
             <Inbox className="w-6 h-6" />
           </div>
           <h3 className="text-base font-semibold text-gray-900 tracking-tight">
             No coupons found
           </h3>
-          <p className="text-sm text-gray-500 mt-1 max-w-sm mx-auto">
+          <p className="text-xs sm:text-sm text-gray-500 mt-1 max-w-sm mx-auto font-medium">
             {debouncedSearch || statusFilter !== 'ALL' || discountTypeFilter !== 'ALL'
               ? 'Try modifying your search or clearing the status filters.'
               : 'Launch your first discount campaign to boost subscription upgrades.'}
@@ -365,15 +364,15 @@ const AdminCoupons = () => {
           {!debouncedSearch && statusFilter === 'ALL' && (
             <button
               onClick={handleOpenCreate}
-              className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-[#093C5D] bg-[#093C5D]/10 hover:bg-[#093C5D]/20 px-4 py-2 rounded-lg mt-4 transition-colors"
+              className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#093C5D] hover:bg-[#072d46] px-4 py-2.5 rounded-lg mt-4 transition-colors"
             >
               <Plus className="w-4 h-4" />
-              Create First Coupon
+              <span>Create First Coupon</span>
             </button>
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {coupons.map((coupon) => (
             <CouponCard
               key={coupon._id}
@@ -388,7 +387,7 @@ const AdminCoupons = () => {
 
       {/* Pagination Bar */}
       {pagination.totalPages > 1 && (
-        <div className="p-4 bg-white rounded-xl border border-gray-200 flex items-center justify-between text-xs text-gray-500 shadow-xs">
+        <div className="p-4 bg-white rounded-lg border border-gray-200 flex items-center justify-between text-xs text-gray-500">
           <span>
             Showing Page {pagination.page} of {pagination.totalPages} ({pagination.total} promo codes)
           </span>
@@ -398,7 +397,7 @@ const AdminCoupons = () => {
               onClick={() =>
                 setPagination((prev) => ({ ...prev, page: prev.page - 1 }))
               }
-              className="cursor-pointer p-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="cursor-pointer p-1.5 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -407,7 +406,7 @@ const AdminCoupons = () => {
               onClick={() =>
                 setPagination((prev) => ({ ...prev, page: prev.page + 1 }))
               }
-              className="cursor-pointer p-1.5 rounded border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="cursor-pointer p-1.5 rounded border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

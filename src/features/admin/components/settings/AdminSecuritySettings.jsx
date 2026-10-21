@@ -196,7 +196,7 @@ const AdminSecuritySettings = () => {
             type="button"
             onClick={handleRevokeOtherSessions}
             disabled={isRevokingSessions}
-            className="cursor-pointer h-9 px-4 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-none whitespace-nowrap shrink-0 disabled:opacity-50"
+            className="cursor-pointer h-9 px-4 rounded bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-none whitespace-nowrap shrink-0 disabled:opacity-50"
           >
             {isRevokingSessions ? (
               <RefreshCw className="w-3.5 h-3.5 animate-spin" />

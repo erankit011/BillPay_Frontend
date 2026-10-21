@@ -144,14 +144,9 @@ const AdminBroadcasts = () => {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
-              Global Announcements & Broadcasts
-            </h1>
-            <span className="text-[10px] sm:text-xs font-semibold uppercase px-2 py-0.5 rounded bg-blue-50 text-[#093C5D] border border-blue-200">
-              Platform-Wide
-            </span>
-          </div>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
+            Global Announcements & Broadcasts
+          </h1>
           <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
             Broadcast operational notices, scheduled maintenance alerts, or new feature updates to merchant stores.
           </p>
@@ -168,56 +163,77 @@ const AdminBroadcasts = () => {
       </div>
 
       {/* KPI Stats Strip */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
-        <div className="p-4 rounded-lg bg-white border border-gray-200 flex items-center justify-between shadow-none">
-          <div>
-            <span className="text-xs font-semibold text-gray-500 uppercase block">Active Dispatches</span>
-            <span className="text-xl sm:text-2xl font-bold text-emerald-700 mt-1 block">
-              {stats.activeCount || 0} Live
-            </span>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
+        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-emerald-700 border border-gray-200 shrink-0">
+              <CheckCircle2 className="w-5 h-5" />
+            </div>
           </div>
-          <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-            <CheckCircle2 className="w-5 h-5" />
-          </div>
-        </div>
-
-        <div className="p-4 rounded-lg bg-white border border-gray-200 flex items-center justify-between shadow-none">
-          <div>
-            <span className="text-xs font-semibold text-gray-500 uppercase block">Total Announcements</span>
-            <span className="text-xl sm:text-2xl font-bold text-gray-900 mt-1 block">
-              {stats.total || 0} Records
-            </span>
-          </div>
-          <div className="w-10 h-10 rounded-lg bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center shrink-0">
-            <Megaphone className="w-4 h-4" />
+          <div className="mt-3 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
+              Live Broadcasts
+            </p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
+              {stats.activeCount || 0}
+            </p>
+            <p className="text-[10px] md:text-xs text-emerald-700 font-medium truncate mt-0.5">
+              Active banners on merchant screens
+            </p>
           </div>
         </div>
 
-        <div className="p-4 rounded-lg bg-white border border-gray-200 flex items-center justify-between shadow-none">
-          <div>
-            <span className="text-xs font-semibold text-gray-500 uppercase block">Delivery Target</span>
-            <span className="text-xl sm:text-2xl font-bold text-[#093C5D] mt-1 block">
-              All Merchants
-            </span>
+        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200 shrink-0">
+              <Megaphone className="w-5 h-5" />
+            </div>
           </div>
-          <div className="w-10 h-10 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
-            <Clock className="w-5 h-5" />
+          <div className="mt-3 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
+              Total Announcements
+            </p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
+              {stats.total || 0}
+            </p>
+            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">
+              All created broadcast history
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-purple-700 border border-gray-200 shrink-0">
+              <Clock className="w-5 h-5" />
+            </div>
+          </div>
+          <div className="mt-3 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
+              Target Audience
+            </p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
+              Targeted Filters
+            </p>
+            <p className="text-[10px] md:text-xs text-purple-700 font-medium truncate mt-0.5">
+              Free trial, Pro, or all merchants
+            </p>
           </div>
         </div>
       </div>
 
       {/* Controls Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3.5 bg-white border border-gray-200 rounded-lg shadow-none">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3.5 bg-white border border-gray-200 rounded-lg">
         {/* Search */}
         <div className="relative flex-1 max-w-sm">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search announcements..."
-            className="w-full h-9 pl-9 pr-3 text-xs sm:text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white text-gray-900 font-medium transition-all"
+            placeholder="Search announcements by title or content..."
+            className="w-full h-10 pl-9 pr-3.5 text-xs sm:text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] text-gray-900 font-medium transition-all"
           />
-          <Search className="w-4 h-4 text-gray-400 absolute left-3 top-2.5 pointer-events-none" />
+          <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3 pointer-events-none" />
         </div>
 
         {/* Filters */}
@@ -226,22 +242,22 @@ const AdminBroadcasts = () => {
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="h-9 px-2.5 text-xs font-medium bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] text-gray-700 cursor-pointer"
+            className="h-10 px-3 text-xs sm:text-sm font-medium bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] text-gray-700 cursor-pointer"
           >
             <option value="ALL">All Categories</option>
             <option value="INFO">Information (Blue)</option>
-            <option value="WARNING">Warning (Amber)</option>
-            <option value="ALERT">Alert (Rose)</option>
-            <option value="SUCCESS">Feature (Emerald)</option>
+            <option value="WARNING">Warning / Maintenance (Amber)</option>
+            <option value="ALERT">Critical Alert (Red)</option>
+            <option value="SUCCESS">Feature Release (Green)</option>
           </select>
 
           {/* Status Filter */}
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="h-9 px-2.5 text-xs font-medium bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] text-gray-700 cursor-pointer"
+            className="h-10 px-3 text-xs sm:text-sm font-medium bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] text-gray-700 cursor-pointer"
           >
-            <option value="ALL">All Status</option>
+            <option value="ALL">All Statuses</option>
             <option value="ACTIVE">Live / Active</option>
             <option value="INACTIVE">Paused / Inactive</option>
           </select>
@@ -250,18 +266,18 @@ const AdminBroadcasts = () => {
 
       {/* Announcements Stream */}
       {filteredBroadcasts.length === 0 ? (
-        <div className="p-12 text-center bg-white rounded-lg border border-gray-200 shadow-none">
+        <div className="p-12 text-center bg-white rounded-lg border border-gray-200">
           <div className="w-12 h-12 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center mx-auto mb-3">
             <Megaphone className="w-6 h-6" />
           </div>
           <h3 className="text-base font-semibold text-gray-900">No Announcements Found</h3>
-          <p className="text-xs text-gray-500 max-w-sm mx-auto mt-1 font-medium">
-            Broadcast platform-wide updates, holiday notices, or new features directly to storekeepers.
+          <p className="text-xs text-gray-500 max-w-sm mx-auto mt-1 font-medium leading-relaxed">
+            Broadcast platform-wide updates, holiday notices, or new features directly across merchant dashboards.
           </p>
           <button
             type="button"
             onClick={handleOpenCreate}
-            className="cursor-pointer mt-4 h-9 px-4 rounded-lg bg-[#093C5D] hover:bg-[#072d46] text-white text-xs font-semibold inline-flex items-center gap-1.5 transition-all shadow-none"
+            className="cursor-pointer mt-4 h-10 px-4 rounded-lg bg-[#093C5D] hover:bg-[#072d46] text-white text-xs sm:text-sm font-semibold inline-flex items-center gap-2 transition-all"
           >
             <Plus className="w-4 h-4" />
             <span>Create First Announcement</span>
@@ -272,7 +288,7 @@ const AdminBroadcasts = () => {
           {filteredBroadcasts.map((broadcast) => (
             <div
               key={broadcast._id}
-              className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-none transition-all hover:border-gray-300"
+              className="bg-white border border-gray-200 rounded-lg overflow-hidden transition-all hover:border-gray-300"
             >
               {/* Actual Banner View */}
               <div className="p-4 sm:p-5">
@@ -280,9 +296,9 @@ const AdminBroadcasts = () => {
               </div>
 
               {/* Administrative Meta & Actions Toolbar */}
-              <div className="px-4 py-2.5 sm:px-5 bg-gray-50/80 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <div className="px-4 py-3 sm:px-5 bg-gray-50/80 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 text-xs">
                 {/* Status & Timing Details */}
-                <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-gray-500">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-gray-500 font-medium">
                   <span
                     className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-semibold uppercase ${
                       broadcast.isActive
@@ -298,24 +314,29 @@ const AdminBroadcasts = () => {
                     {broadcast.isActive ? 'Active' : 'Paused'}
                   </span>
 
+                  {/* Target Audience Badge */}
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-blue-50 text-[#093C5D] border border-blue-200 font-semibold text-[11px] uppercase">
+                    Audience: {broadcast.targetAudience === 'PAID_SUBSCRIBERS' ? 'Paid Pro' : broadcast.targetAudience === 'FREE_TRIAL' ? 'Free Trial' : 'All Merchants'}
+                  </span>
+
                   <span>
-                    Started: <strong className="text-gray-700">{formatDate(broadcast.startsAt || broadcast.createdAt)}</strong>
+                    Started: <strong className="text-gray-700 font-semibold">{formatDate(broadcast.startsAt || broadcast.createdAt)}</strong>
                   </span>
 
                   {broadcast.expiresAt && (
                     <span>
-                      Expires: <strong className="text-gray-700">{formatDate(broadcast.expiresAt)}</strong>
+                      Expires: <strong className="text-gray-700 font-semibold">{formatDate(broadcast.expiresAt)}</strong>
                     </span>
                   )}
                 </div>
 
-                {/* Action Buttons */}
+                {/* Action Buttons - Small buttons use 'rounded' */}
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => handleToggleStatus(broadcast)}
                     title={broadcast.isActive ? 'Pause Broadcast' : 'Activate Broadcast'}
-                    className={`cursor-pointer px-2.5 py-1 rounded-md text-xs font-semibold border transition-all active:scale-95 shadow-none inline-flex items-center gap-1 ${
+                    className={`cursor-pointer px-2.5 py-1 rounded text-xs font-semibold border transition-all active:scale-95 inline-flex items-center gap-1.5 ${
                       broadcast.isActive
                         ? 'bg-amber-50 hover:bg-amber-100 text-amber-800 border-amber-200'
                         : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'
@@ -328,7 +349,7 @@ const AdminBroadcasts = () => {
                   <button
                     type="button"
                     onClick={() => handleOpenEdit(broadcast)}
-                    className="cursor-pointer px-2.5 py-1 rounded-md text-xs font-semibold bg-white hover:bg-gray-100 text-gray-700 border border-gray-200 transition-all active:scale-95 shadow-none inline-flex items-center gap-1"
+                    className="cursor-pointer px-2.5 py-1 rounded text-xs font-semibold bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 transition-all inline-flex items-center gap-1.5"
                   >
                     <Edit2 className="w-3.5 h-3.5 text-gray-500" />
                     <span>Edit</span>
@@ -337,7 +358,7 @@ const AdminBroadcasts = () => {
                   <button
                     type="button"
                     onClick={() => handleDelete(broadcast)}
-                    className="cursor-pointer p-1.5 rounded-md text-red-600 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-all active:scale-95"
+                    className="cursor-pointer p-1.5 rounded text-red-600 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-all active:scale-95"
                     title="Delete announcement"
                   >
                     <Trash2 className="w-3.5 h-3.5" />

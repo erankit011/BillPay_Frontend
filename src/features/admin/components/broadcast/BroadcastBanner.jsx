@@ -92,7 +92,7 @@ const BroadcastBanner = ({ broadcast, onDismiss, isPreview = false }) => {
                     href={broadcast.actionUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all active:scale-95 shadow-none ${config.buttonClass}`}
+                    className={`cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 rounded text-xs font-semibold transition-all active:scale-95 shadow-none ${config.buttonClass}`}
                   >
                     <span>{broadcast.actionLabel || 'Learn More'}</span>
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -100,7 +100,7 @@ const BroadcastBanner = ({ broadcast, onDismiss, isPreview = false }) => {
                 ) : (
                   <Link
                     to={broadcast.actionUrl}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all active:scale-95 shadow-none ${config.buttonClass}`}
+                    className={`cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 rounded text-xs font-semibold transition-all active:scale-95 shadow-none ${config.buttonClass}`}
                   >
                     <span>{broadcast.actionLabel || 'View Details'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -117,7 +117,7 @@ const BroadcastBanner = ({ broadcast, onDismiss, isPreview = false }) => {
             type="button"
             onClick={onDismiss}
             aria-label="Dismiss announcement"
-            className="shrink-0 p-1 rounded-md opacity-60 hover:opacity-100 hover:bg-black/5 transition-all cursor-pointer"
+            className="shrink-0 p-1 rounded opacity-60 hover:opacity-100 hover:bg-black/5 transition-all cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>

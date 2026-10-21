@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Globe,
-  Sliders,
+  SlidersHorizontal,
   Lock,
   Bell,
+  ChevronRight,
   ShieldCheck,
   RefreshCw,
-  SlidersHorizontal,
+  Sliders,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { getPlatformSettings, updatePlatformSettings } from '../../features/admin/api/adminApi';
@@ -17,16 +18,69 @@ import AdminSecuritySettings from '../../features/admin/components/settings/Admi
 import PlatformNotificationSettings from '../../features/admin/components/settings/PlatformNotificationSettings';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 
-const TABS = [
-  { id: 'GENERAL', label: 'General & Brand', icon: Globe },
-  { id: 'OPERATIONS', label: 'Operations & Switches', icon: SlidersHorizontal },
-  { id: 'SECURITY', label: 'Admin Security', icon: Lock },
-  { id: 'NOTIFICATIONS', label: 'Alert Preferences', icon: Bell },
+const SECTIONS = [
+  {
+    id: 'GENERAL',
+    label: 'Brand & Localization',
+    desc: 'Platform name, support contacts & currency',
+    icon: Globe,
+  },
+  {
+    id: 'OPERATIONS',
+    label: 'Operations & Switches',
+    desc: 'Maintenance mode & free tier allowances',
+    icon: SlidersHorizontal,
+  },
+  {
+    id: 'SECURITY',
+    label: 'Admin Security',
+    desc: 'Master credentials & active sessions',
+    icon: Lock,
+  },
+  {
+    id: 'NOTIFICATIONS',
+    label: 'Alert Preferences',
+    desc: 'Email, SMS & WhatsApp notifications',
+    icon: Bell,
+  },
 ];
+
+const SectionNavItem = ({ icon: Icon, label, desc, sectionId, activeSection, onClick }) => (
+  <button
+    type="button"
+    onClick={() => onClick(sectionId)}
+    className={`cursor-pointer w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 text-left ${
+      activeSection === sectionId
+        ? 'bg-[#093C5D]/5 text-[#093C5D] border border-[#093C5D]/15 font-semibold'
+        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border border-transparent'
+    }`}
+  >
+    <div
+      className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+        activeSection === sectionId
+          ? 'bg-[#093C5D] text-white'
+          : 'bg-gray-100 text-gray-500'
+      }`}
+    >
+      <Icon className="w-4 h-4 shrink-0" />
+    </div>
+    <div className="min-w-0 flex-1">
+      <span className="truncate block leading-tight">{label}</span>
+      <span className="text-[11px] text-gray-400 font-normal truncate block mt-0.5">
+        {desc}
+      </span>
+    </div>
+    <ChevronRight
+      className={`w-3.5 h-3.5 ml-auto shrink-0 transition-transform ${
+        activeSection === sectionId ? 'rotate-90 text-[#093C5D]' : 'text-gray-400'
+      }`}
+    />
+  </button>
+);
 
 const AdminSettings = () => {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState('GENERAL');
+  const [activeSection, setActiveSection] = useState('GENERAL');
 
   const { data: settings, isLoading, isError, refetch } = useQuery({
     queryKey: ['platformSettings'],
@@ -41,7 +95,7 @@ const AdminSettings = () => {
       queryClient.invalidateQueries({ queryKey: ['activeBroadcasts'] });
       queryClient.invalidateQueries({ queryKey: ['publicContactInfo'] });
       queryClient.invalidateQueries({ queryKey: ['adminPlans'] });
-      toast.success(variables?.customMessage || 'Settings updated successfully');
+      toast.success(variables?.customMessage || 'Platform settings updated successfully');
     },
     onError: (err) => {
       toast.error(err.response?.data?.message || 'Failed to update platform settings');
@@ -66,7 +120,7 @@ const AdminSettings = () => {
         <p className="font-semibold text-sm sm:text-base">Failed to load platform settings.</p>
         <button
           onClick={() => refetch()}
-          className="mt-3 px-4 py-2 bg-red-50 text-red-700 border border-red-200 rounded-lg text-xs font-semibold hover:bg-red-100 transition-colors"
+          className="mt-3 px-4 py-2 bg-red-50 text-red-700 border border-red-200 rounded text-xs font-semibold hover:bg-red-100 transition-colors cursor-pointer"
         >
           Try Again
         </button>
@@ -79,72 +133,90 @@ const AdminSettings = () => {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
-              Platform & Admin Settings
-            </h1>
-            <span className="text-[10px] sm:text-xs font-semibold uppercase px-2 py-0.5 rounded bg-blue-50 text-[#093C5D] border border-blue-200">
-              Admin Only
-            </span>
-          </div>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
+            Platform & System Settings
+          </h1>
           <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
-            Configure system-wide parameters, operational switches, security credentials, and notification dispatches.
+            Manage global branding, support channels, live operational switches, and default SaaS quotas.
           </p>
         </div>
       </div>
 
-      {/* Tabs Navigation Strip */}
-      <div className="border-b border-gray-200">
-        <nav className="flex space-x-2 sm:space-x-4 overflow-x-auto pb-px" aria-label="Tabs">
-          {TABS.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
+      {/* Main Layout Grid: Left Sidebar (Desktop) + Right Content */}
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+        {/* ── Left Sidebar Nav (Desktop) ── */}
+        <div className="hidden lg:block w-64 xl:w-72 shrink-0">
+          <nav className="sticky top-20 space-y-1.5 bg-white p-2.5 rounded-lg border border-gray-200">
+            <div className="px-3 py-2 border-b border-gray-100 mb-1">
+              <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block">
+                Configuration Sections
+              </span>
+            </div>
+            {SECTIONS.map((sec) => (
+              <SectionNavItem
+                key={sec.id}
+                icon={sec.icon}
+                label={sec.label}
+                desc={sec.desc}
+                sectionId={sec.id}
+                activeSection={activeSection}
+                onClick={setActiveSection}
+              />
+            ))}
+          </nav>
+        </div>
+
+        {/* ── Mobile Horizontal Scroll Nav (Mobile / Tablet) ── */}
+        <div className="lg:hidden flex items-center gap-2 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide">
+          {SECTIONS.map((sec) => {
+            const Icon = sec.icon;
+            const isActive = activeSection === sec.id;
             return (
               <button
-                key={tab.id}
+                key={sec.id}
                 type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={`cursor-pointer inline-flex items-center gap-2 py-2.5 px-3 sm:px-4 text-xs sm:text-sm font-semibold border-b-2 transition-all whitespace-nowrap select-none ${
+                onClick={() => setActiveSection(sec.id)}
+                className={`cursor-pointer flex items-center justify-center gap-2 px-3.5 py-2 rounded text-xs font-semibold whitespace-nowrap border transition-all shrink-0 ${
                   isActive
-                    ? 'border-[#093C5D] text-[#093C5D]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/20'
+                    : 'text-gray-600 hover:text-gray-900 border-gray-200 hover:bg-gray-50 bg-white'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-[#093C5D]' : 'text-gray-400'}`} />
-                <span>{tab.label}</span>
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#093C5D]' : 'text-gray-400'}`} />
+                <span>{sec.label}</span>
               </button>
             );
           })}
-        </nav>
-      </div>
+        </div>
 
-      {/* Tab Panels */}
-      <div className="mt-4">
-        {activeTab === 'GENERAL' && (
-          <GeneralPlatformSettings
-            settings={settings}
-            onUpdate={handleUpdate}
-            isUpdating={mutation.isPending}
-          />
-        )}
+        {/* ── Right Content Panels ── */}
+        <div className="flex-1 min-w-0">
+          {activeSection === 'GENERAL' && (
+            <GeneralPlatformSettings
+              settings={settings}
+              onUpdate={handleUpdate}
+              isUpdating={mutation.isPending}
+            />
+          )}
 
-        {activeTab === 'OPERATIONS' && (
-          <PlatformOperationsSettings
-            settings={settings}
-            onUpdate={handleUpdate}
-            isUpdating={mutation.isPending}
-          />
-        )}
+          {activeSection === 'OPERATIONS' && (
+            <PlatformOperationsSettings
+              settings={settings}
+              onUpdate={handleUpdate}
+              isUpdating={mutation.isPending}
+            />
+          )}
 
-        {activeTab === 'SECURITY' && <AdminSecuritySettings />}
+          {activeSection === 'SECURITY' && <AdminSecuritySettings />}
 
-        {activeTab === 'NOTIFICATIONS' && (
-          <PlatformNotificationSettings
-            settings={settings}
-            onUpdate={handleUpdate}
-            isUpdating={mutation.isPending}
-          />
-        )}
+          {activeSection === 'NOTIFICATIONS' && (
+            <PlatformNotificationSettings
+              settings={settings}
+              onUpdate={handleUpdate}
+              isUpdating={mutation.isPending}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

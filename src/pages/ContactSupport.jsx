@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { ChevronLeft, Mail, Phone, MapPin, Send, User, MessageSquare, Tag, Loader2, CheckCircle } from 'lucide-react';
+import { ChevronLeft, Mail, Phone, MapPin, Send, User, MessageCircle, Tag, Loader2, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import { submitPublicSupportTicket, getPublicContactInfo } from '../features/admin/api/adminApi';
@@ -276,7 +276,7 @@ const ContactSupport = () => {
                   <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">{t('Message')}</label>
                   <div className="relative">
                     <div className="absolute top-2.5 left-0 pl-3.5 pointer-events-none">
-                      <MessageSquare className="h-5 w-5 text-gray-400" />
+                      <MessageCircle className="h-5 w-5 text-gray-400" />
                     </div>
                     <textarea
                       id="message"

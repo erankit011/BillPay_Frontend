@@ -48,44 +48,44 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
 
   return (
     <div
-      className={`relative bg-white rounded-2xl border transition-all duration-200 overflow-hidden shadow-xs hover:shadow-md ${
+      className={`relative bg-white rounded-lg border transition-all duration-200 overflow-hidden hover:border-gray-300 ${
         !coupon.isActive
           ? 'border-gray-200 opacity-75'
           : isExpired
-          ? 'border-amber-200 bg-amber-50/20'
-          : 'border-gray-200 hover:border-[#093C5D]/40'
+          ? 'border-amber-200 bg-amber-50/10'
+          : 'border-gray-200'
       }`}
     >
       {/* Top Banner: Discount Value & Status */}
       <div className="p-4 sm:p-5 flex items-start justify-between gap-3 border-b border-dashed border-gray-200">
         <div className="flex items-center gap-3">
           <div
-            className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${
+            className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border ${
               coupon.discountType === 'PERCENTAGE'
-                ? 'bg-blue-50 text-[#093C5D]'
-                : 'bg-emerald-50 text-emerald-700'
+                ? 'bg-blue-50 text-[#093C5D] border-blue-200'
+                : 'bg-emerald-50 text-emerald-700 border-emerald-200'
             }`}
           >
             {coupon.discountType === 'PERCENTAGE' ? (
-              <Percent className="w-5 h-5 font-bold" />
+              <Percent className="w-5 h-5" />
             ) : (
-              <span className="text-lg font-bold">₹</span>
+              <span className="text-lg font-semibold">₹</span>
             )}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xl font-bold tracking-tight text-gray-900">
+              <span className="text-lg sm:text-xl font-semibold tracking-tight text-gray-900">
                 {coupon.discountType === 'PERCENTAGE'
                   ? `${coupon.discountValue}% OFF`
                   : `₹${coupon.discountValue} FLAT`}
               </span>
               {coupon.maxDiscountAmount && coupon.discountType === 'PERCENTAGE' && (
-                <span className="text-[11px] font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-semibold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded border border-gray-200">
                   Upto ₹{coupon.maxDiscountAmount}
                 </span>
               )}
             </div>
-            <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">
+            <p className="text-xs text-gray-500 mt-0.5 line-clamp-1 font-medium">
               {coupon.description || 'Promotional coupon code'}
             </p>
           </div>
@@ -94,22 +94,22 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
         {/* Status Badge */}
         <div>
           {isExpired ? (
-            <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
+            <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200 uppercase">
               <Clock className="w-3 h-3" />
               Expired
             </span>
           ) : !coupon.isActive ? (
-            <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">
+            <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded bg-gray-100 text-gray-600 border border-gray-200 uppercase">
               <PauseCircle className="w-3 h-3" />
               Paused
             </span>
           ) : !isStarted ? (
-            <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+            <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 uppercase">
               <AlertCircle className="w-3 h-3" />
               Scheduled
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase">
               <CheckCircle2 className="w-3 h-3" />
               Active
             </span>
@@ -119,17 +119,17 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
 
       {/* Code Snippet Box */}
       <div className="p-4 sm:p-5 space-y-4">
-        <div className="flex items-center justify-between gap-2 p-2.5 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+        <div className="flex items-center justify-between gap-2 p-2.5 bg-gray-50 rounded-lg border border-dashed border-gray-300">
           <div className="flex items-center gap-2 overflow-hidden">
             <Tag className="w-4 h-4 text-[#093C5D] shrink-0" />
-            <span className="font-mono font-bold text-gray-900 tracking-wider text-sm truncate">
+            <span className="font-mono font-semibold text-gray-900 tracking-wider text-sm truncate">
               {coupon.code}
             </span>
           </div>
           <button
             type="button"
             onClick={handleCopyCode}
-            className="cursor-pointer inline-flex items-center gap-1 text-xs font-semibold text-[#093C5D] hover:text-[#072C44] px-2 py-1 rounded bg-white border border-gray-200 hover:border-gray-300 shadow-2xs transition-colors shrink-0"
+            className="cursor-pointer inline-flex items-center gap-1 text-xs font-semibold text-[#093C5D] hover:text-[#072C44] px-2 py-1 rounded bg-white border border-gray-200 hover:border-gray-300 transition-colors shrink-0"
           >
             {copied ? (
               <>

@@ -34,16 +34,20 @@ const AdminBills = () => {
 
   // Prevent background scrolling when modal is open
   useEffect(() => {
-    if (selectedBill) {
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
-    }
+    if (!selectedBill) return;
+
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevTouchAction = document.body.style.touchAction;
+
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+
     return () => {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
+      document.body.style.overflow = prevBodyOverflow;
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.touchAction = prevTouchAction;
     };
   }, [selectedBill]);
 
@@ -170,11 +174,10 @@ const AdminBills = () => {
               setPaymentStatus(f.value);
               setPage(1);
             }}
-            className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
-              paymentStatus === f.value
+            className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${paymentStatus === f.value
                 ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
                 : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
-            }`}
+              }`}
           >
             {f.label}
           </button>
@@ -196,11 +199,10 @@ const AdminBills = () => {
               setPaymentMode(f.value);
               setPage(1);
             }}
-            className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
-              paymentMode === f.value
+            className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${paymentMode === f.value
                 ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
                 : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
-            }`}
+              }`}
           >
             {f.label}
           </button>
@@ -216,7 +218,7 @@ const AdminBills = () => {
               setPaymentMode('All');
               setPage(1);
             }}
-            className="shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-semibold text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 flex items-center gap-1.5 transition-colors shadow-none"
+            className="shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 flex items-center gap-1.5 transition-colors shadow-none"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Reset Filters
@@ -459,7 +461,7 @@ const AdminBills = () => {
               <button
                 disabled={page <= 1}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
-                className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 disabled:opacity-40 transition-colors"
+                className="cursor-pointer disabled:cursor-not-allowed inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 disabled:opacity-40 transition-colors"
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
                 Previous
@@ -467,7 +469,7 @@ const AdminBills = () => {
               <button
                 disabled={page >= totalPages}
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 disabled:opacity-40 transition-colors"
+                className="cursor-pointer disabled:cursor-not-allowed inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 disabled:opacity-40 transition-colors"
               >
                 Next
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -479,17 +481,19 @@ const AdminBills = () => {
 
       {/* Bill Itemized Details Modal */}
       {selectedBill && (
-        <div className="fixed inset-0 z-[60]">
+        <div className="fixed inset-0 z-[60] overscroll-contain">
           {/* Backdrop (matching Customer pages) */}
           <div
-            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
             onClick={() => setSelectedBill(null)}
+            onWheel={(e) => e.preventDefault()}
+            onTouchMove={(e) => e.preventDefault()}
           />
 
           {/* Mobile: bottom sheet | sm+: centered modal */}
           <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-[60] pointer-events-none">
             <div className="relative bg-white w-full sm:max-w-lg rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
-              
+
               {/* Drag handle — mobile only */}
               <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-white">
                 <div className="w-10 h-1.5 bg-gray-200 rounded-full" />

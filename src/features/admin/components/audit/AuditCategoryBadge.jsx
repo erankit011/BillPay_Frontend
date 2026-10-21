@@ -4,7 +4,7 @@ import { Store, Sliders, Megaphone, Tag, Headphones, Shield, FileText } from 'lu
 const CATEGORY_CONFIG = {
   MERCHANT_MGMT: {
     label: 'Merchant Mgmt',
-    bg: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+    bg: 'bg-blue-50 text-[#093C5D] border-blue-200',
     icon: Store,
   },
   SYSTEM_SETTINGS: {
@@ -49,7 +49,7 @@ const AuditCategoryBadge = ({ category, size = 'sm' }) => {
 
   return (
     <span
-      className={`inline-flex items-center font-medium rounded-full border ${config.bg} ${sizeClasses}`}
+      className={`inline-flex items-center font-semibold rounded border ${config.bg} ${sizeClasses}`}
     >
       <Icon className={size === 'xs' ? 'w-3 h-3' : 'w-3.5 h-3.5'} />
       {config.label}

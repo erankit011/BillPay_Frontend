@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, Mail, MessageSquare, CreditCard, UserPlus } from 'lucide-react';
+import { Bell, Mail, MessageCircle, CreditCard, UserPlus } from 'lucide-react';
 import SettingCardHeader from './SettingCardHeader';
 import SettingSaveButton from './SettingSaveButton';
 
@@ -60,7 +60,7 @@ const PlatformNotificationSettings = ({ settings, onUpdate, isUpdating }) => {
       key: 'enableWhatsAppAlerts',
       title: 'WhatsApp Gateway Integration Status',
       desc: 'Enable automated platform delivery status for billing reminders and payment receipts.',
-      icon: MessageSquare,
+      icon: MessageCircle,
       color: 'text-green-700',
       bg: 'bg-green-50',
     },

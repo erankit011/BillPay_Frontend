@@ -7,6 +7,32 @@
 
 @import "tailwindcss";
 
+/* Ensure all interactive buttons, clickable controls, tabs, and selects display pointer cursor */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+[role="tab"]:not([aria-disabled="true"]),
+select:not(:disabled),
+a[href],
+summary,
+input[type="checkbox"]:not(:disabled),
+input[type="radio"]:not(:disabled),
+input[type="submit"]:not(:disabled),
+input[type="button"]:not(:disabled),
+label[for],
+label:has(input[type="checkbox"]:not(:disabled)),
+label:has(input[type="radio"]:not(:disabled)),
+label:has(input[type="file"]:not(:disabled)) {
+  cursor: pointer;
+}
+
+button:disabled,
+[role="button"][aria-disabled="true"],
+[role="tab"][aria-disabled="true"],
+select:disabled,
+input:disabled {
+  cursor: not-allowed;
+}
+
 /* ========================================
    DARK MODE THEME SYSTEM (CSS Variables)
    ======================================== */

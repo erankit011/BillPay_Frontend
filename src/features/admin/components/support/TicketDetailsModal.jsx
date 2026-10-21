@@ -12,7 +12,7 @@ import {
   Trash2,
   Send,
   Save,
-  MessageSquare,
+  MessageCircle,
   Shield,
   Copy,
   Check,
@@ -37,25 +37,22 @@ const TicketDetailsModal = ({
   onUpdateTicket,
   onDeleteTicket,
 }) => {
-  if (!isOpen || !ticket) return null;
-
-  const [status, setStatus] = useState(ticket.status || 'OPEN');
-  const [priority, setPriority] = useState(ticket.priority || 'MEDIUM');
-  const [category, setCategory] = useState(ticket.category || 'GENERAL');
-  const [adminNotes, setAdminNotes] = useState(ticket.adminNotes || '');
-  const [adminReply, setAdminReply] = useState(ticket.adminReply || '');
+  const [status, setStatus] = useState(ticket?.status || 'OPEN');
+  const [priority, setPriority] = useState(ticket?.priority || 'MEDIUM');
+  const [category, setCategory] = useState(ticket?.category || 'GENERAL');
+  const [adminNotes, setAdminNotes] = useState(ticket?.adminNotes || '');
+  const [adminReply, setAdminReply] = useState(ticket?.adminReply || '');
   const [saving, setSaving] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
 
   useEffect(() => {
-    if (ticket) {
-      setStatus(ticket.status || 'OPEN');
-      setPriority(ticket.priority || 'MEDIUM');
-      setCategory(ticket.category || 'GENERAL');
-      setAdminNotes(ticket.adminNotes || '');
-      setAdminReply(ticket.adminReply || '');
-    }
-  }, [ticket]);
+    if (!isOpen || !ticket) return;
+    setStatus(ticket.status || 'OPEN');
+    setPriority(ticket.priority || 'MEDIUM');
+    setCategory(ticket.category || 'GENERAL');
+    setAdminNotes(ticket.adminNotes || '');
+    setAdminReply(ticket.adminReply || '');
+  }, [ticket, isOpen]);
 
   const handleCopyEmail = () => {
     if (ticket.email) {
@@ -123,30 +120,71 @@ const TicketDetailsModal = ({
     });
   };
 
+  // Prevent background scrolling when modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevTouchAction = document.body.style.touchAction;
+
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+
+    return () => {
+      document.body.style.overflow = prevBodyOverflow;
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.touchAction = prevTouchAction;
+    };
+  }, [isOpen]);
+
+  if (!isOpen || !ticket) return null;
+
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-      <div className="relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col max-h-[90vh]">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50/80 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-3">
-            <span className="text-base font-semibold text-gray-900 tracking-tight">
-              #{ticket.ticketId}
-            </span>
-            <TicketStatusBadge status={status} />
-            <TicketPriorityBadge priority={priority} />
+    <div className="fixed inset-0 z-50 overscroll-contain">
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
+        onClick={onClose}
+        onWheel={(e) => e.preventDefault()}
+        onTouchMove={(e) => e.preventDefault()}
+      />
+
+      {/* Modal Container: Bottom Sheet on Mobile, Centered on sm+ */}
+      <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
+        <div
+          className="relative w-full sm:max-w-3xl bg-white rounded-t-2xl sm:rounded-xl border border-gray-200 animate-modal-content overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[88vh] pointer-events-auto shadow-2xl sm:shadow-xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Mobile Drag Handle */}
+          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-gray-50/80">
+            <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
           </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-200/60 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+
+          {/* Header */}
+          <div className="px-5 sm:px-6 py-4 border-b border-gray-200 bg-gray-50/80 flex items-center justify-between shrink-0 gap-3">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <span className="text-base font-semibold text-gray-900 tracking-tight">
+                #{ticket.ticketId}
+              </span>
+              <TicketStatusBadge status={status} />
+              <TicketPriorityBadge priority={priority} />
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200 ml-auto"
+              title="Close"
+            >
+              <X className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+          </div>
 
         {/* Scrollable Content Body */}
         <div className="p-6 overflow-y-auto space-y-6">
           {/* Top Info Banner */}
-          <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-gray-500 bg-gray-50 p-3 rounded-xl border border-gray-200">
+          <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-gray-500 bg-gray-50 p-3 rounded-lg border border-gray-200">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-gray-400" />
               <span>Submitted: {formatDate(ticket.createdAt)}</span>
@@ -163,7 +201,7 @@ const TicketDetailsModal = ({
           </div>
 
           {/* Requester Identity Card */}
-          <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs">
+          <div className="bg-white rounded-lg border border-gray-200 p-4">
             <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
               Requester Profile
             </h4>
@@ -229,7 +267,7 @@ const TicketDetailsModal = ({
           </div>
 
           {/* Message Block */}
-          <div className="bg-gray-50/60 rounded-xl border border-gray-200 p-4 space-y-2">
+          <div className="bg-gray-50/60 rounded-lg border border-gray-200 p-4 space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Inquiry Subject
@@ -255,7 +293,7 @@ const TicketDetailsModal = ({
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full text-sm border border-gray-300 rounded-lg p-2 bg-white focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+                className="w-full text-sm font-medium border border-gray-300 rounded-lg p-2 bg-white focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat.value} value={cat.value}>
@@ -272,7 +310,7 @@ const TicketDetailsModal = ({
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
-                className="w-full text-sm border border-gray-300 rounded-lg p-2 bg-white focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+                className="w-full text-sm font-medium border border-gray-300 rounded-lg p-2 bg-white focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
               >
                 <option value="LOW">Low</option>
                 <option value="MEDIUM">Medium</option>
@@ -288,7 +326,7 @@ const TicketDetailsModal = ({
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="w-full text-sm border border-gray-300 rounded-lg p-2 bg-white focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+                className="w-full text-sm font-medium border border-gray-300 rounded-lg p-2 bg-white focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
               >
                 <option value="OPEN">Open</option>
                 <option value="IN_PROGRESS">In Progress</option>
@@ -316,7 +354,7 @@ const TicketDetailsModal = ({
           {/* Official Admin Reply */}
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1 flex items-center gap-1.5">
-              <MessageSquare className="w-3.5 h-3.5 text-[#093C5D]" />
+              <MessageCircle className="w-3.5 h-3.5 text-[#093C5D]" />
               <span>Admin Resolution & Reply Log</span>
             </label>
             <textarea
@@ -334,7 +372,7 @@ const TicketDetailsModal = ({
           <button
             type="button"
             onClick={handleDelete}
-            className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-medium text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-3 py-2 rounded-lg transition-colors border border-transparent hover:border-rose-200"
+            className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-3 py-2 rounded transition-colors border border-transparent hover:border-rose-200"
           >
             <Trash2 className="w-4 h-4" />
             Delete Ticket
@@ -346,7 +384,7 @@ const TicketDetailsModal = ({
                 type="button"
                 disabled={saving}
                 onClick={() => handleSave('RESOLVED')}
-                className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3.5 py-2 rounded-lg transition-colors disabled:opacity-50"
+                className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3.5 py-2 rounded transition-colors disabled:opacity-50"
               >
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 Resolve Ticket
@@ -357,7 +395,7 @@ const TicketDetailsModal = ({
               type="button"
               disabled={saving}
               onClick={() => handleSave()}
-              className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-medium text-white bg-[#093C5D] hover:bg-[#072C44] px-4 py-2 rounded-lg transition-colors shadow-xs disabled:opacity-50"
+              className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#093C5D] hover:bg-[#072C44] px-4 py-2 rounded transition-colors disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
               {saving ? 'Saving...' : 'Save Changes'}
@@ -366,7 +404,8 @@ const TicketDetailsModal = ({
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default TicketDetailsModal;

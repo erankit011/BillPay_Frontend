@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery, keepPreviousData } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Bell, Clock, User, X, MessageSquare, Mail, Edit, Trash2, TrendingUp, Lightbulb, Activity, Send, Loader2, AlertCircle, Eye, Search } from 'lucide-react';
+import { Plus, Bell, Clock, User, X, MessageCircle, Mail, Edit, Trash2, TrendingUp, Lightbulb, Activity, Send, Loader2, AlertCircle, Eye, Search } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import LoadMoreButton from '../components/common/LoadMoreButton';
@@ -414,7 +414,7 @@ const Reminders = () => {
                         </span>
                         <span className="flex items-center gap-1.5 text-[10px] lg:text-xs text-gray-500 font-medium mt-0.5 whitespace-nowrap uppercase tracking-wider">
                           {reminder.type === 'WHATSAPP' ? (
-                            <MessageSquare className="w-3 h-3 text-green-600 shrink-0" />
+                            <MessageCircle className="w-3 h-3 text-green-600 shrink-0" />
                           ) : (
                             <Mail className="w-3 h-3 text-[#093C5D] shrink-0" />
                           )}
@@ -831,7 +831,7 @@ const Reminders = () => {
           <div className="relative bg-white w-full max-w-sm rounded-lg shadow-xl flex flex-col max-h-[80vh] overflow-hidden animate-scale-in z-[101]">
             <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50/50">
               <h3 className="font-semibold text-gray-900 flex items-center gap-2 text-base">
-                <MessageSquare className="w-4 h-4 text-[#093C5D]" />
+                <MessageCircle className="w-4 h-4 text-[#093C5D]" />
                 {t('Message Details')}
               </h3>
               <button onClick={() => setReminderToView(null)} className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200">

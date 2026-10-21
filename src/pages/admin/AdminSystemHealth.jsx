@@ -54,7 +54,7 @@ const AdminSystemHealth = () => {
         <p className="font-semibold text-sm sm:text-base">Failed to retrieve system health diagnostics.</p>
         <button
           onClick={() => refetch()}
-          className="mt-3 px-4 py-2 bg-[#093C5D] text-white text-xs sm:text-sm font-semibold rounded-lg hover:bg-[#082a42] transition-colors"
+          className="cursor-pointer mt-3 px-4 py-2 bg-[#093C5D] text-white text-xs sm:text-sm font-semibold rounded-lg hover:bg-[#082a42] transition-colors"
         >
           Retry Check
         </button>

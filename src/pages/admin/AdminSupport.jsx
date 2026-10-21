@@ -14,7 +14,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ExternalLink,
-  MessageSquare,
+  MessageCircle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import {
@@ -26,6 +26,7 @@ import {
 import TicketStatusBadge from '../../features/admin/components/support/TicketStatusBadge';
 import TicketPriorityBadge from '../../features/admin/components/support/TicketPriorityBadge';
 import TicketDetailsModal from '../../features/admin/components/support/TicketDetailsModal';
+import SwirlingLoader from '../../components/common/SwirlingLoader';
 
 const STATUS_OPTIONS = [
   { value: 'ALL', label: 'All Statuses' },
@@ -196,116 +197,114 @@ const AdminSupport = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="w-full min-w-0 space-y-6 md:space-y-8 pb-24 lg:pb-0">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
-              Support & Helpdesk Desk
-            </h1>
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#093C5D]/10 text-[#093C5D] border border-[#093C5D]/20">
-              Live Inquiries
-            </span>
-          </div>
-          <p className="text-sm text-gray-500 mt-1">
-            Monitor, triage, and respond to inquiries from storekeepers, merchants, and platform visitors
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
+            Support Desk & Helpdesk
+          </h1>
+          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
+            Monitor, triage, and reply directly to merchant tickets with live in-app notifications.
           </p>
         </div>
-
-        <button
-          onClick={() => {
-            fetchStats();
-            fetchTickets();
-            toast.success('Helpdesk refreshed');
-          }}
-          disabled={loading}
-          className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors shadow-xs self-start sm:self-auto"
-        >
-          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-          Refresh
-        </button>
       </div>
 
       {/* KPI Stat Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         {/* Total Inquiries */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Total Inquiries
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600">
-              <LifeBuoy className="w-4 h-4" />
+        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-gray-700 border border-gray-200 shrink-0">
+              <LifeBuoy className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-gray-900 mt-2 tracking-tight">
-            {statsLoading ? '...' : stats.total}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">All-time customer requests</p>
+          <div className="mt-3 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
+              Total Inquiries
+            </p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
+              {statsLoading ? '...' : stats.total}
+            </p>
+            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">
+              All-time merchant tickets
+            </p>
+          </div>
         </div>
 
         {/* Pending Action / Open */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-amber-600 uppercase tracking-wider">
-              Pending / Open
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
-              <Clock className="w-4 h-4" />
+        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-amber-600 border border-gray-200 shrink-0">
+              <Clock className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-amber-600 mt-2 tracking-tight">
-            {statsLoading ? '...' : stats.open}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">Awaiting first response</p>
+          <div className="mt-3 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
+              Pending / Open
+            </p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-amber-600 truncate">
+              {statsLoading ? '...' : stats.open}
+            </p>
+            <p className="text-[10px] md:text-xs text-amber-600 font-medium truncate mt-0.5">
+              Awaiting first response
+            </p>
+          </div>
         </div>
 
         {/* In Progress */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-blue-600 uppercase tracking-wider">
-              In Progress
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
-              <MessageSquare className="w-4 h-4" />
+        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-blue-600 border border-gray-200 shrink-0">
+              <MessageCircle className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-blue-600 mt-2 tracking-tight">
-            {statsLoading ? '...' : stats.inProgress}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">Being actively investigated</p>
+          <div className="mt-3 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
+              In Progress
+            </p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-blue-600 truncate">
+              {statsLoading ? '...' : stats.inProgress}
+            </p>
+            <p className="text-[10px] md:text-xs text-blue-600 font-medium truncate mt-0.5">
+              Under investigation
+            </p>
+          </div>
         </div>
 
         {/* Resolved */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-emerald-600 uppercase tracking-wider">
-              Resolved & Closed
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
-              <CheckCircle2 className="w-4 h-4" />
+        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-emerald-700 border border-gray-200 shrink-0">
+              <CheckCircle2 className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-emerald-600 mt-2 tracking-tight">
-            {statsLoading ? '...' : stats.resolved}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">Successfully addressed</p>
+          <div className="mt-3 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
+              Resolved Tickets
+            </p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-emerald-700 truncate">
+              {statsLoading ? '...' : (stats.resolved || 0)}
+            </p>
+            <p className="text-[10px] md:text-xs text-emerald-700 font-medium truncate mt-0.5">
+              Successfully addressed
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Search & Filters Bar */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs space-y-3">
+      <div className="bg-white rounded-lg border border-gray-200 p-3.5 md:p-4">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
           {/* Search Input */}
           <div className="md:col-span-5 relative">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by Ticket ID, name, email, store, or subject..."
-              className="w-full pl-9 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-shadow"
+              className="w-full h-10 pl-9 pr-4 text-xs sm:text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] text-gray-900 font-medium transition-all"
             />
           </div>
 
@@ -317,7 +316,7 @@ const AdminSupport = () => {
                 setStatusFilter(e.target.value);
                 setPagination((prev) => ({ ...prev, page: 1 }));
               }}
-              className="w-full text-sm border border-gray-300 rounded-lg p-2 bg-white focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+              className="w-full h-10 text-xs sm:text-sm font-medium border border-gray-200 rounded-lg px-3 bg-white focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] text-gray-700 cursor-pointer"
             >
               {STATUS_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -335,7 +334,7 @@ const AdminSupport = () => {
                 setPriorityFilter(e.target.value);
                 setPagination((prev) => ({ ...prev, page: 1 }));
               }}
-              className="w-full text-sm border border-gray-300 rounded-lg p-2 bg-white focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+              className="w-full h-10 text-xs sm:text-sm font-medium border border-gray-200 rounded-lg px-3 bg-white focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] text-gray-700 cursor-pointer"
             >
               {PRIORITY_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -353,7 +352,7 @@ const AdminSupport = () => {
                 setCategoryFilter(e.target.value);
                 setPagination((prev) => ({ ...prev, page: 1 }));
               }}
-              className="w-full text-sm border border-gray-300 rounded-lg p-2 bg-white focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+              className="w-full h-10 text-xs sm:text-sm font-medium border border-gray-200 rounded-lg px-3 bg-white focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] text-gray-700 cursor-pointer"
             >
               {CATEGORY_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -366,11 +365,11 @@ const AdminSupport = () => {
       </div>
 
       {/* Tickets List Table */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-xs overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         {loading ? (
           <div className="py-16 text-center">
-            <RefreshCw className="w-8 h-8 text-[#093C5D] animate-spin mx-auto mb-2" />
-            <p className="text-sm text-gray-500">Loading support inquiries...</p>
+            <SwirlingLoader className="w-10 h-10 text-[#093C5D] mx-auto mb-3" />
+            <p className="text-sm font-medium text-gray-500">Loading support inquiries...</p>
           </div>
         ) : tickets.length === 0 ? (
           <div className="py-16 text-center px-4">
@@ -465,7 +464,7 @@ const AdminSupport = () => {
                             type="button"
                             onClick={(e) => handleQuickResolve(e, ticket)}
                             title="Quick Resolve"
-                            className="p-1.5 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-md transition-colors"
+                            className="cursor-pointer p-1.5 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded transition-colors"
                           >
                             <CheckCircle2 className="w-4 h-4" />
                           </button>
@@ -476,7 +475,7 @@ const AdminSupport = () => {
                             e.stopPropagation();
                             handleOpenTicket(ticket);
                           }}
-                          className="px-2.5 py-1 text-xs font-medium text-[#093C5D] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 rounded-md transition-colors"
+                          className="cursor-pointer px-2.5 py-1 text-xs font-semibold text-[#093C5D] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 rounded transition-colors"
                         >
                           View
                         </button>

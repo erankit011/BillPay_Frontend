@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/axios';
-import { Phone, X, IndianRupee, History, ArrowDownRight, ArrowUpRight, Loader2, Calendar, Mail, MessageSquareText, Wallet, Eye, Receipt } from 'lucide-react';
+import { Phone, X, IndianRupee, History, ArrowDownRight, ArrowUpRight, Loader2, Calendar, Mail, MessageCircle, Wallet, Eye, Receipt } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 
@@ -358,7 +358,7 @@ const CustomerLedger = ({ customer, onClose }) => {
           <div className="relative bg-white w-full max-w-sm rounded-lg shadow-xl flex flex-col max-h-[80vh] overflow-hidden animate-scale-in">
             <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50/50">
               <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                <MessageSquareText className="w-4 h-4 text-[#093C5D]" />
+                <MessageCircle className="w-4 h-4 text-[#093C5D]" />
                 {t('Transaction Details')}
               </h3>
               <button onClick={() => setViewDescTx(null)} className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200">

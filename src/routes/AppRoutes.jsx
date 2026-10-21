@@ -117,7 +117,11 @@ const SettingsRoute = () => {
 
 const AppRoutes = () => {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-50"></div>}>
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <SwirlingLoader className="w-12 h-12 text-[#093C5D]" />
+      </div>
+    }>
       <Routes>
         {/* Landing Page - Public */}
         <Route path="/" element={

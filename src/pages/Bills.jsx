@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery, keepPreviousData } from '@tanstack/react-query';
 import api from '../api/axios';
-import { Plus, Search, FileText, Send, Loader2, Wallet, Users, Mail, MessageSquare, MessageCircle, MoreVertical, IndianRupee, Eye, Filter, Download, Printer, Clock, Hash, TrendingUp } from 'lucide-react';
+import { Plus, Search, FileText, Send, Loader2, Wallet, Users, Mail, MessageCircle, MoreVertical, IndianRupee, Eye, Filter, Download, Printer, Clock, Hash, TrendingUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { generateInvoicePDF } from '../utils/generateInvoicePDF';
