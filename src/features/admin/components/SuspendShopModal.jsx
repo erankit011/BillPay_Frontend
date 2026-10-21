@@ -12,19 +12,23 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
   const [reason, setReason] = useState('');
   const isSuspended = Boolean(shop?.isSuspended);
 
-  // Sync reason state when modal opens or shop changes
+  // Sync reason state and prevent background page scrolling
   useEffect(() => {
-    if (isOpen) {
-      setReason('');
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
-    }
+    if (!isOpen) return;
+
+    setReason('');
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevTouchAction = document.body.style.touchAction;
+
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+
     return () => {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
+      document.body.style.overflow = prevBodyOverflow;
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.touchAction = prevTouchAction;
     };
   }, [isOpen, shop]);
 
@@ -41,11 +45,13 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
   const shopDisplayName = shop.businessName || shop.name || 'Merchant Shop';
 
   return (
-    <div className="fixed inset-0 z-[60]">
+    <div className="fixed inset-0 z-[60] overscroll-contain">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
+        onWheel={(e) => e.preventDefault()}
+        onTouchMove={(e) => e.preventDefault()}
       />
 
       {/* Modal Container: Bottom Sheet on Mobile, Centered on sm+ */}
@@ -86,10 +92,10 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-gray-400 hover:text-gray-700 hover:bg-gray-100 w-8.5 h-8.5 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 shrink-0 border border-gray-200 bg-gray-50/80 shadow-none ml-auto"
-              title="Close dialog"
+              className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200 ml-auto"
+              title="Close"
             >
-              <X className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+              <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
 

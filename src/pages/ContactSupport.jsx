@@ -1,21 +1,82 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { ChevronLeft, Mail, Phone, MapPin, Send, User, MessageSquare } from 'lucide-react';
+import { ChevronLeft, Mail, Phone, MapPin, Send, User, MessageCircle, Tag, Loader2, CheckCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import { submitPublicSupportTicket, getPublicContactInfo } from '../features/admin/api/adminApi';
 
 const ContactSupport = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [submitted, setSubmitted] = useState(false);
+  const { user } = useSelector((state) => state.auth);
 
-  const handleSubmit = (e) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    category: 'GENERAL',
+    subject: '',
+    message: '',
+  });
+  const [loading, setLoading] = useState(false);
+  const [submittedTicket, setSubmittedTicket] = useState(null);
+  const [contactInfo, setContactInfo] = useState({
+    supportEmail: 'support@udharpay.in',
+    supportPhone: '+91 98765 43210',
+    companyAddress: 'Level 4, Digital Park, Cyber Hub\nBangalore, Karnataka 560001\nIndia',
+  });
+
+  useEffect(() => {
+    const fetchContactInfo = async () => {
+      try {
+        const info = await getPublicContactInfo();
+        if (info) {
+          setContactInfo({
+            supportEmail: info.supportEmail || 'support@udharpay.in',
+            supportPhone: info.supportPhone || '+91 98765 43210',
+            companyAddress: info.companyAddress || 'Level 4, Digital Park, Cyber Hub\nBangalore, Karnataka 560001\nIndia',
+          });
+        }
+      } catch (e) {
+        // Fallback to default contact details
+      }
+    };
+    fetchContactInfo();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        name: prev.name || user.name || '',
+        email: prev.email || user.email || '',
+        phone: prev.phone || user.phone || '',
+      }));
+    }
+  }, [user]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate form submission
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 5000);
-    setFormData({ name: '', email: '', message: '' });
+    setLoading(true);
+    try {
+      const res = await submitPublicSupportTicket(formData);
+      setSubmittedTicket(res?.data || { ticketId: 'SUBMITTED' });
+      toast.success(t('Message sent successfully!'));
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        category: 'GENERAL',
+        subject: '',
+        message: '',
+      });
+    } catch (err) {
+      toast.error(err?.response?.data?.message || t('Failed to send message. Please try again.'));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -65,7 +126,7 @@ const ContactSupport = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold tracking-tight text-gray-900 mb-1">{t('Email Address')}</h3>
-                  <a href="mailto:support@udharpay.in" className="text-gray-600 hover:text-[#093C5D] transition-colors">support@udharpay.in</a>
+                  <a href={`mailto:${contactInfo.supportEmail}`} className="text-gray-600 hover:text-[#093C5D] transition-colors">{contactInfo.supportEmail}</a>
                   <p className="text-sm text-gray-500 mt-1">{t('We reply within 24 hours')}</p>
                 </div>
               </div>
@@ -76,7 +137,7 @@ const ContactSupport = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold tracking-tight text-gray-900 mb-1">{t('Phone Number')}</h3>
-                  <a href="tel:+919876543210" className="text-gray-600 hover:text-[#093C5D] transition-colors">+91 98765 43210</a>
+                  <a href={`tel:${contactInfo.supportPhone.replace(/\s+/g, '')}`} className="text-gray-600 hover:text-[#093C5D] transition-colors">{contactInfo.supportPhone}</a>
                   <p className="text-sm text-gray-500 mt-1">{t('Mon-Sat, 9am to 6pm')}</p>
                 </div>
               </div>
@@ -87,7 +148,7 @@ const ContactSupport = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold tracking-tight text-gray-900 mb-1">{t('Office Address')}</h3>
-                  <p className="text-gray-600">Level 4, Digital Park, Cyber Hub<br/>Bangalore, Karnataka 560001<br/>India</p>
+                  <p className="text-gray-600 whitespace-pre-line">{contactInfo.companyAddress}</p>
                 </div>
               </div>
             </div>
@@ -97,10 +158,31 @@ const ContactSupport = () => {
           <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 transition-colors hover:border-[#093C5D]/30">
             <h2 className="text-xl sm:text-2xl tracking-tight font-semibold text-gray-900 mb-6">{t('Send us a Message')}</h2>
             
-            {submitted ? (
-              <div className="bg-green-50 border border-green-200 text-green-700 rounded-lg p-4 text-center">
-                <p className="font-medium">{t('Message sent successfully!')}</p>
-                <p className="text-sm mt-1">{t('We will get back to you shortly.')}</p>
+            {submittedTicket ? (
+              <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl p-6 text-center space-y-3">
+                <div className="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto">
+                  <CheckCircle className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-semibold tracking-tight text-emerald-900">
+                  {t('Message sent successfully!')}
+                </h3>
+                <p className="text-sm text-emerald-700 max-w-md mx-auto">
+                  {t('Thank you for reaching out. Your support inquiry has been registered with our team.')}
+                </p>
+                {submittedTicket.ticketId && (
+                  <div className="inline-block bg-white border border-emerald-300 px-4 py-2 rounded-lg text-xs font-mono font-bold text-[#093C5D] tracking-wider shadow-xs">
+                    Ticket Reference: #{submittedTicket.ticketId}
+                  </div>
+                )}
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setSubmittedTicket(null)}
+                    className="cursor-pointer text-xs font-semibold text-[#093C5D] hover:underline"
+                  >
+                    {t('Send another inquiry')}
+                  </button>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -122,20 +204,70 @@ const ContactSupport = () => {
                   </div>
                 </div>
                 
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">{t('Email Address')}</label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                      <Mail className="h-5 w-5 text-gray-400" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">{t('Email Address')}</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                        <Mail className="h-5 w-5 text-gray-400" />
+                      </div>
+                      <input
+                        type="email"
+                        id="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-shadow"
+                        placeholder={t('Enter your email')}
+                      />
                     </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">{t('Phone Number')} <span className="text-gray-400 text-xs font-normal">({t('Optional')})</span></label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                        <Phone className="h-5 w-5 text-gray-400" />
+                      </div>
+                      <input
+                        type="tel"
+                        id="phone"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-shadow"
+                        placeholder="+91 98765 43210"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">{t('Topic / Category')}</label>
+                    <select
+                      id="category"
+                      value={formData.category}
+                      onChange={(e) => setFormData({...formData, category: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-shadow text-sm"
+                    >
+                      <option value="GENERAL">{t('General Inquiry')}</option>
+                      <option value="BILLING">{t('Billing & Subscriptions')}</option>
+                      <option value="TECHNICAL">{t('Technical Problem')}</option>
+                      <option value="ACCOUNT">{t('Account & Access')}</option>
+                      <option value="FEATURE_REQUEST">{t('Feature Suggestion')}</option>
+                      <option value="BUG_REPORT">{t('Report a Bug')}</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">{t('Subject')}</label>
                     <input
-                      type="email"
-                      id="email"
-                      required
-                      value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-shadow"
-                      placeholder={t('Enter your email')}
+                      type="text"
+                      id="subject"
+                      value={formData.subject}
+                      onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-shadow text-sm"
+                      placeholder={t('Brief summary of issue')}
                     />
                   </div>
                 </div>
@@ -144,7 +276,7 @@ const ContactSupport = () => {
                   <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">{t('Message')}</label>
                   <div className="relative">
                     <div className="absolute top-2.5 left-0 pl-3.5 pointer-events-none">
-                      <MessageSquare className="h-5 w-5 text-gray-400" />
+                      <MessageCircle className="h-5 w-5 text-gray-400" />
                     </div>
                     <textarea
                       id="message"
@@ -153,17 +285,27 @@ const ContactSupport = () => {
                       value={formData.message}
                       onChange={(e) => setFormData({...formData, message: e.target.value})}
                       className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-shadow resize-none"
-                      placeholder={t('How can we help you?')}
+                      placeholder={t('How can we help you? Describe in detail...')}
                     ></textarea>
                   </div>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full cursor-pointer h-12 bg-[#093C5D] text-white rounded-lg font-semibold text-base hover:bg-[#072C44] transition-colors flex items-center justify-center gap-2 mt-2"
+                  disabled={loading}
+                  className="w-full cursor-pointer h-12 bg-[#093C5D] text-white rounded-lg font-semibold text-base hover:bg-[#072C44] transition-colors flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
                 >
-                  <Send className="w-4 h-4" />
-                  {t('Send Message')}
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>{t('Sending inquiry...')}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>{t('Send Message')}</span>
+                    </>
+                  )}
                 </button>
               </form>
             )}

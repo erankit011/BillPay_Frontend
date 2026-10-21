@@ -31,8 +31,15 @@ const AdminDashboard = lazy(() => import('../pages/admin/AdminDashboard'));
 const AdminShops = lazy(() => import('../pages/admin/AdminShops'));
 const AdminBills = lazy(() => import('../pages/admin/AdminBills'));
 const AdminSubscriptions = lazy(() => import('../pages/admin/AdminSubscriptions'));
+const AdminStorePlans = lazy(() => import('../pages/admin/AdminStorePlans'));
 const AdminReports = lazy(() => import('../pages/admin/AdminReports'));
 const AdminSystemHealth = lazy(() => import('../pages/admin/AdminSystemHealth'));
+const AdminSettings = lazy(() => import('../pages/admin/AdminSettings'));
+const AdminBroadcasts = lazy(() => import('../pages/admin/AdminBroadcasts'));
+const AdminSupport = lazy(() => import('../pages/admin/AdminSupport'));
+const AdminCoupons = lazy(() => import('../pages/admin/AdminCoupons'));
+const AdminAuditLogs = lazy(() => import('../pages/admin/AdminAuditLogs'));
+const AdminPlans = lazy(() => import('../pages/admin/AdminPlans'));
 
 // Static pages
 const PrivacyPolicy = lazy(() => import('../pages/PrivacyPage'));
@@ -83,8 +90,6 @@ const OnboardingRoute = ({ children }) => {
   return children;
 };
 
-
-
 const PublicRoute = ({ children }) => {
   const { isAuthenticated, isLoading, user } = useSelector((state) => state.auth);
 
@@ -103,9 +108,21 @@ const PublicRoute = ({ children }) => {
   return children;
 };
 
+const SettingsRoute = () => {
+  const { user } = useSelector((state) => state.auth);
+  if (user?.role === ROLES.ADMIN) {
+    return <Navigate to="/admin/settings" replace />;
+  }
+  return <Settings />;
+};
+
 const AppRoutes = () => {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-50"></div>}>
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <SwirlingLoader className="w-12 h-12 text-[#093C5D]" />
+      </div>
+    }>
       <Routes>
         {/* Landing Page - Public */}
         <Route path="/" element={
@@ -118,6 +135,7 @@ const AppRoutes = () => {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/contact-support" element={<ContactSupport />} />
+        <Route path="/support" element={<Navigate to="/contact-support" replace />} />
 
         {/* Auth Routes - Redirect to dashboard if already logged in */}
         <Route path="/login" element={
@@ -161,8 +179,16 @@ const AppRoutes = () => {
           <Route path="/admin/shops" element={<AdminShops />} />
           <Route path="/admin/bills" element={<AdminBills />} />
           <Route path="/admin/subscriptions" element={<AdminSubscriptions />} />
+          <Route path="/admin/subscriptions/store-plans" element={<AdminStorePlans />} />
+          <Route path="/admin/subscriptions/plans" element={<Navigate to="/admin/subscriptions/store-plans" replace />} />
           <Route path="/admin/reports" element={<AdminReports />} />
           <Route path="/admin/health" element={<AdminSystemHealth />} />
+          <Route path="/admin/settings" element={<AdminSettings />} />
+          <Route path="/admin/broadcasts" element={<AdminBroadcasts />} />
+          <Route path="/admin/support" element={<AdminSupport />} />
+          <Route path="/admin/coupons" element={<AdminCoupons />} />
+          <Route path="/admin/plans" element={<AdminPlans />} />
+          <Route path="/admin/audit-logs" element={<AdminAuditLogs />} />
           <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
         </Route>
 
@@ -173,7 +199,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }>
           <Route path="/profile" element={<Profile />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/settings" element={<SettingsRoute />} />
           <Route path="/notifications" element={<Notifications />} />
         </Route>
 

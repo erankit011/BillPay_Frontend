@@ -20,13 +20,11 @@ import {
   ComposedChart,
   Area,
   Bar,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend
 } from 'recharts';
 import { Link } from 'react-router-dom';
 import {
@@ -137,7 +135,7 @@ const AdminDashboard = () => {
       toggleShopSuspension(shopId, { isSuspended, reason }),
     onSuccess: (res) => {
       toast.success(res.message || 'Shop suspension status updated');
-      queryClient.invalidateQueries(['adminOverview']);
+      queryClient.invalidateQueries({ queryKey: ['adminOverview'] });
       setSuspendModalShop(null);
       if (inspectShop) setInspectShop(null);
     },
@@ -150,7 +148,7 @@ const AdminDashboard = () => {
     mutationFn: ({ shopId, planData }) => overrideShopPlan(shopId, planData),
     onSuccess: () => {
       toast.success('Shop subscription updated successfully');
-      queryClient.invalidateQueries(['adminOverview']);
+      queryClient.invalidateQueries({ queryKey: ['adminOverview'] });
       setPlanModalShop(null);
       if (inspectShop) setInspectShop(null);
     },
@@ -163,7 +161,7 @@ const AdminDashboard = () => {
     mutationFn: (shopId) => forceLogoutShop(shopId),
     onSuccess: () => {
       toast.success('Shopkeeper logged out across all devices successfully');
-      queryClient.invalidateQueries(['adminOverview']);
+      queryClient.invalidateQueries({ queryKey: ['adminOverview'] });
       setLogoutModalShop(null);
       if (inspectShop) setInspectShop(null);
     },

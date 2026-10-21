@@ -23,16 +23,20 @@ const ShopDetailsModal = ({
 }) => {
   // Prevent background scrolling when modal is open
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
-    }
+    if (!isOpen) return;
+
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevTouchAction = document.body.style.touchAction;
+
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+
     return () => {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
+      document.body.style.overflow = prevBodyOverflow;
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.touchAction = prevTouchAction;
     };
   }, [isOpen]);
 
@@ -47,12 +51,12 @@ const ShopDetailsModal = ({
     FREE: 'bg-blue-50 text-blue-700 border-blue-200',
   };
 
-  const shopName = shop.businessName || shop.name || 'Merchant Shop';
+  const shopName = shop.shopName || shop.businessName || shop.settings?.shopName || shop.name || 'Merchant Shop';
   const ownerName = shop.name || 'N/A';
-  const businessName = shop.shopSettings?.businessName || shop.businessName;
-  const gstNumber = shop.shopSettings?.gstin;
-  const upiId = shop.shopSettings?.upiId;
-  const address = shop.shopSettings?.address;
+  const businessName = shop.shopName || shop.settings?.shopName || shop.shopSettings?.businessName || shop.businessName;
+  const gstNumber = shop.gstNumber || shop.settings?.gstNumber || shop.shopSettings?.gstin;
+  const upiId = shop.upiId || shop.settings?.upiId || shop.shopSettings?.upiId;
+  const address = shop.shopAddress || shop.settings?.shopAddress || shop.shopSettings?.address;
   const shortId = shop._id ? shop._id.slice(-6).toUpperCase() : '';
 
   const getInitials = (name) => {
@@ -95,11 +99,13 @@ const ShopDetailsModal = ({
   const expiryInfo = getExpiryDisplay();
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-50 overscroll-contain">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
+        onWheel={(e) => e.preventDefault()}
+        onTouchMove={(e) => e.preventDefault()}
       />
 
       {/* Modal Container: Bottom Sheet on Mobile, Centered on sm+ */}
@@ -154,10 +160,10 @@ const ShopDetailsModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-gray-400 hover:text-gray-700 hover:bg-gray-100 w-8.5 h-8.5 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 shrink-0 border border-gray-200 bg-gray-50/80 shadow-none ml-auto"
-              title="Close dialog"
+              className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200 ml-auto"
+              title="Close"
             >
-              <X className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+              <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
 
@@ -282,14 +288,16 @@ const ShopDetailsModal = ({
                     Subscription Status & Plan
                   </h4>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => onOpenPlanModal(shop)}
-                  className="cursor-pointer px-3 py-1.5 text-xs font-semibold text-[#093C5D] bg-[#093C5D]/10 hover:bg-[#093C5D]/15 border border-[#093C5D]/20 rounded-lg inline-flex items-center gap-1.5 transition-all active:scale-95 shadow-none shrink-0"
-                >
-                  <Crown className="w-3.5 h-3.5 text-amber-600 shrink-0" strokeWidth={2} />
-                  <span>Change Plan / Extend</span>
-                </button>
+                {onOpenPlanModal && (
+                  <button
+                    type="button"
+                    onClick={() => onOpenPlanModal(shop)}
+                    className="cursor-pointer px-3 py-1.5 text-xs font-semibold text-[#093C5D] bg-[#093C5D]/10 hover:bg-[#093C5D]/15 border border-[#093C5D]/20 rounded-lg inline-flex items-center gap-1.5 transition-all active:scale-95 shadow-none shrink-0"
+                  >
+                    <Crown className="w-3.5 h-3.5 text-amber-600 shrink-0" strokeWidth={2} />
+                    <span>Change Plan / Extend</span>
+                  </button>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -349,7 +357,7 @@ const ShopDetailsModal = ({
                 <button
                   type="button"
                   onClick={() => onForceLogout(shop)}
-                  className="cursor-pointer h-8.5 px-3 text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-none shrink-0"
+                  className="cursor-pointer h-8.5 px-3 text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded inline-flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-none shrink-0"
                   title="Terminate all active shopkeeper sessions"
                 >
                   <LogOut className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />

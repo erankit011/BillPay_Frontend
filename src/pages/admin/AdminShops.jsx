@@ -27,12 +27,10 @@ import toast from 'react-hot-toast';
 import {
   getAdminShops,
   toggleShopSuspension,
-  overrideShopPlan,
   forceLogoutShop
 } from '../../features/admin/api/adminApi';
 import ShopDetailsModal from '../../features/admin/components/ShopDetailsModal';
 import SuspendShopModal from '../../features/admin/components/SuspendShopModal';
-import PlanOverrideModal from '../../features/admin/components/PlanOverrideModal';
 import ForceLogoutModal from '../../features/admin/components/ForceLogoutModal';
 import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
@@ -68,7 +66,6 @@ const AdminShops = () => {
   // Active Modals
   const [inspectShop, setInspectShop] = useState(null);
   const [suspendModalShop, setSuspendModalShop] = useState(null);
-  const [planModalShop, setPlanModalShop] = useState(null);
   const [logoutModalShop, setLogoutModalShop] = useState(null);
 
   useEffect(() => {
@@ -130,9 +127,9 @@ const AdminShops = () => {
   const totalPages = data?.totalPages || 1;
   const currentPage = data?.currentPage || urlPage;
 
-  const activeCount = shops.filter((s) => !s.isSuspended).length;
-  const proCount = shops.filter((s) => s.subscriptionPlan && s.subscriptionPlan !== 'FREE').length;
-  const totalUdharSum = shops.reduce((sum, s) => sum + (s.totalUdhar || 0), 0);
+  const activeCount = data?.activeCount ?? shops.filter((s) => !s.isSuspended).length;
+  const proCount = data?.proCount ?? shops.filter((s) => s.subscriptionPlan && s.subscriptionPlan !== 'FREE').length;
+  const totalUdharSum = data?.totalUdharSum ?? shops.reduce((sum, s) => sum + (s.totalUdhar || 0), 0);
 
   // Mutations
   const suspendMutation = useMutation({
@@ -140,8 +137,8 @@ const AdminShops = () => {
       toggleShopSuspension(shopId, { isSuspended, reason }),
     onSuccess: (res) => {
       toast.success(res.message || 'Shop suspension status updated');
-      queryClient.invalidateQueries(['adminShops']);
-      queryClient.invalidateQueries(['adminOverview']);
+      queryClient.invalidateQueries({ queryKey: ['adminShops'] });
+      queryClient.invalidateQueries({ queryKey: ['adminOverview'] });
       setSuspendModalShop(null);
       if (inspectShop) setInspectShop(null);
     },
@@ -150,26 +147,12 @@ const AdminShops = () => {
     },
   });
 
-  const planMutation = useMutation({
-    mutationFn: ({ shopId, planData }) => overrideShopPlan(shopId, planData),
-    onSuccess: () => {
-      toast.success('Shop subscription updated successfully');
-      queryClient.invalidateQueries(['adminShops']);
-      queryClient.invalidateQueries(['adminOverview']);
-      setPlanModalShop(null);
-      if (inspectShop) setInspectShop(null);
-    },
-    onError: (err) => {
-      toast.error(err.response?.data?.message || 'Failed to update plan');
-    },
-  });
-
   const forceLogoutMutation = useMutation({
     mutationFn: (shopId) => forceLogoutShop(shopId),
     onSuccess: () => {
       toast.success('Shopkeeper logged out across all devices successfully');
-      queryClient.invalidateQueries(['adminShops']);
-      queryClient.invalidateQueries(['adminOverview']);
+      queryClient.invalidateQueries({ queryKey: ['adminShops'] });
+      queryClient.invalidateQueries({ queryKey: ['adminOverview'] });
       setLogoutModalShop(null);
       if (inspectShop) setInspectShop(null);
     },
@@ -289,7 +272,7 @@ const AdminShops = () => {
               setSearchTerm('');
               setSearchParams({}, { replace: true });
             }}
-            className="shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-semibold text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 flex items-center gap-1.5 transition-colors shadow-none"
+            className="shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 flex items-center gap-1.5 transition-colors shadow-none"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Reset Filters
@@ -470,27 +453,18 @@ const AdminShops = () => {
                             {/* Inspect */}
                             <button
                               onClick={() => setInspectShop(shop)}
-                              className="cursor-pointer h-8 px-2.5 sm:px-3 text-blue-700 font-semibold bg-blue-50 border border-blue-200 hover:bg-blue-100 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
+                              className="cursor-pointer h-8 px-2.5 sm:px-3 text-blue-700 font-semibold bg-blue-50 border border-blue-200 hover:bg-blue-100 rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
                               title="Inspect full shop profile, activity and customer metrics"
                             >
                               <Eye className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
                               <span className="leading-none">Inspect</span>
                             </button>
 
-                            {/* Plan Override */}
-                            <button
-                              onClick={() => setPlanModalShop(shop)}
-                              className="cursor-pointer h-8 px-2.5 sm:px-3 text-amber-700 font-semibold bg-amber-50 border border-amber-200 hover:bg-amber-100 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
-                              title="Update subscription tier and billing validity"
-                            >
-                              <Crown className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
-                              <span className="leading-none">Plan</span>
-                            </button>
 
                             {/* Suspend / Restore */}
                             <button
                               onClick={() => setSuspendModalShop(shop)}
-                              className={`cursor-pointer h-8 px-2.5 sm:px-3 font-semibold rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none ${
+                              className={`cursor-pointer h-8 px-2.5 sm:px-3 font-semibold rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none ${
                                 isSuspended
                                   ? 'text-green-700 bg-green-50 border border-green-200 hover:bg-green-100'
                                   : 'text-red-700 bg-red-50 border border-red-200 hover:bg-red-100'
@@ -515,7 +489,7 @@ const AdminShops = () => {
                               type="button"
                               onClick={() => handleOpenLogoutModal(shop)}
                               disabled={forceLogoutMutation.isPending}
-                              className="cursor-pointer h-8 px-2.5 sm:px-3 text-gray-700 font-semibold bg-gray-50 border border-gray-200 hover:bg-gray-100 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none disabled:opacity-50"
+                              className="cursor-pointer h-8 px-2.5 sm:px-3 text-gray-700 font-semibold bg-gray-50 border border-gray-200 hover:bg-gray-100 rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none disabled:opacity-50"
                               title="Forcibly terminate shopkeeper sessions across all devices"
                             >
                               <LogOut className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
@@ -610,26 +584,18 @@ const AdminShops = () => {
                     </div>
 
                     {/* Bottom Actions Grid */}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-gray-100">
+                    <div className="grid grid-cols-3 gap-2 pt-2 border-t border-gray-100">
                       <button
                         onClick={() => setInspectShop(shop)}
-                        className="cursor-pointer w-full h-8.5 text-blue-700 font-semibold bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
+                        className="cursor-pointer w-full h-8.5 text-blue-700 font-semibold bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2 rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
                       >
                         <Eye className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
                         <span className="leading-none">Inspect</span>
                       </button>
 
                       <button
-                        onClick={() => setPlanModalShop(shop)}
-                        className="cursor-pointer w-full h-8.5 text-amber-700 font-semibold bg-amber-50 border border-amber-200 hover:bg-amber-100 px-2 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
-                      >
-                        <Crown className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
-                        <span className="leading-none">Plan</span>
-                      </button>
-
-                      <button
                         onClick={() => setSuspendModalShop(shop)}
-                        className={`cursor-pointer w-full h-8.5 font-semibold px-2 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none ${
+                        className={`cursor-pointer w-full h-8.5 font-semibold px-2 rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none ${
                           isSuspended
                             ? 'text-green-700 bg-green-50 border border-green-200 hover:bg-green-100'
                             : 'text-red-700 bg-red-50 border border-red-200 hover:bg-red-100'
@@ -652,7 +618,7 @@ const AdminShops = () => {
                         type="button"
                         onClick={() => handleOpenLogoutModal(shop)}
                         disabled={forceLogoutMutation.isPending}
-                        className="cursor-pointer w-full h-8.5 text-gray-700 font-semibold bg-gray-50 border border-gray-200 hover:bg-gray-100 px-2 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none disabled:opacity-50"
+                        className="cursor-pointer w-full h-8.5 text-gray-700 font-semibold bg-gray-50 border border-gray-200 hover:bg-gray-100 px-2 rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none disabled:opacity-50"
                       >
                         <LogOut className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
                         <span className="leading-none">Logout</span>
@@ -675,7 +641,7 @@ const AdminShops = () => {
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage <= 1}
-                    className="p-1.5 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    className="cursor-pointer p-1.5 rounded border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
@@ -685,7 +651,7 @@ const AdminShops = () => {
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage >= totalPages}
-                    className="p-1.5 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    className="cursor-pointer p-1.5 rounded border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </button>
@@ -702,7 +668,6 @@ const AdminShops = () => {
         onClose={() => setInspectShop(null)}
         shop={inspectShop}
         onOpenSuspendModal={(shop) => setSuspendModalShop(shop)}
-        onOpenPlanModal={(shop) => setPlanModalShop(shop)}
         onForceLogout={(shopOrId) => {
           const target = typeof shopOrId === 'object' && shopOrId !== null
             ? shopOrId
@@ -718,16 +683,6 @@ const AdminShops = () => {
         isLoading={suspendMutation.isPending}
         onConfirm={({ isSuspended, reason }) =>
           suspendMutation.mutate({ shopId: suspendModalShop._id, isSuspended, reason })
-        }
-      />
-
-      <PlanOverrideModal
-        isOpen={!!planModalShop}
-        onClose={() => setPlanModalShop(null)}
-        shop={planModalShop}
-        isLoading={planMutation.isPending}
-        onConfirm={(planData) =>
-          planMutation.mutate({ shopId: planModalShop._id, planData })
         }
       />
 

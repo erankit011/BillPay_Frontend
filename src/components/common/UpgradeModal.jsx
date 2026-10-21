@@ -7,6 +7,25 @@ const UpgradeModal = ({ isOpen, onClose, title, message }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  // Prevent background scrolling when modal is open
+  React.useEffect(() => {
+    if (!isOpen) return;
+
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevTouchAction = document.body.style.touchAction;
+
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+
+    return () => {
+      document.body.style.overflow = prevBodyOverflow;
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.touchAction = prevTouchAction;
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleUpgradeClick = () => {
@@ -15,9 +34,14 @@ const UpgradeModal = ({ isOpen, onClose, title, message }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[60]">
+    <div className="fixed inset-0 z-[60] overscroll-contain">
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" onClick={onClose} />
+      <div
+        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
+        onClick={onClose}
+        onWheel={(e) => e.preventDefault()}
+        onTouchMove={(e) => e.preventDefault()}
+      />
 
       {/* Mobile: bottom sheet | sm+: centered modal */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-[60] pointer-events-none">

@@ -19,7 +19,14 @@ import {
   X,
   ArrowUp,
   ArrowDown,
-  CornerDownLeft
+  CornerDownLeft,
+  Megaphone,
+  LifeBuoy,
+  Tag,
+  ShieldCheck,
+  Layers,
+  Crown,
+  HelpCircle
 } from 'lucide-react';
 
 const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
@@ -31,31 +38,41 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
   const listRef = useRef(null);
   const itemRefs = useRef([]);
 
-  // Define searchable pages based on user role
+  // Define searchable pages based on user role (1:1 synced with MainLayout)
   const searchablePages = useMemo(() => {
     if (isAdmin) {
       return [
-        { title: t('Dashboard'), desc: 'Overview, analytics & KPIs', path: '/admin/dashboard', icon: Home, category: 'Main' },
-        { title: t('Stores'), desc: 'Browse and manage all registered stores', path: '/admin/shops', icon: Store, category: 'Management' },
-        { title: t('Customer Bills Ledger'), desc: 'Track customer udhar & store transactions', path: '/admin/bills', icon: FileText, category: 'Ledger' },
-        { title: t('Subscriptions & Revenue'), desc: 'SaaS plan tiers, merchant renewals & invoices', path: '/admin/subscriptions', icon: CreditCard, category: 'Billing' },
-        { title: t('Platform Financial Reports'), desc: 'Financial audit, growth trends & export', path: '/admin/reports', icon: BarChart2, category: 'Reports' },
-        { title: t('System Health & Metrics'), desc: 'Server telemetry, memory, latency & uptime', path: '/admin/health', icon: Activity, category: 'System' },
-        { title: t('Account Profile'), desc: 'Manage your admin credentials and security', path: '/profile', icon: User, category: 'Account' },
-        { title: t('Platform Settings'), desc: 'System configuration and preferences', path: '/settings', icon: Settings, category: 'Settings' },
+        { title: t('Dashboard'), desc: 'Platform overview, KPIs & live stats', path: '/admin/dashboard', icon: Home, category: 'Main' },
+        { title: t('Stores'), desc: 'Browse and manage all registered merchant stores', path: '/admin/shops', icon: Store, category: 'Stores' },
+        { title: t('Store Bills'), desc: 'Audit itemized bills, settlements & customer transactions', path: '/admin/bills', icon: FileText, category: 'Stores' },
+        { title: t('Store Reports'), desc: 'Store sales turnover, GMV trends & credit recovery analytics', path: '/admin/reports', icon: BarChart2, category: 'Stores' },
+        { title: t('Billing Receipts'), desc: 'Platform SaaS invoices, merchant transaction receipts & renewals', path: '/admin/subscriptions', icon: CreditCard, category: 'Subscriptions' },
+        { title: t('Store Plans'), desc: 'Manage merchant store subscription tiers & custom quota overrides', path: '/admin/subscriptions/store-plans', icon: Crown, category: 'Subscriptions' },
+        { title: t('Plans & Pricing'), desc: 'Configure tier quotas, features, prices & billing cycles', path: '/admin/plans', icon: Layers, category: 'Subscriptions' },
+        { title: t('System Health'), desc: 'Server telemetry, memory, latency & database uptime', path: '/admin/health', icon: Activity, category: 'System' },
+        { title: t('Broadcast Announcements'), desc: 'Publish banners, notices and alerts to storekeepers', path: '/admin/broadcasts', icon: Megaphone, category: 'Communication' },
+        { title: t('Support Desk'), desc: 'Triage customer inquiries, complaints and helpdesk tickets', path: '/admin/support', icon: LifeBuoy, category: 'Support' },
+        { title: t('Coupons & Promo Codes'), desc: 'Launch and configure discount campaigns for subscription plans', path: '/admin/coupons', icon: Tag, category: 'Billing' },
+        { title: t('Security & Audit Logs'), desc: 'Immutable audit trail of admin actions and platform mutations', path: '/admin/audit-logs', icon: ShieldCheck, category: 'Security' },
+        { title: t('Platform Settings'), desc: 'System configuration, operational switches and preferences', path: '/admin/settings', icon: Settings, category: 'Settings' },
+        { title: t('Notifications'), desc: 'Real-time alerts, broadcast triggers & activity updates', path: '/notifications', icon: Bell, category: 'System' },
+        { title: t('Help & Support'), desc: 'Contact platform support desk and customer care', path: '/contact-support', icon: HelpCircle, category: 'Support' },
+        { title: t('Account Profile'), desc: 'Manage your admin credentials, security & photo', path: '/profile', icon: User, category: 'Account' },
       ];
     }
     return [
-      { title: t('Dashboard'), desc: 'Sales overview, udhar summary & analytics', path: '/dashboard', icon: Home, category: 'Main' },
-      { title: t('Customers'), desc: 'Manage customers and udhar balance', path: '/customers', icon: Users, category: 'Customers' },
-      { title: t('Billing & Invoices'), desc: 'Create bills, track payments and shares', path: '/bills', icon: FileText, category: 'Billing' },
-      { title: t('Products & Inventory'), desc: 'Catalog, pricing and stock management', path: '/products', icon: Box, category: 'Inventory' },
-      { title: t('Payment Reminders'), desc: 'Send automated WhatsApp and SMS reminders', path: '/reminders', icon: Bell, category: 'Reminders' },
-      { title: t('Voice Billing'), desc: 'Fast hands-free invoice creation via voice', path: '/voice', icon: Mic, category: 'Billing' },
-      { title: t('Business Reports'), desc: 'Financial audit, cashflow & sales export', path: '/reports', icon: BarChart2, category: 'Reports' },
-      { title: t('Subscription Plans'), desc: 'Upgrade or manage active store plan', path: '/subscription', icon: Gem, category: 'Subscription' },
-      { title: t('Store Settings'), desc: 'Business profile and invoice preferences', path: '/settings', icon: Settings, category: 'Settings' },
-      { title: t('Account Profile'), desc: 'Manage profile photo and personal info', path: '/profile', icon: User, category: 'Account' },
+      { title: t('Dashboard'), desc: 'Sales overview, udhar summary & daily analytics', path: '/dashboard', icon: Home, category: 'Main' },
+      { title: t('Customers'), desc: 'Manage customer accounts, khata & udhar balance', path: '/customers', icon: Users, category: 'Customers' },
+      { title: t('Products & Inventory'), desc: 'Item catalog, pricing, barcodes & stock management', path: '/products', icon: Box, category: 'Inventory' },
+      { title: t('Bills & Invoices'), desc: 'Create bills, track payments and print/share receipts', path: '/bills', icon: FileText, category: 'Billing' },
+      { title: t('Voice Billing'), desc: 'Fast hands-free invoice creation using voice recognition', path: '/voice', icon: Mic, category: 'Billing' },
+      { title: t('Payment Reminders'), desc: 'Send automated WhatsApp and SMS udhar reminders', path: '/reminders', icon: Bell, category: 'Reminders' },
+      { title: t('Business Reports'), desc: 'Financial audit, profit/loss, cashflow & sales export', path: '/reports', icon: BarChart2, category: 'Reports' },
+      { title: t('Subscription Plans'), desc: 'Upgrade or manage active store membership & plan limits', path: '/subscription', icon: Gem, category: 'Subscription' },
+      { title: t('Store Settings'), desc: 'Business profile, print templates & invoice preferences', path: '/settings', icon: Settings, category: 'Settings' },
+      { title: t('Notifications'), desc: 'Payment alerts, customer notifications & system announcements', path: '/notifications', icon: Bell, category: 'System' },
+      { title: t('Help & Support'), desc: 'Contact customer support and raise help tickets', path: '/contact-support', icon: HelpCircle, category: 'Support' },
+      { title: t('Account Profile'), desc: 'Manage personal profile, login credentials & security', path: '/profile', icon: User, category: 'Account' },
     ];
   }, [isAdmin, t]);
 
@@ -200,8 +217,8 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={
                   isAdmin
-                    ? t('Search By Page & Stores & Bills & Reports')
-                    : t('Search By Page & Customers & Bills & Products')
+                    ? t('Search by page, stores, bills, subscriptions, settings...')
+                    : t('Search by page, customers, bills, products, settings...')
                 }
                 className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-11 bg-white border border-gray-300 rounded-lg text-[13px] sm:text-sm font-normal text-gray-900 placeholder-gray-400 placeholder:font-normal focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
               />
@@ -232,7 +249,10 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
           </div>
 
           {/* Search Results List */}
-          <div ref={listRef} className="overflow-y-auto overscroll-contain p-2 pb-3 sm:pb-2.5 space-y-1 flex-1">
+          <div
+            ref={listRef}
+            className="overflow-y-auto overscroll-contain p-2 pr-2.5 pb-3 sm:pb-2.5 space-y-1 flex-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-300"
+          >
             {filteredPages.length === 0 ? (
               <div className="py-10 px-4 text-center">
                 <div className="w-10 h-10 rounded-lg bg-gray-50 border border-gray-200 text-gray-400 mx-auto flex items-center justify-center mb-2.5">
@@ -289,13 +309,13 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
                       </div>
                     </div>
 
-                    {/* Category Chip - Hugs text content, neatly right-aligned */}
+                    {/* Category Chip - Centered flex container with proper height, padding and line-height */}
                     {item.category && (
                       <span
-                        className={`text-[10px] font-medium px-2 py-0.5 rounded border transition-colors shrink-0 shadow-none uppercase tracking-wider select-none ml-auto ${
+                        className={`inline-flex items-center justify-center text-center whitespace-nowrap text-[10px] font-semibold leading-none h-5 px-2.5 rounded border transition-colors shrink-0 shadow-none uppercase tracking-wide select-none ml-2 ${
                           isSelected
                             ? 'bg-white text-[#093C5D] border-[#093C5D]/25'
-                            : 'bg-gray-100/70 text-gray-500 border-gray-200/70'
+                            : 'bg-gray-100/80 text-gray-500 border-gray-200/80'
                         }`}
                       >
                         {item.category}
