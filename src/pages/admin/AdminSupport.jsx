@@ -17,6 +17,7 @@ import {
   MessageCircle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { formatShortDate } from '../../utils/dateUtils';
 import {
   getAdminTickets,
   getAdminTicketStats,
@@ -185,16 +186,7 @@ const AdminSupport = () => {
     setModalOpen(true);
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    const d = new Date(dateString);
-    if (isNaN(d.getTime())) return '';
-    return d.toLocaleDateString('en-IN', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    });
-  };
+  const formatDate = (dateString) => formatShortDate(dateString);
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 pb-24 lg:pb-0">

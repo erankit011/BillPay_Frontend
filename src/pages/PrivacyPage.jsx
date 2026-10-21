@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft } from 'lucide-react';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import { formatShortDate } from '../utils/dateUtils';
 
 const PrivacyPage = () => {
   const { t } = useTranslation();
@@ -39,7 +40,7 @@ const PrivacyPage = () => {
       <main className="pt-24 sm:pt-28 pb-12 sm:pb-16 lg:pb-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
         <div className="bg-white rounded-2xl p-6 sm:p-8 md:p-12 transition-colors border border-gray-200 hover:border-[#093C5D]/30">
           <h1 className="text-3xl sm:text-4xl tracking-tight font-semibold text-gray-900 mb-2">{t('Privacy Policy')}</h1>
-          <p className="text-gray-500 mb-8 pb-8 border-b border-gray-100">{t('Last updated')}: {new Date().toLocaleDateString()}</p>
+          <p className="text-gray-500 mb-8 pb-8 border-b border-gray-100">{t('Last updated')}: {formatShortDate(new Date())}</p>
           
           <div className="prose prose-blue max-w-none text-gray-600">
             <h2 className="text-xl sm:text-2xl tracking-tight font-semibold text-gray-900 mt-8 mb-4">{t('1. Information We Collect')}</h2>

@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import api from '../../../../api/axios';
 import { logout } from '../../../../redux/slices/authSlice';
 import toast from 'react-hot-toast';
-import { formatShortDate } from '../../../../utils/dateUtils';
+import { formatShortDate, formatRelativeTime } from '../../../../utils/dateUtils';
 
 const AdminActiveDevices = () => {
   const { t } = useTranslation();
@@ -89,29 +89,7 @@ const AdminActiveDevices = () => {
     }
   };
 
-  const formatDeviceTime = (dateStr) => {
-    if (!dateStr) return '';
-    try {
-      const date = new Date(dateStr);
-      const now = new Date();
-      const diffMs = now.getTime() - date.getTime();
-      const diffMins = Math.floor(diffMs / (1000 * 60));
-      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-      if (diffMins < 2) return t('Just now');
-      if (diffMins < 60) return `${diffMins} ${t('mins ago')}`;
-      if (diffHours < 24) return `${diffHours} ${t('hours ago')}`;
-      if (diffDays < 7) return `${diffDays} ${t('days ago')}`;
-
-      const day = date.getDate();
-      const month = date.toLocaleDateString('en-US', { month: 'short' });
-      const year = date.getFullYear();
-      return `${day} ${month} ${year}`;
-    } catch (e) {
-      return '';
-    }
-  };
+  const formatDeviceTime = (dateStr) => formatRelativeTime(dateStr, t);
 
   const formatDeviceDate = (dateStr) => formatShortDate(dateStr);
 

@@ -14,6 +14,7 @@ import {
   Percent,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { formatShortDate, isDateExpired } from '../../../../utils/dateUtils';
 
 const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
   const [copied, setCopied] = useState(false);
@@ -25,7 +26,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
     toast.success(`Coupon code ${coupon.code} copied!`);
   };
 
-  const isExpired = coupon.expiresAt && new Date(coupon.expiresAt) < new Date();
+  const isExpired = isDateExpired(coupon.expiresAt);
   const isStarted = !coupon.startsAt || new Date(coupon.startsAt) <= new Date();
 
   // Usage percentage
@@ -35,16 +36,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
     ? Math.min(100, Math.round((usedCount / usageLimit) * 100))
     : null;
 
-  const formatDate = (d) => {
-    if (!d) return 'Never';
-    const parsed = new Date(d);
-    if (isNaN(parsed.getTime())) return 'Never';
-    return parsed.toLocaleDateString('en-IN', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    });
-  };
+  const formatDate = (d) => (!d ? 'Never' : (formatShortDate(d) || 'Never'));
 
   return (
     <div

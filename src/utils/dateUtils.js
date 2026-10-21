@@ -106,21 +106,38 @@ export const calculateExtendedExpiry = (currentExpiry, daysToAdd) => {
 };
 
 /**
- * Format relative time (e.g. "2 hours ago", "Just now")
+ * Format time as 12-hour hh:mm AM/PM
  */
-export const formatRelativeTime = (dateString) => {
+export const formatTimeOnly = (dateString) => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return '';
+  let hours = date.getHours();
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  const strHours = hours.toString().padStart(2, '0');
+  return `${strHours}:${minutes} ${ampm}`;
+};
+
+/**
+ * Format relative time (e.g. "Just now", "5 mins ago", "2 hours ago")
+ * Accepts optional translation function t
+ */
+export const formatRelativeTime = (dateString, t = (s) => s) => {
   if (!dateString) return '';
   const date = new Date(dateString);
   if (isNaN(date.getTime())) return '';
   const diffSeconds = Math.floor((Date.now() - date.getTime()) / 1000);
-  if (diffSeconds < 60) return 'Just now';
+  if (diffSeconds < 120) return t('Just now');
   const diffMinutes = Math.floor(diffSeconds / 60);
-  if (diffMinutes < 60) return `${diffMinutes}m ago`;
+  if (diffMinutes < 60) return `${diffMinutes} ${t('mins ago')}`;
   const diffHours = Math.floor(diffMinutes / 60);
-  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffHours < 24) return `${diffHours} ${t('hours ago')}`;
   const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 30) return `${diffDays}d ago`;
-  return formatDateOnly(dateString);
+  if (diffDays < 7) return `${diffDays} ${t('days ago')}`;
+  return formatShortDate(dateString);
 };
 
 /**
