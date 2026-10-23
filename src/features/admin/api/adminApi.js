@@ -37,6 +37,11 @@ export const forceLogoutShop = async (shopId) => {
   return res.data;
 };
 
+export const sendDirectShopNotice = async (shopId, noticeData) => {
+  const res = await api.post(`/admin/shops/${shopId}/send-notice`, noticeData);
+  return res.data;
+};
+
 // 3. Platform Customer Bills Audit & Ledger
 export const getAdminBills = async (params = {}) => {
   const res = await api.get('/admin/bills', { params });

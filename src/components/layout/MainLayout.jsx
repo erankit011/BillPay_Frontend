@@ -36,7 +36,7 @@ import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
 import LanguageSwitcher from '../LanguageSwitcher';
 import QuickSearchModal from '../../features/search';
-import ActiveBroadcastBanner from '../../features/admin/components/broadcast/ActiveBroadcastBanner';
+import TopAnnouncementBar from './TopAnnouncementBar';
 import SuspendedAccountModal from '../common/SuspendedAccountModal';
 import { io } from 'socket.io-client';
 import toast from 'react-hot-toast';
@@ -304,10 +304,17 @@ const MainLayout = () => {
             { ...newNotif, read: false },
             ...prev.slice(0, 4),
           ]);
+          queryClient.invalidateQueries({ queryKey: ['directOfficialNotices'] });
           toast(newNotif.title + ': ' + newNotif.message, {
             icon: '🔔',
             duration: 4000,
           });
+        });
+
+        // 5.1 Direct official notice sent to store
+        socket.on('admin_direct_notice', () => {
+          queryClient.invalidateQueries({ queryKey: ['directOfficialNotices'] });
+          queryClient.invalidateQueries({ queryKey: ['notifications'] });
         });
 
         // 6. Broadcasts created/updated/deleted by admin in real time
@@ -402,20 +409,22 @@ const MainLayout = () => {
         prev.map((n) => (n._id === notificationId ? { ...n, read: true } : n))
       );
       setNotificationCount((prev) => Math.max(0, prev - 1));
+      queryClient.invalidateQueries({ queryKey: ['directOfficialNotices'] });
     } catch (error) {
       console.error(error);
     }
-  }, []);
+  }, [queryClient]);
 
   const markAllAsRead = useCallback(async () => {
     try {
       await api.patch('/notifications/mark-all-read');
       setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
       setNotificationCount(0);
+      queryClient.invalidateQueries({ queryKey: ['directOfficialNotices'] });
     } catch (error) {
       console.error(error);
     }
-  }, []);
+  }, [queryClient]);
 
   const executeLogout = useCallback(async () => {
     try {
@@ -1556,8 +1565,10 @@ const MainLayout = () => {
           sidebarCollapsed ? 'lg:pl-[72px]' : 'lg:pl-64'
         }`}
       >
-        {/* Sticky Top Navbar */}
-        <header className="sticky top-0 z-30 h-14 bg-white/95 backdrop-blur-md border-b border-gray-100 flex items-center justify-between px-3 sm:px-6 shrink-0">
+        {/* Sticky Top Header Container (Universal 1-Line Top Announcement Banner + Navbar) */}
+        <div className="sticky top-0 z-30 shrink-0">
+          <TopAnnouncementBar />
+          <header className="h-14 bg-white/95 backdrop-blur-md border-b border-gray-100 flex items-center justify-between px-3 sm:px-6 shrink-0">
           {/* Left Side: Sidebar Trigger + Breadcrumb */}
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             {/* Desktop: Rail Collapse Trigger Button */}
@@ -1677,7 +1688,14 @@ const MainLayout = () => {
                           }`}
                         >
                           <div className="flex items-start justify-between gap-2">
-                            <p className="text-xs font-medium text-gray-900">{notif.title}</p>
+                            <div className="flex items-center gap-1.5 min-w-0">
+                              {notif.type === 'ADMIN_NOTICE' && (
+                                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#093C5D]/10 text-[#093C5D] shrink-0">
+                                  Official
+                                </span>
+                              )}
+                              <p className="text-xs font-semibold text-gray-900 truncate">{notif.title}</p>
+                            </div>
                             {!notif.read && (
                               <span className="w-2 h-2 rounded-full bg-[#093C5D] shrink-0 mt-1" />
                             )}
@@ -1815,6 +1833,7 @@ const MainLayout = () => {
             </div>
           </div>
         </header>
+      </div>
 
         {/* Primary Page Content */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1440px] w-full mx-auto">
@@ -1839,9 +1858,6 @@ const MainLayout = () => {
               </Link>
             </div>
           )}
-
-          {/* Active Global Broadcast Announcement Banners */}
-          <ActiveBroadcastBanner />
 
           <Outlet />
         </main>

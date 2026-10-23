@@ -58,7 +58,8 @@ const Notifications = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries(['notifications']);
-      queryClient.invalidateQueries(['unread-notifications']); // Assuming unread count query key is this
+      queryClient.invalidateQueries(['unread-notifications']);
+      queryClient.invalidateQueries(['directOfficialNotices']);
     }
   });
 
@@ -67,6 +68,7 @@ const Notifications = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(['notifications']);
       queryClient.invalidateQueries(['unread-notifications']);
+      queryClient.invalidateQueries(['directOfficialNotices']);
     }
   });
 
@@ -80,6 +82,7 @@ const Notifications = () => {
 
   const getNotificationIcon = (type) => {
     switch (type) {
+      case 'ADMIN_NOTICE': return '📢';
       case 'PAYMENT': return '💰';
       case 'CUSTOMER': return '👤';
       case 'BILL': return '📄';
@@ -178,10 +181,26 @@ const Notifications = () => {
                     <p className="text-xs sm:text-sm md:text-base text-gray-600 mb-2 leading-relaxed font-medium line-clamp-2">
                       {notification.message}
                     </p>
-                    <div className="flex items-center gap-2 md:gap-3 text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wide">
+                    <div className="flex items-center gap-2 md:gap-3 text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wide flex-wrap">
                       <span>{formatRelativeTime(notification.createdAt)}</span>
                       <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                      <span>{notification.type}</span>
+                      {notification.type === 'ADMIN_NOTICE' ? (
+                        <>
+                          <span className="text-[#093C5D] font-bold lowercase first-letter:uppercase">Official Notice</span>
+                          {notification.priority === 'URGENT' && (
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                              Urgent
+                            </span>
+                          )}
+                          {notification.priority === 'HIGH' && (
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                              High Priority
+                            </span>
+                          )}
+                        </>
+                      ) : (
+                        <span>{notification.type}</span>
+                      )}
                     </div>
                   </div>
                 </div>
