@@ -94,11 +94,16 @@ api.interceptors.response.use(
     ) {
       isRefreshing = false;
       localStorage.removeItem('isLoggedIn');
-      toast.error(error.response.data.message, { duration: 6000 });
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('token');
+      const msg = error.response.data.message || '';
+      const reasonMatch = msg.match(/Reason:\s*(.+)$/i);
+      const reason = reasonMatch ? reasonMatch[1].trim() : '';
+      toast.error(msg, { duration: 6000 });
       if (!isPublicPage()) {
         setTimeout(() => {
-          window.location.href = '/login?suspended=true';
-        }, 1200);
+          window.location.href = `/login?suspended=true${reason ? `&reason=${encodeURIComponent(reason)}` : ''}`;
+        }, 1000);
       }
       return Promise.reject(error);
     }

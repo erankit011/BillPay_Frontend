@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Crown, Calendar, Clock } from 'lucide-react';
-import { formatDate, calculateExtendedExpiry } from '../../../utils/dateUtils';
+import { formatDate, calculateExtendedExpiry, isDateExpired } from '../../../utils/dateUtils';
 
 const PLAN_OPTIONS = [
   {
@@ -66,6 +66,10 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
   if (!isOpen || !shop) return null;
 
   const selectedOption = PLAN_OPTIONS.find((p) => p.id === selectedPlan) || PLAN_OPTIONS[0];
+
+  const hasActiveFutureExpiry = Boolean(
+    shop?.currentPeriodEnd && !isDateExpired(shop.currentPeriodEnd)
+  );
 
   // Accurate Calculation using central dateUtils (extends from future expiry if active, else from now)
   const calculatedExpiry = selectedPlan !== 'FREE'

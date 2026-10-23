@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
-import { Loader2, Mail, Lock, Eye, EyeOff, LogIn, AlertCircle } from 'lucide-react';
+import { Loader2, Mail, Lock, Eye, EyeOff, LogIn, AlertCircle, ShieldAlert } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const loginSchema = yup.object({
@@ -18,6 +18,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [maintenanceMessage, setMaintenanceMessage] = useState(null);
+  const [suspensionMessage, setSuspensionMessage] = useState(null);
 
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -35,6 +36,16 @@ const Login = () => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('session_expired')) {
       toast.error(t('This device was logged out remotely. Please sign in again.'));
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    if (params.get('suspended')) {
+      const reason = params.get('reason') || '';
+      setSuspensionMessage(
+        reason
+          ? `${t('Your shop account has been suspended by the administrator.')} (${t('Reason')}: ${reason})`
+          : t('Your shop account has been suspended by the administrator. Please contact support.')
+      );
       window.history.replaceState({}, document.title, window.location.pathname);
     }
 
@@ -63,7 +74,11 @@ const Login = () => {
         });
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Invalid credentials. Please try again.');
+      const errMsg = err.response?.data?.message || 'Invalid credentials. Please try again.';
+      if (err.response?.status === 403 && errMsg.toLowerCase().includes('suspended')) {
+        setSuspensionMessage(errMsg);
+      }
+      toast.error(errMsg);
     } finally {
       setIsLoading(false);
     }
@@ -88,6 +103,34 @@ const Login = () => {
           <div>
             <p className="font-semibold text-xs sm:text-sm text-amber-900">{t('Platform Maintenance Active')}</p>
             <p className="mt-0.5 text-xs text-amber-800 leading-relaxed font-normal">{maintenanceMessage}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Account Suspended Alert Banner */}
+      {suspensionMessage && (
+        <div className="mb-5 p-4 rounded-xl bg-rose-50 border border-rose-300 text-rose-950 text-xs sm:text-sm font-medium flex items-start gap-3 text-left animate-fade-in shadow-sm">
+          <ShieldAlert className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-bold text-xs sm:text-sm text-rose-900 tracking-tight">
+                {t('Store Account Suspended')}
+              </p>
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-200/80 text-rose-900">
+                {t('Restricted')}
+              </span>
+            </div>
+            <p className="mt-1 text-xs text-rose-800 leading-relaxed font-normal break-words">
+              {suspensionMessage}
+            </p>
+            <div className="mt-2.5 pt-2 border-t border-rose-200/80 flex items-center gap-3">
+              <Link
+                to="/contact-support"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-700 hover:text-rose-900 underline underline-offset-2"
+              >
+                {t('Contact Platform Support')} →
+              </Link>
+            </div>
           </div>
         </div>
       )}
