@@ -98,28 +98,6 @@ const AdminSettings = () => {
     { id: 'devices', icon: Laptop, label: t('Active Devices') },
   ];
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[80vh]">
-        <SwirlingLoader />
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="p-8 text-center bg-white rounded-lg border border-red-200 text-red-700 shadow-none my-6">
-        <p className="font-semibold text-sm sm:text-base">{t('Failed to load platform settings.')}</p>
-        <button
-          onClick={() => refetch()}
-          className="mt-3 px-4 py-2 bg-red-50 text-red-700 border border-red-200 rounded text-xs font-semibold hover:bg-red-100 transition-colors cursor-pointer"
-        >
-          {t('Try Again')}
-        </button>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 pb-24 lg:pb-0">
       {/* ── Page Header (Identical to Shopkeeper Settings) ── */}
@@ -167,43 +145,62 @@ const AdminSettings = () => {
 
         {/* ── Right Content Panels ── */}
         <div className="flex-1 min-w-0">
-          {activeSection === 'general' && (
-            <GeneralPlatformSettings
-              settings={settings}
-              onUpdate={handleUpdate}
-              isUpdating={mutation.isPending}
-            />
+          {isLoading ? (
+            <div className="bg-white rounded-lg border border-gray-200 p-16 text-center shadow-none">
+              <SwirlingLoader className="w-10 h-10 text-[#093C5D] mx-auto mb-3" />
+              <p className="text-sm font-medium text-gray-600">{t('Loading platform configurations...')}</p>
+            </div>
+          ) : isError ? (
+            <div className="p-8 text-center bg-white rounded-lg border border-red-200 text-red-700 shadow-none">
+              <p className="font-semibold text-sm sm:text-base">{t('Failed to load platform settings.')}</p>
+              <button
+                onClick={() => refetch()}
+                className="mt-3 px-4 py-2 bg-red-50 text-red-700 border border-red-200 rounded text-xs font-semibold hover:bg-red-100 transition-colors cursor-pointer"
+              >
+                {t('Try Again')}
+              </button>
+            </div>
+          ) : (
+            <>
+              {activeSection === 'general' && (
+                <GeneralPlatformSettings
+                  settings={settings}
+                  onUpdate={handleUpdate}
+                  isUpdating={mutation.isPending}
+                />
+              )}
+
+              {activeSection === 'whatsapp' && <WhatsAppGatewaySettings />}
+
+              {activeSection === 'operations' && (
+                <PlatformOperationsSettings
+                  settings={settings}
+                  onUpdate={handleUpdate}
+                  isUpdating={mutation.isPending}
+                />
+              )}
+
+              {activeSection === 'maintenance' && (
+                <PlatformMaintenanceSettings
+                  settings={settings}
+                  onUpdate={handleUpdate}
+                  isUpdating={mutation.isPending}
+                />
+              )}
+
+              {activeSection === 'notifications' && (
+                <PlatformNotificationSettings
+                  settings={settings}
+                  onUpdate={handleUpdate}
+                  isUpdating={mutation.isPending}
+                />
+              )}
+
+              {activeSection === 'security' && <AdminSecuritySettings />}
+
+              {activeSection === 'devices' && <AdminActiveDevices />}
+            </>
           )}
-
-          {activeSection === 'whatsapp' && <WhatsAppGatewaySettings />}
-
-          {activeSection === 'operations' && (
-            <PlatformOperationsSettings
-              settings={settings}
-              onUpdate={handleUpdate}
-              isUpdating={mutation.isPending}
-            />
-          )}
-
-          {activeSection === 'maintenance' && (
-            <PlatformMaintenanceSettings
-              settings={settings}
-              onUpdate={handleUpdate}
-              isUpdating={mutation.isPending}
-            />
-          )}
-
-          {activeSection === 'notifications' && (
-            <PlatformNotificationSettings
-              settings={settings}
-              onUpdate={handleUpdate}
-              isUpdating={mutation.isPending}
-            />
-          )}
-
-          {activeSection === 'security' && <AdminSecuritySettings />}
-
-          {activeSection === 'devices' && <AdminActiveDevices />}
         </div>
       </div>
     </div>

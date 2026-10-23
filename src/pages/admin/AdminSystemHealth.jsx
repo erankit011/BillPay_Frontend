@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { getAdminSystemHealth } from '../../features/admin/api/adminApi';
 import HealthServiceCard from '../../features/admin/components/HealthServiceCard';
+import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 
 const formatUptime = (seconds = 0) => {
@@ -40,28 +41,7 @@ const AdminSystemHealth = () => {
 
   const services = data?.services || {};
   const server = data?.server || {};
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[75vh]">
-        <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#093C5D]" />
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="p-8 text-center bg-white rounded-lg border border-red-200 text-red-700 shadow-none">
-        <p className="font-semibold text-sm sm:text-base">Failed to retrieve system health diagnostics.</p>
-        <button
-          onClick={() => refetch()}
-          className="cursor-pointer mt-3 px-4 py-2 bg-[#093C5D] text-white text-xs sm:text-sm font-semibold rounded-lg hover:bg-[#082a42] transition-colors"
-        >
-          Retry Check
-        </button>
-      </div>
-    );
-  }
+  const isOverallHealthy = Object.values(services).every((s) => s?.status === 'healthy');
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
@@ -79,7 +59,7 @@ const AdminSystemHealth = () => {
         <button
           onClick={() => refetch()}
           disabled={isFetching}
-          className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg flex items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all shadow-none disabled:opacity-70"
+          className="cursor-pointer h-10 sm:h-11 px-4 sm:px-5 rounded-lg bg-[#093C5D] hover:bg-[#072d46] text-white text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition-all active:scale-95 shrink-0 shadow-none disabled:opacity-70"
           title="Refresh real-time system diagnostics"
         >
           <RotateCcw className={`w-4 h-4 mr-1.5 sm:mr-2 ${isFetching ? 'animate-spin' : ''}`} />
@@ -87,15 +67,64 @@ const AdminSystemHealth = () => {
         </button>
       </div>
 
-      {/* Server Runtime & Memory Load Overview */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-5 shadow-none">
-        <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#F5F5F5] text-[#093C5D] flex items-center justify-center border border-gray-200 shrink-0">
-              <Cpu className="w-4 h-4 sm:w-5 sm:h-5" />
-            </div>
+      {/* Top KPI Summary Cards (Matched with Admin Shops UI) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
+        <AdminStatCard
+          title="SYSTEM HEALTH"
+          value={isLoading ? '...' : (isOverallHealthy ? 'OPERATIONAL' : 'DEGRADED')}
+          subtext="Core infrastructure & databases"
+          icon={ShieldCheck}
+          variant={isOverallHealthy ? 'success' : 'danger'}
+        />
+        <AdminStatCard
+          title="SERVER UPTIME"
+          value={isLoading ? '...' : formatUptime(server.uptime)}
+          subtext={`Node ${server.nodeVersion || 'v20.x'} (${server.environment || 'development'})`}
+          icon={Cpu}
+          variant="primary"
+        />
+        <AdminStatCard
+          title="MICROSERVICES"
+          value={isLoading ? '...' : `${Object.values(services).filter((s) => s?.status === 'healthy').length + 1} / ${Object.keys(services).length + 1} Active`}
+          subtext="Connected third-party gateways"
+          icon={Server}
+          variant="default"
+        />
+        <AdminStatCard
+          title="RESIDENT RAM (RSS)"
+          value={isLoading ? '...' : (server.memory?.rss || 'N/A')}
+          subtext="Active physical server RAM"
+          icon={Activity}
+          variant="danger"
+        />
+      </div>
+
+      {isLoading ? (
+        <div className="bg-white rounded-lg border border-gray-200 p-16 text-center shadow-none">
+          <SwirlingLoader className="w-10 h-10 text-[#093C5D] mx-auto mb-3" />
+          <p className="text-sm font-medium text-gray-600">Checking system infrastructure health & diagnostics...</p>
+        </div>
+      ) : isError ? (
+        <div className="p-8 text-center bg-white rounded-lg border border-red-200 text-red-700 shadow-none">
+          <p className="font-semibold text-sm sm:text-base">Failed to retrieve system health diagnostics.</p>
+          <button
+            onClick={() => refetch()}
+            className="cursor-pointer mt-3 px-4 py-2 bg-[#093C5D] text-white text-xs sm:text-sm font-semibold rounded-lg hover:bg-[#082a42] transition-colors"
+          >
+            Retry Check
+          </button>
+        </div>
+      ) : (
+        <>
+          {/* Server Runtime & Memory Load Overview */}
+          <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-5 shadow-none hover:border-gray-300 transition-all duration-200">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#F5F5F5] text-[#093C5D] flex items-center justify-center border border-gray-200 shrink-0">
+                  <Cpu className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
             <div>
-              <h3 className="text-sm sm:text-base font-semibold text-gray-900">
+              <h3 className="text-sm sm:text-base font-semibold text-gray-900 tracking-tight">
                 Backend Node.js Server Runtime
               </h3>
               <p className="text-xs font-medium text-gray-500">
@@ -114,28 +143,28 @@ const AdminSystemHealth = () => {
 
         {/* Memory Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
-          <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
-            <span className="text-gray-500 font-semibold block uppercase text-[10px] tracking-wide">Heap Memory Used</span>
-            <span className="text-base sm:text-lg font-semibold text-gray-900 mt-0.5 block">
+          <div className="bg-white rounded-lg p-3.5 sm:p-4 border border-gray-200 border-l-4 border-l-[#093C5D] hover:border-gray-300 transition-all duration-200 shadow-none">
+            <span className="text-gray-500 font-semibold block uppercase text-[10px] sm:text-xs tracking-wide">Heap Memory Used</span>
+            <span className="text-base sm:text-xl font-bold text-gray-900 mt-1 block">
               {server.memory?.heapUsed || 'N/A'}
             </span>
-            <span className="text-[11px] text-gray-500 font-medium">Memory occupied by active data objects</span>
+            <span className="text-[11px] text-gray-500 font-medium block mt-0.5">Memory occupied by active data objects</span>
           </div>
 
-          <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
-            <span className="text-gray-500 font-semibold block uppercase text-[10px] tracking-wide">Total Allocated Heap</span>
-            <span className="text-base sm:text-lg font-semibold text-gray-900 mt-0.5 block">
+          <div className="bg-white rounded-lg p-3.5 sm:p-4 border border-gray-200 border-l-4 border-l-purple-700 hover:border-gray-300 transition-all duration-200 shadow-none">
+            <span className="text-gray-500 font-semibold block uppercase text-[10px] sm:text-xs tracking-wide">Total Allocated Heap</span>
+            <span className="text-base sm:text-xl font-bold text-gray-900 mt-1 block">
               {server.memory?.heapTotal || 'N/A'}
             </span>
-            <span className="text-[11px] text-gray-500 font-medium">Total memory space reserved by V8 engine</span>
+            <span className="text-[11px] text-gray-500 font-medium block mt-0.5">Total memory space reserved by V8 engine</span>
           </div>
 
-          <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
-            <span className="text-gray-500 font-semibold block uppercase text-[10px] tracking-wide">Resident Set Size (RSS)</span>
-            <span className="text-base sm:text-lg font-semibold text-gray-900 mt-0.5 block">
+          <div className="bg-white rounded-lg p-3.5 sm:p-4 border border-gray-200 border-l-4 border-l-emerald-700 hover:border-gray-300 transition-all duration-200 shadow-none">
+            <span className="text-gray-500 font-semibold block uppercase text-[10px] sm:text-xs tracking-wide">Resident Set Size (RSS)</span>
+            <span className="text-base sm:text-xl font-bold text-emerald-700 mt-1 block">
               {server.memory?.rss || 'N/A'}
             </span>
-            <span className="text-[11px] text-gray-500 font-medium">Total physical server RAM in active use</span>
+            <span className="text-[11px] text-emerald-700 font-medium block mt-0.5">Total physical server RAM in active use</span>
           </div>
         </div>
       </div>
@@ -221,6 +250,8 @@ const AdminSystemHealth = () => {
           />
         </div>
       </div>
+    </>
+  )}
     </div>
   );
 };

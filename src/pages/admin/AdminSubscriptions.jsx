@@ -26,17 +26,17 @@ import { formatCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/dateUtils';
 
 const STATUS_FILTERS = [
-  { label: 'All Invoices', value: 'All' },
-  { label: 'Paid (Successful)', value: 'success' },
-  { label: 'Pending Payment', value: 'pending' },
-  { label: 'Failed Transactions', value: 'failed' },
+  { label: 'All Invoices', value: 'ALL' },
+  { label: 'Paid (Successful)', value: 'SUCCESS' },
+  { label: 'Pending Payment', value: 'PENDING' },
+  { label: 'Failed Transactions', value: 'FAILED' },
 ];
 
 const AdminSubscriptions = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const urlSearch = searchParams.get('search') || '';
-  const urlStatus = searchParams.get('status') || 'All';
+  const urlStatus = (searchParams.get('status') || 'ALL').toUpperCase();
   const urlPage = Number(searchParams.get('page')) || 1;
 
   const [searchTerm, setSearchTerm] = useState(urlSearch);
@@ -68,8 +68,8 @@ const AdminSubscriptions = () => {
   const setStatusFilter = (status) => {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
-      if (status === 'All') next.delete('status');
-      else next.set('status', status);
+      if (status === 'ALL' || status === 'All') next.delete('status');
+      else next.set('status', status.toUpperCase());
       next.set('page', '1');
       return next;
     }, { replace: true });
@@ -88,7 +88,7 @@ const AdminSubscriptions = () => {
     queryFn: () =>
       getAdminSubscriptions({
         search: debouncedSearch,
-        status: urlStatus !== 'All' ? urlStatus : undefined,
+        status: urlStatus !== 'ALL' && urlStatus !== 'All' ? urlStatus.toLowerCase() : undefined,
         page: urlPage,
         limit: 15,
       }),
@@ -215,7 +215,7 @@ const AdminSubscriptions = () => {
           </button>
         ))}
 
-        {(urlStatus !== 'All' || searchTerm) && (
+        {(urlStatus !== 'ALL' || searchTerm) && (
           <button
             type="button"
             onClick={() => {

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Layers,
   RotateCcw,
@@ -22,27 +22,18 @@ import SwirlingLoader from '../../components/common/SwirlingLoader';
 const AdminPlans = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const [plans, setPlans] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [resetting, setResetting] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [confirmResetModal, setConfirmResetModal] = useState(false);
 
-  const fetchPlans = useCallback(async () => {
-    try {
-      setLoading(true);
-      const data = await getAdminPlans();
-      if (data) setPlans(data);
-    } catch (err) {
-      toast.error(t('Failed to load SaaS plan tiers'));
-    } finally {
-      setLoading(false);
-    }
-  }, [t]);
+  const { data: plansData, isLoading: loading } = useQuery({
+    queryKey: ['adminPlans'],
+    queryFn: getAdminPlans,
+    staleTime: 30 * 1000,
+  });
 
-  useEffect(() => {
-    fetchPlans();
-  }, [fetchPlans]);
+  const plans = plansData || [];
 
   const handleUpdatePlan = async (planId, payload) => {
     try {
@@ -51,7 +42,6 @@ const AdminPlans = () => {
       queryClient.invalidateQueries({ queryKey: ['publicPlans'] });
       queryClient.invalidateQueries({ queryKey: ['adminPlans'] });
       toast.success(t('Plan configuration updated successfully'));
-      fetchPlans();
     } catch (err) {
       const msg = err.response?.data?.message || t('Failed to update plan');
       toast.error(msg);
@@ -59,20 +49,15 @@ const AdminPlans = () => {
     }
   };
 
-  const [confirmResetModal, setConfirmResetModal] = useState(false);
-
   const executeResetDefaults = async () => {
     try {
       setResetting(true);
-      const data = await resetAdminPlans();
-      if (data) {
-        setPlans(data.data || data);
-        queryClient.invalidateQueries({ queryKey: ['platformSettings'] });
-        queryClient.invalidateQueries({ queryKey: ['publicPlans'] });
-        queryClient.invalidateQueries({ queryKey: ['adminPlans'] });
-        toast.success(t('All plans reset to factory defaults'));
-        setConfirmResetModal(false);
-      }
+      await resetAdminPlans();
+      queryClient.invalidateQueries({ queryKey: ['platformSettings'] });
+      queryClient.invalidateQueries({ queryKey: ['publicPlans'] });
+      queryClient.invalidateQueries({ queryKey: ['adminPlans'] });
+      toast.success(t('All plans reset to factory defaults'));
+      setConfirmResetModal(false);
     } catch (err) {
       toast.error(t('Failed to reset plans to defaults'));
     } finally {
@@ -92,14 +77,14 @@ const AdminPlans = () => {
   const freePlan = plans.find((p) => p.planId === 'FREE');
 
   return (
-    <div className="w-full min-w-0 space-y-6 md:space-y-8 pb-24 lg:pb-0">
-      {/* ── Page Header (Standardized with App Theme) ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+    <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
             {t('SaaS Plan Limits & Pricing')}
           </h1>
-          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-normal">
+          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
             {t('Configure live subscription plan pricing, customer quotas, monthly invoice allowances, and feature entitlements.')}
           </p>
         </div>
@@ -109,7 +94,7 @@ const AdminPlans = () => {
             type="button"
             onClick={() => setConfirmResetModal(true)}
             disabled={resetting || loading}
-            className="cursor-pointer inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 h-9 sm:h-10 text-xs sm:text-sm font-medium text-rose-600 bg-white border border-rose-200 hover:bg-rose-50 rounded-lg transition-all active:scale-95 shadow-none disabled:opacity-50"
+            className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 sm:px-5 h-10 sm:h-11 text-xs sm:text-sm font-semibold text-rose-600 bg-white border border-rose-200 hover:bg-rose-50 rounded-lg transition-all active:scale-95 shadow-none disabled:opacity-50"
             title={t('Reset all tiers to factory defaults')}
           >
             <RotateCcw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-600 ${resetting ? 'animate-spin' : ''}`} />
