@@ -90,7 +90,6 @@ const MainLayout = () => {
   const isSubscriptionsActive = useMemo(() => {
     return (
       location.pathname === '/admin/subscriptions' ||
-      location.pathname === '/admin/subscriptions/store-plans' ||
       location.pathname === '/admin/subscriptions/plans' ||
       location.pathname === '/admin/plans'
     );
@@ -290,7 +289,6 @@ const MainLayout = () => {
             queryClient.invalidateQueries({ queryKey: ['customers'] });
             queryClient.invalidateQueries({ queryKey: ['dashboard'] });
             toast.success(data.message || t('Your subscription plan has been updated!'), {
-              icon: '👑',
               duration: 5000,
             });
           }
@@ -306,7 +304,6 @@ const MainLayout = () => {
           ]);
           queryClient.invalidateQueries({ queryKey: ['directOfficialNotices'] });
           toast(newNotif.title + ': ' + newNotif.message, {
-            icon: '🔔',
             duration: 4000,
           });
         });
@@ -330,7 +327,6 @@ const MainLayout = () => {
           queryClient.invalidateQueries({ queryKey: ['publicContactInfo'] });
           if (data?.isMaintenanceMode) {
             toast(data.maintenanceMessage || t('Platform is currently undergoing scheduled maintenance.'), {
-              icon: '⚠️',
               duration: 6000,
             });
           }
@@ -347,9 +343,8 @@ const MainLayout = () => {
           if (user?.role === 'admin' || user?.role === ROLES.ADMIN) {
             queryClient.invalidateQueries({ queryKey: ['adminOverview'] });
             queryClient.invalidateQueries({ queryKey: ['adminSubscriptions'] });
-            queryClient.invalidateQueries({ queryKey: ['adminStorePlans'] });
+            queryClient.invalidateQueries({ queryKey: ['adminShops'] });
             toast.success(`Store upgraded: ${data.shopName || 'Shop'} (${data.plan})`, {
-              icon: '🎉',
               duration: 5000,
             });
           }
@@ -361,7 +356,6 @@ const MainLayout = () => {
             queryClient.invalidateQueries({ queryKey: ['adminTickets'] });
             queryClient.invalidateQueries({ queryKey: ['adminTicketStats'] });
             toast(`New support ticket #${ticket.ticketId}: ${ticket.subject || 'Inquiry'}`, {
-              icon: '🎫',
               duration: 5000,
             });
           }
@@ -483,7 +477,6 @@ const MainLayout = () => {
     if (p.includes('/admin/dashboard') || p === '/admin') return 'Dashboard';
     if (p.includes('/admin/shops')) return 'Store';
     if (p.includes('/admin/bills')) return 'Store Bill';
-    if (p.includes('/admin/subscriptions/store-plans') || p.includes('/admin/subscriptions/plans')) return 'Store Plans';
     if (p.includes('/admin/subscriptions')) return 'Billing Receipts';
     if (p.includes('/admin/reports')) return 'Store Reports';
     if (p.includes('/admin/health')) return 'System Health';
@@ -513,7 +506,6 @@ const MainLayout = () => {
     if (p.includes('/admin/dashboard') || p === '/admin') return Home;
     if (p.includes('/admin/shops')) return Store;
     if (p.includes('/admin/bills')) return FileText;
-    if (p.includes('/admin/subscriptions/store-plans') || p.includes('/admin/subscriptions/plans')) return Crown;
     if (p.includes('/admin/subscriptions')) return CreditCard;
     if (p.includes('/admin/reports')) return BarChart2;
     if (p.includes('/admin/health')) return Activity;
@@ -752,18 +744,6 @@ const MainLayout = () => {
                           Billing Receipts
                         </NavLink>
 
-                        <NavLink
-                          to="/admin/subscriptions/store-plans"
-                          className={({ isActive }) =>
-                            `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
-                              isActive
-                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
-                            }`
-                          }
-                        >
-                          Store Plans
-                        </NavLink>
 
                         <NavLink
                           to="/admin/plans"
@@ -1264,19 +1244,6 @@ const MainLayout = () => {
                           Billing Receipts
                         </NavLink>
 
-                        <NavLink
-                          to="/admin/subscriptions/store-plans"
-                          onClick={() => setMobileDrawerOpen(false)}
-                          className={({ isActive }) =>
-                            `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
-                              isActive
-                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
-                            }`
-                          }
-                        >
-                          Store Plans
-                        </NavLink>
 
                         <NavLink
                           to="/admin/plans"

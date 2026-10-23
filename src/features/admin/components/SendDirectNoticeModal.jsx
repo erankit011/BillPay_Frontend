@@ -112,7 +112,6 @@ const SendDirectNoticeModal = ({ isOpen, onClose, shop, onSuccess }) => {
       });
 
       toast.success(res?.message || `Official notice delivered to ${shopDisplayName}!`, {
-        icon: '📨',
         duration: 5000,
       });
 

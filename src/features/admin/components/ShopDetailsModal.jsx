@@ -202,7 +202,7 @@ const ShopDetailsModal = ({
                   <span>Bills Issued</span>
                 </div>
                 <p className="text-base sm:text-lg font-semibold text-gray-900 mt-1">
-                  {shop.billsCount ?? 0}
+                  {shop.billCount ?? shop.billsCount ?? 0}
                 </p>
               </div>
 
