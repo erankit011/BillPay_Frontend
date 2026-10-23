@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Megaphone,
@@ -12,6 +13,8 @@ import {
   Power,
   RefreshCw,
   Search,
+  RotateCcw,
+  X,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import {
@@ -22,24 +25,61 @@ import {
 } from '../../features/admin/api/adminApi';
 import BroadcastBanner from '../../features/admin/components/broadcast/BroadcastBanner';
 import BroadcastModal from '../../features/admin/components/broadcast/BroadcastModal';
+import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 import { formatDate } from '../../utils/dateUtils';
 
 const AdminBroadcasts = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
+
+  const urlSearch = searchParams.get('search') || '';
+  const urlType = searchParams.get('type') || 'ALL';
+  const urlStatus = searchParams.get('status') || 'ALL';
+
+  const [searchTerm, setSearchTerm] = useState(urlSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(urlSearch);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [editingBroadcast, setEditingBroadcast] = useState(null);
-  const [filterType, setFilterType] = useState('ALL');
-  const [filterStatus, setFilterStatus] = useState('ALL');
-  const [searchQuery, setSearchQuery] = useState('');
 
-  // Fetch all broadcasts
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ['adminBroadcasts', filterType, filterStatus],
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev);
+        if (searchTerm) next.set('search', searchTerm);
+        else next.delete('search');
+        return next;
+      }, { replace: true });
+    }, 450);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm, setSearchParams]);
+
+  useEffect(() => {
+    if (urlSearch !== debouncedSearch) {
+      setSearchTerm(urlSearch);
+      setDebouncedSearch(urlSearch);
+    }
+  }, [urlSearch]);
+
+  const setFilter = (key, value) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (value === 'ALL') next.delete(key);
+      else next.set(key, value);
+      return next;
+    }, { replace: true });
+  };
+
+  // Fetch all broadcasts with URL-synced params
+  const { data, isLoading } = useQuery({
+    queryKey: ['adminBroadcasts', urlType, urlStatus],
     queryFn: () =>
       getAdminBroadcasts({
-        type: filterType !== 'ALL' ? filterType : undefined,
-        status: filterStatus !== 'ALL' ? filterStatus.toLowerCase() : undefined,
+        type: urlType !== 'ALL' ? urlType : undefined,
+        status: urlStatus !== 'ALL' ? urlStatus.toLowerCase() : undefined,
       }),
     staleTime: 30 * 1000,
   });
@@ -119,30 +159,22 @@ const AdminBroadcasts = () => {
     }
   };
 
-  // Client-side search filtering
+  // Client-side search filtering using debounced search
   const filteredBroadcasts = useMemo(() => {
-    if (!searchQuery.trim()) return broadcasts;
-    const q = searchQuery.toLowerCase();
+    if (!debouncedSearch.trim()) return broadcasts;
+    const q = debouncedSearch.toLowerCase();
     return broadcasts.filter(
       (b) =>
         b.title?.toLowerCase().includes(q) ||
         b.message?.toLowerCase().includes(q) ||
         b.type?.toLowerCase().includes(q)
     );
-  }, [broadcasts, searchQuery]);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[75vh]">
-        <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#093C5D]" />
-      </div>
-    );
-  }
+  }, [broadcasts, debouncedSearch]);
 
   return (
-    <div className="w-full min-w-0 space-y-6 md:space-y-8 pb-24 lg:pb-0">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
             Global Announcements & Broadcasts
@@ -155,129 +187,157 @@ const AdminBroadcasts = () => {
         <button
           type="button"
           onClick={handleOpenCreate}
-          className="cursor-pointer h-10 px-4 sm:px-5 rounded-lg bg-[#093C5D] hover:bg-[#072d46] text-white text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition-all active:scale-95 shadow-none shrink-0"
+          className="cursor-pointer h-10 sm:h-11 px-4 sm:px-5 rounded-lg bg-[#093C5D] hover:bg-[#082a42] text-white text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition-all active:scale-95 shadow-none shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>New Broadcast</span>
         </button>
       </div>
 
-      {/* KPI Stats Strip */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
-        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
-          <div className="flex justify-between items-start gap-1">
-            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-emerald-700 border border-gray-200 shrink-0">
-              <CheckCircle2 className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="mt-3 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
-              Live Broadcasts
-            </p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
-              {stats.activeCount || 0}
-            </p>
-            <p className="text-[10px] md:text-xs text-emerald-700 font-medium truncate mt-0.5">
-              Active banners on merchant screens
-            </p>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
-          <div className="flex justify-between items-start gap-1">
-            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200 shrink-0">
-              <Megaphone className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="mt-3 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
-              Total Announcements
-            </p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
-              {stats.total || 0}
-            </p>
-            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">
-              All created broadcast history
-            </p>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg p-4 md:p-5 flex flex-col justify-between border border-gray-200 hover:border-gray-300 transition-all duration-200">
-          <div className="flex justify-between items-start gap-1">
-            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-purple-700 border border-gray-200 shrink-0">
-              <Clock className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="mt-3 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
-              Target Audience
-            </p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">
-              Targeted Filters
-            </p>
-            <p className="text-[10px] md:text-xs text-purple-700 font-medium truncate mt-0.5">
-              Free trial, Pro, or all merchants
-            </p>
-          </div>
-        </div>
+      {/* Top KPI Summary Cards (Matched with Admin Shops UI) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
+        <AdminStatCard
+          title="LIVE BROADCASTS"
+          value={stats.activeCount || 0}
+          subtext="Active banners on merchant screens"
+          icon={CheckCircle2}
+          variant="success"
+        />
+        <AdminStatCard
+          title="TOTAL ANNOUNCEMENTS"
+          value={stats.total || 0}
+          subtext="All created broadcast history"
+          icon={Megaphone}
+          variant="primary"
+        />
+        <AdminStatCard
+          title="AUDIENCE TARGETING"
+          value="Precision"
+          subtext="Free Trial, Pro & All Stores"
+          icon={Clock}
+          variant="default"
+        />
+        <AdminStatCard
+          title="PAUSED BROADCASTS"
+          value={Math.max(0, (stats.total || 0) - (stats.activeCount || 0))}
+          subtext="Inactive or scheduled alerts"
+          icon={Power}
+          variant="danger"
+        />
       </div>
 
-      {/* Controls Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3.5 bg-white border border-gray-200 rounded-lg">
-        {/* Search */}
-        <div className="relative flex-1 max-w-sm">
+      {/* Filter Chips (Matched with Admin Shops UI) */}
+      <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        {[
+          { label: 'All Categories', value: 'ALL' },
+          { label: 'Information', value: 'INFO' },
+          { label: 'Warning / Maintenance', value: 'WARNING' },
+          { label: 'Critical Alert', value: 'ALERT' },
+          { label: 'Feature Release', value: 'SUCCESS' },
+        ].map((chip) => (
+          <button
+            key={chip.value}
+            onClick={() => setFilter('type', chip.value)}
+            className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
+              urlType === chip.value
+                ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
+                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
+            }`}
+          >
+            {chip.label}
+          </button>
+        ))}
+
+        <span className="w-px h-6 bg-gray-300 mx-1 shrink-0" />
+
+        {[
+          { label: 'All Status', value: 'ALL' },
+          { label: 'Active Stores', value: 'ACTIVE' },
+          { label: 'Paused Stores', value: 'INACTIVE' },
+        ].map((chip) => (
+          <button
+            key={chip.value}
+            onClick={() => setFilter('status', chip.value)}
+            className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
+              urlStatus === chip.value
+                ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
+                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
+            }`}
+          >
+            {chip.label}
+          </button>
+        ))}
+
+        {(urlType !== 'ALL' || urlStatus !== 'ALL' || searchTerm) && (
+          <button
+            type="button"
+            onClick={() => {
+              setSearchTerm('');
+              setDebouncedSearch('');
+              setSearchParams({}, { replace: true });
+            }}
+            className="shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 flex items-center gap-1.5 transition-colors shadow-none active:scale-95"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Reset Filters</span>
+          </button>
+        )}
+      </div>
+
+      {/* Search Bar (Matched with Admin Shops UI) */}
+      <div className="flex flex-col w-full mb-3 sm:mb-4">
+        <div className="relative flex-1 w-full">
+          <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+          </div>
           <input
             type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search announcements by title or content..."
-            className="w-full h-10 pl-9 pr-3.5 text-xs sm:text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] text-gray-900 font-medium transition-all"
+            placeholder="Search By Announcement Title & Content & Audience"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-white border border-gray-300 rounded-lg text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
           />
-          <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3 pointer-events-none" />
-        </div>
-
-        {/* Filters */}
-        <div className="flex items-center gap-2.5 overflow-x-auto pb-1 sm:pb-0">
-          {/* Severity Filter */}
-          <select
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-            className="h-10 px-3 text-xs sm:text-sm font-medium bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] text-gray-700 cursor-pointer"
-          >
-            <option value="ALL">All Categories</option>
-            <option value="INFO">Information (Blue)</option>
-            <option value="WARNING">Warning / Maintenance (Amber)</option>
-            <option value="ALERT">Critical Alert (Red)</option>
-            <option value="SUCCESS">Feature Release (Green)</option>
-          </select>
-
-          {/* Status Filter */}
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="h-10 px-3 text-xs sm:text-sm font-medium bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#093C5D]/20 focus:border-[#093C5D] text-gray-700 cursor-pointer"
-          >
-            <option value="ALL">All Statuses</option>
-            <option value="ACTIVE">Live / Active</option>
-            <option value="INACTIVE">Paused / Inactive</option>
-          </select>
+          {searchTerm && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchTerm('');
+                setDebouncedSearch('');
+                setSearchParams((prev) => {
+                  const next = new URLSearchParams(prev);
+                  next.delete('search');
+                  return next;
+                }, { replace: true });
+              }}
+              className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
+            >
+              <X className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+          )}
         </div>
       </div>
 
       {/* Announcements Stream */}
-      {filteredBroadcasts.length === 0 ? (
-        <div className="p-12 text-center bg-white rounded-lg border border-gray-200">
-          <div className="w-12 h-12 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center mx-auto mb-3">
+      {isLoading ? (
+        <div className="p-12 text-center bg-white rounded-lg border border-gray-200 shadow-none">
+          <SwirlingLoader className="w-10 h-10 text-[#093C5D] mx-auto mb-3" />
+          <p className="text-sm font-medium text-gray-600">Loading announcements...</p>
+        </div>
+      ) : filteredBroadcasts.length === 0 ? (
+        <div className="p-8 md:p-12 text-center bg-white rounded-lg border border-gray-200 shadow-none">
+          <div className="w-12 h-12 rounded-lg bg-gray-100 text-gray-400 flex items-center justify-center mx-auto mb-3">
             <Megaphone className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-semibold text-gray-900">No Announcements Found</h3>
-          <p className="text-xs text-gray-500 max-w-sm mx-auto mt-1 font-medium leading-relaxed">
-            Broadcast platform-wide updates, holiday notices, or new features directly across merchant dashboards.
+          <h3 className="text-base font-semibold text-gray-900 tracking-tight">No Announcements Found</h3>
+          <p className="text-xs sm:text-sm text-gray-500 max-w-sm mx-auto mt-1 font-medium leading-relaxed">
+            {debouncedSearch || urlType !== 'ALL' || urlStatus !== 'ALL'
+              ? 'Try modifying your search or clearing your active category filters.'
+              : 'Broadcast platform-wide updates, holiday notices, or new features directly across merchant dashboards.'}
           </p>
           <button
             type="button"
             onClick={handleOpenCreate}
-            className="cursor-pointer mt-4 h-10 px-4 rounded-lg bg-[#093C5D] hover:bg-[#072d46] text-white text-xs sm:text-sm font-semibold inline-flex items-center gap-2 transition-all"
+            className="cursor-pointer mt-4 h-10 px-4 rounded-lg bg-[#093C5D] hover:bg-[#072d46] text-white text-xs sm:text-sm font-semibold inline-flex items-center gap-2 transition-all active:scale-95 shadow-none"
           >
             <Plus className="w-4 h-4" />
             <span>Create First Announcement</span>
@@ -288,7 +348,7 @@ const AdminBroadcasts = () => {
           {filteredBroadcasts.map((broadcast) => (
             <div
               key={broadcast._id}
-              className="bg-white border border-gray-200 rounded-lg overflow-hidden transition-all hover:border-gray-300"
+              className="bg-white border border-gray-200 rounded-lg overflow-hidden transition-all hover:border-gray-300 shadow-none"
             >
               {/* Actual Banner View */}
               <div className="p-4 sm:p-5">
@@ -300,43 +360,43 @@ const AdminBroadcasts = () => {
                 {/* Status & Timing Details */}
                 <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-gray-500 font-medium">
                   <span
-                    className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-semibold uppercase ${
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide ${
                       broadcast.isActive
-                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                        ? 'bg-green-50 text-green-700 border border-green-200'
                         : 'bg-gray-100 text-gray-600 border border-gray-200'
                     }`}
                   >
                     <span
                       className={`w-1.5 h-1.5 rounded-full ${
-                        broadcast.isActive ? 'bg-emerald-500' : 'bg-gray-400'
+                        broadcast.isActive ? 'bg-green-500' : 'bg-gray-400'
                       }`}
                     />
                     {broadcast.isActive ? 'Active' : 'Paused'}
                   </span>
 
                   {/* Target Audience Badge */}
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-blue-50 text-[#093C5D] border border-blue-200 font-semibold text-[11px] uppercase">
-                    Audience: {broadcast.targetAudience === 'PAID_SUBSCRIBERS' ? 'Paid Pro' : broadcast.targetAudience === 'FREE_TRIAL' ? 'Free Trial' : 'All Merchants'}
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-blue-50 text-[#093C5D] border border-blue-200 font-semibold text-[10px] lg:text-xs uppercase">
+                    Audience: {broadcast.targetAudience === 'PAID_SUBSCRIBERS' ? 'Paid Pro' : broadcast.targetAudience === 'FREE_TRIAL' ? 'Free Trial' : 'All Stores'}
                   </span>
 
-                  <span>
-                    Started: <strong className="text-gray-700 font-semibold">{formatDate(broadcast.startsAt || broadcast.createdAt)}</strong>
+                  <span className="text-gray-500 font-medium">
+                    Started: <strong className="text-gray-800 font-semibold">{formatDate(broadcast.startsAt || broadcast.createdAt)}</strong>
                   </span>
 
                   {broadcast.expiresAt && (
-                    <span>
-                      Expires: <strong className="text-gray-700 font-semibold">{formatDate(broadcast.expiresAt)}</strong>
+                    <span className="text-gray-500 font-medium">
+                      Expires: <strong className="text-gray-800 font-semibold">{formatDate(broadcast.expiresAt)}</strong>
                     </span>
                   )}
                 </div>
 
-                {/* Action Buttons - Small buttons use 'rounded' */}
+                {/* Action Buttons */}
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => handleToggleStatus(broadcast)}
                     title={broadcast.isActive ? 'Pause Broadcast' : 'Activate Broadcast'}
-                    className={`cursor-pointer px-2.5 py-1 rounded text-xs font-semibold border transition-all active:scale-95 inline-flex items-center gap-1.5 ${
+                    className={`cursor-pointer px-2.5 py-1 rounded-md text-xs font-semibold border transition-all active:scale-95 inline-flex items-center gap-1.5 ${
                       broadcast.isActive
                         ? 'bg-amber-50 hover:bg-amber-100 text-amber-800 border-amber-200'
                         : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'
@@ -349,7 +409,7 @@ const AdminBroadcasts = () => {
                   <button
                     type="button"
                     onClick={() => handleOpenEdit(broadcast)}
-                    className="cursor-pointer px-2.5 py-1 rounded text-xs font-semibold bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 transition-all inline-flex items-center gap-1.5"
+                    className="cursor-pointer px-2.5 py-1 rounded-md text-xs font-semibold bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 transition-all inline-flex items-center gap-1.5 active:scale-95"
                   >
                     <Edit2 className="w-3.5 h-3.5 text-gray-500" />
                     <span>Edit</span>
@@ -358,7 +418,7 @@ const AdminBroadcasts = () => {
                   <button
                     type="button"
                     onClick={() => handleDelete(broadcast)}
-                    className="cursor-pointer p-1.5 rounded text-red-600 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-all active:scale-95"
+                    className="cursor-pointer p-1.5 rounded-md text-red-600 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-all active:scale-95"
                     title="Delete announcement"
                   >
                     <Trash2 className="w-3.5 h-3.5" />

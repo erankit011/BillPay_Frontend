@@ -86,22 +86,22 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
         {/* Status Badge */}
         <div>
           {isExpired ? (
-            <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200 uppercase">
+            <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-red-50 text-red-700 border border-red-200 uppercase tracking-wide">
               <Clock className="w-3 h-3" />
               Expired
             </span>
           ) : !coupon.isActive ? (
-            <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded bg-gray-100 text-gray-600 border border-gray-200 uppercase">
+            <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-gray-100 text-gray-600 border border-gray-200 uppercase tracking-wide">
               <PauseCircle className="w-3 h-3" />
               Paused
             </span>
           ) : !isStarted ? (
-            <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 uppercase">
+            <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200 uppercase tracking-wide">
               <AlertCircle className="w-3 h-3" />
               Scheduled
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase">
+            <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-green-50 text-green-700 border border-green-200 uppercase tracking-wide">
               <CheckCircle2 className="w-3 h-3" />
               Active
             </span>
@@ -121,7 +121,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
           <button
             type="button"
             onClick={handleCopyCode}
-            className="cursor-pointer inline-flex items-center gap-1 text-xs font-semibold text-[#093C5D] hover:text-[#072C44] px-2 py-1 rounded bg-white border border-gray-200 hover:border-gray-300 transition-colors shrink-0"
+            className="cursor-pointer inline-flex items-center gap-1 text-xs font-semibold text-[#093C5D] hover:text-[#072C44] px-2.5 py-1 rounded-md bg-white border border-gray-200 hover:border-gray-300 transition-all active:scale-95 shrink-0 shadow-none"
           >
             {copied ? (
               <>
@@ -139,7 +139,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
 
         {/* Applicable Plans */}
         <div className="space-y-1">
-          <span className="text-[11px] font-medium text-gray-500 uppercase tracking-wider">
+          <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
             Valid For Plans
           </span>
           <div className="flex flex-wrap gap-1.5 pt-0.5">
@@ -147,13 +147,13 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
               coupon.applicablePlans.map((plan) => (
                 <span
                   key={plan}
-                  className="text-[11px] font-medium px-2 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200"
+                  className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-gray-100 text-gray-700 border border-gray-200"
                 >
                   {plan}
                 </span>
               ))
             ) : (
-              <span className="text-xs text-gray-500">All SaaS Plans</span>
+              <span className="text-xs text-gray-500 font-medium">All SaaS Subscription Plans</span>
             )}
           </div>
         </div>
@@ -161,7 +161,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
         {/* Usage Progress */}
         <div className="space-y-1.5 pt-1">
           <div className="flex items-center justify-between text-xs text-gray-600">
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1 font-medium">
               <Users className="w-3.5 h-3.5 text-gray-400" />
               Redemptions
             </span>
@@ -190,7 +190,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
         </div>
 
         {/* Validity Dates */}
-        <div className="flex items-center justify-between text-[11px] text-gray-500 pt-1 border-t border-gray-100">
+        <div className="flex items-center justify-between text-[11px] text-gray-500 pt-1 border-t border-gray-100 font-medium">
           <span className="flex items-center gap-1">
             <Calendar className="w-3.5 h-3.5 text-gray-400" />
             Expires: {formatDate(coupon.expiresAt)}
@@ -206,20 +206,20 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
         <button
           type="button"
           onClick={() => onToggleActive(coupon._id)}
-          className={`cursor-pointer font-medium transition-colors ${
+          className={`cursor-pointer font-semibold transition-all active:scale-95 px-2 py-1 rounded-md ${
             coupon.isActive
-              ? 'text-amber-700 hover:text-amber-900'
-              : 'text-emerald-700 hover:text-emerald-900'
+              ? 'text-amber-700 hover:text-amber-900 hover:bg-amber-50'
+              : 'text-emerald-700 hover:text-emerald-900 hover:bg-emerald-50'
           }`}
         >
           {coupon.isActive ? 'Pause Coupon' : 'Activate Coupon'}
         </button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <button
             type="button"
             onClick={() => onEdit(coupon)}
-            className="cursor-pointer p-1.5 text-gray-500 hover:text-[#093C5D] hover:bg-white rounded transition-colors"
+            className="cursor-pointer p-1.5 text-gray-500 hover:text-[#093C5D] hover:bg-white rounded-md transition-all active:scale-95 border border-transparent hover:border-gray-200"
             title="Edit Coupon"
           >
             <Edit2 className="w-4 h-4" />
@@ -227,7 +227,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
           <button
             type="button"
             onClick={() => onDelete(coupon._id, coupon.code)}
-            className="cursor-pointer p-1.5 text-gray-500 hover:text-rose-600 hover:bg-white rounded transition-colors"
+            className="cursor-pointer p-1.5 text-gray-500 hover:text-rose-600 hover:bg-white rounded-md transition-all active:scale-95 border border-transparent hover:border-gray-200"
             title="Delete Coupon"
           >
             <Trash2 className="w-4 h-4" />

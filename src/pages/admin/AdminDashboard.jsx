@@ -290,22 +290,6 @@ const AdminDashboard = () => {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[75vh]">
-        <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#093C5D]" />
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="p-8 text-center bg-white rounded-lg border border-red-200 text-red-700 shadow-none">
-        <p className="font-semibold text-sm sm:text-base">Failed to load admin overview metrics.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
       {/* Header */}
@@ -322,7 +306,7 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         <AdminStatCard
           title="REGISTERED MERCHANTS"
-          value={totalShops}
+          value={isLoading ? '...' : totalShops}
           subtext={`${activeSubscribers} on paid plan • ${planBreakdown.FREE || 0} trial`}
           icon={Store}
           variant="primary"
@@ -331,7 +315,7 @@ const AdminDashboard = () => {
 
         <AdminStatCard
           title="PLATFORM GMV (TURNOVER)"
-          value={formatCurrency(totalPlatformGMV)}
+          value={isLoading ? '...' : formatCurrency(totalPlatformGMV)}
           subtext={`${formatCurrency(totalBillPaid)} collected from customers`}
           icon={IndianRupee}
           variant="success"
@@ -340,7 +324,7 @@ const AdminDashboard = () => {
 
         <AdminStatCard
           title="SUBSCRIPTION EARNINGS"
-          value={formatCurrency(totalRevenue)}
+          value={isLoading ? '...' : formatCurrency(totalRevenue)}
           subtext="Merchant SaaS membership fees"
           icon={CreditCard}
           variant="primary"
@@ -349,7 +333,7 @@ const AdminDashboard = () => {
 
         <AdminStatCard
           title="TOTAL PENDING UDHAR"
-          value={formatCurrency(totalPlatformUdhar)}
+          value={isLoading ? '...' : formatCurrency(totalPlatformUdhar)}
           subtext="Customer credit owed across shops"
           icon={IndianRupee}
           variant="danger"
@@ -357,12 +341,23 @@ const AdminDashboard = () => {
         />
       </div>
 
-      {/* Secondary Quick Metrics Strip */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="bg-white border border-gray-200 rounded-lg p-3.5 flex items-center justify-between shadow-none">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#093C5D] flex items-center justify-center">
-              <FileText className="w-4 h-4" />
+      {isLoading ? (
+        <div className="bg-white rounded-lg border border-gray-200 p-16 md:p-20 text-center shadow-none">
+          <SwirlingLoader className="w-10 h-10 text-[#093C5D] mx-auto mb-3" />
+          <p className="text-sm font-medium text-gray-600">Loading platform overview metrics & store insights...</p>
+        </div>
+      ) : isError ? (
+        <div className="p-8 text-center bg-white rounded-lg border border-red-200 text-red-700 shadow-none">
+          <p className="font-semibold text-sm sm:text-base">Failed to load admin overview metrics.</p>
+        </div>
+      ) : (
+        <>
+          {/* Secondary Quick Metrics Strip */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="bg-white border border-gray-200 rounded-lg p-3.5 flex items-center justify-between shadow-none">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#093C5D] flex items-center justify-center">
+                  <FileText className="w-4 h-4" />
             </div>
             <div>
               <span className="text-xs font-semibold text-gray-500 uppercase block">Total Bills Issued</span>
@@ -1022,6 +1017,8 @@ const AdminDashboard = () => {
           )}
         </div>
       </div>
+    </>
+  )}
 
       {/* Modals */}
       <ShopDetailsModal

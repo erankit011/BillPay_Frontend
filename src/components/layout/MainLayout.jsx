@@ -327,6 +327,7 @@ const MainLayout = () => {
           queryClient.invalidateQueries({ queryKey: ['activeBroadcasts'] });
           queryClient.invalidateQueries({ queryKey: ['platformSettings'] });
           queryClient.invalidateQueries({ queryKey: ['supportContactInfo'] });
+          queryClient.invalidateQueries({ queryKey: ['publicContactInfo'] });
           if (data?.isMaintenanceMode) {
             toast(data.maintenanceMessage || t('Platform is currently undergoing scheduled maintenance.'), {
               icon: '⚠️',
@@ -536,16 +537,23 @@ const MainLayout = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] text-gray-900 flex">
+    <div className="min-h-screen bg-[#F9FAFB] text-gray-900 flex flex-col">
       {/* =========================================================================
-          DESKTOP SIDEBAR (Pinned full height)
-          Collapsed rail mode: w-[72px] | Expanded mode: w-64
+          TOP ANNOUNCEMENT BAR (Global Broadcasts, Notices & Maintenance Alert)
       ========================================================================= */}
-      <aside
-        className={`hidden lg:flex flex-col fixed inset-y-0 left-0 z-40 bg-white border-r border-gray-100 transition-all duration-200 ease-in-out ${
-          sidebarCollapsed ? 'w-[72px]' : 'w-64'
-        }`}
-      >
+      <TopAnnouncementBar />
+
+      <div className="flex-1 flex min-w-0 relative">
+        {/* =========================================================================
+            DESKTOP SIDEBAR (Pinned below top announcement bar if active)
+            Collapsed rail mode: w-[72px] | Expanded mode: w-64
+        ========================================================================= */}
+        <aside
+          className={`hidden lg:flex flex-col fixed left-0 z-40 bg-white border-r border-gray-100 transition-all duration-200 ease-in-out ${
+            sidebarCollapsed ? 'w-[72px]' : 'w-64'
+          }`}
+          style={{ top: 'var(--top-announcement-height, 0px)', bottom: 0 }}
+        >
         {/* Brand Header */}
         <div className="h-14 flex items-center px-4 border-b border-gray-100 shrink-0">
           <Link
@@ -1579,51 +1587,47 @@ const MainLayout = () => {
           sidebarCollapsed ? 'lg:pl-[72px]' : 'lg:pl-64'
         }`}
       >
-        {/* Sticky Top Header Container (Universal 1-Line Top Announcement Banner + Navbar) */}
-        <div className="sticky top-0 z-30 shrink-0">
-          <TopAnnouncementBar />
+        {/* Sticky Top Header Container (Navbar sticks below TopAnnouncementBar if active) */}
+        <div
+          className="sticky z-30 shrink-0 transition-all duration-150"
+          style={{ top: 'var(--top-announcement-height, 0px)' }}
+        >
           <header className="h-14 bg-white/95 backdrop-blur-md border-b border-gray-100 flex items-center justify-between px-3 sm:px-6 shrink-0">
-          {/* Left Side: Sidebar Trigger + Breadcrumb */}
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          {/* Left Side: Sidebar Trigger + Vertical Divider + Breadcrumb */}
+          <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
             {/* Desktop: Rail Collapse Trigger Button */}
             <button
               type="button"
               onClick={toggleSidebarCollapse}
-              className="hidden lg:flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 border border-transparent hover:border-gray-200 rounded-full text-gray-600 hover:text-gray-900 bg-transparent active:bg-gray-100 hover:bg-gray-100 transition-colors duration-150 cursor-pointer shrink-0"
+              className="hidden lg:inline-flex items-center justify-center w-8 h-8 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer shrink-0"
               title="Toggle sidebar (Ctrl+B)"
               aria-label="Toggle sidebar collapse"
             >
-              <SidebarRailIcon className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-gray-600" />
+              <SidebarRailIcon className="w-[18px] h-[18px] text-gray-600" strokeWidth={1.75} />
             </button>
 
             {/* Mobile / Tablet: Hamburger Menu Button */}
             <button
               type="button"
               onClick={() => setMobileDrawerOpen(true)}
-              className="lg:hidden flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 border border-transparent hover:border-gray-200 rounded-full text-gray-600 hover:text-gray-900 bg-transparent active:bg-gray-100 hover:bg-gray-100 transition-colors duration-150 cursor-pointer shrink-0"
+              className="lg:hidden inline-flex items-center justify-center w-8 h-8 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer shrink-0"
               aria-label="Open menu"
             >
-              <Menu className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-gray-600" strokeWidth={1.75} />
+              <Menu className="w-5 h-5 text-gray-600" strokeWidth={1.75} />
             </button>
 
-            {/* Breadcrumb Trail */}
-            <div aria-label="Breadcrumb" className="flex items-center gap-1.5 sm:gap-2 min-w-0 select-none">
-              <span className="flex items-center justify-center text-gray-600 shrink-0">
-                <BreadcrumbIcon className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-gray-600" strokeWidth={1.75} />
+            {/* Subtle Vertical Divider between Toggle Button and Breadcrumb */}
+            <div className="hidden lg:block w-px h-4 bg-gray-200 shrink-0 mx-0.5" aria-hidden="true" />
+
+            {/* Breadcrumb Trail (Strictly Aligned) */}
+            <div aria-label="Breadcrumb" className="flex items-center gap-2 min-w-0 select-none">
+              <span className="inline-flex items-center justify-center text-gray-600 shrink-0">
+                <BreadcrumbIcon className="w-4 h-4 text-gray-600" strokeWidth={1.75} />
               </span>
-              <span className="flex items-center justify-center text-gray-300 shrink-0" aria-hidden="true">
-                <svg
-                  className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-300"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                >
-                  <line x1="5" y1="13" x2="11" y2="3" />
-                </svg>
+              <span className="text-gray-300 text-xs font-normal select-none shrink-0" aria-hidden="true">
+                /
               </span>
-              <span className="text-gray-900 font-medium text-sm truncate flex items-center leading-none">
+              <span className="text-gray-900 font-medium text-sm truncate leading-none">
                 {breadcrumbTitle}
               </span>
             </div>
@@ -1876,6 +1880,7 @@ const MainLayout = () => {
           <Outlet />
         </main>
       </div>
+    </div>
 
       {/* =========================================================================
           QUICK SEARCH COMMAND PALETTE MODAL (Ctrl+K / Cmd+K)

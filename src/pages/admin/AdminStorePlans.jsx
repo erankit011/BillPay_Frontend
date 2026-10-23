@@ -22,7 +22,7 @@ import SwirlingLoader from '../../components/common/SwirlingLoader';
 import { formatDate, isDateExpired } from '../../utils/dateUtils';
 
 const PLAN_FILTERS = [
-  { label: 'All Plans', value: 'All' },
+  { label: 'All Plans', value: 'ALL' },
   { label: 'Free Trial (₹0)', value: 'FREE' },
   { label: 'Monthly Pro (₹299)', value: 'MONTHLY' },
   { label: 'Quarterly Pro (₹799)', value: 'QUARTERLY' },
@@ -30,7 +30,7 @@ const PLAN_FILTERS = [
 ];
 
 const STATUS_FILTERS = [
-  { label: 'All Status', value: 'All' },
+  { label: 'All Status', value: 'ALL' },
   { label: 'Active Stores', value: 'ACTIVE' },
   { label: 'Suspended Stores', value: 'SUSPENDED' },
 ];
@@ -40,8 +40,8 @@ const AdminStorePlans = () => {
   const queryClient = useQueryClient();
 
   const urlSearch = searchParams.get('search') || '';
-  const urlPlan = searchParams.get('plan') || 'All';
-  const urlStatus = searchParams.get('status') || 'All';
+  const urlPlan = (searchParams.get('plan') || 'ALL').toUpperCase();
+  const urlStatus = (searchParams.get('status') || 'ALL').toUpperCase();
   const urlPage = Number(searchParams.get('page')) || 1;
 
   const [searchTerm, setSearchTerm] = useState(urlSearch);
@@ -76,8 +76,8 @@ const AdminStorePlans = () => {
   const setPlanFilter = (plan) => {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
-      if (plan === 'All') next.delete('plan');
-      else next.set('plan', plan);
+      if (plan === 'ALL' || plan === 'All') next.delete('plan');
+      else next.set('plan', plan.toUpperCase());
       next.set('page', '1');
       return next;
     }, { replace: true });
@@ -86,8 +86,8 @@ const AdminStorePlans = () => {
   const setStatusFilter = (status) => {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
-      if (status === 'All') next.delete('status');
-      else next.set('status', status);
+      if (status === 'ALL' || status === 'All') next.delete('status');
+      else next.set('status', status.toUpperCase());
       next.set('page', '1');
       return next;
     }, { replace: true });
@@ -112,8 +112,8 @@ const AdminStorePlans = () => {
     queryFn: () =>
       getAdminShops({
         search: debouncedSearch,
-        plan: urlPlan !== 'All' ? urlPlan : undefined,
-        status: urlStatus !== 'All' ? urlStatus : undefined,
+        plan: urlPlan !== 'ALL' && urlPlan !== 'All' ? urlPlan : undefined,
+        status: urlStatus !== 'ALL' && urlStatus !== 'All' ? urlStatus : undefined,
         page: urlPage,
         limit: 15,
       }),
@@ -248,7 +248,7 @@ const AdminStorePlans = () => {
           </button>
         ))}
 
-        {(urlPlan !== 'All' || urlStatus !== 'All' || searchTerm) && (
+        {(urlPlan !== 'ALL' || urlStatus !== 'ALL' || searchTerm) && (
           <button
             type="button"
             onClick={handleResetFilters}

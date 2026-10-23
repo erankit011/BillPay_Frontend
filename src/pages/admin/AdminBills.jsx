@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
   FileText,
@@ -25,12 +26,56 @@ import { formatCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/dateUtils';
 
 const AdminBills = () => {
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [searchInput, setSearchInput] = useState('');
-  const [paymentStatus, setPaymentStatus] = useState('All');
-  const [paymentMode, setPaymentMode] = useState('All');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const urlSearch = searchParams.get('search') || '';
+  const urlStatus = (searchParams.get('status') || 'ALL').toUpperCase();
+  const urlPaymentMode = (searchParams.get('mode') || 'ALL').toUpperCase();
+  const urlPage = Number(searchParams.get('page')) || 1;
+
+  const [searchTerm, setSearchTerm] = useState(urlSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(urlSearch);
   const [selectedBill, setSelectedBill] = useState(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev);
+        if (searchTerm) next.set('search', searchTerm);
+        else next.delete('search');
+        next.set('page', '1');
+        return next;
+      }, { replace: true });
+    }, 450);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm, setSearchParams]);
+
+  useEffect(() => {
+    if (urlSearch !== debouncedSearch) {
+      setSearchTerm(urlSearch);
+      setDebouncedSearch(urlSearch);
+    }
+  }, [urlSearch]);
+
+  const setFilter = (key, value) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (value === 'All' || value === 'ALL') next.delete(key);
+      else next.set(key, value.toUpperCase());
+      next.set('page', '1');
+      return next;
+    }, { replace: true });
+  };
+
+  const handlePageChange = (newPage) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set('page', String(newPage));
+      return next;
+    });
+  };
 
   // Prevent background scrolling when modal is open
   useEffect(() => {
@@ -52,14 +97,14 @@ const AdminBills = () => {
   }, [selectedBill]);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['adminBills', page, search, paymentStatus, paymentMode],
+    queryKey: ['adminBills', urlPage, debouncedSearch, urlStatus, urlPaymentMode],
     queryFn: () =>
       getAdminBills({
-        page,
+        page: urlPage,
         limit: 10,
-        search,
-        paymentStatus,
-        paymentMode
+        search: debouncedSearch || undefined,
+        paymentStatus: urlStatus !== 'ALL' && urlStatus !== 'All' ? urlStatus : undefined,
+        paymentMode: urlPaymentMode !== 'ALL' && urlPaymentMode !== 'All' ? urlPaymentMode : undefined,
       }),
     staleTime: 30 * 1000,
   });
@@ -70,12 +115,6 @@ const AdminBills = () => {
   const totalPaid = data?.totalPaid || 0;
   const totalPending = data?.totalPending || 0;
   const totalPages = data?.totalPages || 1;
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    setSearch(searchInput);
-    setPage(1);
-  };
 
   const getInitials = (name) => {
     if (!name || typeof name !== 'string') return 'SH';
@@ -162,7 +201,7 @@ const AdminBills = () => {
       {/* Filter Chips (Matched with Customer/Shopkeeper Pages UI) */}
       <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {[
-          { label: 'All Invoices', value: 'All' },
+          { label: 'All Invoices', value: 'ALL' },
           { label: 'Fully Paid', value: 'PAID' },
           { label: 'Partially Paid', value: 'PARTIAL' },
           { label: 'Unpaid (Udhar)', value: 'UNPAID' },
@@ -170,14 +209,12 @@ const AdminBills = () => {
           <button
             key={f.value}
             type="button"
-            onClick={() => {
-              setPaymentStatus(f.value);
-              setPage(1);
-            }}
-            className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${paymentStatus === f.value
+            onClick={() => setFilter('status', f.value)}
+            className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
+              urlStatus === f.value
                 ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
                 : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
-              }`}
+            }`}
           >
             {f.label}
           </button>
@@ -186,7 +223,7 @@ const AdminBills = () => {
         <span className="w-px h-6 bg-gray-300 mx-1 shrink-0" />
 
         {[
-          { label: 'All Modes', value: 'All' },
+          { label: 'All Modes', value: 'ALL' },
           { label: 'Cash', value: 'CASH' },
           { label: 'UPI Payment', value: 'UPI' },
           { label: 'Store Credit (Udhar)', value: 'CREDIT' },
@@ -195,28 +232,24 @@ const AdminBills = () => {
           <button
             key={f.value}
             type="button"
-            onClick={() => {
-              setPaymentMode(f.value);
-              setPage(1);
-            }}
-            className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${paymentMode === f.value
+            onClick={() => setFilter('mode', f.value)}
+            className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
+              urlPaymentMode === f.value
                 ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
                 : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
-              }`}
+            }`}
           >
             {f.label}
           </button>
         ))}
 
-        {(paymentStatus !== 'All' || paymentMode !== 'All' || search || searchInput) && (
+        {(urlStatus !== 'ALL' || urlPaymentMode !== 'ALL' || searchTerm) && (
           <button
             type="button"
             onClick={() => {
-              setSearchInput('');
-              setSearch('');
-              setPaymentStatus('All');
-              setPaymentMode('All');
-              setPage(1);
+              setSearchTerm('');
+              setDebouncedSearch('');
+              setSearchParams({}, { replace: true });
             }}
             className="shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 flex items-center gap-1.5 transition-colors shadow-none"
           >
@@ -227,25 +260,30 @@ const AdminBills = () => {
       </div>
 
       {/* Search Bar (Matched with Customer/Shopkeeper Pages UI) */}
-      <form onSubmit={handleSearchSubmit} className="flex flex-col w-full mb-3 sm:mb-4">
+      <div className="flex flex-col w-full mb-3 sm:mb-4">
         <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
             <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
           </div>
           <input
             type="text"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search By Invoice Number & Shop & Customer"
             className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-white border border-gray-300 rounded-lg text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
           />
-          {searchInput && (
+          {searchTerm && (
             <button
               type="button"
               onClick={() => {
-                setSearchInput('');
-                setSearch('');
-                setPage(1);
+                setSearchTerm('');
+                setDebouncedSearch('');
+                setSearchParams((prev) => {
+                  const next = new URLSearchParams(prev);
+                  next.delete('search');
+                  next.set('page', '1');
+                  return next;
+                }, { replace: true });
               }}
               className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-gray-400 hover:text-gray-600"
             >
@@ -253,7 +291,7 @@ const AdminBills = () => {
             </button>
           )}
         </div>
-      </form>
+      </div>
 
       {/* Bills Ledger Table (Separate Shop Name & Merchant Owner Columns) */}
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-none">
@@ -454,21 +492,21 @@ const AdminBills = () => {
         {!isLoading && totalPages > 1 && (
           <div className="px-4 py-3 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
             <span className="text-xs text-gray-600 font-medium">
-              Showing page <span className="font-semibold text-gray-900">{page}</span> of{' '}
+              Showing page <span className="font-semibold text-gray-900">{urlPage}</span> of{' '}
               <span className="font-semibold text-gray-900">{totalPages}</span> ({totalCount} total bills)
             </span>
             <div className="flex items-center gap-2">
               <button
-                disabled={page <= 1}
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={urlPage <= 1}
+                onClick={() => handlePageChange(Math.max(1, urlPage - 1))}
                 className="cursor-pointer disabled:cursor-not-allowed inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 disabled:opacity-40 transition-colors"
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
                 Previous
               </button>
               <button
-                disabled={page >= totalPages}
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={urlPage >= totalPages}
+                onClick={() => handlePageChange(Math.min(totalPages, urlPage + 1))}
                 className="cursor-pointer disabled:cursor-not-allowed inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 disabled:opacity-40 transition-colors"
               >
                 Next

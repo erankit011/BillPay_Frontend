@@ -40,7 +40,7 @@ import { formatCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/dateUtils';
 
 const PLAN_FILTERS = [
-  { label: 'All Plans', value: 'All' },
+  { label: 'All Plans', value: 'ALL' },
   { label: 'Free Trial (₹0)', value: 'FREE' },
   { label: 'Monthly Pro (₹299)', value: 'MONTHLY' },
   { label: 'Quarterly Pro (₹799)', value: 'QUARTERLY' },
@@ -48,7 +48,7 @@ const PLAN_FILTERS = [
 ];
 
 const STATUS_FILTERS = [
-  { label: 'All Status', value: 'All' },
+  { label: 'All Status', value: 'ALL' },
   { label: 'Active Stores', value: 'ACTIVE' },
   { label: 'Suspended Stores', value: 'SUSPENDED' },
 ];
@@ -58,8 +58,8 @@ const AdminShops = () => {
   const queryClient = useQueryClient();
 
   const urlSearch = searchParams.get('search') || '';
-  const urlPlan = searchParams.get('plan') || 'All';
-  const urlStatus = searchParams.get('status') || 'All';
+  const urlPlan = (searchParams.get('plan') || 'ALL').toUpperCase();
+  const urlStatus = (searchParams.get('status') || 'ALL').toUpperCase();
   const urlPage = Number(searchParams.get('page')) || 1;
 
   const [searchTerm, setSearchTerm] = useState(urlSearch);
@@ -97,8 +97,8 @@ const AdminShops = () => {
   const setFilter = (key, value) => {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
-      if (value === 'All') next.delete(key);
-      else next.set(key, value);
+      if (value === 'All' || value === 'ALL') next.delete(key);
+      else next.set(key, value.toUpperCase());
       next.set('page', '1');
       return next;
     }, { replace: true });
@@ -117,8 +117,8 @@ const AdminShops = () => {
     queryFn: () =>
       getAdminShops({
         search: debouncedSearch,
-        plan: urlPlan !== 'All' ? urlPlan : undefined,
-        status: urlStatus !== 'All' ? urlStatus : undefined,
+        plan: urlPlan !== 'ALL' && urlPlan !== 'All' ? urlPlan : undefined,
+        status: urlStatus !== 'ALL' && urlStatus !== 'All' ? urlStatus : undefined,
         page: urlPage,
         limit: 10,
       }),
@@ -268,7 +268,7 @@ const AdminShops = () => {
           </button>
         ))}
 
-        {(urlPlan !== 'All' || urlStatus !== 'All' || searchTerm) && (
+        {(urlPlan !== 'ALL' || urlStatus !== 'ALL' || searchTerm) && (
           <button
             type="button"
             onClick={() => {
