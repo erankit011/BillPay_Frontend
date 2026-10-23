@@ -8,7 +8,9 @@ import {
   Laptop,
   Bell,
   ChevronRight,
+  MessageCircle,
 } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { getPlatformSettings, updatePlatformSettings } from '../../features/admin/api/adminApi';
@@ -18,6 +20,7 @@ import PlatformMaintenanceSettings from '../../features/admin/components/setting
 import AdminSecuritySettings from '../../features/admin/components/settings/AdminSecuritySettings';
 import AdminActiveDevices from '../../features/admin/components/settings/AdminActiveDevices';
 import PlatformNotificationSettings from '../../features/admin/components/settings/PlatformNotificationSettings';
+import WhatsAppGatewaySettings from '../../features/admin/components/settings/WhatsAppGatewaySettings';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 
 // ── Section Nav Item (Exact pattern from Shopkeeper Settings) ──
@@ -44,10 +47,18 @@ const SectionNavItem = ({ icon: Icon, label, sectionId, activeSection, onClick }
 const AdminSettings = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlTab = searchParams.get('tab');
 
   const [activeSection, setActiveSection] = useState(() => {
-    return localStorage.getItem('udharpay_admin_settings_tab') || 'general';
+    return urlTab || localStorage.getItem('udharpay_admin_settings_tab') || 'general';
   });
+
+  useEffect(() => {
+    if (urlTab && urlTab !== activeSection) {
+      setActiveSection(urlTab);
+    }
+  }, [urlTab, activeSection]);
 
   useEffect(() => {
     localStorage.setItem('udharpay_admin_settings_tab', activeSection);
@@ -79,6 +90,7 @@ const AdminSettings = () => {
 
   const sections = [
     { id: 'general', icon: Globe, label: t('Platform Details') },
+    { id: 'whatsapp', icon: MessageCircle, label: t('WhatsApp Gateway') },
     { id: 'operations', icon: SlidersHorizontal, label: t('Operations & Quotas') },
     { id: 'maintenance', icon: Wrench, label: t('Platform Maintenance') },
     { id: 'notifications', icon: Bell, label: t('Notifications') },
@@ -162,6 +174,8 @@ const AdminSettings = () => {
               isUpdating={mutation.isPending}
             />
           )}
+
+          {activeSection === 'whatsapp' && <WhatsAppGatewaySettings />}
 
           {activeSection === 'operations' && (
             <PlatformOperationsSettings

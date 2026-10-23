@@ -365,6 +365,20 @@ const MainLayout = () => {
             });
           }
         });
+
+        // 11. Real-time WhatsApp Gateway status update (Admin view live sync)
+        socket.on('whatsapp_status', (data) => {
+          if (user?.role === 'admin' || user?.role === ROLES.ADMIN) {
+            queryClient.setQueryData(['whatsappStatus'], data);
+            queryClient.invalidateQueries({ queryKey: ['adminSystemHealth'] });
+            if (data?.status === 'CONNECTED') {
+              toast.success(t('WhatsApp Gateway connected successfully!'), {
+                id: 'wa-connected-success',
+                duration: 4000,
+              });
+            }
+          }
+        });
       } catch (err) {
         // Fallback
       }

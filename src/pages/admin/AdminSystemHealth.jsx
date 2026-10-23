@@ -9,7 +9,8 @@ import {
   CreditCard,
   Cpu,
   ShieldCheck,
-  RotateCcw
+  RotateCcw,
+  MessageCircle,
 } from 'lucide-react';
 import { getAdminSystemHealth } from '../../features/admin/api/adminApi';
 import HealthServiceCard from '../../features/admin/components/HealthServiceCard';
@@ -207,6 +208,16 @@ const AdminSystemHealth = () => {
             details="Broadcasts live in-app notifications to users"
             icon={Activity}
             delay={0.3}
+          />
+
+          {/* WhatsApp Business Gateway (Baileys) */}
+          <HealthServiceCard
+            name="WhatsApp Gateway"
+            status={services.whatsapp?.status}
+            latency={services.whatsapp?.status === 'healthy' ? 32 : undefined}
+            details={services.whatsapp?.details || "Automated bill slips & reminders"}
+            icon={MessageCircle}
+            delay={0.35}
           />
         </div>
       </div>

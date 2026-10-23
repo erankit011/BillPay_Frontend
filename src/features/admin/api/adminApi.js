@@ -215,6 +215,18 @@ export const getPublicPlans = async () => {
   return res.data?.data;
 };
 
+// 14. WhatsApp Business Gateway
+export const getWhatsAppStatus = async () => {
+  const res = await api.get('/admin/whatsapp/status');
+  return res.data?.data;
+};
 
+export const restartWhatsAppGateway = async () => {
+  const res = await api.post('/admin/whatsapp/restart');
+  return res.data;
+};
 
-
+export const logoutWhatsAppGateway = async () => {
+  const res = await api.post('/admin/whatsapp/logout');
+  return res.data;
+};
