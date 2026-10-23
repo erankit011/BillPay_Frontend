@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { X, Crown, Calendar, Clock } from 'lucide-react';
-import { formatDate } from '../../../utils/dateUtils';
+import { formatDate, calculateExtendedExpiry, isDateExpired } from '../../../utils/dateUtils';
 
 const PLAN_OPTIONS = [
   {
     id: 'FREE',
     label: 'Free Plan (₹0)',
-    desc: 'Basic Starter • 2 Customers & 10 Bills Trial Limit',
+    desc: 'Basic Starter • 2 Customers & 5 Bills Trial Limit',
     badge: null,
     days: 0,
   },
@@ -67,19 +67,14 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
 
   const selectedOption = PLAN_OPTIONS.find((p) => p.id === selectedPlan) || PLAN_OPTIONS[0];
 
-  // Current validity state & active check
-  const currentExpiry = shop?.currentPeriodEnd ? new Date(shop.currentPeriodEnd) : null;
-  const now = new Date();
-  const hasActiveFutureExpiry = Boolean(currentExpiry && currentExpiry.getTime() > now.getTime());
+  const hasActiveFutureExpiry = Boolean(
+    shop?.currentPeriodEnd && !isDateExpired(shop.currentPeriodEnd)
+  );
 
-  // Accurate Calculation:
-  // - If FREE: No expiry (null)
-  // - If Paid: Extend from existing active expiry if valid in future, else start from today (now)
-  let calculatedExpiry = null;
-  if (selectedPlan !== 'FREE' && selectedOption.days > 0) {
-    const baseTime = hasActiveFutureExpiry ? currentExpiry.getTime() : now.getTime();
-    calculatedExpiry = new Date(baseTime + selectedOption.days * 24 * 60 * 60 * 1000);
-  }
+  // Accurate Calculation using central dateUtils (extends from future expiry if active, else from now)
+  const calculatedExpiry = selectedPlan !== 'FREE'
+    ? calculateExtendedExpiry(shop?.currentPeriodEnd, selectedOption.days)
+    : null;
 
   const handleSubmit = (e) => {
     e.preventDefault();

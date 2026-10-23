@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { formatCurrency } from '../../utils/currency';
+import { formatDateOnly, formatTimeOnly } from '../../utils/dateUtils';
 
 const formatPaymentMode = (mode) => {
   if (!mode) return '';
@@ -69,10 +70,10 @@ const ViewBillModal = ({ viewBill, setViewBill, shopSettings = {} }) => {
                <div className="text-left pl-3 border-l border-gray-100 w-[45%] sm:min-w-[140px]">
                  <p className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t('Date & Status')}</p>
                  <p className="text-[13px] sm:text-sm font-semibold text-gray-900 leading-tight">
-                   {new Date(viewBill.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                   {formatDateOnly(viewBill.createdAt)}
                  </p>
                  <p className="text-[12px] sm:text-xs text-gray-500 mt-1">
-                   {new Date(viewBill.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })}
+                   {formatTimeOnly(viewBill.createdAt)}
                  </p>
                  <div className="mt-0.5 flex justify-start">
                     <span className={`px-2 py-0.5 rounded text-[9px] uppercase sm:text-[10px] font-medium ${(viewBill.paymentStatus === 'PAID' || viewBill.paymentStatus === 'ADVANCE') ? 'bg-green-50 text-green-700 border border-green-200' : viewBill.paymentStatus === 'PARTIAL' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>

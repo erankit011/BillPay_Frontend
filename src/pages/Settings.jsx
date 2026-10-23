@@ -7,6 +7,7 @@ import api from '../api/axios';
 import { logout, setUser } from '../redux/slices/authSlice';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import toast from 'react-hot-toast';
+import { formatShortDate, formatRelativeTime } from '../utils/dateUtils';
 
 
 // ── Section Nav Item ──
@@ -384,42 +385,9 @@ const Settings = () => {
     }
   };
 
-  const formatDeviceTime = (dateStr) => {
-    if (!dateStr) return '';
-    try {
-      const date = new Date(dateStr);
-      const now = new Date();
-      const diffMs = now.getTime() - date.getTime();
-      const diffMins = Math.floor(diffMs / (1000 * 60));
-      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const formatDeviceTime = (dateStr) => formatRelativeTime(dateStr, t);
 
-      if (diffMins < 2) return t('Just now');
-      if (diffMins < 60) return `${diffMins} ${t('mins ago')}`;
-      if (diffHours < 24) return `${diffHours} ${t('hours ago')}`;
-      if (diffDays < 7) return `${diffDays} ${t('days ago')}`;
-      
-      const day = date.getDate();
-      const month = date.toLocaleDateString('en-US', { month: 'short' });
-      const year = date.getFullYear();
-      return `${day} ${month} ${year}`;
-    } catch (e) {
-      return '';
-    }
-  };
-
-  const formatDeviceDate = (dateStr) => {
-    if (!dateStr) return '-';
-    try {
-      const date = new Date(dateStr);
-      const day = date.getDate();
-      const month = date.toLocaleDateString('en-US', { month: 'short' });
-      const year = date.getFullYear();
-      return `${day} ${month} ${year}`;
-    } catch (e) {
-      return '-';
-    }
-  };
+  const formatDeviceDate = (dateStr) => formatShortDate(dateStr);
 
   const getDeviceIcon = (device) => {
     if (!device) return Monitor;
@@ -900,12 +868,10 @@ const Settings = () => {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-100">
-                            {platformInvoices.map((inv) => {
-                              const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
-                              return (
+                            {platformInvoices.map((inv) => (
                               <tr key={inv._id} className="hover:bg-gray-50/50 transition-colors">
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                  {formatDate(inv.createdAt)}
+                                  {formatShortDate(inv.createdAt)}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-gray-500 font-mono text-xs">
                                   {inv.razorpayPaymentId || '-'}
@@ -915,9 +881,9 @@ const Settings = () => {
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                   <div className="flex items-center gap-1.5">
-                                    <span>{formatDate(inv.billingPeriodStart)}</span>
+                                    <span>{formatShortDate(inv.billingPeriodStart)}</span>
                                     <span className="text-gray-400">&rarr;</span>
-                                    <span>{formatDate(inv.billingPeriodEnd)}</span>
+                                    <span>{formatShortDate(inv.billingPeriodEnd)}</span>
                                   </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
@@ -954,75 +920,71 @@ const Settings = () => {
                                   )}
                                 </td>
                               </tr>
-                              );
-                            })}
+                            ))}
                           </tbody>
                         </table>
                       </div>
 
                       {/* Mobile & Tablet Cards (Visible below lg) */}
                       <div className="block lg:hidden space-y-3 p-1">
-                        {platformInvoices.map((inv) => {
-                          const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
-                          return (
-                            <div key={`card-${inv._id}`} className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 active:bg-gray-50 transition-colors duration-200">
-                              <div className="flex justify-between items-start gap-2 mb-3">
-                                <div className="min-w-0">
-                                  <h3 className="text-sm sm:text-[15px] font-semibold text-[#093C5D] truncate leading-tight mb-0.5">{inv.planName} Subscription</h3>
-                                  <div className="text-[10px] sm:text-[11px] text-gray-500 font-medium font-mono truncate">#{inv.razorpayPaymentId || '-'}</div>
-                                </div>
-                                <span className={`shrink-0 inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-xs font-semibold uppercase tracking-wider ${
-                                  inv.status === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'
-                                }`}>
-                                  {inv.status}
-                                </span>
+                        {platformInvoices.map((inv) => (
+                          <div key={`card-${inv._id}`} className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 active:bg-gray-50 transition-colors duration-200">
+                            <div className="flex justify-between items-start gap-2 mb-3">
+                              <div className="min-w-0">
+                                <h3 className="text-sm sm:text-[15px] font-semibold text-[#093C5D] truncate leading-tight mb-0.5">{inv.planName} Subscription</h3>
+                                <div className="text-[10px] sm:text-[11px] text-gray-500 font-medium font-mono truncate">#{inv.razorpayPaymentId || '-'}</div>
                               </div>
-                              
-                              <div className="grid grid-cols-2 gap-3 text-sm bg-gray-50/50 p-2.5 sm:p-3 rounded-lg border border-gray-100 mb-3">
-                                <div>
-                                  <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Date')}</span>
-                                  <div className="mt-0.5 text-gray-900 font-medium text-xs sm:text-sm">{formatDate(inv.createdAt)}</div>
-                                </div>
-                                <div>
-                                  <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Amount')}</span>
-                                  <div className="mt-0.5 text-gray-900 font-semibold text-sm sm:text-[15px]">₹{inv.amount}</div>
-                                </div>
-                                <div className="col-span-2">
-                                  <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Validity')}</span>
-                                  <div className="mt-0.5 text-gray-700 font-medium flex items-center gap-1.5 text-xs sm:text-sm">
-                                    <span>{formatDate(inv.billingPeriodStart)}</span>
-                                    <span className="text-gray-400">&rarr;</span>
-                                    <span>{formatDate(inv.billingPeriodEnd)}</span>
-                                  </div>
-                                </div>
+                              <span className={`shrink-0 inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-xs font-semibold uppercase tracking-wider ${
+                                inv.status === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'
+                              }`}>
+                                {inv.status}
+                              </span>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-3 text-sm bg-gray-50/50 p-2.5 sm:p-3 rounded-lg border border-gray-100 mb-3">
+                              <div>
+                                <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Date')}</span>
+                                <div className="mt-0.5 text-gray-900 font-medium text-xs sm:text-sm">{formatShortDate(inv.createdAt)}</div>
                               </div>
-                              
-                              <div className="flex justify-end pt-1">
-                                {inv.receiptUrl ? (
-                                  <a 
-                                    href={inv.receiptUrl} 
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center gap-1.5 text-[#093C5D] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 sm:px-4 py-1.5 sm:py-2 rounded-md transition-colors text-xs sm:text-sm font-semibold w-full sm:w-auto border border-[#093C5D]/10 active:scale-95"
-                                  >
-                                    <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                                    <span>{t('View & Download Invoice')}</span>
-                                  </a>
-                                ) : (
-                                  <Link 
-                                    to={`/platform-receipt/${inv._id}`} 
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center gap-1.5 text-[#093C5D] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 sm:px-4 py-1.5 sm:py-2 rounded-md transition-colors text-xs sm:text-sm font-semibold w-full sm:w-auto border border-[#093C5D]/10 active:scale-95"
-                                  >
-                                    <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                                    <span>{t('View & Download Invoice')}</span>
-                                  </Link>
-                                )}
+                              <div>
+                                <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Amount')}</span>
+                                <div className="mt-0.5 text-gray-900 font-semibold text-sm sm:text-[15px]">₹{inv.amount}</div>
+                              </div>
+                              <div className="col-span-2">
+                                <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Validity')}</span>
+                                <div className="mt-0.5 text-gray-700 font-medium flex items-center gap-1.5 text-xs sm:text-sm">
+                                  <span>{formatShortDate(inv.billingPeriodStart)}</span>
+                                  <span className="text-gray-400">&rarr;</span>
+                                  <span>{formatShortDate(inv.billingPeriodEnd)}</span>
+                                </div>
                               </div>
                             </div>
-                          );
-                        })}
+                            
+                            <div className="flex justify-end pt-1">
+                              {inv.receiptUrl ? (
+                                <a 
+                                  href={inv.receiptUrl} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center justify-center gap-1.5 text-[#093C5D] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 sm:px-4 py-1.5 sm:py-2 rounded-md transition-colors text-xs sm:text-sm font-semibold w-full sm:w-auto border border-[#093C5D]/10 active:scale-95"
+                                >
+                                  <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                                  <span>{t('View & Download Invoice')}</span>
+                                </a>
+                              ) : (
+                                <Link 
+                                  to={`/platform-receipt/${inv._id}`} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center justify-center gap-1.5 text-[#093C5D] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 sm:px-4 py-1.5 sm:py-2 rounded-md transition-colors text-xs sm:text-sm font-semibold w-full sm:w-auto border border-[#093C5D]/10 active:scale-95"
+                                >
+                                  <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                                  <span>{t('View & Download Invoice')}</span>
+                                </Link>
+                              )}
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   )}

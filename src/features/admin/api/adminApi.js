@@ -37,6 +37,11 @@ export const forceLogoutShop = async (shopId) => {
   return res.data;
 };
 
+export const sendDirectShopNotice = async (shopId, noticeData) => {
+  const res = await api.post(`/admin/shops/${shopId}/send-notice`, noticeData);
+  return res.data;
+};
+
 // 3. Platform Customer Bills Audit & Ledger
 export const getAdminBills = async (params = {}) => {
   const res = await api.get('/admin/bills', { params });
@@ -210,6 +215,18 @@ export const getPublicPlans = async () => {
   return res.data?.data;
 };
 
+// 14. WhatsApp Business Gateway
+export const getWhatsAppStatus = async () => {
+  const res = await api.get('/admin/whatsapp/status');
+  return res.data?.data;
+};
 
+export const restartWhatsAppGateway = async () => {
+  const res = await api.post('/admin/whatsapp/restart');
+  return res.data;
+};
 
-
+export const logoutWhatsAppGateway = async () => {
+  const res = await api.post('/admin/whatsapp/logout');
+  return res.data;
+};

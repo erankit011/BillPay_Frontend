@@ -8,10 +8,11 @@ import {
   FileText,
   IndianRupee,
   LogOut,
-  Crown
+  Crown,
+  BellRing
 } from 'lucide-react';
 import { formatCurrency } from '../../../utils/currency';
-import { formatDate } from '../../../utils/dateUtils';
+import { formatDate, isDateExpired } from '../../../utils/dateUtils';
 
 const ShopDetailsModal = ({
   isOpen,
@@ -20,6 +21,7 @@ const ShopDetailsModal = ({
   onOpenSuspendModal,
   onOpenPlanModal,
   onForceLogout,
+  onOpenDirectNoticeModal,
 }) => {
   // Prevent background scrolling when modal is open
   useEffect(() => {
@@ -69,7 +71,7 @@ const ShopDetailsModal = ({
   };
 
   const expiryDate = shop.currentPeriodEnd || shop.subscriptionExpiresAt;
-  const isPlanExpired = expiryDate ? new Date(expiryDate) < new Date() : false;
+  const isPlanExpired = isDateExpired(expiryDate);
 
   const getExpiryDisplay = () => {
     if (plan === 'FREE') {
@@ -368,33 +370,45 @@ const ShopDetailsModal = ({
           </div>
 
           {/* Footer Actions */}
-          <div className="px-5 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-between flex-shrink-0 gap-3">
-            <button
-              type="button"
-              onClick={() => onOpenSuspendModal(shop)}
-              className={`cursor-pointer h-9.5 px-3.5 sm:px-4 text-xs sm:text-sm font-semibold rounded-lg border transition-all active:scale-95 inline-flex items-center gap-1.5 shadow-none shrink-0 ${
-                isSuspended
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-                  : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
-              }`}
-            >
-              {isSuspended ? (
-                <>
-                  <ShieldCheck className="w-4 h-4 shrink-0" />
-                  <span>Unsuspend Shop</span>
-                </>
-              ) : (
-                <>
-                  <ShieldAlert className="w-4 h-4 shrink-0" />
-                  <span>Suspend Shop</span>
-                </>
-              )}
-            </button>
+          <div className="px-5 py-3.5 bg-gray-50 border-t border-gray-200 flex flex-wrap items-center justify-between flex-shrink-0 gap-3">
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                type="button"
+                onClick={() => onOpenSuspendModal(shop)}
+                className={`cursor-pointer h-9 px-3.5 text-xs sm:text-sm font-semibold rounded-lg border transition-all active:scale-95 inline-flex items-center gap-1.5 shadow-none shrink-0 ${
+                  isSuspended
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                    : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
+                }`}
+              >
+                {isSuspended ? (
+                  <>
+                    <ShieldCheck className="w-4 h-4 shrink-0" />
+                    <span>Unsuspend Shop</span>
+                  </>
+                ) : (
+                  <>
+                    <ShieldAlert className="w-4 h-4 shrink-0" />
+                    <span>Suspend Shop</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onOpenDirectNoticeModal && onOpenDirectNoticeModal(shop)}
+                className="cursor-pointer h-9 px-3.5 text-xs sm:text-sm font-semibold text-[#093C5D] bg-[#093C5D]/10 hover:bg-[#093C5D]/20 border border-[#093C5D]/30 rounded-lg transition-all active:scale-95 inline-flex items-center gap-1.5 shadow-none shrink-0"
+                title="Send official direct notification to this store"
+              >
+                <BellRing className="w-4 h-4 shrink-0 text-[#093C5D]" />
+                <span>Send Direct Notice</span>
+              </button>
+            </div>
 
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer h-9.5 px-5 text-xs sm:text-sm font-semibold text-gray-700 bg-white hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors active:scale-95 inline-flex items-center justify-center shadow-none"
+              className="cursor-pointer h-9 px-5 text-xs sm:text-sm font-semibold text-gray-700 bg-white hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors active:scale-95 inline-flex items-center justify-center shadow-none ml-auto"
             >
               Close
             </button>

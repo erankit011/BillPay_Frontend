@@ -12,6 +12,7 @@ import {
   Laptop,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { formatDate } from '../../../../utils/dateUtils';
 import AuditCategoryBadge from './AuditCategoryBadge';
 
 const formatActionName = (action) => {
@@ -63,18 +64,7 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
-  const dateObj = log.createdAt ? new Date(log.createdAt) : null;
-  const formattedDate = dateObj && !isNaN(dateObj.getTime())
-    ? dateObj.toLocaleString('en-IN', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: true,
-    })
-    : 'N/A';
+  const formattedDate = formatDate(log.createdAt) || 'N/A';
 
   return (
     <div className="fixed inset-0 z-50 overscroll-contain">

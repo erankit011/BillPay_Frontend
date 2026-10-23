@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 
 import { formatCurrency } from '../../utils/currency';
+import { formatDate, formatShortDate } from '../../utils/dateUtils';
 
 const formatPaymentMode = (mode) => {
   switch (mode) {
@@ -134,7 +135,7 @@ const CustomerLedger = ({ customer, onClose }) => {
                     <span className="text-gray-300 hidden sm:inline-block">|</span>
                     <p className="text-gray-500 text-xs sm:text-[13px] flex items-center font-medium">
                       <Calendar className="w-3.5 h-3.5 mr-1.5 text-gray-400" />
-                      {new Date(liveCustomer.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                      {formatShortDate(liveCustomer.createdAt)}
                     </p>
                   </div>
                   {liveCustomer.email && (
@@ -279,7 +280,7 @@ const CustomerLedger = ({ customer, onClose }) => {
                               : (tx.description && tx.description.startsWith('Advance payment for bill') ? t('Bill Payment Received') : t('Payment Received'))}
                           </p>
                           <p className="text-[10px] sm:text-xs text-gray-500 font-medium mt-0.5">
-                            {new Date(tx.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })} • {new Date(tx.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })}
+                            {formatDate(tx.createdAt)}
                           </p>
                           {(tx.description || tx.paymentMode) && (
                             <div className="mt-1.5 flex items-center gap-1.5 w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">

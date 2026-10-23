@@ -1,11 +1,12 @@
-import { useState, Fragment } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
-import { Loader2, User, Mail, Phone, Store, Lock, ArrowRight, Eye, EyeOff, Camera, UserPlus, AlertCircle } from 'lucide-react';
+import { getPublicContactInfo } from '../features/admin/api/adminApi';
+import { Loader2, User, Mail, Phone, Store, Lock, ArrowRight, Eye, EyeOff, Camera, UserPlus, AlertCircle, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const registerSchema = yup.object({
@@ -20,9 +21,30 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
+  const [allowRegistration, setAllowRegistration] = useState(true);
+  const [maintenanceMessage, setMaintenanceMessage] = useState(null);
   
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    let isMounted = true;
+    getPublicContactInfo()
+      .then((info) => {
+        if (isMounted && info) {
+          if (info.allowNewRegistrations === false) {
+            setAllowRegistration(false);
+          }
+          if (info.isMaintenanceMode && info.maintenanceMessage) {
+            setMaintenanceMessage(info.maintenanceMessage);
+          }
+        }
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   
   const { register, handleSubmit, formState: { errors }, watch, trigger } = useForm({
     resolver: yupResolver(registerSchema),
@@ -80,6 +102,29 @@ const Register = () => {
           {step === 3 && 'Secure your account'}
         </p>
       </div>
+
+      {/* Maintenance or Registration Closed Banners */}
+      {maintenanceMessage && (
+        <div className="mb-5 p-3.5 rounded-lg bg-amber-50/90 border border-amber-300 text-amber-950 text-xs sm:text-sm font-medium flex items-start gap-2.5 text-left">
+          <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-xs sm:text-sm text-amber-900">{t('Platform Maintenance Active')}</p>
+            <p className="mt-0.5 text-xs text-amber-800 leading-relaxed font-normal">{maintenanceMessage}</p>
+          </div>
+        </div>
+      )}
+
+      {!allowRegistration && (
+        <div className="mb-5 p-3.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-950 text-xs sm:text-sm font-medium flex items-start gap-2.5 text-left">
+          <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-rose-600 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-xs sm:text-sm text-rose-900">{t('Registrations Temporarily Closed')}</p>
+            <p className="mt-0.5 text-xs text-rose-800 leading-relaxed font-normal">
+              {t('New store signups are currently paused by the platform administrator. Please check back later or contact support.')}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Modern Progress Steps */}
       <div className="mb-6 sm:mb-8">
@@ -170,7 +215,8 @@ const Register = () => {
             <button 
               type="button"
               onClick={handleNext}
-              className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#072C44] text-white rounded-full py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition-all active:scale-[0.98] mt-6"
+              disabled={!allowRegistration}
+              className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#072C44] text-white rounded-full py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition-all active:scale-[0.98] mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span>{t("Continue")}</span>
               <ArrowRight className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
@@ -278,7 +324,7 @@ const Register = () => {
               </button>
               <button 
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || !allowRegistration}
                 className="cursor-pointer w-full sm:w-2/3 bg-[#093C5D] hover:bg-[#072C44] text-white rounded-full py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
@@ -306,18 +352,24 @@ const Register = () => {
           </div>
         </div>
 
-        <a
-          href={`${import.meta.env.VITE_API_URL}/auth/google`}
-          className="mt-4 sm:mt-6 w-full cursor-pointer py-2.5 sm:py-3 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full font-semibold text-sm sm:text-base flex items-center justify-center gap-2 sm:gap-3 transition-all active:scale-[0.98]"
-        >
-          <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24">
-            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-          </svg>
-          {t('Continue With Google')}
-        </a>
+        {allowRegistration ? (
+          <a
+            href={`${import.meta.env.VITE_API_URL}/auth/google`}
+            className="mt-4 sm:mt-6 w-full cursor-pointer py-2.5 sm:py-3 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full font-semibold text-sm sm:text-base flex items-center justify-center gap-2 sm:gap-3 transition-all active:scale-[0.98]"
+          >
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            {t('Continue With Google')}
+          </a>
+        ) : (
+          <div className="mt-4 sm:mt-6 w-full py-2.5 sm:py-3 bg-gray-50 border border-gray-200 text-gray-400 rounded-full font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-not-allowed">
+            {t('Google registration is temporarily paused')}
+          </div>
+        )}
       </div>
 
       {/* Bottom Actions */}

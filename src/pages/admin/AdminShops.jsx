@@ -13,6 +13,7 @@ import {
   Eye,
   Crown,
   LogOut,
+  BellRing,
   ChevronLeft,
   ChevronRight,
   ChevronDown,
@@ -32,6 +33,7 @@ import {
 import ShopDetailsModal from '../../features/admin/components/ShopDetailsModal';
 import SuspendShopModal from '../../features/admin/components/SuspendShopModal';
 import ForceLogoutModal from '../../features/admin/components/ForceLogoutModal';
+import SendDirectNoticeModal from '../../features/admin/components/SendDirectNoticeModal';
 import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 import { formatCurrency } from '../../utils/currency';
@@ -67,6 +69,7 @@ const AdminShops = () => {
   const [inspectShop, setInspectShop] = useState(null);
   const [suspendModalShop, setSuspendModalShop] = useState(null);
   const [logoutModalShop, setLogoutModalShop] = useState(null);
+  const [noticeModalShop, setNoticeModalShop] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -460,6 +463,15 @@ const AdminShops = () => {
                               <span className="leading-none">Inspect</span>
                             </button>
 
+                            {/* Send Direct Notice */}
+                            <button
+                              onClick={() => setNoticeModalShop(shop)}
+                              className="cursor-pointer h-8 px-2.5 sm:px-3 text-[#093C5D] font-semibold bg-[#093C5D]/10 border border-[#093C5D]/25 hover:bg-[#093C5D]/20 rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
+                              title="Send official direct notice to this store"
+                            >
+                              <BellRing className="w-3.5 h-3.5 shrink-0 text-[#093C5D]" strokeWidth={2} />
+                              <span className="leading-none">Notice</span>
+                            </button>
 
                             {/* Suspend / Restore */}
                             <button
@@ -584,13 +596,21 @@ const AdminShops = () => {
                     </div>
 
                     {/* Bottom Actions Grid */}
-                    <div className="grid grid-cols-3 gap-2 pt-2 border-t border-gray-100">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-gray-100">
                       <button
                         onClick={() => setInspectShop(shop)}
                         className="cursor-pointer w-full h-8.5 text-blue-700 font-semibold bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2 rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
                       >
                         <Eye className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
                         <span className="leading-none">Inspect</span>
+                      </button>
+
+                      <button
+                        onClick={() => setNoticeModalShop(shop)}
+                        className="cursor-pointer w-full h-8.5 text-[#093C5D] font-semibold bg-[#093C5D]/10 border border-[#093C5D]/25 hover:bg-[#093C5D]/20 px-2 rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
+                      >
+                        <BellRing className="w-3.5 h-3.5 shrink-0 text-[#093C5D]" strokeWidth={2} />
+                        <span className="leading-none">Notice</span>
                       </button>
 
                       <button
@@ -668,6 +688,7 @@ const AdminShops = () => {
         onClose={() => setInspectShop(null)}
         shop={inspectShop}
         onOpenSuspendModal={(shop) => setSuspendModalShop(shop)}
+        onOpenDirectNoticeModal={(shop) => setNoticeModalShop(shop)}
         onForceLogout={(shopOrId) => {
           const target = typeof shopOrId === 'object' && shopOrId !== null
             ? shopOrId
@@ -694,6 +715,16 @@ const AdminShops = () => {
         onConfirm={(shopId) => {
           const id = typeof shopId === 'object' ? shopId._id : shopId;
           forceLogoutMutation.mutate(id);
+        }}
+      />
+
+      <SendDirectNoticeModal
+        isOpen={!!noticeModalShop}
+        onClose={() => setNoticeModalShop(null)}
+        shop={noticeModalShop}
+        onSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: ['adminShops'] });
+          queryClient.invalidateQueries({ queryKey: ['adminOverview'] });
         }}
       />
     </div>

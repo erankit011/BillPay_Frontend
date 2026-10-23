@@ -19,7 +19,7 @@ import { getAdminShops, overrideShopPlan } from '../../features/admin/api/adminA
 import PlanOverrideModal from '../../features/admin/components/PlanOverrideModal';
 import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
-import { formatDate } from '../../utils/dateUtils';
+import { formatDate, isDateExpired } from '../../utils/dateUtils';
 
 const PLAN_FILTERS = [
   { label: 'All Plans', value: 'All' },
@@ -333,7 +333,7 @@ const AdminStorePlans = () => {
                     const plan = (shop.subscriptionPlan || 'FREE').toUpperCase();
                     const isSuspended = Boolean(shop.isSuspended);
                     const expiry = shop.currentPeriodEnd;
-                    const isExpired = expiry ? new Date(expiry) < new Date() : false;
+                    const isExpired = isDateExpired(expiry);
 
                     return (
                       <tr key={shop._id} className="hover:bg-gray-50/60 transition-colors">

@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../redux/slices/authSlice';
 import toast from 'react-hot-toast';
 import { validateSubscriptionCoupon, getPublicPlans } from '../features/admin/api/adminApi';
+import { getDaysRemaining, getTrialEndDate } from '../utils/dateUtils';
 
 const DEFAULT_PLANS = [
   {
@@ -15,7 +16,7 @@ const DEFAULT_PLANS = [
     duration: '7-Day Trial',
     features: [
       'Up to 2 Customers',
-      'Up to 10 Bills',
+      'Up to 5 Bills',
       'Email Support',
     ],
     color: 'bg-gray-100 text-gray-800',
@@ -265,11 +266,8 @@ const Subscription = () => {
     }
   };
 
-  const getDaysRemaining = (expiryDate) => {
-    if (!expiryDate) return 0;
-    const diff = new Date(expiryDate).getTime() - new Date().getTime();
-    return Math.max(0, Math.ceil(diff / (1000 * 3600 * 24)));
-  };
+  const freeTrialDays = plans.find((p) => p.id === 'FREE')?.trialDays || 7;
+  const trialEndDate = getTrialEndDate(user, freeTrialDays);
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
@@ -300,10 +298,7 @@ const Subscription = () => {
               <p className="text-sm text-slate-500">
                 {t('Free trial expires in')}{' '}
                 <span className="font-semibold text-slate-900">
-                  {getDaysRemaining(
-                    new Date(user?.createdAt || Date.now()).getTime() +
-                      (plans.find((p) => p.id === 'FREE')?.trialDays || 7) * 24 * 60 * 60 * 1000
-                  )}{' '}
+                  {getDaysRemaining(trialEndDate)}{' '}
                   {t('days')}
                 </span>
               </p>

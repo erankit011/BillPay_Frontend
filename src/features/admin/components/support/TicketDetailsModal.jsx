@@ -18,6 +18,7 @@ import {
   Check,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { formatDate } from '../../../../utils/dateUtils';
 import TicketStatusBadge from './TicketStatusBadge';
 import TicketPriorityBadge from './TicketPriorityBadge';
 
@@ -107,18 +108,6 @@ const TicketDetailsModal = ({
     }
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
-    const parsed = new Date(dateString);
-    if (isNaN(parsed.getTime())) return 'N/A';
-    return parsed.toLocaleString('en-IN', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
 
   // Prevent background scrolling when modal is open
   useEffect(() => {

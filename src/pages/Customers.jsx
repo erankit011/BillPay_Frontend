@@ -14,7 +14,7 @@ import UpgradeModal from '../components/common/UpgradeModal';
 import toast from 'react-hot-toast';
 
 import { formatCurrency } from '../utils/currency';
-import { formatDate } from '../utils/dateUtils';
+import { formatDate, isSubscriptionExpired, isTrialExpired } from '../utils/dateUtils';
 
 const Customers = () => {
   const { t } = useTranslation();
@@ -210,11 +210,18 @@ const Customers = () => {
   const thisMonthCustomersCount = firstPage?.thisMonthCustomersCount || 0;
 
   const handleAddCustomerClick = () => {
-    if (!user?.subscriptionPlan || user?.subscriptionPlan === 'FREE' || user?.subscriptionStatus === 'none') {
-      const trialEnd = new Date(user?.createdAt);
-      trialEnd.setDate(trialEnd.getDate() + 7);
-      
-      if (new Date() > trialEnd) {
+    if (isSubscriptionExpired(user)) {
+      setUpgradeModal({
+        isOpen: true,
+        title: t('Subscription Expired'),
+        message: t('Your subscription has expired. Please renew your plan to continue adding customers.')
+      });
+      return;
+    }
+
+    const isPaid = user?.subscriptionPlan && user?.subscriptionPlan !== 'FREE';
+    if (!isPaid || user?.subscriptionStatus === 'none') {
+      if (isTrialExpired(user)) {
         setUpgradeModal({
           isOpen: true,
           title: t('Trial Expired'),
@@ -223,7 +230,8 @@ const Customers = () => {
         return;
       }
       
-      if (totalCount >= 2) {
+      const customerLimit = user?.freePlanCustomerLimit || 2;
+      if (totalCount >= customerLimit) {
         setUpgradeModal({
           isOpen: true,
           title: t('Limit Reached'),
