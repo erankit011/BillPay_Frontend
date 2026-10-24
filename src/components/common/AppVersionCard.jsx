@@ -42,7 +42,7 @@ const AppVersionCard = ({ variant = 'sidebar', className = '' }) => {
           </div>
           <button
             type="button"
-            onClick={(e) => checkForUpdates(e.shiftKey)}
+            onClick={() => checkForUpdates()}
             disabled={isChecking}
             className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-[#093C5D] hover:text-[#082a42] hover:underline transition-colors active:scale-95 disabled:opacity-50 select-none"
             title={t('Check For Update')}
@@ -82,7 +82,7 @@ const AppVersionCard = ({ variant = 'sidebar', className = '' }) => {
         <span className="text-gray-500 font-normal truncate">{BUILD_DATE}</span>
         <button
           type="button"
-          onClick={(e) => checkForUpdates(e.shiftKey)}
+          onClick={() => checkForUpdates()}
           disabled={isChecking}
           className="cursor-pointer inline-flex items-center gap-1.5 text-[10.5px] font-semibold text-[#093C5D] hover:text-[#082a42] hover:underline transition-colors active:scale-95 disabled:opacity-50 select-none shrink-0"
           title={t('Check For Update')}

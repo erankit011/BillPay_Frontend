@@ -83,16 +83,8 @@ export const PWAProvider = ({ children }) => {
   };
 
   // 5. User action: Manual 'Check for updates' trigger (Hybrid Dual Detection)
-  const checkForUpdates = async (forceSimulate = false) => {
+  const checkForUpdates = async () => {
     if (isCheckingRef.current) return;
-
-    // Developer preview / simulation trigger (e.g. Shift + Click in dev mode)
-    if (forceSimulate) {
-      setAvailableVersion('1.0.1');
-      setNeedRefresh(true);
-      toast.success(t('Update prompt triggered (Test Mode)'), { id: 'pwa-update-toast' });
-      return;
-    }
 
     if (!navigator.onLine) {
       toast.error(t('You are offline. Please check your internet connection.'), { id: 'pwa-update-toast' });
