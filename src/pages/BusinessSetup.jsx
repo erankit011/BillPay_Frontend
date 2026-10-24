@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { Store, Save, Loader2, AlertCircle, Upload, X, LogOut } from 'lucide-react';
+import { Store, Save, Loader2, AlertCircle, Upload, X } from 'lucide-react';
 import api from '../api/axios';
-import { setUser, logout } from '../redux/slices/authSlice';
+import { setUser } from '../redux/slices/authSlice';
 
 const BusinessSetup = () => {
   const { t } = useTranslation();
@@ -23,43 +23,28 @@ const BusinessSetup = () => {
     shopEmail: '',
     invoiceLogo: ''
   });
-  
+
   const [loading, setLoading] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [errors, setErrors] = useState({});
-  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-  
+
   // Checking if changes are made to enable the Save button
   const hasChanges = formData.shopName.trim() !== '' && formData.shopPhone.trim() !== '' && formData.shopAddress.trim() !== '';
 
   useEffect(() => {
-    if (user?.isBusinessSetupCompleted) {
-      navigate('/dashboard', { replace: true });
+    if (user?.phone || user?.email) {
+      setFormData(prev => ({
+        ...prev,
+        shopPhone: prev.shopPhone || user?.phone || '',
+        shopEmail: prev.shopEmail || user?.email || '',
+      }));
     }
-  }, [user, navigate]);
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
-  };
-
-  const executeLogout = async () => {
-    setIsLoggingOut(true);
-    try {
-      await api.post('/auth/logout');
-    } catch (e) {
-      // ignore
-    } finally {
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('token');
-      dispatch(logout());
-      toast.success(t('Logged out successfully'));
-      setLogoutModalOpen(false);
-      window.location.href = '/login';
-    }
   };
 
   const handleLogoUpload = async (e) => {
@@ -75,11 +60,11 @@ const BusinessSetup = () => {
     try {
       const uploadData = new FormData();
       uploadData.append('file', file);
-      
+
       const res = await api.post('/upload', uploadData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      
+
       if (res.data.success) {
         setFormData(prev => ({ ...prev, invoiceLogo: res.data.data.url }));
         setErrors(prev => ({ ...prev, global: '' }));
@@ -95,46 +80,68 @@ const BusinessSetup = () => {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.shopName.trim()) newErrors.shopName = t('Business Name is required');
-    
+    if (!formData.shopName.trim()) {
+      newErrors.shopName = t('Business Name is required');
+    } else if (formData.shopName.trim().length < 2) {
+      newErrors.shopName = t('Business Name must be at least 2 characters');
+    }
+
     if (!formData.shopPhone.trim()) {
       newErrors.shopPhone = t('Business Phone is required');
     } else {
       const phoneRegex = /^(?:\+?91[\-\s]?)?[0]?(?:\d[\-\s]?){10}$/;
       if (!phoneRegex.test(formData.shopPhone.trim())) {
-        newErrors.shopPhone = t('Please enter a valid phone number');
+        newErrors.shopPhone = t('Please enter a valid 10-digit phone number');
       }
     }
-    
-    if (!formData.shopAddress.trim()) newErrors.shopAddress = t('Business Address is required');
-    
+
+    if (!formData.shopAddress.trim()) {
+      newErrors.shopAddress = t('Business Address is required');
+    } else if (formData.shopAddress.trim().length < 5) {
+      newErrors.shopAddress = t('Business Address must be at least 5 characters');
+    }
+
+    if (formData.shopEmail && formData.shopEmail.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.shopEmail.trim())) {
+        newErrors.shopEmail = t('Please enter a valid email address');
+      }
+    }
+
+    if (formData.gstNumber && formData.gstNumber.trim()) {
+      const gstRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/i;
+      if (!gstRegex.test(formData.gstNumber.trim())) {
+        newErrors.gstNumber = t('Please enter a valid 15-character GSTIN');
+      }
+    }
+
     return Object.keys(newErrors).length > 0 ? newErrors : null;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const validationErrors = validate();
     if (validationErrors) {
       setErrors(validationErrors);
-      toast.error(t('Please check the form for errors'));
+      toast.error(t('Please check the form for errors'), { id: 'business-setup-val-error', duration: 4000 });
       return;
     }
 
     setLoading(true);
     try {
       const res = await api.post('/auth/complete-onboarding', formData);
-      
+
       if (res.data.success) {
         const updatedUser = { ...user, ...res.data.data };
         dispatch(setUser(updatedUser));
-        toast.success(t('Business details saved successfully!'));
+        toast.success(t('Business details saved successfully!'), { id: 'business-setup-success', duration: 4000 });
         navigate('/dashboard', { replace: true });
       }
     } catch (err) {
       const msg = err.response?.data?.message || t('Something went wrong. Please try again.');
       setErrors({ global: msg });
-      toast.error(msg);
+      toast.error(msg, { id: 'business-setup-api-error', duration: 5000 });
     } finally {
       setLoading(false);
     }
@@ -143,13 +150,13 @@ const BusinessSetup = () => {
   return (
     <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 font-sans flex flex-col justify-center">
       <div className="mx-auto max-w-4xl w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        
+
         {/* Intro */}
-        <div className="mb-8 text-center sm:text-left">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
+        <div className="mb-6">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 tracking-tight">
             {t('Welcome to UdharPay!')}
           </h2>
-          <p className="mt-2 text-sm sm:text-base text-gray-600 font-medium max-w-2xl">
+          <p className="mt-1 text-sm text-gray-600 font-medium max-w-2xl leading-relaxed">
             {t("Let's set up your business profile. This information will be used on your invoices, receipts, and reports.")}
           </p>
         </div>
@@ -157,7 +164,7 @@ const BusinessSetup = () => {
         <form onSubmit={handleSubmit}>
           {/* Card (Matching Settings.jsx EXACTLY) */}
           <section className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-            
+
             <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex justify-between items-center">
               <div>
                 <h2 className="text-base md:text-lg font-semibold text-gray-900 flex items-center gap-2">
@@ -171,7 +178,7 @@ const BusinessSetup = () => {
             </div>
 
             <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
-              
+
               {/* Global Error Message */}
               {errors.global && (
                 <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-6 text-sm font-medium flex items-start gap-2 border border-red-100">
@@ -181,7 +188,7 @@ const BusinessSetup = () => {
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-                
+
                 {/* Shop Name */}
                 <div className="md:col-span-2">
                   <label htmlFor="shopName" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
@@ -194,7 +201,7 @@ const BusinessSetup = () => {
                     value={formData.shopName}
                     onChange={handleChange}
                     className={`block w-full rounded-lg border ${errors.shopName ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
-                    placeholder={t('e.g. Sharma General Store')}
+                    placeholder={t('Enter Business / Shop Name')}
                   />
                   {errors.shopName && <p className="text-red-500 text-xs mt-1 font-medium">{errors.shopName}</p>}
                 </div>
@@ -208,10 +215,11 @@ const BusinessSetup = () => {
                     value={formData.gstNumber}
                     onChange={handleChange}
                     placeholder="23ABCDE0000A1A2"
-                    className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                    className={`block w-full rounded-lg border ${errors.gstNumber ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
                   />
+                  {errors.gstNumber && <p className="text-red-500 text-xs mt-1 font-medium">{errors.gstNumber}</p>}
                 </div>
-                
+
                 {/* UPI Id */}
                 <div>
                   <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('UPI Id')}</label>
@@ -257,16 +265,20 @@ const BusinessSetup = () => {
                     type="email"
                     value={formData.shopEmail}
                     onChange={handleChange}
-                    className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                    className={`block w-full rounded-lg border ${errors.shopEmail ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
                     placeholder={t('yourshop@gmail.com')}
                   />
-                  <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Shown on invoices, can differ from personal email')}</p>
+                  {errors.shopEmail ? (
+                    <p className="text-red-500 text-xs mt-1 font-medium">{errors.shopEmail}</p>
+                  ) : (
+                    <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Shown on invoices, can differ from personal email')}</p>
+                  )}
                 </div>
 
                 {/* Invoice Logo */}
                 <div className="md:col-span-2">
                   <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Invoice Logo')}</label>
-                  
+
                   <div className="flex flex-col items-start gap-4">
                     {formData.invoiceLogo ? (
                       <div className="flex items-center gap-3">
@@ -293,7 +305,7 @@ const BusinessSetup = () => {
                             <span>{uploadingLogo ? t('Uploading...') : t('Upload New Logo')}</span>
                             <input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} disabled={uploadingLogo} />
                           </label>
-                          
+
                           <div className="flex-1 w-full flex items-center gap-2">
                             <span className="text-gray-400 font-medium text-xs md:text-sm hidden md:inline-block">{t('Or')}</span>
                             <input
@@ -358,26 +370,18 @@ const BusinessSetup = () => {
 
           {/* Action Buttons (Matching Settings.jsx sticky button bar exactly) */}
           <div className="sticky bottom-4 z-20 mt-8">
-            <div className="bg-white border border-gray-200 p-2 sm:px-4 sm:py-2.5 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 w-full">
-              <div className="hidden sm:flex items-center gap-2 text-sm ml-1">
+            <div className="bg-white border border-gray-200 p-2 sm:px-4 sm:py-2.5 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 w-full shadow-none">
+              <div className="flex items-center gap-2 text-sm ml-1">
                 <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                <span className="text-gray-500 font-medium">
+                <span className="text-gray-500 font-medium text-xs sm:text-sm">
                   {t('Please complete setup to proceed')}
                 </span>
               </div>
-              <div className="flex w-full sm:w-auto items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setLogoutModalOpen(true)}
-                  className="cursor-pointer bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 sm:py-2.5 rounded-lg flex items-center justify-center font-semibold text-sm transition-colors duration-300 active:scale-[0.98] whitespace-nowrap"
-                >
-                  {t('Logout')}
-                </button>
-                
+              <div className="flex w-full sm:w-auto items-center">
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`cursor-pointer bg-[#093C5D] text-white px-8 py-2 sm:py-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold text-sm w-full sm:w-auto active:scale-[0.98] transition-colors duration-300 ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#072d46]'}`}
+                  className={`cursor-pointer bg-[#093C5D] text-white px-8 py-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold text-sm w-full sm:w-auto active:scale-[0.98] transition-colors duration-300 shadow-none ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#072d46]'}`}
                 >
                   {loading ? (
                     <>
@@ -397,59 +401,6 @@ const BusinessSetup = () => {
         </form>
 
       </div>
-
-      {/* Logout Confirmation Modal */}
-      {logoutModalOpen && (
-        <div className="fixed inset-0 z-[100]">
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity z-[100]"
-            onClick={() => {
-              if (!isLoggingOut) setLogoutModalOpen(false);
-            }}
-          />
-
-          {/* Modal Content */}
-          <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
-            <div
-              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-5 sm:p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-red-50 mx-auto flex items-center justify-center mb-4 border border-red-100">
-                  <LogOut className="w-6 h-6 text-red-600 ml-0.5" />
-                </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
-                  {t('Logout')}
-                </h3>
-                <p className="text-gray-500 text-sm mb-6 font-medium">
-                  {t('Are you sure you want to log out?')}
-                </p>
-
-                <div className="flex gap-2 sm:gap-3 justify-center">
-                  <button
-                    type="button"
-                    onClick={() => setLogoutModalOpen(false)}
-                    disabled={isLoggingOut}
-                    className="cursor-pointer flex-1 px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium text-xs sm:text-[13px] transition-colors active:scale-95 disabled:opacity-50"
-                  >
-                    {t('Cancel')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={executeLogout}
-                    disabled={isLoggingOut}
-                    className="cursor-pointer flex-1 px-3 py-1.5 sm:px-4 sm:py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium text-xs sm:text-[13px] transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
-                  >
-                    {isLoggingOut && <Loader2 className="w-4 h-4 animate-spin" />}
-                    <span>{t('Yes, Logout')}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

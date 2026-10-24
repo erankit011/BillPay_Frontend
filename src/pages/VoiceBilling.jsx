@@ -4,7 +4,9 @@ import { Mic, Loader2, CheckCircle2, Keyboard } from 'lucide-react';
 import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
+import { useSelector } from 'react-redux';
 import SwirlingLoader from '../components/common/SwirlingLoader';
+import BusinessSetupModal from '../components/common/BusinessSetupModal';
 import toast from 'react-hot-toast';
 
 const VoiceBilling = () => {
@@ -26,6 +28,9 @@ const VoiceBilling = () => {
   const [transcript, setTranscript] = useState('');
   const [result, setResult] = useState(null);
   const [manualText, setManualText] = useState('');
+  const [businessSetupModalOpen, setBusinessSetupModalOpen] = useState(false);
+
+  const { user } = useSelector(state => state.auth);
 
   const { data: shopSettings = {} } = useQuery({
       queryKey: ['shopSettings'],
@@ -49,6 +54,15 @@ const VoiceBilling = () => {
   const recognitionRef = useRef(null);
 
   const startVoiceRecognition = () => {
+    if (!user?.isBusinessSetupCompleted) {
+      toast(t('Please complete your Business Profile to use voice billing'), {
+        id: 'voice-setup-required-toast',
+        duration: 4000,
+      });
+      setBusinessSetupModalOpen(true);
+      return;
+    }
+
     try {
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
         toast.error(t('Voice recognition not supported. Please use manual input.'));
@@ -173,6 +187,15 @@ const VoiceBilling = () => {
   const handleManualSubmit = async (e) => {
     e.preventDefault();
     if (!manualText.trim()) return;
+
+    if (!user?.isBusinessSetupCompleted) {
+      toast(t('Please complete your Business Profile to use voice billing'), {
+        id: 'voice-setup-required-toast',
+        duration: 4000,
+      });
+      setBusinessSetupModalOpen(true);
+      return;
+    }
 
     await processCommand(manualText);
     setManualText('');
@@ -553,6 +576,11 @@ const VoiceBilling = () => {
           </div>
         )}
       </div>
+
+      <BusinessSetupModal
+        isOpen={businessSetupModalOpen}
+        onClose={() => setBusinessSetupModalOpen(false)}
+      />
     </div>
   );
 };

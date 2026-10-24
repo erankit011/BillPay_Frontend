@@ -99,11 +99,7 @@ const VerifyOTP = ({ type = 'registration' }) => {
         const payloadData = res.data.data;
         const userObj = payloadData?.user || payloadData;
         dispatch(loginSuccess({ user: userObj }));
-        if (userObj && !userObj.isBusinessSetupCompleted) {
-          navigate('/setup-business', { replace: true });
-        } else {
-          navigate('/dashboard', { replace: true });
-        }
+        navigate('/dashboard', { replace: true });
       }
     } catch (err) {
       const msg = err.response?.data?.message || 'Invalid code. Please try again.';

@@ -79,13 +79,8 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 };
 
 const OnboardingRoute = ({ children }) => {
-  const { user } = useSelector((state) => state.auth);
-
-  // Only shopkeepers need business setup; admins manage platform
-  if (user?.role === ROLES.SHOPKEEPER && !user.isBusinessSetupCompleted) {
-    return <Navigate to="/setup-business" replace />;
-  }
-
+  // Allow shopkeepers to freely explore the dashboard and features;
+  // business setup is prompted contextually and via the persistent banner
   return children;
 };
 
