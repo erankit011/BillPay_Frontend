@@ -736,7 +736,19 @@ const resources = {
       "Send instant digital bills and friendly payment reminders to customers.": "Send instant digital bills and friendly payment reminders to customers.",
       "100% Free & Cloud Secured": "100% Free & Cloud Secured",
       "Zero commission on UPI payments. All your records are encrypted safely.": "Zero commission on UPI payments. All your records are encrypted safely.",
-      "You can change all business details anytime later from Store Settings.": "You can change all business details anytime later from Store Settings."
+      "You can change all business details anytime later from Store Settings.": "You can change all business details anytime later from Store Settings.",
+      "New Update Available": "New Update Available",
+      "Release": "Release",
+      "Check For Update": "Check For Update",
+      "Checking...": "Checking...",
+      "Update Now": "Update Now",
+      "Updating...": "Updating...",
+      "Maybe Later": "Maybe Later",
+      "A new version of UdharPay is ready to install. Update now to experience new features and improvements.": "A new version of UdharPay is ready to install. Update now to experience new features and improvements.",
+      "UdharPay v{{version}} is ready to install. Update now to experience new features and improvements.": "UdharPay v{{version}} is ready to install. Update now to experience new features and improvements.",
+      "You are using the latest version of UdharPay": "You are using the latest version of UdharPay",
+      "Unable to check for updates right now": "Unable to check for updates right now",
+      "You are offline. Please check your internet connection.": "You are offline. Please check your internet connection."
     }
   },
   hi: {
@@ -1565,7 +1577,19 @@ const resources = {
       "Send instant digital bills and friendly payment reminders to customers.": "ग्राहकों को तुरंत डिजिटल बिल और भुगतान रिमाइंडर भेजें।",
       "100% Free & Cloud Secured": "100% मुफ़्त और सुरक्षित क्लाउड",
       "Zero commission on UPI payments. All your records are encrypted safely.": "UPI भुगतान पर शून्य कमीशन। आपका सारा डेटा पूरी तरह सुरक्षित है।",
-      "You can change all business details anytime later from Store Settings.": "आप स्टोर सेटिंग्स से कभी भी सभी व्यावसायिक विवरण बदल सकते हैं।"
+      "You can change all business details anytime later from Store Settings.": "आप स्टोर सेटिंग्स से कभी भी सभी व्यावसायिक विवरण बदल सकते हैं।",
+      "New Update Available": "नया अपडेट उपलब्ध है",
+      "Release": "रिलीज़",
+      "Check For Update": "अपडेट चेक करें",
+      "Checking...": "जाँच हो रही है...",
+      "Update Now": "अभी अपडेट करें",
+      "Updating...": "अपडेट हो रहा है...",
+      "Maybe Later": "बाद में करें",
+      "A new version of UdharPay is ready to install. Update now to experience new features and improvements.": "उधारपे का नया संस्करण इंस्टॉल के लिए तैयार है। नए फीचर्स और सुधारों के लिए अभी अपडेट करें।",
+      "UdharPay v{{version}} is ready to install. Update now to experience new features and improvements.": "उधारपे v{{version}} इंस्टॉल के लिए तैयार है। नए फीचर्स और सुधारों के लिए अभी अपडेट करें।",
+      "You are using the latest version of UdharPay": "आप उधारपे का नवीनतम संस्करण इस्तेमाल कर रहे हैं",
+      "Unable to check for updates right now": "इस समय अपडेट की जाँच नहीं हो सकी",
+      "You are offline. Please check your internet connection.": "आप ऑफ़लाइन हैं। कृपया इंटरनेट कनेक्शन जांचें।"
     }
   }
 };

@@ -9,6 +9,17 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Windows Junction Fix: Sync process.cwd() with realpath so esbuild metafile output keys match Vite's path computations exactly
+try {
+  const realCwd = fs.realpathSync.native ? fs.realpathSync.native(process.cwd()) : fs.realpathSync(process.cwd());
+  if (process.cwd() !== realCwd) {
+    process.chdir(realCwd);
+  }
+} catch {
+  // Fallback silently if realpath fails
+}
+
 const packageJson = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, 'package.json'), 'utf-8')
 );
@@ -22,12 +33,15 @@ export default defineConfig(({ mode }) => ({
   esbuild: {
     drop: mode === 'production' ? ['console', 'debugger'] : [],
   },
+  optimizeDeps: {
+    exclude: ['virtual:pwa-register', 'virtual:pwa-register/react']
+  },
   plugins: [
     react(),
     tailwindcss(),
     // ===== PWA CONFIGURATION START =====
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       includeAssets: ['pwa-192x192.svg', 'pwa-512x512.svg'],
       manifest: {
         name: 'UdharPay - Billing & Reminders',
@@ -58,7 +72,8 @@ export default defineConfig(({ mode }) => ({
         ]
       },
       devOptions: {
-        enabled: false
+        enabled: true,
+        type: 'module'
       }
     })
     // ===== PWA CONFIGURATION END =====
