@@ -41,11 +41,7 @@ const OAuthCallback = () => {
           dispatch(loginSuccess({ user }));
           toast.success(`Welcome, ${user.name || 'User'}!`);
 
-          if (user.isBusinessSetupCompleted) {
-            navigate('/dashboard', { replace: true });
-          } else {
-            navigate('/setup-business', { replace: true });
-          }
+          navigate('/dashboard', { replace: true });
         } else {
           toast.error('Failed to load user details.');
           navigate('/login', { replace: true });

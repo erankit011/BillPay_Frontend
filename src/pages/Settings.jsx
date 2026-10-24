@@ -8,6 +8,7 @@ import { logout, setUser } from '../redux/slices/authSlice';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import toast from 'react-hot-toast';
 import { formatShortDate, formatRelativeTime } from '../utils/dateUtils';
+import AppVersionCard from '../components/common/AppVersionCard';
 
 
 // ── Section Nav Item ──
@@ -464,6 +465,11 @@ const Settings = () => {
             {userHasPassword && <SectionNavItem icon={Lock} label={t('Change Password')} sectionId="security" activeSection={activeSection} onClick={scrollToSection} />}
             <SectionNavItem icon={Laptop} label={t('Active Devices')} sectionId="devices" activeSection={activeSection} onClick={scrollToSection} />
             <SectionNavItem icon={Trash2} label={t('Delete Account')} sectionId="account" activeSection={activeSection} onClick={scrollToSection} />
+
+            {/* App Version Card (Desktop) */}
+            <div className="pt-4 border-t border-gray-100 mt-4">
+              <AppVersionCard variant="sidebar" />
+            </div>
           </nav>
         </div>
 
@@ -1410,6 +1416,11 @@ const Settings = () => {
             )}
 
           </form>
+
+          {/* App Version Card (Mobile / Tablets) */}
+          <div className="lg:hidden pt-4 pb-2">
+            <AppVersionCard variant="full" />
+          </div>
         </div>
       </div>
 

@@ -15,6 +15,7 @@ import toast from 'react-hot-toast';
 
 import { formatCurrency } from '../utils/currency';
 import { formatDate, isSubscriptionExpired, isTrialExpired } from '../utils/dateUtils';
+import { getInitials } from '../utils/stringUtils';
 
 const Customers = () => {
   const { t } = useTranslation();
@@ -181,15 +182,6 @@ const Customers = () => {
 
   const onSubmit = (formData) => {
     mutation.mutate(formData);
-  };
-
-  const getInitials = (name) => {
-    if (!name) return 'UN';
-    const parts = name.trim().split(/\s+/);
-    if (parts.length > 1) {
-      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
   };
 
   const getAvatarColor = (balance) => {

@@ -24,6 +24,7 @@ import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 import { formatCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/dateUtils';
+import { getInitials } from '../../utils/stringUtils';
 
 const STATUS_FILTERS = [
   { label: 'All Invoices', value: 'ALL' },
@@ -104,14 +105,7 @@ const AdminSubscriptions = () => {
   const pendingOrFailed = Math.max(0, totalCount - paidCount);
 
 
-  const getInitials = (name) => {
-    if (!name) return 'SH';
-    const parts = name.trim().split(/\s+/);
-    if (parts.length > 1) {
-      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
-  };
+
 
   const getStatusBadge = (status) => {
     switch (status?.toLowerCase()) {

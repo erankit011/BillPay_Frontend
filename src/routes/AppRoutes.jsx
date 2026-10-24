@@ -8,7 +8,7 @@ import AuthLayout from '../components/layout/AuthLayout';
 const Landing = lazy(() => import('../pages/Landing'));
 const Login = lazy(() => import('../pages/Login'));
 const Register = lazy(() => import('../pages/Register'));
-const VerifyOTP = lazy(() => import('../components/auth/VerifyOTP'));
+const VerifyOTP = lazy(() => import('../pages/VerifyOTP'));
 const ForgotPassword = lazy(() => import('../pages/ForgotPassword'));
 const ResetPassword = lazy(() => import('../pages/ResetPassword'));
 const Dashboard = lazy(() => import('../pages/Dashboard'));
@@ -31,7 +31,6 @@ const AdminDashboard = lazy(() => import('../pages/admin/AdminDashboard'));
 const AdminShops = lazy(() => import('../pages/admin/AdminShops'));
 const AdminBills = lazy(() => import('../pages/admin/AdminBills'));
 const AdminSubscriptions = lazy(() => import('../pages/admin/AdminSubscriptions'));
-const AdminStorePlans = lazy(() => import('../pages/admin/AdminStorePlans'));
 const AdminReports = lazy(() => import('../pages/admin/AdminReports'));
 const AdminSystemHealth = lazy(() => import('../pages/admin/AdminSystemHealth'));
 const AdminSettings = lazy(() => import('../pages/admin/AdminSettings'));
@@ -80,13 +79,8 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 };
 
 const OnboardingRoute = ({ children }) => {
-  const { user } = useSelector((state) => state.auth);
-
-  // Only shopkeepers need business setup; admins manage platform
-  if (user?.role === ROLES.SHOPKEEPER && !user.isBusinessSetupCompleted) {
-    return <Navigate to="/setup-business" replace />;
-  }
-
+  // Allow shopkeepers to freely explore the dashboard and features;
+  // business setup is prompted contextually and via the persistent banner
   return children;
 };
 
@@ -179,8 +173,8 @@ const AppRoutes = () => {
           <Route path="/admin/shops" element={<AdminShops />} />
           <Route path="/admin/bills" element={<AdminBills />} />
           <Route path="/admin/subscriptions" element={<AdminSubscriptions />} />
-          <Route path="/admin/subscriptions/store-plans" element={<AdminStorePlans />} />
-          <Route path="/admin/subscriptions/plans" element={<Navigate to="/admin/subscriptions/store-plans" replace />} />
+          <Route path="/admin/subscriptions/store-plans" element={<Navigate to="/admin/shops" replace />} />
+          <Route path="/admin/subscriptions/plans" element={<Navigate to="/admin/plans" replace />} />
           <Route path="/admin/reports" element={<AdminReports />} />
           <Route path="/admin/health" element={<AdminSystemHealth />} />
           <Route path="/admin/settings" element={<AdminSettings />} />

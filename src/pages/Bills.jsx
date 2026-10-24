@@ -11,19 +11,12 @@ import CreateBillModal from '../components/bills/CreateBillModal';
 import ViewBillModal from '../components/bills/ViewBillModal';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import UpgradeModal from '../components/common/UpgradeModal';
+import BusinessSetupModal from '../components/common/BusinessSetupModal';
 import toast from 'react-hot-toast';
 
 import { formatCurrency } from '../utils/currency';
 import { formatDate, isSubscriptionExpired, isTrialExpired } from '../utils/dateUtils';
-
-const getInitials = (name) => {
-    if (!name) return 'CS';
-    const parts = name.trim().split(/\s+/);
-    if (parts.length > 1) {
-        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
-};
+import { getInitials } from '../utils/stringUtils';
 
 
 const Bills = () => {
@@ -47,6 +40,7 @@ const Bills = () => {
 
     // Upgrade Modal State
     const [upgradeModal, setUpgradeModal] = useState({ isOpen: false, title: '', message: '' });
+    const [businessSetupModalOpen, setBusinessSetupModalOpen] = useState(false);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(null);
@@ -327,6 +321,15 @@ const Bills = () => {
     };
 
     const handleNewBillClick = () => {
+        if (!shopDetails?.isBusinessSetupCompleted) {
+            toast(t('Please complete your Business Profile to create bills & invoices'), {
+                id: 'business-setup-required-toast',
+                duration: 4000,
+            });
+            setBusinessSetupModalOpen(true);
+            return;
+        }
+
         if (isSubscriptionExpired(shopDetails)) {
             setUpgradeModal({
                 isOpen: true,
@@ -858,7 +861,7 @@ const Bills = () => {
             />
 
             {/* Mobile & Tablet Extended FAB (No Shadow) - hidden when any modal is open */}
-            {!activeBill && !isModalOpen && (
+            {!activeBill && !isModalOpen && !businessSetupModalOpen && (
                 <button
                     onClick={handleNewBillClick}
                     className="lg:hidden fixed bottom-6 sm:bottom-8 right-6 sm:right-8 z-50 bg-[#093C5D] hover:bg-[#082a42] text-white px-5 sm:px-6 py-3 rounded-lg cursor-pointer flex items-center justify-center gap-2 active:scale-95 transition-all duration-200"
@@ -874,6 +877,11 @@ const Bills = () => {
                 onClose={() => setUpgradeModal({ ...upgradeModal, isOpen: false })}
                 title={upgradeModal.title}
                 message={upgradeModal.message}
+            />
+
+            <BusinessSetupModal
+                isOpen={businessSetupModalOpen}
+                onClose={() => setBusinessSetupModalOpen(false)}
             />
         </div>
     );

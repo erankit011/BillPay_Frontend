@@ -26,15 +26,7 @@ import { getAdminReports } from '../../features/admin/api/adminApi';
 import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 import { formatCurrency } from '../../utils/currency';
-
-const getInitials = (name) => {
-  if (!name) return 'SH';
-  const parts = name.trim().split(/\s+/);
-  if (parts.length > 1) {
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  }
-  return name.substring(0, 2).toUpperCase();
-};
+import { getInitials } from '../../utils/stringUtils';
 
 const getPlanBadge = (plan) => {
   switch (plan?.toUpperCase()) {

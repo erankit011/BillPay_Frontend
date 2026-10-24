@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function SwirlingLoader({ className = "w-12 h-12 text-[#093C5D]", ...props }) {
+export default function SwirlingLoader({ className = "w-12 h-12 text-[#093C5D]", strokeWidth = 50, ...props }) {
   return (
     <>
       <style>{`
@@ -46,7 +46,7 @@ export default function SwirlingLoader({ className = "w-12 h-12 text-[#093C5D]",
           fill="none"
           stroke="currentColor"
           strokeLinecap="round"
-          strokeWidth="50"
+          strokeWidth={strokeWidth}
         />
       </svg>
     </>

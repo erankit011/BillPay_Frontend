@@ -3,12 +3,12 @@ import toast from 'react-hot-toast';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { ShieldCheck, Clock, ArrowRight, RotateCcw, Headphones } from 'lucide-react';
-import { loginSuccess } from '../../redux/slices/authSlice';
-import api from '../../api/axios';
+import { loginSuccess } from '../redux/slices/authSlice';
+import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
 
 /**
- * Reusable OTP Verification Component
+ * Reusable OTP Verification Component / Page
  * Used for both Registration and Login OTP verification
  * 
  * @param {string} type - 'registration' or 'login'
@@ -99,11 +99,7 @@ const VerifyOTP = ({ type = 'registration' }) => {
         const payloadData = res.data.data;
         const userObj = payloadData?.user || payloadData;
         dispatch(loginSuccess({ user: userObj }));
-        if (userObj && !userObj.isBusinessSetupCompleted) {
-          navigate('/setup-business', { replace: true });
-        } else {
-          navigate('/dashboard', { replace: true });
-        }
+        navigate('/dashboard', { replace: true });
       }
     } catch (err) {
       const msg = err.response?.data?.message || 'Invalid code. Please try again.';

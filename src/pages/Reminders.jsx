@@ -5,9 +5,11 @@ import api from '../api/axios';
 import { Plus, Bell, Clock, User, X, MessageCircle, Mail, Edit, Trash2, TrendingUp, Lightbulb, Activity, Send, Loader2, AlertCircle, Eye, Search } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import LoadMoreButton from '../components/common/LoadMoreButton';
 import SearchableSelect from '../components/common/SearchableSelect';
 import SwirlingLoader from '../components/common/SwirlingLoader';
+import BusinessSetupModal from '../components/common/BusinessSetupModal';
 import { formatDate } from '../utils/dateUtils';
 import toast from 'react-hot-toast';
 
@@ -26,6 +28,8 @@ const Reminders = () => {
   const [reminderToSend, setReminderToSend] = useState(null);
   const [reminderToView, setReminderToView] = useState(null);
   const [sendingReminderId, setSendingReminderId] = useState(null);
+  const [businessSetupModalOpen, setBusinessSetupModalOpen] = useState(false);
+  const { user } = useSelector(state => state.auth);
   const queryClient = useQueryClient();
 
   const setFilterStatus = (value) => {
@@ -136,6 +140,14 @@ const Reminders = () => {
 
   const handleSendNow = async (reminder) => {
     if (sendingReminderId) return;
+    if (!user?.isBusinessSetupCompleted) {
+      toast(t('Please complete your Business Profile to send payment reminders'), {
+        id: 'reminder-setup-required-toast',
+        duration: 4000,
+      });
+      setBusinessSetupModalOpen(true);
+      return;
+    }
     try {
       setSendingReminderId(reminder._id);
       await api.post(`/reminders/${reminder._id}/send`);
@@ -183,7 +195,7 @@ const Reminders = () => {
     reset();
   };
 
-  const isAnyModalOpen = isModalOpen || !!reminderToDelete || !!reminderToSend || !!reminderToView;
+  const isAnyModalOpen = isModalOpen || !!reminderToDelete || !!reminderToSend || !!reminderToView || businessSetupModalOpen;
 
   useEffect(() => {
     if (isAnyModalOpen) {
@@ -230,7 +242,17 @@ const Reminders = () => {
           </p>
         </div>
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            if (!user?.isBusinessSetupCompleted) {
+              toast(t('Please complete your Business Profile to schedule reminders'), {
+                id: 'reminder-setup-required-toast',
+                duration: 4000,
+              });
+              setBusinessSetupModalOpen(true);
+              return;
+            }
+            setIsModalOpen(true);
+          }}
           className="hidden lg:flex cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
         >
           <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
@@ -593,9 +615,15 @@ const Reminders = () => {
       </div>
 
       {/* Mobile & Tablet Extended FAB (No Shadow) */}
-      {!isAnyModalOpen && (
+      {!isAnyModalOpen && !businessSetupModalOpen && (
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            if (!user?.isBusinessSetupCompleted) {
+              setBusinessSetupModalOpen(true);
+              return;
+            }
+            setIsModalOpen(true);
+          }}
           className="lg:hidden fixed bottom-6 right-6 bg-[#093C5D] hover:bg-[#082a42] text-white px-5 py-3.5 rounded-lg flex items-center transition-all z-[40] active:scale-95 group font-semibold text-sm"
         >
           <Plus className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
@@ -844,6 +872,12 @@ const Reminders = () => {
           </div>
         </div>
       )}
+
+      {/* Business Setup Prompt Modal */}
+      <BusinessSetupModal
+        isOpen={businessSetupModalOpen}
+        onClose={() => setBusinessSetupModalOpen(false)}
+      />
 
     </div>
   );

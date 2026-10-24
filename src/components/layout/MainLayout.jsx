@@ -90,7 +90,6 @@ const MainLayout = () => {
   const isSubscriptionsActive = useMemo(() => {
     return (
       location.pathname === '/admin/subscriptions' ||
-      location.pathname === '/admin/subscriptions/store-plans' ||
       location.pathname === '/admin/subscriptions/plans' ||
       location.pathname === '/admin/plans'
     );
@@ -290,7 +289,6 @@ const MainLayout = () => {
             queryClient.invalidateQueries({ queryKey: ['customers'] });
             queryClient.invalidateQueries({ queryKey: ['dashboard'] });
             toast.success(data.message || t('Your subscription plan has been updated!'), {
-              icon: '👑',
               duration: 5000,
             });
           }
@@ -306,7 +304,6 @@ const MainLayout = () => {
           ]);
           queryClient.invalidateQueries({ queryKey: ['directOfficialNotices'] });
           toast(newNotif.title + ': ' + newNotif.message, {
-            icon: '🔔',
             duration: 4000,
           });
         });
@@ -330,7 +327,6 @@ const MainLayout = () => {
           queryClient.invalidateQueries({ queryKey: ['publicContactInfo'] });
           if (data?.isMaintenanceMode) {
             toast(data.maintenanceMessage || t('Platform is currently undergoing scheduled maintenance.'), {
-              icon: '⚠️',
               duration: 6000,
             });
           }
@@ -347,9 +343,8 @@ const MainLayout = () => {
           if (user?.role === 'admin' || user?.role === ROLES.ADMIN) {
             queryClient.invalidateQueries({ queryKey: ['adminOverview'] });
             queryClient.invalidateQueries({ queryKey: ['adminSubscriptions'] });
-            queryClient.invalidateQueries({ queryKey: ['adminStorePlans'] });
+            queryClient.invalidateQueries({ queryKey: ['adminShops'] });
             toast.success(`Store upgraded: ${data.shopName || 'Shop'} (${data.plan})`, {
-              icon: '🎉',
               duration: 5000,
             });
           }
@@ -361,7 +356,6 @@ const MainLayout = () => {
             queryClient.invalidateQueries({ queryKey: ['adminTickets'] });
             queryClient.invalidateQueries({ queryKey: ['adminTicketStats'] });
             toast(`New support ticket #${ticket.ticketId}: ${ticket.subject || 'Inquiry'}`, {
-              icon: '🎫',
               duration: 5000,
             });
           }
@@ -483,7 +477,6 @@ const MainLayout = () => {
     if (p.includes('/admin/dashboard') || p === '/admin') return 'Dashboard';
     if (p.includes('/admin/shops')) return 'Store';
     if (p.includes('/admin/bills')) return 'Store Bill';
-    if (p.includes('/admin/subscriptions/store-plans') || p.includes('/admin/subscriptions/plans')) return 'Store Plans';
     if (p.includes('/admin/subscriptions')) return 'Billing Receipts';
     if (p.includes('/admin/reports')) return 'Store Reports';
     if (p.includes('/admin/health')) return 'System Health';
@@ -513,7 +506,6 @@ const MainLayout = () => {
     if (p.includes('/admin/dashboard') || p === '/admin') return Home;
     if (p.includes('/admin/shops')) return Store;
     if (p.includes('/admin/bills')) return FileText;
-    if (p.includes('/admin/subscriptions/store-plans') || p.includes('/admin/subscriptions/plans')) return Crown;
     if (p.includes('/admin/subscriptions')) return CreditCard;
     if (p.includes('/admin/reports')) return BarChart2;
     if (p.includes('/admin/health')) return Activity;
@@ -752,18 +744,6 @@ const MainLayout = () => {
                           Billing Receipts
                         </NavLink>
 
-                        <NavLink
-                          to="/admin/subscriptions/store-plans"
-                          className={({ isActive }) =>
-                            `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
-                              isActive
-                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
-                            }`
-                          }
-                        >
-                          Store Plans
-                        </NavLink>
 
                         <NavLink
                           to="/admin/plans"
@@ -1083,8 +1063,8 @@ const MainLayout = () => {
         </nav>
 
         {/* Sidebar Footer */}
-        {!isAdmin && (
-          <div className="p-3 border-t border-gray-100 shrink-0">
+        <div className="p-3 border-t border-gray-100 shrink-0">
+          {!isAdmin && (
             <Link
               to="/contact-support"
               title={sidebarCollapsed ? 'Help & Support' : undefined}
@@ -1097,8 +1077,8 @@ const MainLayout = () => {
               <HelpCircle className="w-4 h-4 shrink-0" />
               {!sidebarCollapsed && <span>{t('Help')}</span>}
             </Link>
-          </div>
-        )}
+          )}
+        </div>
       </aside>
 
       {/* =========================================================================
@@ -1264,19 +1244,6 @@ const MainLayout = () => {
                           Billing Receipts
                         </NavLink>
 
-                        <NavLink
-                          to="/admin/subscriptions/store-plans"
-                          onClick={() => setMobileDrawerOpen(false)}
-                          className={({ isActive }) =>
-                            `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
-                              isActive
-                                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
-                            }`
-                          }
-                        >
-                          Store Plans
-                        </NavLink>
 
                         <NavLink
                           to="/admin/plans"
@@ -1559,8 +1526,8 @@ const MainLayout = () => {
               )}
             </div>
 
-            {!isAdmin && (
-              <div className="p-4 border-t border-gray-100 shrink-0">
+            <div className="p-4 border-t border-gray-100 shrink-0 space-y-2.5">
+              {!isAdmin && (
                 <Link
                   to="/contact-support"
                   onClick={() => setMobileDrawerOpen(false)}
@@ -1573,8 +1540,8 @@ const MainLayout = () => {
                   <HelpCircle className="w-4 h-4 shrink-0" />
                   <span>{t('Help & Support')}</span>
                 </Link>
-              </div>
-            )}
+              )}
+            </div>
           </aside>
         </div>
       )}
@@ -1874,6 +1841,34 @@ const MainLayout = () => {
               >
                 {t('Resolve Now')}
               </Link>
+            </div>
+          )}
+
+          {/* Shopkeeper Business Setup Incomplete Alert Banner */}
+          {user?.role === ROLES.SHOPKEEPER && !user?.isBusinessSetupCompleted && (
+            <div className="w-full bg-blue-50/70 border border-blue-200 rounded-lg p-3.5 sm:p-4 mb-6 shadow-none flex flex-col md:flex-row md:items-center justify-between gap-3.5 sm:gap-4 transition-all">
+              <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-white border border-blue-200 text-[#093C5D] flex items-center justify-center shrink-0 shadow-none">
+                  <Store className="w-4 h-4 sm:w-5 sm:h-5 text-[#093C5D]" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h4 className="text-xs sm:text-sm font-semibold text-gray-900 tracking-tight leading-snug">
+                    {t('Set Up Your Business Profile')}
+                  </h4>
+                  <p className="text-xs sm:text-[13px] font-medium text-gray-600 leading-normal mt-0.5">
+                    {t('Add your shop name, address & phone to create bills and send invoices.')}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center shrink-0 w-full md:w-auto">
+                <Link
+                  to="/setup-business"
+                  className="cursor-pointer w-full md:w-auto inline-flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-white bg-[#093C5D] hover:bg-[#082a42] active:scale-95 px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-all shadow-none"
+                >
+                  <span>{t('Complete Setup')}</span>
+                  <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+                </Link>
+              </div>
             </div>
           )}
 

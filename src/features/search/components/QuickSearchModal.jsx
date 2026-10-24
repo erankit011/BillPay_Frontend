@@ -47,7 +47,6 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
         { title: t('Store Bills'), desc: 'Audit itemized bills, settlements & customer transactions', path: '/admin/bills', icon: FileText, category: 'Stores' },
         { title: t('Store Reports'), desc: 'Store sales turnover, GMV trends & credit recovery analytics', path: '/admin/reports', icon: BarChart2, category: 'Stores' },
         { title: t('Billing Receipts'), desc: 'Platform SaaS invoices, merchant transaction receipts & renewals', path: '/admin/subscriptions', icon: CreditCard, category: 'Subscriptions' },
-        { title: t('Store Plans'), desc: 'Manage merchant store subscription tiers & custom quota overrides', path: '/admin/subscriptions/store-plans', icon: Crown, category: 'Subscriptions' },
         { title: t('Plans & Pricing'), desc: 'Configure tier quotas, features, prices & billing cycles', path: '/admin/plans', icon: Layers, category: 'Subscriptions' },
         { title: t('System Health'), desc: 'Server telemetry, memory, latency & database uptime', path: '/admin/health', icon: Activity, category: 'System' },
         { title: t('Broadcast Announcements'), desc: 'Publish banners, notices and alerts to storekeepers', path: '/admin/broadcasts', icon: Megaphone, category: 'Communication' },

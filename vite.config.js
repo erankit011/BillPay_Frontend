@@ -3,23 +3,45 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Windows Junction Fix: Sync process.cwd() with realpath so esbuild metafile output keys match Vite's path computations exactly
+try {
+  const realCwd = fs.realpathSync.native ? fs.realpathSync.native(process.cwd()) : fs.realpathSync(process.cwd());
+  if (process.cwd() !== realCwd) {
+    process.chdir(realCwd);
+  }
+} catch {
+  // Fallback silently if realpath fails
+}
+
+const packageJson = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, 'package.json'), 'utf-8')
+);
+
 export default defineConfig(({ mode }) => ({
   root: __dirname,
+  define: {
+    __APP_VERSION__: JSON.stringify(packageJson.version || '1.0.0'),
+    __BUILD_DATE__: JSON.stringify(new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })),
+  },
   esbuild: {
     drop: mode === 'production' ? ['console', 'debugger'] : [],
+  },
+  optimizeDeps: {
+    exclude: ['virtual:pwa-register', 'virtual:pwa-register/react']
   },
   plugins: [
     react(),
     tailwindcss(),
     // ===== PWA CONFIGURATION START =====
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       includeAssets: ['pwa-192x192.svg', 'pwa-512x512.svg'],
       manifest: {
         name: 'UdharPay - Billing & Reminders',
@@ -50,7 +72,8 @@ export default defineConfig(({ mode }) => ({
         ]
       },
       devOptions: {
-        enabled: false
+        enabled: true,
+        type: 'module'
       }
     })
     // ===== PWA CONFIGURATION END =====

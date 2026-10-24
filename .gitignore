@@ -47,3 +47,5 @@ tmp
 # Cache
 .cache
 .parcel-cache
+.vite
+dev-dist
