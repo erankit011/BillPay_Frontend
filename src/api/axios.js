@@ -176,7 +176,16 @@ api.interceptors.response.use(
     }
 
     if (error.response?.status === 429) {
-      toast.error(error.response?.data?.message || 'Too many requests, please try again later.');
+      const serverMessage = error.response?.data?.message;
+      const retryAfter = error.response?.data?.retryAfter;
+      const message = serverMessage || (retryAfter 
+        ? `Too many requests. Please wait ${retryAfter} seconds before trying again.`
+        : 'Too many requests. Please slow down and try again shortly.');
+
+      toast.error(message, {
+        id: 'rate-limit-toast',
+        duration: 4500,
+      });
     }
 
     return Promise.reject(error);
