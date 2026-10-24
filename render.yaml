@@ -14,6 +14,12 @@ services:
       - key: VITE_API_URL
         sync: false
     headers:
+      - path: /sw.js
+        name: Cache-Control
+        value: no-cache, no-store, must-revalidate
+      - path: /manifest.webmanifest
+        name: Cache-Control
+        value: no-cache, no-store, must-revalidate
       - path: /*
         name: X-Frame-Options
         value: SAMEORIGIN
