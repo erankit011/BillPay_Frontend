@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { formatShortDate } from '../../utils/dateUtils';
+import { getInitials } from '../../utils/stringUtils';
 import {
   getAdminTickets,
   getAdminTicketStats,
@@ -186,13 +187,6 @@ const AdminSupport = () => {
   };
 
   const formatDate = (dateString) => formatShortDate(dateString);
-
-  const getInitials = (name) => {
-    if (!name) return 'U';
-    const parts = name.trim().split(' ');
-    if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
-    return name.slice(0, 2).toUpperCase();
-  };
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">

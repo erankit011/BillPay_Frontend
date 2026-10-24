@@ -41,6 +41,7 @@ import ForceLogoutModal from '../../features/admin/components/ForceLogoutModal';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 import { formatCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/dateUtils';
+import { getInitials } from '../../utils/stringUtils';
 import toast from 'react-hot-toast';
 
 const formatMonthYear = (val) => {
@@ -221,15 +222,6 @@ const AdminDashboard = () => {
       avgRevPerStore: avg,
     };
   }, [chartData]);
-
-  const getInitials = (name) => {
-    if (!name) return 'SH';
-    const parts = name.trim().split(/\s+/);
-    if (parts.length > 1) {
-      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
-  };
 
   const getPlanBadge = (plan) => {
     switch (plan?.toUpperCase()) {

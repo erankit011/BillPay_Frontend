@@ -15,15 +15,7 @@ import toast from 'react-hot-toast';
 
 import { formatCurrency } from '../utils/currency';
 import { formatDate, isSubscriptionExpired, isTrialExpired } from '../utils/dateUtils';
-
-const getInitials = (name) => {
-    if (!name) return 'CS';
-    const parts = name.trim().split(/\s+/);
-    if (parts.length > 1) {
-        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
-};
+import { getInitials } from '../utils/stringUtils';
 
 
 const Bills = () => {

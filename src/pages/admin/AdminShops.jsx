@@ -40,6 +40,7 @@ import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 import { formatCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/dateUtils';
+import { getInitials } from '../../utils/stringUtils';
 
 const PLAN_FILTERS = [
   { label: 'All Plans', value: 'ALL' },
@@ -184,15 +185,6 @@ const AdminShops = () => {
 
   const handleOpenLogoutModal = (shop) => {
     setLogoutModalShop(shop);
-  };
-
-  const getInitials = (name) => {
-    if (!name) return 'SH';
-    const parts = name.trim().split(/\s+/);
-    if (parts.length > 1) {
-      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
   };
 
   const getPlanBadge = (plan) => {

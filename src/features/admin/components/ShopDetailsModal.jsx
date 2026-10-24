@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { formatCurrency } from '../../../utils/currency';
 import { formatDate, isDateExpired } from '../../../utils/dateUtils';
+import { getInitials } from '../../../utils/stringUtils';
 
 const ShopDetailsModal = ({
   isOpen,
@@ -60,15 +61,6 @@ const ShopDetailsModal = ({
   const upiId = shop.upiId || shop.settings?.upiId || shop.shopSettings?.upiId;
   const address = shop.shopAddress || shop.settings?.shopAddress || shop.shopSettings?.address;
   const shortId = shop._id ? shop._id.slice(-6).toUpperCase() : '';
-
-  const getInitials = (name) => {
-    if (!name) return 'SH';
-    const parts = name.trim().split(/\s+/);
-    if (parts.length > 1) {
-      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
-  };
 
   const expiryDate = shop.currentPeriodEnd || shop.subscriptionExpiresAt;
   const isPlanExpired = isDateExpired(expiryDate);

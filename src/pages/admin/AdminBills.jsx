@@ -24,6 +24,7 @@ import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 import { formatCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/dateUtils';
+import { getInitials } from '../../utils/stringUtils';
 
 const AdminBills = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -115,15 +116,6 @@ const AdminBills = () => {
   const totalPaid = data?.totalPaid || 0;
   const totalPending = data?.totalPending || 0;
   const totalPages = data?.totalPages || 1;
-
-  const getInitials = (name) => {
-    if (!name || typeof name !== 'string') return 'SH';
-    const parts = name.trim().split(/\s+/);
-    if (parts.length >= 2) {
-      return (parts[0][0] + parts[1][0]).toUpperCase();
-    }
-    return name.slice(0, 2).toUpperCase();
-  };
 
   const getStatusBadge = (status) => {
     switch (status) {

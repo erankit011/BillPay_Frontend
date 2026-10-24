@@ -32,6 +32,7 @@ import AuditDetailsModal from '../../features/admin/components/audit/AuditDetail
 import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 import { formatDate } from '../../utils/dateUtils';
+import { getInitials } from '../../utils/stringUtils';
 
 const CATEGORY_OPTIONS = [
   { value: 'ALL', label: 'All Categories' },
@@ -204,13 +205,6 @@ const AdminAuditLogs = () => {
   const openLogDetails = (log) => {
     setSelectedLog(log);
     setIsDetailsOpen(true);
-  };
-
-  const getInitials = (name) => {
-    if (!name) return 'S';
-    const parts = name.trim().split(' ');
-    if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
-    return name.slice(0, 2).toUpperCase();
   };
 
   return (
