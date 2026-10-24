@@ -8,7 +8,7 @@ import AuthLayout from '../components/layout/AuthLayout';
 const Landing = lazy(() => import('../pages/Landing'));
 const Login = lazy(() => import('../pages/Login'));
 const Register = lazy(() => import('../pages/Register'));
-const VerifyOTP = lazy(() => import('../components/auth/VerifyOTP'));
+const VerifyOTP = lazy(() => import('../pages/VerifyOTP'));
 const ForgotPassword = lazy(() => import('../pages/ForgotPassword'));
 const ResetPassword = lazy(() => import('../pages/ResetPassword'));
 const Dashboard = lazy(() => import('../pages/Dashboard'));
