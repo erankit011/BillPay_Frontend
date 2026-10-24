@@ -22,6 +22,7 @@ import AdminActiveDevices from '../../features/admin/components/settings/AdminAc
 import PlatformNotificationSettings from '../../features/admin/components/settings/PlatformNotificationSettings';
 import WhatsAppGatewaySettings from '../../features/admin/components/settings/WhatsAppGatewaySettings';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
+import AppVersionCard from '../../components/common/AppVersionCard';
 
 // ── Section Nav Item (Exact pattern from Shopkeeper Settings) ──
 const SectionNavItem = ({ icon: Icon, label, sectionId, activeSection, onClick }) => (
@@ -122,6 +123,11 @@ const AdminSettings = () => {
                 onClick={setActiveSection}
               />
             ))}
+
+            {/* App Version Card (Desktop) */}
+            <div className="pt-4 border-t border-gray-100 mt-4">
+              <AppVersionCard variant="sidebar" />
+            </div>
           </nav>
         </div>
 
@@ -201,6 +207,11 @@ const AdminSettings = () => {
               {activeSection === 'devices' && <AdminActiveDevices />}
             </>
           )}
+
+          {/* App Version Card (Mobile / Tablets) */}
+          <div className="lg:hidden pt-4 pb-2">
+            <AppVersionCard variant="full" />
+          </div>
         </div>
       </div>
     </div>

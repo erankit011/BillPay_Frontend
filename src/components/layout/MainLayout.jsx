@@ -1063,8 +1063,8 @@ const MainLayout = () => {
         </nav>
 
         {/* Sidebar Footer */}
-        {!isAdmin && (
-          <div className="p-3 border-t border-gray-100 shrink-0">
+        <div className="p-3 border-t border-gray-100 shrink-0">
+          {!isAdmin && (
             <Link
               to="/contact-support"
               title={sidebarCollapsed ? 'Help & Support' : undefined}
@@ -1077,8 +1077,8 @@ const MainLayout = () => {
               <HelpCircle className="w-4 h-4 shrink-0" />
               {!sidebarCollapsed && <span>{t('Help')}</span>}
             </Link>
-          </div>
-        )}
+          )}
+        </div>
       </aside>
 
       {/* =========================================================================
@@ -1526,8 +1526,8 @@ const MainLayout = () => {
               )}
             </div>
 
-            {!isAdmin && (
-              <div className="p-4 border-t border-gray-100 shrink-0">
+            <div className="p-4 border-t border-gray-100 shrink-0 space-y-2.5">
+              {!isAdmin && (
                 <Link
                   to="/contact-support"
                   onClick={() => setMobileDrawerOpen(false)}
@@ -1540,8 +1540,8 @@ const MainLayout = () => {
                   <HelpCircle className="w-4 h-4 shrink-0" />
                   <span>{t('Help & Support')}</span>
                 </Link>
-              </div>
-            )}
+              )}
+            </div>
           </aside>
         </div>
       )}
