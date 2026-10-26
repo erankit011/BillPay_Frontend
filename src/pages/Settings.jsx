@@ -97,6 +97,13 @@ const Settings = () => {
     taxRate: 0,
     defaultPaymentMode: 'CASH',
     defaultPaymentTerms: 30,
+    printerType: 'A4',
+    autoPrint: false,
+    invoiceLogo: '',
+    discountType: 'PERCENTAGE',
+    gstSplit: false,
+    defaultCreditLimit: 0,
+    voiceLanguage: 'hi-IN',
     // Shop / Business Info
     shopName: '',
     gstNumber: '',
@@ -120,6 +127,12 @@ const Settings = () => {
   const [userHasPassword, setUserHasPassword] = useState(true); // Default to true
   const [platformInvoices, setPlatformInvoices] = useState([]);
   const [uploadingLogo, setUploadingLogo] = useState(false);
+
+  useEffect(() => {
+    if (!userHasPassword && activeSection === 'security') {
+      setActiveSection('business');
+    }
+  }, [userHasPassword, activeSection]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -189,11 +202,44 @@ const Settings = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.shopName || !formData.shopName.trim()) {
+      toast.error(t('Business / Shop Name is required'));
+      return;
+    }
     setLoading(true);
     try {
       const res = await api.put('/settings', formData);
-      if (res.data.success) {
-        setInitialData(formData); // Update initial data after successful save
+      if (res.data.success && res.data.data) {
+        const s = res.data.data;
+        const savedSettings = {
+          invoicePrefix: s.invoicePrefix || 'INV',
+          currency: s.currency || 'INR',
+          taxEnabled: s.taxEnabled ?? false,
+          taxRate: s.taxRate ?? 0,
+          defaultPaymentMode: s.defaultPaymentMode || 'CASH',
+          defaultPaymentTerms: s.defaultPaymentTerms ?? 30,
+          shopName: s.shopName || '',
+          gstNumber: s.gstNumber || '',
+          shopAddress: s.shopAddress || '',
+          upiId: s.upiId || '',
+          shopPhone: s.shopPhone || '',
+          shopEmail: s.shopEmail || '',
+          autoSendInvoices: s.autoSendInvoices ?? true,
+          emailNotifications: s.emailNotifications ?? true,
+          lowStockThreshold: s.lowStockThreshold ?? 5,
+          lowStockAlert: s.lowStockAlert ?? true,
+          invoiceFooterNote: s.invoiceFooterNote || '',
+          termsAndConditions: s.termsAndConditions || '',
+          printerType: s.printerType || 'A4',
+          autoPrint: s.autoPrint ?? false,
+          invoiceLogo: s.invoiceLogo || '',
+          discountType: s.discountType || 'PERCENTAGE',
+          gstSplit: s.gstSplit ?? false,
+          defaultCreditLimit: s.defaultCreditLimit ?? 0,
+          voiceLanguage: s.voiceLanguage || 'hi-IN',
+        };
+        setFormData(savedSettings);
+        setInitialData(savedSettings); // Update initial data after successful save
         toast.success(t('Settings updated successfully'));
       }
     } catch (error) {
