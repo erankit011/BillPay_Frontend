@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import {
   Check,
@@ -88,7 +89,6 @@ const Subscription = () => {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const [plans, setPlans] = useState(DEFAULT_PLANS);
   const [loadingPlan, setLoadingPlan] = useState(null);
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [couponCode, setCouponCode] = useState('');
@@ -96,6 +96,54 @@ const Subscription = () => {
   const [validatingCoupon, setValidatingCoupon] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancellingSubscription, setCancellingSubscription] = useState(false);
+
+  // Real-time synchronization: Fetch live plans using React Query
+  // When Admin updates pricing or limits, MainLayout invalidates 'publicPlans' and this automatically re-renders instantly!
+  const { data: livePlansData } = useQuery({
+    queryKey: ['publicPlans'],
+    queryFn: getPublicPlans,
+    staleTime: 30 * 1000,
+  });
+
+  const plans = useMemo(() => {
+    if (livePlansData && Array.isArray(livePlansData) && livePlansData.length > 0) {
+      return livePlansData.map((p) => ({
+        id: p.planId,
+        name: p.name,
+        price: p.price,
+        duration:
+          p.planId === 'FREE'
+            ? `${p.trialDays || 7}-Day Trial`
+            : p.billingCycleDays === 365
+            ? t('Per Year')
+            : p.billingCycleDays === 90
+            ? t('Per 3 Months')
+            : t('Per Month'),
+        features:
+          p.features && p.features.length > 0
+            ? p.features
+            : [
+                p.maxCustomers === -1
+                  ? t('Unlimited Customers')
+                  : `Up to ${p.maxCustomers} Customers`,
+                p.maxBills === -1 ? t('Unlimited Bills') : `Up to ${p.maxBills} Bills`,
+                p.hasWhatsAppReminders ? t('WhatsApp Reminders') : t('Standard Reminders'),
+                p.supportTier === 'PRIORITY' || p.supportTier === 'DEDICATED'
+                  ? t('Priority Support')
+                  : t('Email Support'),
+              ],
+        color:
+          p.planId === 'YEARLY'
+            ? 'bg-[#093C5D] text-white'
+            : p.planId === 'FREE'
+            ? 'bg-gray-100 text-gray-800'
+            : 'bg-blue-50 text-[#093C5D] border-[#093C5D]',
+        buttonText: p.planId === 'FREE' ? t('Current Plan') : `Upgrade to ${p.name}`,
+        badge: p.badge,
+      }));
+    }
+    return DEFAULT_PLANS;
+  }, [livePlansData, t]);
 
   useEffect(() => {
     // Load Razorpay Script
@@ -115,54 +163,6 @@ const Subscription = () => {
     };
     loadRazorpayScript();
   }, []);
-
-  useEffect(() => {
-    const fetchLivePlans = async () => {
-      try {
-        const livePlans = await getPublicPlans();
-        if (livePlans && Array.isArray(livePlans) && livePlans.length > 0) {
-          const mapped = livePlans.map((p) => ({
-            id: p.planId,
-            name: p.name,
-            price: p.price,
-            duration:
-              p.planId === 'FREE'
-                ? `${p.trialDays || 7}-Day Trial`
-                : p.billingCycleDays === 365
-                ? t('Per Year')
-                : p.billingCycleDays === 90
-                ? t('Per 3 Months')
-                : t('Per Month'),
-            features:
-              p.features && p.features.length > 0
-                ? p.features
-                : [
-                    p.maxCustomers === -1
-                      ? t('Unlimited Customers')
-                      : `Up to ${p.maxCustomers} Customers`,
-                    p.maxBills === -1 ? t('Unlimited Bills') : `Up to ${p.maxBills} Bills`,
-                    p.hasWhatsAppReminders ? t('WhatsApp Reminders') : t('Standard Reminders'),
-                    p.supportTier === 'PRIORITY' || p.supportTier === 'DEDICATED'
-                      ? t('Priority Support')
-                      : t('Email Support'),
-                  ],
-            color:
-              p.planId === 'YEARLY'
-                ? 'bg-[#093C5D] text-white'
-                : p.planId === 'FREE'
-                ? 'bg-gray-100 text-gray-800'
-                : 'bg-blue-50 text-[#093C5D] border-[#093C5D]',
-            buttonText: p.planId === 'FREE' ? t('Current Plan') : `Upgrade to ${p.name}`,
-            badge: p.badge,
-          }));
-          setPlans(mapped);
-        }
-      } catch (err) {
-        // Graceful fallback to default plans
-      }
-    };
-    fetchLivePlans();
-  }, [t]);
 
   const handleApplyCoupon = async (e) => {
     e.preventDefault();

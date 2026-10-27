@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import {
   X,
   Tag,
@@ -11,8 +12,9 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { getAdminPlans } from '../../api/adminApi';
 
-const AVAILABLE_PLANS = [
+const DEFAULT_AVAILABLE_PLANS = [
   { id: 'MONTHLY', label: 'Monthly Pro (₹299)' },
   { id: 'QUARTERLY', label: 'Quarterly Pro (₹799)' },
   { id: 'YEARLY', label: 'Yearly Pro (₹2999)' },
@@ -34,6 +36,25 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
   const [offerId, setOfferId] = useState('');
   const [isActive, setIsActive] = useState(true);
   const [saving, setSaving] = useState(false);
+
+  // Live query for dynamically configured plans
+  const { data: adminPlans } = useQuery({
+    queryKey: ['adminPlans'],
+    queryFn: getAdminPlans,
+    staleTime: 30 * 1000,
+  });
+
+  const availablePlans = useMemo(() => {
+    if (adminPlans && Array.isArray(adminPlans) && adminPlans.length > 0) {
+      return adminPlans
+        .filter((p) => p.planId !== 'FREE')
+        .map((p) => ({
+          id: p.planId,
+          label: `${p.name} (₹${p.price})`,
+        }));
+    }
+    return DEFAULT_AVAILABLE_PLANS;
+  }, [adminPlans]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -315,7 +336,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                   Eligible Plans *
                 </label>
                 <div className="space-y-2">
-                  {AVAILABLE_PLANS.map((p) => (
+                  {availablePlans.map((p) => (
                     <label
                       key={p.id}
                       className="flex items-center gap-2.5 text-xs text-gray-700 cursor-pointer"
