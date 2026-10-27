@@ -178,6 +178,12 @@ export const validateSubscriptionCoupon = async (code, plan) => {
   return res.data?.data;
 };
 
+// Shopkeeper Auto-Pay Cancellation
+export const cancelSubscription = async () => {
+  const res = await api.post('/subscription/cancel-subscription');
+  return res.data;
+};
+
 // 12. Platform Security & Immutable Audit Logs
 export const getAdminAuditLogs = async (params = {}) => {
   const res = await api.get('/admin/audit-logs', { params });
