@@ -1,12 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Shield, Loader2, Tag, Percent, X, Sparkles } from 'lucide-react';
+import {
+  Check,
+  Shield,
+  Loader2,
+  Tag,
+  Percent,
+  X,
+  Sparkles,
+  RefreshCw,
+  AlertTriangle,
+  CreditCard,
+  CheckCircle2,
+  Lock,
+  FileText,
+  Clock,
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../redux/slices/authSlice';
 import toast from 'react-hot-toast';
-import { validateSubscriptionCoupon, getPublicPlans } from '../features/admin/api/adminApi';
-import { getDaysRemaining, getTrialEndDate } from '../utils/dateUtils';
+import { validateSubscriptionCoupon, getPublicPlans, cancelSubscription } from '../features/admin/api/adminApi';
+import { getDaysRemaining, getTrialEndDate, formatDate } from '../utils/dateUtils';
 
 const DEFAULT_PLANS = [
   {
@@ -78,6 +94,8 @@ const Subscription = () => {
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [validatingCoupon, setValidatingCoupon] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancellingSubscription, setCancellingSubscription] = useState(false);
 
   useEffect(() => {
     // Load Razorpay Script
@@ -199,20 +217,40 @@ const Subscription = () => {
     setLoadingPlan(plan.id);
 
     try {
-      // 1. Create subscription on backend
-      const resData = await api.post('/subscription/create-subscription', { plan: plan.id });
+      // 1. Create subscription on backend with Auto-Pay
+      const resData = await api.post('/subscription/create-subscription', {
+        plan: plan.id,
+        couponCode: appliedCoupon?.code,
+      });
 
-      if (!resData.data || !resData.data.data.subscriptionId) {
+      if (!resData.data || !resData.data.data) {
         throw new Error('Invalid subscription response');
       }
 
-      const { subscriptionId } = resData.data.data;
+      // Handle 100% free promotional code activation directly
+      if (resData.data.data.activated) {
+        toast.success(t('Subscription upgraded successfully with 100% promo discount!'));
+        dispatch(
+          setUser({
+            ...user,
+            subscriptionStatus: resData.data.data.subscriptionStatus || 'active',
+            subscriptionPlan: resData.data.data.subscriptionPlan || plan.id,
+            currentPeriodEnd: resData.data.data.currentPeriodEnd,
+          })
+        );
+        return;
+      }
 
-      // 2. Open Razorpay Checkout for Subscription
+      const { subscriptionId, razorpayKeyId } = resData.data.data;
+      if (!subscriptionId) {
+        throw new Error('Subscription identifier missing from gateway response');
+      }
+
+      // 2. Open Razorpay Checkout for Auto-Pay Subscription
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID || '',
+        key: razorpayKeyId || import.meta.env.VITE_RAZORPAY_KEY_ID || '',
         name: "UdharPay",
-        description: `${plan.name} Subscription`,
+        description: `${plan.name} Auto-Pay Subscription`,
         subscription_id: subscriptionId,
         handler: async function (response) {
           try {
@@ -226,7 +264,7 @@ const Subscription = () => {
             });
 
             if (verifyRes.data.success || verifyRes.status === 200) {
-              toast.success(t('Subscription upgraded successfully!'));
+              toast.success(t('Subscription and Auto-Pay activated successfully!'));
               // Update user context
               dispatch(setUser({
                 ...user,
@@ -266,8 +304,28 @@ const Subscription = () => {
     }
   };
 
+  const handleCancelSubscription = async () => {
+    try {
+      setCancellingSubscription(true);
+      const res = await cancelSubscription();
+      toast.success(res?.message || t('Auto-Pay cancelled successfully'));
+      dispatch(
+        setUser({
+          ...user,
+          subscriptionStatus: 'cancelled',
+        })
+      );
+      setShowCancelModal(false);
+    } catch (err) {
+      toast.error(err.response?.data?.message || t('Failed to cancel Auto-Pay'));
+    } finally {
+      setCancellingSubscription(false);
+    }
+  };
+
   const freeTrialDays = plans.find((p) => p.id === 'FREE')?.trialDays || 7;
   const trialEndDate = getTrialEndDate(user, freeTrialDays);
+  const isPaidPlan = user?.subscriptionPlan && user?.subscriptionPlan !== 'FREE';
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
@@ -275,34 +333,115 @@ const Subscription = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Subscription')}</h1>
-          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed">{t('Manage your plan and billing')}</p>
+          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed">
+            {t('Manage your plan, billing, and recurring Auto-Pay mandates')}
+          </p>
         </div>
       </div>
 
-      {/* Current Plan Status */}
-      <div className="bg-white rounded-xl border border-gray-200 p-5 sm:p-6 hover:border-gray-300 transition-colors duration-200">
-        <div className="flex items-center gap-4 sm:gap-5">
-          <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-[14px] flex items-center justify-center shrink-0 ${user?.subscriptionStatus === 'active' ? 'bg-green-50 text-green-600' : 'bg-slate-50 text-[#093C5D]'}`}>
-            <Shield className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={2} />
-          </div>
-          <div className="flex flex-col justify-center">
-            <h2 className="text-base sm:text-lg mb-0.5">
-              <span className="font-medium text-slate-500">{t('Current Plan')}: </span>
-              <span className="font-bold text-[#093C5D] uppercase tracking-wide">{user?.subscriptionPlan || 'FREE'}</span>
-            </h2>
-            {user?.subscriptionStatus === 'active' && user?.currentPeriodEnd ? (
-              <p className="text-sm text-slate-500">
-                {t('Expires in')} <span className="font-semibold text-slate-900">{getDaysRemaining(user.currentPeriodEnd)} {t('days')}</span>
-              </p>
-            ) : (
-              <p className="text-sm text-slate-500">
-                {t('Free trial expires in')}{' '}
-                <span className="font-semibold text-slate-900">
-                  {getDaysRemaining(trialEndDate)}{' '}
-                  {t('days')}
+      {/* Current Plan Status Card */}
+      <div className="bg-white rounded-xl border border-gray-200 p-5 sm:p-6 hover:border-gray-300 transition-colors duration-200 shadow-xs">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-4 sm:gap-5 min-w-0">
+            <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-xs ${
+              user?.subscriptionStatus === 'active' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-50 text-[#093C5D] border border-slate-200'
+            }`}>
+              <Shield className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={2} />
+            </div>
+            <div className="flex flex-col justify-center min-w-0">
+              <div className="flex items-center gap-2 flex-wrap mb-1">
+                <span className="font-medium text-slate-500 text-xs sm:text-sm">{t('Current Plan')}: </span>
+                <span className="font-bold text-[#093C5D] uppercase tracking-wide text-base sm:text-lg">
+                  {user?.subscriptionPlan || 'FREE'}
                 </span>
-              </p>
+                {isPaidPlan && user?.subscriptionStatus === 'active' && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    Auto-Pay Active
+                  </span>
+                )}
+                {isPaidPlan && user?.subscriptionStatus === 'cancelled' && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                    Auto-Pay Cancelled
+                  </span>
+                )}
+              </div>
+
+              {user?.subscriptionStatus === 'active' && user?.currentPeriodEnd ? (
+                <p className="text-xs sm:text-sm text-slate-500 flex items-center gap-1.5 flex-wrap">
+                  <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                  <span>{t('Expires in')} <strong className="font-semibold text-slate-900">{getDaysRemaining(user.currentPeriodEnd)} {t('days')}</strong></span>
+                  <span className="text-xs text-gray-400">({formatDate(user.currentPeriodEnd)})</span>
+                </p>
+              ) : isPaidPlan && user?.subscriptionStatus === 'cancelled' ? (
+                <p className="text-xs sm:text-sm text-amber-700 font-medium flex items-center gap-1.5 flex-wrap">
+                  <Clock className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                  <span>{t('Pro access remains active until')} <strong className="font-semibold text-gray-900">{user?.currentPeriodEnd ? formatDate(user.currentPeriodEnd) : 'billing period end'}</strong></span>
+                </p>
+              ) : (
+                <p className="text-xs sm:text-sm text-slate-500 flex items-center gap-1.5 flex-wrap">
+                  <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                  <span>{t('Free trial expires in')} <strong className="font-semibold text-slate-900">{getDaysRemaining(trialEndDate)} {t('days')}</strong></span>
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Action Buttons for Active Subscriptions */}
+          <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-100">
+            <Link
+              to="/settings"
+              onClick={() => localStorage.setItem('udharpay_settings_tab', 'platform-invoices')}
+              className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 px-3.5 py-2 rounded-lg transition-colors whitespace-nowrap"
+            >
+              <FileText className="w-3.5 h-3.5 text-gray-500" />
+              <span>Billing Receipts</span>
+            </Link>
+
+            {isPaidPlan && user?.subscriptionStatus === 'active' && (
+              <button
+                type="button"
+                onClick={() => setShowCancelModal(true)}
+                className="cursor-pointer text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-3.5 py-2 rounded-lg transition-colors active:scale-95 whitespace-nowrap"
+              >
+                Cancel Auto-Pay
+              </button>
             )}
+          </div>
+        </div>
+      </div>
+
+      {/* Auto-Pay Trust & Highlights Strip */}
+      <div className="bg-gradient-to-r from-blue-50/80 via-white to-blue-50/80 border border-blue-200/80 rounded-xl p-4 sm:p-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4 text-xs">
+          <div className="flex items-start gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center shrink-0 mt-0.5">
+              <RefreshCw className="w-3.5 h-3.5" />
+            </div>
+            <div>
+              <strong className="font-semibold text-gray-900 block mb-0.5">Hassle-Free Auto-Pay</strong>
+              <span className="text-gray-600">UPI Autopay (GPay, PhonePe, Paytm), Cards & Netbanking mandates.</span>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center shrink-0 mt-0.5">
+              <CreditCard className="w-3.5 h-3.5" />
+            </div>
+            <div>
+              <strong className="font-semibold text-gray-900 block mb-0.5">Instant Platform Tax Receipts</strong>
+              <span className="text-gray-600">Downloadable cloud PDF invoices generated automatically on each renewal.</span>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center shrink-0 mt-0.5">
+              <Shield className="w-3.5 h-3.5" />
+            </div>
+            <div>
+              <strong className="font-semibold text-gray-900 block mb-0.5">100% RBI e-Mandate Compliant</strong>
+              <span className="text-gray-600">Pre-debit notifications before each cycle. Cancel recurring anytime with 1 click.</span>
+            </div>
           </div>
         </div>
       </div>
@@ -394,47 +533,107 @@ const Subscription = () => {
                   )}
                 </div>
                 {discountedPrice !== null && (
-                  <p className="text-[11px] font-semibold text-emerald-700 mt-1">
-                    Save ₹{plan.price - discountedPrice} with {appliedCoupon.code}
+                  <p className="text-[11px] font-semibold text-emerald-700 mt-1 leading-tight">
+                    Save ₹{plan.price - discountedPrice} on 1st cycle with {appliedCoupon.code} • Auto-renews at ₹{plan.price}/{plan.duration}
                   </p>
                 )}
               </div>
 
-            <div className="flex-1 space-y-3.5 md:space-y-4 mb-6">
-              {plan.features.map((feature, idx) => (
-                <div key={idx} className="flex items-start gap-2.5">
-                  <div className="bg-green-50 rounded-full p-1 mt-0.5 shrink-0 flex items-center justify-center">
-                    <Check className="w-3 h-3 md:w-3.5 md:h-3.5 text-green-600" />
+              <div className="flex-1 space-y-3.5 md:space-y-4 mb-6">
+                {plan.features.map((feature, idx) => (
+                  <div key={idx} className="flex items-start gap-2.5">
+                    <div className="bg-green-50 rounded-full p-1 mt-0.5 shrink-0 flex items-center justify-center">
+                      <Check className="w-3 h-3 md:w-3.5 md:h-3.5 text-green-600" />
+                    </div>
+                    <span className="text-xs md:text-sm text-gray-600 font-medium">{feature}</span>
                   </div>
-                  <span className="text-xs md:text-sm text-gray-600 font-medium">{feature}</span>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              <button
+                onClick={() => handleUpgrade(plan)}
+                disabled={plan.id === 'FREE' || loadingPlan === plan.id || user?.subscriptionPlan === plan.id}
+                className={`w-full py-2.5 md:py-3 px-4 rounded-lg font-semibold text-xs md:text-sm transition-all flex items-center justify-center
+                  ${plan.id === 'FREE' || user?.subscriptionPlan === plan.id
+                    ? 'bg-gray-100 text-gray-500 cursor-default'
+                    : plan.id === 'YEARLY'
+                      ? 'bg-[#093C5D] text-white hover:bg-[#082a42] active:scale-95 cursor-pointer'
+                      : 'bg-blue-50 text-[#093C5D] hover:bg-blue-100 active:scale-95 cursor-pointer border border-[#093C5D]/20'
+                  }
+                `}
+              >
+                {loadingPlan === plan.id ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : user?.subscriptionPlan === plan.id ? (
+                  t('Active Plan')
+                ) : (
+                  plan.buttonText
+                )}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Cancel Auto-Pay Confirmation Modal */}
+      {showCancelModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-gray-900/60 backdrop-blur-xs overscroll-contain animate-modal-overlay">
+          <div className="bg-white rounded-t-2xl sm:rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-gray-200 space-y-4 animate-modal-content">
+            {/* Mobile drag handle */}
+            <div className="sm:hidden flex justify-center -mt-2 pb-1">
+              <div className="w-10 h-1 bg-gray-300 rounded-full" />
             </div>
 
-            <button
-              onClick={() => handleUpgrade(plan)}
-              disabled={plan.id === 'FREE' || loadingPlan === plan.id || user?.subscriptionPlan === plan.id}
-              className={`w-full py-2.5 md:py-3 px-4 rounded-lg font-semibold text-xs md:text-sm transition-all flex items-center justify-center
-                ${plan.id === 'FREE' || user?.subscriptionPlan === plan.id
-                  ? 'bg-gray-100 text-gray-500 cursor-default'
-                  : plan.id === 'YEARLY'
-                    ? 'bg-[#093C5D] text-white hover:bg-[#082a42] active:scale-95 cursor-pointer'
-                    : 'bg-blue-50 text-[#093C5D] hover:bg-blue-100 active:scale-95 cursor-pointer border border-[#093C5D]/20'
-                }
-              `}
-            >
-              {loadingPlan === plan.id ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : user?.subscriptionPlan === plan.id ? (
-                t('Active')
-              ) : (
-                plan.buttonText
-              )}
-            </button>
+            <div className="flex items-start gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-200 shrink-0">
+                <AlertTriangle className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900">Cancel Auto-Pay Subscription?</h3>
+                <p className="text-xs sm:text-sm text-gray-600 mt-1 leading-relaxed">
+                  Your Auto-Pay mandate will be stopped and Razorpay will not auto-debit on the next cycle. You will keep complete access to all your Pro features until{' '}
+                  <strong className="text-gray-900">{user?.currentPeriodEnd ? formatDate(user.currentPeriodEnd) : 'the end of your paid billing period'}</strong>.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 text-xs text-gray-600 space-y-1.5">
+              <div className="flex items-center gap-2 text-gray-700 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span>Pro features remain active until current billing cycle ends</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span>No charges will be deducted from next cycle</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span>You can restart or upgrade anytime</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowCancelModal(false)}
+                disabled={cancellingSubscription}
+                className="cursor-pointer w-full sm:w-auto px-4 py-2.5 text-xs sm:text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-center"
+              >
+                Keep Active
+              </button>
+              <button
+                type="button"
+                onClick={handleCancelSubscription}
+                disabled={cancellingSubscription}
+                className="cursor-pointer w-full sm:w-auto px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-colors flex items-center justify-center gap-2 active:scale-95"
+              >
+                {cancellingSubscription && <Loader2 className="w-4 h-4 animate-spin" />}
+                <span>Confirm Cancel Auto-Pay</span>
+              </button>
+            </div>
           </div>
-        );
-      })}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

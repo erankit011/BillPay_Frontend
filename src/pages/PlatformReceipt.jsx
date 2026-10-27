@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import { Printer, ArrowLeft, CheckCircle } from 'lucide-react';
@@ -9,9 +10,14 @@ import { formatShortDate } from '../utils/dateUtils';
 const PlatformReceipt = () => {
   const { id } = useParams();
   const { t } = useTranslation();
+  const { user } = useSelector((state) => state.auth);
   const [invoice, setInvoice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const isAdmin = user?.role === 'admin' || user?.role === 'ADMIN';
+  const backLink = isAdmin ? '/admin/subscriptions' : '/settings';
+  const backLabel = isAdmin ? t('Back to Subscriptions') : t('Back to Settings');
 
   useEffect(() => {
     const fetchInvoice = async () => {
@@ -45,8 +51,8 @@ const PlatformReceipt = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4 text-center">
         <div className="text-red-500 mb-4 text-xl font-medium">{error || 'Invoice not found'}</div>
-        <Link to="/settings" className="text-[#093C5D] font-medium hover:underline">
-          &larr; Back to Settings
+        <Link to={backLink} className="text-[#093C5D] font-medium hover:underline">
+          &larr; {backLabel}
         </Link>
       </div>
     );
@@ -59,9 +65,9 @@ const PlatformReceipt = () => {
       <div className="max-w-3xl mx-auto">
         {/* Actions (Hidden on Print) */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 print:hidden">
-          <Link to="/settings" className="flex w-full sm:w-auto items-center justify-center gap-2 text-gray-600 hover:text-gray-900 transition-colors font-medium text-sm bg-white px-4 py-2.5 rounded-lg border border-gray-200">
+          <Link to={backLink} className="flex w-full sm:w-auto items-center justify-center gap-2 text-gray-600 hover:text-gray-900 transition-colors font-medium text-sm bg-white px-4 py-2.5 rounded-lg border border-gray-200">
             <ArrowLeft className="w-4 h-4" />
-            {t('Back to Settings')}
+            {backLabel}
           </Link>
           <div className="flex w-full sm:w-auto items-center gap-3 flex-col sm:flex-row">
             {invoice.receiptUrl ? (

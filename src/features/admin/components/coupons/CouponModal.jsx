@@ -31,6 +31,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
   const [usageLimit, setUsageLimit] = useState('');
   const [perUserLimit, setPerUserLimit] = useState(1);
   const [expiresAt, setExpiresAt] = useState('');
+  const [offerId, setOfferId] = useState('');
   const [isActive, setIsActive] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -47,6 +48,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
       setUsageLimit(coupon.usageLimit !== null && coupon.usageLimit !== undefined ? coupon.usageLimit : '');
       setPerUserLimit(coupon.perUserLimit || 1);
       setExpiresAt(coupon.expiresAt ? new Date(coupon.expiresAt).toISOString().split('T')[0] : '');
+      setOfferId(coupon.offerId || '');
       setIsActive(coupon.isActive !== undefined ? coupon.isActive : true);
     } else {
       setCode('');
@@ -59,6 +61,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
       setUsageLimit('');
       setPerUserLimit(1);
       setExpiresAt('');
+      setOfferId('');
       setIsActive(true);
     }
   }, [coupon, isOpen]);
@@ -109,6 +112,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
         usageLimit: usageLimit ? Number(usageLimit) : null,
         perUserLimit: Number(perUserLimit) || 1,
         expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null,
+        offerId: offerId.trim() || null,
         isActive,
       };
 
@@ -369,6 +373,26 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                   onChange={(e) => setExpiresAt(e.target.value)}
                   className="w-full text-sm px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
                 />
+              </div>
+
+              {/* Razorpay Offer ID (Model 1 NPCI-Compliant AutoPay) */}
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-gray-700">
+                    Razorpay Offer ID (Optional)
+                  </label>
+                  <span className="text-[10px] text-gray-400 font-medium">NPCI AutoPay Compliant</span>
+                </div>
+                <input
+                  type="text"
+                  value={offerId}
+                  onChange={(e) => setOfferId(e.target.value)}
+                  placeholder="e.g. offer_K1abc2xyz (Model 1 1st-cycle discount)"
+                  className="w-full text-sm font-mono px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+                />
+                <p className="text-[11px] text-gray-500 mt-1">
+                  Razorpay Dashboard &gt; Offers se banaya gaya Offer ID. AutoPay e-mandate me 1st cycle discount deta hai bina NPCI cap exceed kiye.
+                </p>
               </div>
             </form>
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Save, Store, FileText, Bell, ShoppingCart, CreditCard, ChevronRight, BriefcaseBusiness, Lock, Trash2, AlertTriangle, Loader2, Download, Upload, X, Laptop, Monitor, Smartphone, Tablet, Globe, LogOut, RefreshCw } from 'lucide-react';
+import { Save, Store, FileText, Bell, ShoppingCart, CreditCard, ChevronRight, BriefcaseBusiness, Lock, Trash2, AlertTriangle, Loader2, Download, Upload, X, Laptop, Monitor, Smartphone, Tablet, Globe, LogOut, RefreshCw, Gem, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -97,6 +97,13 @@ const Settings = () => {
     taxRate: 0,
     defaultPaymentMode: 'CASH',
     defaultPaymentTerms: 30,
+    printerType: 'A4',
+    autoPrint: false,
+    invoiceLogo: '',
+    discountType: 'PERCENTAGE',
+    gstSplit: false,
+    defaultCreditLimit: 0,
+    voiceLanguage: 'hi-IN',
     // Shop / Business Info
     shopName: '',
     gstNumber: '',
@@ -120,6 +127,12 @@ const Settings = () => {
   const [userHasPassword, setUserHasPassword] = useState(true); // Default to true
   const [platformInvoices, setPlatformInvoices] = useState([]);
   const [uploadingLogo, setUploadingLogo] = useState(false);
+
+  useEffect(() => {
+    if (!userHasPassword && activeSection === 'security') {
+      setActiveSection('business');
+    }
+  }, [userHasPassword, activeSection]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -189,11 +202,44 @@ const Settings = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.shopName || !formData.shopName.trim()) {
+      toast.error(t('Business / Shop Name is required'));
+      return;
+    }
     setLoading(true);
     try {
       const res = await api.put('/settings', formData);
-      if (res.data.success) {
-        setInitialData(formData); // Update initial data after successful save
+      if (res.data.success && res.data.data) {
+        const s = res.data.data;
+        const savedSettings = {
+          invoicePrefix: s.invoicePrefix || 'INV',
+          currency: s.currency || 'INR',
+          taxEnabled: s.taxEnabled ?? false,
+          taxRate: s.taxRate ?? 0,
+          defaultPaymentMode: s.defaultPaymentMode || 'CASH',
+          defaultPaymentTerms: s.defaultPaymentTerms ?? 30,
+          shopName: s.shopName || '',
+          gstNumber: s.gstNumber || '',
+          shopAddress: s.shopAddress || '',
+          upiId: s.upiId || '',
+          shopPhone: s.shopPhone || '',
+          shopEmail: s.shopEmail || '',
+          autoSendInvoices: s.autoSendInvoices ?? true,
+          emailNotifications: s.emailNotifications ?? true,
+          lowStockThreshold: s.lowStockThreshold ?? 5,
+          lowStockAlert: s.lowStockAlert ?? true,
+          invoiceFooterNote: s.invoiceFooterNote || '',
+          termsAndConditions: s.termsAndConditions || '',
+          printerType: s.printerType || 'A4',
+          autoPrint: s.autoPrint ?? false,
+          invoiceLogo: s.invoiceLogo || '',
+          discountType: s.discountType || 'PERCENTAGE',
+          gstSplit: s.gstSplit ?? false,
+          defaultCreditLimit: s.defaultCreditLimit ?? 0,
+          voiceLanguage: s.voiceLanguage || 'hi-IN',
+        };
+        setFormData(savedSettings);
+        setInitialData(savedSettings); // Update initial data after successful save
         toast.success(t('Settings updated successfully'));
       }
     } catch (error) {
@@ -852,6 +898,43 @@ const Settings = () => {
                     <p className="text-xs text-gray-500 mt-0.5">{t('Your UdharPay subscription billing history')}</p>
                   </div>
                 </div>
+
+                {/* Active Membership Banner */}
+                <div className="m-4 sm:m-6 bg-gradient-to-r from-[#093C5D]/5 via-white to-blue-50/50 border border-[#093C5D]/15 rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center shrink-0 border border-[#093C5D]/15">
+                      <Gem className="w-5 h-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs text-gray-500 font-medium">{t('Active Membership')}:</span>
+                        <strong className="text-sm font-bold text-[#093C5D] uppercase tracking-wide">{user?.subscriptionPlan || 'FREE'}</strong>
+                        {user?.subscriptionStatus === 'active' && user?.subscriptionPlan !== 'FREE' && (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            Auto-Pay Active
+                          </span>
+                        )}
+                        {user?.subscriptionStatus === 'cancelled' && (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                            Auto-Pay Cancelled
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-gray-500 mt-0.5 truncate">
+                        {user?.currentPeriodEnd ? `${t('Valid until')} ${formatShortDate(user.currentPeriodEnd)}` : t('7-Day Free Trial')}
+                      </p>
+                    </div>
+                  </div>
+                  <Link
+                    to="/subscription"
+                    className="cursor-pointer shrink-0 inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-white bg-[#093C5D] hover:bg-[#072C44] px-4 py-2.5 rounded-lg transition-colors w-full sm:w-auto shadow-xs active:scale-95"
+                  >
+                    <span>{t('Manage Plan & Auto-Pay')}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+
                 <div className="px-0 py-0">
                   {platformInvoices.length === 0 ? (
                     <div className="p-8 text-center text-gray-500 text-sm">
