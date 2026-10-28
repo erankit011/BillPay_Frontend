@@ -147,9 +147,11 @@ const AdminDashboard = () => {
 
   const planMutation = useMutation({
     mutationFn: ({ shopId, planData }) => overrideShopPlan(shopId, planData),
-    onSuccess: () => {
-      toast.success('Shop subscription updated successfully');
+    onSuccess: (res) => {
+      toast.success(res?.message || 'Shop subscription updated successfully');
       queryClient.invalidateQueries({ queryKey: ['adminOverview'] });
+      queryClient.invalidateQueries({ queryKey: ['adminShops'] });
+      queryClient.invalidateQueries({ queryKey: ['adminSubscriptions'] });
       setPlanModalShop(null);
       if (inspectShop) setInspectShop(null);
     },

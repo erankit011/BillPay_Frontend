@@ -1,18 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { X, Crown, Calendar, Clock } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { X, Crown, Calendar, Clock, Receipt } from 'lucide-react';
 import { formatDate, calculateExtendedExpiry, isDateExpired } from '../../../utils/dateUtils';
+import { getAdminPlans } from '../api/adminApi';
 
-const PLAN_OPTIONS = [
+const DEFAULT_PLAN_OPTIONS = [
   {
     id: 'FREE',
     label: 'Free Plan (₹0)',
-    desc: 'Basic Starter • 2 Customers & 5 Bills Trial Limit',
+    price: 0,
+    desc: 'Basic Starter • Trial Limit',
     badge: null,
     days: 0,
   },
   {
     id: 'MONTHLY',
     label: 'Monthly Pro (₹299)',
+    price: 299,
     desc: 'Full Billing • Unlimited Customers & Automated Reminders',
     badge: '1 MONTH',
     days: 30,
@@ -20,6 +24,7 @@ const PLAN_OPTIONS = [
   {
     id: 'QUARTERLY',
     label: 'Quarterly Pro (₹799)',
+    price: 799,
     desc: '3 Months Unlimited Access • Best Value for Kirana & Retail',
     badge: 'BEST VALUE',
     days: 90,
@@ -27,6 +32,7 @@ const PLAN_OPTIONS = [
   {
     id: 'YEARLY',
     label: 'Yearly Pro (₹2999)',
+    price: 2999,
     desc: '1 Full Year Unlimited • Premium Support & Multi-device Sync',
     badge: 'SAVE 16%',
     days: 365,
@@ -36,6 +42,29 @@ const PLAN_OPTIONS = [
 const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
   const currentPlan = (shop?.subscriptionPlan || 'FREE').toUpperCase();
   const [selectedPlan, setSelectedPlan] = useState(currentPlan);
+  const [customAmount, setCustomAmount] = useState('');
+  const [isWaived, setIsWaived] = useState(false);
+
+  // Live synchronization: fetch dynamic plans configured by admin
+  const { data: adminPlans } = useQuery({
+    queryKey: ['adminPlans'],
+    queryFn: getAdminPlans,
+    staleTime: 30 * 1000,
+  });
+
+  const planOptions = useMemo(() => {
+    if (adminPlans && Array.isArray(adminPlans) && adminPlans.length > 0) {
+      return adminPlans.map((p) => ({
+        id: p.planId,
+        label: `${p.name} (₹${p.price})`,
+        price: p.price ?? 0,
+        desc: p.description || (p.planId === 'FREE' ? 'Basic Starter • Trial Limit' : 'Full Billing & Automated Reminders'),
+        badge: p.badge || (p.planId === 'YEARLY' ? 'SAVE 16%' : p.planId === 'QUARTERLY' ? 'BEST VALUE' : p.planId === 'MONTHLY' ? '1 MONTH' : null),
+        days: p.billingCycleDays || (p.planId === 'YEARLY' ? 365 : p.planId === 'QUARTERLY' ? 90 : p.planId === 'FREE' ? 0 : 30),
+      }));
+    }
+    return DEFAULT_PLAN_OPTIONS;
+  }, [adminPlans]);
 
   // Sync state when shop changes
   useEffect(() => {
@@ -43,6 +72,19 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
       setSelectedPlan(shop.subscriptionPlan.toUpperCase());
     }
   }, [shop]);
+
+  const selectedOption = planOptions.find((p) => p.id === selectedPlan) || planOptions[0];
+
+  // Sync default amount when selected plan changes
+  useEffect(() => {
+    if (selectedPlan === 'FREE') {
+      setCustomAmount('0');
+      setIsWaived(false);
+    } else {
+      setCustomAmount(String(selectedOption.price || 0));
+      setIsWaived(false);
+    }
+  }, [selectedPlan, selectedOption?.price]);
 
   // Prevent background scrolling when modal is open
   useEffect(() => {
@@ -65,8 +107,6 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
 
   if (!isOpen || !shop) return null;
 
-  const selectedOption = PLAN_OPTIONS.find((p) => p.id === selectedPlan) || PLAN_OPTIONS[0];
-
   const hasActiveFutureExpiry = Boolean(
     shop?.currentPeriodEnd && !isDateExpired(shop.currentPeriodEnd)
   );
@@ -78,11 +118,19 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const effectiveAmount = selectedPlan === 'FREE' || isWaived
+      ? 0
+      : (customAmount !== '' && !isNaN(Number(customAmount)))
+        ? Math.max(0, Number(customAmount))
+        : (selectedOption.price || 0);
+
     onConfirm({
       plan: selectedPlan,
       durationDays: selectedOption.days,
       expiryDate: calculatedExpiry ? calculatedExpiry.toISOString() : null,
       status: 'active',
+      amount: effectiveAmount,
+      paymentMethod: isWaived ? 'COMPLIMENTARY' : 'ADMIN_MANUAL_OVERRIDE',
     });
   };
 
@@ -191,7 +239,7 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                   Select Subscription Tier
                 </label>
                 <div className="space-y-2">
-                  {PLAN_OPTIONS.map((plan) => {
+                  {planOptions.map((plan) => {
                     const isSelected = selectedPlan === plan.id;
                     return (
                       <div
@@ -276,6 +324,67 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                   </div>
                 </div>
               )}
+
+              {/* Official Invoice & Billing Details Card */}
+              <div className="p-3.5 bg-gray-50/80 border border-gray-200 rounded-lg space-y-2.5">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <Receipt className="w-4 h-4 text-[#093C5D]" />
+                    <span className="text-xs font-semibold text-gray-900">
+                      Platform Invoice Configuration
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded leading-none">
+                    Tax Invoice Generated
+                  </span>
+                </div>
+
+                {selectedPlan !== 'FREE' ? (
+                  <div className="space-y-2 pt-1">
+                    <div className="flex items-center justify-between gap-3">
+                      <label className="text-xs font-medium text-gray-700">
+                        Invoice Amount (₹):
+                      </label>
+                      <label className="flex items-center gap-1.5 cursor-pointer text-[11px] text-gray-600 font-medium">
+                        <input
+                          type="checkbox"
+                          checked={isWaived}
+                          onChange={(e) => {
+                            setIsWaived(e.target.checked);
+                            if (e.target.checked) setCustomAmount('0');
+                            else setCustomAmount(String(selectedOption.price || 0));
+                          }}
+                          className="rounded border-gray-300 text-[#093C5D] focus:ring-[#093C5D] w-3.5 h-3.5 cursor-pointer"
+                        />
+                        <span>Waive Fee (₹0 Invoice)</span>
+                      </label>
+                    </div>
+
+                    {!isWaived && (
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs font-semibold">₹</span>
+                        <input
+                          type="number"
+                          min="0"
+                          step="1"
+                          value={customAmount}
+                          onChange={(e) => setCustomAmount(e.target.value)}
+                          className="w-full pl-7 pr-3 py-2 text-xs font-semibold text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D]"
+                          placeholder="Amount in Rupees"
+                        />
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-[11px] text-gray-500 font-normal">
+                    Free starter tier invoice will be recorded with ₹0 amount for audit trail.
+                  </div>
+                )}
+
+                <p className="text-[11px] text-gray-500 font-normal leading-normal border-t border-gray-200/60 pt-2">
+                  A formal tax invoice and PDF receipt will be automatically generated, saved to merchant billing records, and emailed to the store.
+                </p>
+              </div>
             </div>
 
             {/* Modal Footer */}

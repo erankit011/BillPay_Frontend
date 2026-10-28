@@ -276,22 +276,31 @@ const MainLayout = () => {
         });
 
         // 4. Subscription plan overridden by admin
-        socket.on('plan_updated', (data) => {
-          if (data?.plan) {
-            dispatch(setUser({
-              ...user,
-              subscriptionPlan: data.plan,
-              subscriptionStatus: data.status || user.subscriptionStatus,
-              currentPeriodEnd: data.currentPeriodEnd || user.currentPeriodEnd,
-            }));
-            queryClient.invalidateQueries({ queryKey: ['shopSettings'] });
-            queryClient.invalidateQueries({ queryKey: ['bills'] });
-            queryClient.invalidateQueries({ queryKey: ['customers'] });
-            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-            toast.success(data.message || t('Your subscription plan has been updated!'), {
-              duration: 5000,
-            });
+        socket.on('plan_updated', async (data) => {
+          try {
+            const res = await api.get('/auth/me');
+            if (res.data?.data) {
+              dispatch(setUser(res.data.data));
+            }
+          } catch (e) {
+            if (data?.plan) {
+              dispatch(setUser({
+                ...user,
+                subscriptionPlan: data.plan,
+                subscriptionStatus: data.status || user?.subscriptionStatus,
+                currentPeriodEnd: data.currentPeriodEnd || user?.currentPeriodEnd,
+              }));
+            }
           }
+          queryClient.invalidateQueries({ queryKey: ['shopSettings'] });
+          queryClient.invalidateQueries({ queryKey: ['bills'] });
+          queryClient.invalidateQueries({ queryKey: ['customers'] });
+          queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+          queryClient.invalidateQueries({ queryKey: ['invoices'] });
+          queryClient.invalidateQueries({ queryKey: ['myInvoices'] });
+          toast.success(data?.message || t('Your subscription plan has been updated!'), {
+            duration: 5000,
+          });
         });
 
         // 5. Normal new notification
@@ -336,6 +345,12 @@ const MainLayout = () => {
         socket.on('plans_updated', () => {
           queryClient.invalidateQueries({ queryKey: ['publicPlans'] });
           queryClient.invalidateQueries({ queryKey: ['adminPlans'] });
+        });
+
+        // 8.1 SaaS Coupons updated or redeemed
+        socket.on('coupons_updated', () => {
+          queryClient.invalidateQueries({ queryKey: ['adminCoupons'] });
+          queryClient.invalidateQueries({ queryKey: ['adminCouponStats'] });
         });
 
         // 9. When a merchant upgrades their subscription (Admin view live sync)
