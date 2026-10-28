@@ -109,9 +109,10 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
       return api.post('/bills', payload);
     },
     onSuccess: (res) => {
-      queryClient.invalidateQueries(['bills']);
-      queryClient.invalidateQueries(['customers']);
-      queryClient.invalidateQueries(['products']);
+      queryClient.invalidateQueries({ queryKey: ['bills'] });
+      queryClient.invalidateQueries({ queryKey: ['customers'] });
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboardAnalytics'] });
 
       if (shopSettings?.autoPrint && res.data?.data) {
         generateInvoicePDF(res.data.data, shopDetails, 'print', t, shopSettings);
@@ -132,7 +133,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
   const addProductMutation = useMutation({
     mutationFn: (prod) => api.post('/products', prod),
     onSuccess: (res) => {
-      queryClient.invalidateQueries(['products']);
+      queryClient.invalidateQueries({ queryKey: ['products'] });
       setIsAddProductOpen(false);
       setNewProduct({ name: '', price: '', stock: '' });
       setProductError('');
@@ -155,7 +156,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
   const addCustomerMutation = useMutation({
     mutationFn: (cust) => api.post('/customers', cust),
     onSuccess: (res) => {
-      queryClient.invalidateQueries(['customers']);
+      queryClient.invalidateQueries({ queryKey: ['customers'] });
       setIsAddCustomerOpen(false);
       setNewCustomer({ name: '', phone: '', email: '', address: '' });
       setCustomerError('');

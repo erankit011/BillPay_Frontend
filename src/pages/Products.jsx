@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import api from '../api/axios';
@@ -121,7 +121,7 @@ const Products = () => {
   const createMutation = useMutation({
     mutationFn: (newProduct) => api.post('/products', newProduct),
     onSuccess: () => {
-      queryClient.invalidateQueries(['products']);
+      queryClient.invalidateQueries({ queryKey: ['products'] });
       closeModal();
       toast.success(t('Product added successfully!'));
     },
@@ -136,7 +136,7 @@ const Products = () => {
   const updateMutation = useMutation({
     mutationFn: (updatedProduct) => api.put(`/products/${updatedProduct.id}`, updatedProduct.data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['products']);
+      queryClient.invalidateQueries({ queryKey: ['products'] });
       closeModal();
       toast.success(t('Product updated successfully!'));
     },
@@ -150,10 +150,37 @@ const Products = () => {
 
   const deleteMutation = useMutation({
     mutationFn: (id) => api.delete(`/products/${id}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['products']);
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ['products'] });
+      const previousData = queryClient.getQueryData(['products', debouncedSearch, filterStock]);
+
+      queryClient.setQueryData(['products', debouncedSearch, filterStock], (old) => {
+        if (!old || !old.pages) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            data: (page.data || []).filter((p) => p._id !== id),
+            totalCount: Math.max(0, (page.totalCount || 1) - 1),
+          })),
+        };
+      });
+
       setDeleteModalOpen(false);
       setProductToDelete(null);
+
+      return { previousData };
+    },
+    onError: (err, id, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(['products', debouncedSearch, filterStock], context.previousData);
+      }
+      toast.error(err.response?.data?.message || t('Failed to delete product.'));
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+    onSuccess: () => {
       toast.success(t('Product deleted successfully!'));
     }
   });
@@ -188,7 +215,7 @@ const Products = () => {
     setFormError(null);
   };
 
-  const products = data?.pages?.flatMap(page => page.data || []) || [];
+  const products = useMemo(() => data?.pages?.flatMap(page => page.data || []) || [], [data?.pages]);
 
   const [isDownloading, setIsDownloading] = useState(false);
 

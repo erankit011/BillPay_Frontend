@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import {
   Store,
   Search,
@@ -127,9 +127,10 @@ const AdminShops = () => {
         limit: 10,
       }),
     staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
   });
 
-  const shops = data?.data || [];
+  const shops = useMemo(() => data?.data || [], [data?.data]);
   const totalCount = data?.totalCount ?? shops.length;
   const totalPages = data?.totalPages || 1;
   const currentPage = data?.currentPage || urlPage;

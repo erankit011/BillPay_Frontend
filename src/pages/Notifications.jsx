@@ -57,18 +57,18 @@ const Notifications = () => {
       queryClient.setQueryData(['notifications'], context.previousData);
     },
     onSettled: () => {
-      queryClient.invalidateQueries(['notifications']);
-      queryClient.invalidateQueries(['unread-notifications']);
-      queryClient.invalidateQueries(['directOfficialNotices']);
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: ['unread-notifications'] });
+      queryClient.invalidateQueries({ queryKey: ['directOfficialNotices'] });
     }
   });
 
   const markAllReadMutation = useMutation({
     mutationFn: () => api.patch('/notifications/mark-all-read'),
     onSuccess: () => {
-      queryClient.invalidateQueries(['notifications']);
-      queryClient.invalidateQueries(['unread-notifications']);
-      queryClient.invalidateQueries(['directOfficialNotices']);
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: ['unread-notifications'] });
+      queryClient.invalidateQueries({ queryKey: ['directOfficialNotices'] });
     }
   });
 

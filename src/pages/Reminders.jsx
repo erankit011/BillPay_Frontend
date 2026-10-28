@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery, keepPreviousData } from '@tanstack/react-query';
 import api from '../api/axios';
@@ -84,18 +84,18 @@ const Reminders = () => {
     placeholderData: keepPreviousData,
   });
 
-  // Only fetch 1000 customers when create reminder modal is open
+  // Fetch minimal customer fields only when create reminder modal is open
   const { data: customers = [] } = useQuery({
-    queryKey: ['customers', 'all'],
+    queryKey: ['customers', 'minimal-dropdown'],
     queryFn: async () => {
-      const res = await api.get('/customers?limit=1000');
+      const res = await api.get('/customers?limit=1000&fields=minimal&includeStats=false');
       return res.data.data?.data || res.data.data || [];
     },
     enabled: isModalOpen,
     staleTime: 2 * 60 * 1000,
   });
 
-  const reminders = data?.pages?.flatMap(page => page.data || []) || [];
+  const reminders = useMemo(() => data?.pages?.flatMap(page => page.data || []) || [], [data?.pages]);
 
   const { register, handleSubmit, reset, watch, control, formState: { errors } } = useForm();
   const selectedCustomerId = watch('customerId');
@@ -115,7 +115,7 @@ const Reminders = () => {
       return api.post('/reminders', reminderData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['reminders']);
+      queryClient.invalidateQueries({ queryKey: ['reminders'] });
       setIsModalOpen(false);
       setIsEditMode(false);
       setEditingReminder(null);
@@ -130,8 +130,36 @@ const Reminders = () => {
 
   const deleteMutation = useMutation({
     mutationFn: (reminderId) => api.delete(`/reminders/${reminderId}`),
+    onMutate: async (reminderId) => {
+      await queryClient.cancelQueries({ queryKey: ['reminders'] });
+      const previousData = queryClient.getQueryData(['reminders', debouncedSearch, filterStatus]);
+
+      queryClient.setQueryData(['reminders', debouncedSearch, filterStatus], (old) => {
+        if (!old || !old.pages) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            data: (page.data || []).filter((r) => r._id !== reminderId),
+            totalCount: Math.max(0, (page.totalCount || 1) - 1),
+          })),
+        };
+      });
+
+      setReminderToDelete(null);
+
+      return { previousData };
+    },
+    onError: (err, reminderId, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(['reminders', debouncedSearch, filterStatus], context.previousData);
+      }
+      toast.error(err.response?.data?.message || t('Failed to delete reminder.'));
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['reminders'] });
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries(['reminders']);
       toast.success(t('Reminder deleted successfully!'));
     }
   });
@@ -151,7 +179,7 @@ const Reminders = () => {
     try {
       setSendingReminderId(reminder._id);
       await api.post(`/reminders/${reminder._id}/send`);
-      queryClient.invalidateQueries(['reminders']);
+      queryClient.invalidateQueries({ queryKey: ['reminders'] });
       toast.success(t('Reminder sent via WhatsApp successfully!'), { id: `send-reminder-${reminder._id}` });
     } catch (err) {
       console.error('Failed to send reminder directly:', err);

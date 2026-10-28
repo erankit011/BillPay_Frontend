@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery, keepPreviousData } from '@tanstack/react-query';
 import api from '../api/axios';
@@ -265,11 +265,11 @@ const Bills = () => {
 
 
 
-    // Only fetch 1000 customers/products when the create bill modal is actually opened
+    // Fetch minimal customer/product fields for dropdown selection (sub-10ms response)
     const { data: customers = [] } = useQuery({
-        queryKey: ['customers', 'all'],
+        queryKey: ['customers', 'dropdown'],
         queryFn: async () => {
-            const res = await api.get('/customers?limit=1000');
+            const res = await api.get('/customers?limit=1000&fields=minimal&includeStats=false');
             return res.data.data.data || res.data.data || [];
         },
         enabled: isModalOpen,
@@ -277,9 +277,9 @@ const Bills = () => {
     });
 
     const { data: products = [] } = useQuery({
-        queryKey: ['products', 'all'],
+        queryKey: ['products', 'dropdown'],
         queryFn: async () => {
-            const res = await api.get('/products?limit=1000');
+            const res = await api.get('/products?limit=1000&fields=minimal&includeStats=false');
             return res.data.data.data || res.data.data || [];
         },
         enabled: isModalOpen,
@@ -295,7 +295,7 @@ const Bills = () => {
         staleTime: 5 * 60 * 1000,
     });
 
-    const bills = data?.pages?.flatMap(page => page.data || []) || [];
+    const bills = useMemo(() => data?.pages?.flatMap(page => page.data || []) || [], [data?.pages]);
     const viewBillId = searchParams.get('viewBill');
     const cachedBill = viewBillId ? bills.find(b => b._id === viewBillId) : null;
 

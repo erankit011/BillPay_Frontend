@@ -62,18 +62,22 @@ const Reports = () => {
           break;
       }
 
+      const isoStartDate = startDate.getTime() > 0 ? startDate.toISOString() : undefined;
+      const billParams = new URLSearchParams({ limit: '1000', includeStats: 'false' });
+      if (isoStartDate) billParams.set('startDate', isoStartDate);
+
+      const txParams = new URLSearchParams({ type: 'PAYMENT' });
+      if (isoStartDate) txParams.set('startDate', isoStartDate);
+
       const [billsRes, txRes, settingsRes] = await Promise.all([
-        api.get('/bills?limit=10000'), // Large limit to ensure we get all for the report
-        api.get('/transactions'),
+        api.get(`/bills?${billParams.toString()}`),
+        api.get(`/transactions?${txParams.toString()}`),
         api.get('/settings')
       ]);
 
-      const allBills = billsRes.data.data?.data || billsRes.data.data || [];
-      const allTransactions = txRes.data.data || [];
+      const filteredBills = billsRes.data.data?.data || billsRes.data.data || [];
+      const filteredTransactions = txRes.data.data || [];
       const shopSettings = settingsRes.data.data || {};
-
-      const filteredBills = allBills.filter(bill => new Date(bill.createdAt) >= startDate);
-      const filteredTransactions = allTransactions.filter(tx => new Date(tx.createdAt) >= startDate && tx.type === 'PAYMENT');
 
       generateStatementPDF(filteredBills, filteredTransactions, statementPeriod, shopSettings, t, formatCurrency, formatDate);
     } catch (error) {

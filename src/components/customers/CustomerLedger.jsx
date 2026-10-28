@@ -60,12 +60,61 @@ const CustomerLedger = ({ customer, onClose }) => {
 
   const mutation = useMutation({
     mutationFn: (newTx) => api.post('/transactions', newTx),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['transactions', customer._id]);
-      queryClient.invalidateQueries(['customer', customer._id]);
-      queryClient.invalidateQueries(['customers']);
+    onMutate: async (newTx) => {
+      await queryClient.cancelQueries({ queryKey: ['transactions', customer._id] });
+      await queryClient.cancelQueries({ queryKey: ['customer', customer._id] });
+
+      const prevTx = queryClient.getQueryData(['transactions', customer._id]);
+      const prevCustomer = queryClient.getQueryData(['customer', customer._id]);
+
+      const delta = newTx.type === 'UDHAR' ? Number(newTx.amount) : -Number(newTx.amount);
+
+      queryClient.setQueryData(['customer', customer._id], (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          balance: (old.balance || 0) + delta,
+          totalUdhar: newTx.type === 'UDHAR' ? (old.totalUdhar || 0) + Number(newTx.amount) : old.totalUdhar,
+          totalPaid: newTx.type === 'PAYMENT' ? (old.totalPaid || 0) + Number(newTx.amount) : old.totalPaid,
+        };
+      });
+
+      const optimisticTx = {
+        _id: `temp-${Date.now()}`,
+        shopId: customer.shopId,
+        customerId: customer._id,
+        type: newTx.type,
+        amount: Number(newTx.amount),
+        paymentMode: newTx.paymentMode || 'CASH',
+        description: newTx.description || '',
+        createdAt: new Date().toISOString(),
+        balanceAfterTransaction: (prevCustomer?.balance || 0) + delta,
+        isOptimistic: true,
+      };
+
+      queryClient.setQueryData(['transactions', customer._id], (old = []) => [optimisticTx, ...old]);
+
       setAmount('');
       setRemarks('');
+
+      return { prevTx, prevCustomer };
+    },
+    onError: (err, newTx, context) => {
+      if (context?.prevTx) {
+        queryClient.setQueryData(['transactions', customer._id], context.prevTx);
+      }
+      if (context?.prevCustomer) {
+        queryClient.setQueryData(['customer', customer._id], context.prevCustomer);
+      }
+      toast.error(err.response?.data?.message || t('Transaction failed. Reverted.'));
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['transactions', customer._id] });
+      queryClient.invalidateQueries({ queryKey: ['customer', customer._id] });
+      queryClient.invalidateQueries({ queryKey: ['customers'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboardAnalytics'] });
+    },
+    onSuccess: () => {
       toast.success(txType === 'UDHAR' ? t('Udhar added & WhatsApp sent!') : t('Payment received & WhatsApp receipt sent!'));
     }
   });
