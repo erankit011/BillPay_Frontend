@@ -84,9 +84,28 @@ const Login = () => {
         });
       }
     } catch (err) {
-      const errMsg = err.response?.data?.message || 'Invalid credentials. Please try again.';
-      if (err.response?.status === 403 && errMsg.toLowerCase().includes('suspended')) {
-        setSuspensionMessage(errMsg);
+      const errData = err.response?.data;
+      const errMsg = errData?.message || 'Invalid credentials. Please try again.';
+
+      /**
+       * Unverified Identity & Suspension Evaluation
+       * Redirects unverified merchants to OTP screen and renders formal suspension alerts
+       */
+      if (err.response?.status === 403) {
+        if (errData?.code === 'EMAIL_NOT_VERIFIED' || errMsg.toLowerCase().includes('not verified')) {
+          toast.error(errMsg);
+          navigate('/verify-email', {
+            state: {
+              email: errData?.email || data.email,
+              name: errData?.name || ''
+            }
+          });
+          return;
+        }
+
+        if (errMsg.toLowerCase().includes('suspended')) {
+          setSuspensionMessage(errMsg);
+        }
       }
       toast.error(errMsg);
     } finally {
