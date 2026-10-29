@@ -1,7 +1,14 @@
+/**
+ * 404 Route Not Found Error Fallback Page
+ */
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * NotFound Component
+ */
 const NotFound = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();

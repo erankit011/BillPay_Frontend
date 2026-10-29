@@ -1,9 +1,18 @@
+/**
+ * Administrative Subscription Plan Override Modal
+ * Allows platform administrators to manually assign plan tiers, extend validity dates,
+ * and synchronize billing states for merchant accounts.
+ */
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { X, Crown, Calendar, Clock, Receipt } from 'lucide-react';
 import { formatDate, calculateExtendedExpiry, isDateExpired } from '../../../utils/dateUtils';
 import { getAdminPlans } from '../api/adminApi';
 
+/**
+ * Fallback Default Subscription Tier Options
+ */
 const DEFAULT_PLAN_OPTIONS = [
   {
     id: 'FREE',
@@ -45,7 +54,10 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
   const [customAmount, setCustomAmount] = useState('');
   const [isWaived, setIsWaived] = useState(false);
 
-  // Live synchronization: fetch dynamic plans configured by admin
+  /**
+   * Plan Catalog Query
+   * Queries dynamically configured subscription tiers from administrative endpoints.
+   */
   const { data: adminPlans } = useQuery({
     queryKey: ['adminPlans'],
     queryFn: getAdminPlans,
@@ -66,7 +78,10 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
     return DEFAULT_PLAN_OPTIONS;
   }, [adminPlans]);
 
-  // Sync state when shop changes
+  /**
+   * Store Plan Synchronization
+   * Updates locally selected tier when active shop target changes.
+   */
   useEffect(() => {
     if (shop?.subscriptionPlan) {
       setSelectedPlan(shop.subscriptionPlan.toUpperCase());
@@ -75,7 +90,10 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
 
   const selectedOption = planOptions.find((p) => p.id === selectedPlan) || planOptions[0];
 
-  // Sync default amount when selected plan changes
+  /**
+   * Price Synchronization
+   * Initializes custom amount to base tier price whenever selected tier changes.
+   */
   useEffect(() => {
     if (selectedPlan === 'FREE') {
       setCustomAmount('0');
@@ -86,7 +104,10 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
     }
   }, [selectedPlan, selectedOption?.price]);
 
-  // Prevent background scrolling when modal is open
+  /**
+   * Scroll & Touch Prevention Hook
+   * Disables document scrolling and touch moves while modal dialog is open.
+   */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -111,7 +132,10 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
     shop?.currentPeriodEnd && !isDateExpired(shop.currentPeriodEnd)
   );
 
-  // Accurate Calculation using central dateUtils (extends from future expiry if active, else from now)
+  /**
+   * Expiry Date Calculation
+   * Extends from future expiry if plan is currently active, or from current timestamp.
+   */
   const calculatedExpiry = selectedPlan !== 'FREE'
     ? calculateExtendedExpiry(shop?.currentPeriodEnd, selectedOption.days)
     : null;
@@ -138,7 +162,10 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
 
   return (
     <div className="fixed inset-0 z-[60] overscroll-contain">
-      {/* Backdrop */}
+      {/**
+       * Backdrop Overlay
+       * Semi-transparent dark background dismissing plan override dialog on click.
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
@@ -146,16 +173,25 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
         onTouchMove={(e) => e.preventDefault()}
       />
 
-      {/* Modal Container: Bottom Sheet on Mobile, Centered on sm+ */}
+      {/**
+       * Modal Viewport Dialog
+       * Renders as mobile bottom sheet or desktop centered dialogue modal.
+       */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-[60] pointer-events-none">
         <div className="relative bg-white w-full sm:max-w-lg rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
           
-          {/* Mobile Drag Handle */}
+          {/**
+           * Mobile Drag Pill
+           * Visual drag pill indicator displayed on mobile devices.
+           */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-white">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
           </div>
 
-          {/* Modal Header */}
+          {/**
+           * Modal Header
+           * Crown emblem, modal title banner, and round close button.
+           */}
           <div className="px-5 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white flex-shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="w-10 h-10 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center border border-amber-200 shrink-0">
@@ -181,13 +217,22 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
             </button>
           </div>
 
-          {/* Form Body */}
+          {/**
+           * Plan Override Configuration Form
+           * Contains shop info, tier choices, validity previews, and billing controls.
+           */}
           <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
             <div className="p-4 sm:p-5 space-y-3.5 overflow-y-auto flex-1">
               
-              {/* Merchant Details & Current Subscription Card */}
+              {/**
+               * Merchant Profile & Active Tier Card
+               * Displays store name, email address, active plan badge, and current expiration date.
+               */}
               <div className="p-3.5 bg-gray-50/80 border border-gray-200 rounded-lg space-y-2.5">
-                {/* Shop Info + Current Plan Badge */}
+                {/**
+                 * Shop Title & Plan Pill
+                 * Basic shop identifier alongside current subscription tier chip.
+                 */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <h4 className="text-xs sm:text-sm font-semibold text-gray-900 leading-snug truncate" title={shopDisplayName}>
@@ -200,7 +245,10 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                     )}
                   </div>
 
-                  {/* Current Active Plan Badge / Button UI */}
+                  {/**
+                   * Current Active Plan Chip
+                   * Colored status badge indicating free or paid subscription status.
+                   */}
                   <div className="flex items-center shrink-0">
                     <span
                       className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold uppercase tracking-wide border shadow-none ${
@@ -219,7 +267,10 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                   </div>
                 </div>
 
-                {/* Expiry Details Row */}
+                {/**
+                 * Expiry Timestamp Row
+                 * Displays current expiry date or free tier absence of expiration.
+                 */}
                 <div className="pt-2 border-t border-gray-200/80 flex items-center justify-between gap-2 text-xs">
                   <div className="flex items-center gap-2 min-w-0 text-gray-500">
                     <div className="w-5 h-5 rounded bg-white border border-gray-200 flex items-center justify-center shrink-0">
@@ -233,7 +284,10 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                 </div>
               </div>
 
-              {/* Plan Options */}
+              {/**
+               * Plan Tier Selection Matrix
+               * List of selectable subscription plans with pricing, duration, and feature notes.
+               */}
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-2">
                   Select Subscription Tier
@@ -256,7 +310,10 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                             <span className="text-xs sm:text-sm font-semibold text-gray-900 leading-tight">
                               {plan.label}
                             </span>
-                            {/* Green badge kept for plans that have a badge */}
+                            {/**
+                             * Promotional Plan Badge
+                             * Highlight chip indicating savings or best value tiers.
+                             */}
                             {plan.badge && (
                               <span className="inline-flex items-center justify-center text-[10px] font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded leading-none">
                                 {plan.badge}
@@ -268,7 +325,10 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                           </p>
                         </div>
 
-                        {/* Clean Standard Radio Circle */}
+                        {/**
+                         * Selection Radio Indicator
+                         * Visual radio circle denoting currently selected plan tier.
+                         */}
                         <div
                           className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
                             isSelected
@@ -286,7 +346,10 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                 </div>
               </div>
 
-              {/* Accurate Plan Validity & Expiry Preview */}
+              {/**
+               * Validity Extension Preview
+               * Live calculation of added validity days and resulting expiration timestamp.
+               */}
               {selectedPlan === 'FREE' ? (
                 <div className="p-3 bg-blue-50/60 border border-blue-200 rounded-lg flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2 text-blue-900 font-medium">
@@ -325,7 +388,10 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                 </div>
               )}
 
-              {/* Official Invoice & Billing Details Card */}
+              {/**
+               * Official Invoice Configuration
+               * Form inputs for invoice amount, fee waiver checkbox, and receipt generation.
+               */}
               <div className="p-3.5 bg-gray-50/80 border border-gray-200 rounded-lg space-y-2.5">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
@@ -387,7 +453,10 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
               </div>
             </div>
 
-            {/* Modal Footer */}
+            {/**
+             * Modal Action Footer
+             * Buttons to dismiss modal or submit and execute plan tier override.
+             */}
             <div className="px-4 sm:px-5 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-end gap-2.5 flex-shrink-0">
               <button
                 type="button"

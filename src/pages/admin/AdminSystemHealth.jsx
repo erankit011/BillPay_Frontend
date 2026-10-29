@@ -1,3 +1,8 @@
+/**
+ * Platform Core Health & Infrastructure Diagnostic Center
+ * Live monitoring of MongoDB connections, Redis blacklist, WhatsApp Baileys socket, and Node server memory.
+ */
+
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -45,7 +50,10 @@ const AdminSystemHealth = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
-      {/* Header */}
+      {/**
+       * System Diagnostics Header
+       * Displays page title and real-time refresh trigger for infrastructure monitoring.
+       */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
@@ -67,7 +75,10 @@ const AdminSystemHealth = () => {
         </button>
       </div>
 
-      {/* Top KPI Summary Cards (Matched with Admin Shops UI) */}
+      {/**
+       * Key Infrastructure Stat Cards
+       * Summarizes system operational health, continuous uptime, active microservices, and RSS memory.
+       */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         <AdminStatCard
           title="SYSTEM HEALTH"
@@ -116,7 +127,10 @@ const AdminSystemHealth = () => {
         </div>
       ) : (
         <>
-          {/* Server Runtime & Memory Load Overview */}
+          {/**
+           * Server Runtime & Memory Load Overview
+           * Displays Node.js process environment, engine version, uptime, and V8 heap breakdown.
+           */}
           <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-5 shadow-none hover:border-gray-300 transition-all duration-200">
             <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
               <div className="flex items-center gap-2.5">
@@ -141,7 +155,10 @@ const AdminSystemHealth = () => {
           </div>
         </div>
 
-        {/* Memory Grid */}
+        {/**
+         * V8 Heap & Physical RAM Metric Cards
+         * Visualizes used heap, total reserved heap, and resident set physical memory.
+         */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
           <div className="bg-white rounded-lg p-3.5 sm:p-4 border border-gray-200 border-l-4 border-l-[#093C5D] hover:border-gray-300 transition-all duration-200 shadow-none">
             <span className="text-gray-500 font-semibold block uppercase text-[10px] sm:text-xs tracking-wide">Heap Memory Used</span>
@@ -169,7 +186,10 @@ const AdminSystemHealth = () => {
         </div>
       </div>
 
-      {/* External Services Section */}
+      {/**
+       * External Services & Integrations Section
+       * Real-time connectivity and latency status for databases, caches, and gateways.
+       */}
       <div>
         <div className="mb-3 sm:mb-4">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-600 flex items-center gap-1.5">
@@ -179,7 +199,10 @@ const AdminSystemHealth = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
-          {/* MongoDB */}
+          {/**
+           * MongoDB Atlas Database
+           * Primary operational document store cluster latency and connection state.
+           */}
           <HealthServiceCard
             name="MongoDB Atlas"
             status={services.database?.status}
@@ -189,7 +212,10 @@ const AdminSystemHealth = () => {
             delay={0.05}
           />
 
-          {/* Redis */}
+          {/**
+           * Redis Cache & Session Store
+           * High-performance in-memory key-value store for token revocation and cache.
+           */}
           <HealthServiceCard
             name="Redis Cache & Sessions"
             status={services.redis?.status}
@@ -199,7 +225,10 @@ const AdminSystemHealth = () => {
             delay={0.1}
           />
 
-          {/* Brevo Email */}
+          {/**
+           * Brevo Transactional Email Gateway
+           * Email transport service for authentication OTPs and system notifications.
+           */}
           <HealthServiceCard
             name="Brevo Email Gateway"
             status={services.email?.status}
@@ -209,7 +238,10 @@ const AdminSystemHealth = () => {
             delay={0.15}
           />
 
-          {/* ImageKit */}
+          {/**
+           * ImageKit Media Storage CDN
+           * Distributed media network hosting merchant logos and bill attachment slips.
+           */}
           <HealthServiceCard
             name="ImageKit Media CDN"
             status={services.imageStorage?.status}
@@ -219,7 +251,10 @@ const AdminSystemHealth = () => {
             delay={0.2}
           />
 
-          {/* Razorpay */}
+          {/**
+           * Razorpay Payment Gateway
+           * Financial checkout processing engine for subscription billing.
+           */}
           <HealthServiceCard
             name="Razorpay Gateway"
             status={services.payments?.status}
@@ -229,7 +264,10 @@ const AdminSystemHealth = () => {
             delay={0.25}
           />
 
-          {/* Socket.io Realtime */}
+          {/**
+           * Socket.io Real-Time Engine
+           * WebSockets server cluster powering instantaneous in-app sync.
+           */}
           <HealthServiceCard
             name="Socket.io Realtime"
             status="healthy"
@@ -239,7 +277,10 @@ const AdminSystemHealth = () => {
             delay={0.3}
           />
 
-          {/* WhatsApp Business Gateway (Baileys) */}
+          {/**
+           * WhatsApp Business Gateway
+           * Automated customer messaging service for billing reminders and slips.
+           */}
           <HealthServiceCard
             name="WhatsApp Gateway"
             status={services.whatsapp?.status}

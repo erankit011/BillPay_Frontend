@@ -1,3 +1,8 @@
+/**
+ * Third-Party OAuth Social Callback Handler
+ * Receives authorization exchange codes, establishes session cookies, and routes to merchant workspace.
+ */
+
 import { useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -6,6 +11,9 @@ import api from '../api/axios';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import toast from 'react-hot-toast';
 
+/**
+ * OAuthCallback Component
+ */
 const OAuthCallback = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -29,10 +37,16 @@ const OAuthCallback = () => {
       try {
         let res;
         if (code) {
-          // Direct AJAX POST exchange: sets httpOnly cookies reliably on standard 200 response
+          /**
+           * Authorization Code Exchange
+           * Direct POST exchange setting secure httpOnly session cookies via API response.
+           */
           res = await api.post('/auth/google/exchange', { code });
         } else {
-          // Fallback to checking existing cookie session
+          /**
+           * Active Session Verification Fallback
+           * Checks existing cookie session if no single-use authorization code was provided.
+           */
           res = await api.get('/auth/me');
         }
 

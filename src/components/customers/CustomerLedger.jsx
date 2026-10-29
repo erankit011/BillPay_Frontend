@@ -60,12 +60,61 @@ const CustomerLedger = ({ customer, onClose }) => {
 
   const mutation = useMutation({
     mutationFn: (newTx) => api.post('/transactions', newTx),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['transactions', customer._id]);
-      queryClient.invalidateQueries(['customer', customer._id]);
-      queryClient.invalidateQueries(['customers']);
+    onMutate: async (newTx) => {
+      await queryClient.cancelQueries({ queryKey: ['transactions', customer._id] });
+      await queryClient.cancelQueries({ queryKey: ['customer', customer._id] });
+
+      const prevTx = queryClient.getQueryData(['transactions', customer._id]);
+      const prevCustomer = queryClient.getQueryData(['customer', customer._id]);
+
+      const delta = newTx.type === 'UDHAR' ? Number(newTx.amount) : -Number(newTx.amount);
+
+      queryClient.setQueryData(['customer', customer._id], (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          balance: (old.balance || 0) + delta,
+          totalUdhar: newTx.type === 'UDHAR' ? (old.totalUdhar || 0) + Number(newTx.amount) : old.totalUdhar,
+          totalPaid: newTx.type === 'PAYMENT' ? (old.totalPaid || 0) + Number(newTx.amount) : old.totalPaid,
+        };
+      });
+
+      const optimisticTx = {
+        _id: `temp-${Date.now()}`,
+        shopId: customer.shopId,
+        customerId: customer._id,
+        type: newTx.type,
+        amount: Number(newTx.amount),
+        paymentMode: newTx.paymentMode || 'CASH',
+        description: newTx.description || '',
+        createdAt: new Date().toISOString(),
+        balanceAfterTransaction: (prevCustomer?.balance || 0) + delta,
+        isOptimistic: true,
+      };
+
+      queryClient.setQueryData(['transactions', customer._id], (old = []) => [optimisticTx, ...old]);
+
       setAmount('');
       setRemarks('');
+
+      return { prevTx, prevCustomer };
+    },
+    onError: (err, newTx, context) => {
+      if (context?.prevTx) {
+        queryClient.setQueryData(['transactions', customer._id], context.prevTx);
+      }
+      if (context?.prevCustomer) {
+        queryClient.setQueryData(['customer', customer._id], context.prevCustomer);
+      }
+      toast.error(err.response?.data?.message || t('Transaction failed. Reverted.'));
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['transactions', customer._id] });
+      queryClient.invalidateQueries({ queryKey: ['customer', customer._id] });
+      queryClient.invalidateQueries({ queryKey: ['customers'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboardAnalytics'] });
+    },
+    onSuccess: () => {
       toast.success(txType === 'UDHAR' ? t('Udhar added & WhatsApp sent!') : t('Payment received & WhatsApp receipt sent!'));
     }
   });
@@ -97,17 +146,24 @@ const CustomerLedger = ({ customer, onClose }) => {
     <div className="fixed inset-0 z-50">
       <div className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" onClick={onClose} />
 
-      {/* Mobile: bottom sheet | sm+: centered modal */}
-      {/* Mobile: bottom sheet | sm+: centered modal */}
+      {/**
+       * Responsive Dialog Frame
+       * Bottom sheet on mobile devices, centered window on desktop
+       */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div className="relative bg-white w-full sm:max-w-lg lg:max-w-2xl rounded-t-lg sm:rounded-lg flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto">
 
-          {/* Drag handle — mobile only */}
+          {/**
+           * Mobile Sheet Drag Indicator
+           */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
             <div className="w-10 h-1 bg-gray-200 rounded-full" />
           </div>
 
-          {/* Header */}
+          {/**
+           * Modal Header
+           * Title banner and modal dismissal action
+           */}
           <div className="flex items-center justify-between px-4 sm:px-6 pt-3 sm:pt-5 pb-3 sm:pb-4 border-b border-gray-100 flex-shrink-0">
             <h3 className="text-base sm:text-lg font-semibold text-gray-900">{t('Transactions')}</h3>
             <button
@@ -118,14 +174,21 @@ const CustomerLedger = ({ customer, onClose }) => {
             </button>
           </div>
 
-          {/* Scrollable body */}
+          {/**
+           * Scrollable Ledger Content Body
+           * Profile summary, quick balance card, entry inputs, and history feed
+           */}
           <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-5">
 
-            {/* Customer Details & Balance Card */}
+            {/**
+             * Customer Overview & Outstanding Balance Card
+             */}
             <div className="mb-4 bg-gray-50/80 rounded-lg p-3.5 sm:p-4 border border-gray-200">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 flex-wrap">
 
-                {/* Customer Info */}
+                {/**
+                 * Customer Profile Metadata
+                 */}
                 <div className="flex-1 min-w-0">
                   <h3 className="text-lg sm:text-[19px] font-semibold text-gray-900 leading-tight truncate">{liveCustomer.name}</h3>
                   <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
@@ -145,10 +208,11 @@ const CustomerLedger = ({ customer, onClose }) => {
                   )}
                 </div>
 
-                {/* Divider on Mobile */}
                 <div className="h-px w-full bg-gray-200 sm:hidden"></div>
 
-                {/* Balance Info */}
+                {/**
+                 * Current Balance & Settlement State
+                 */}
                 <div className="sm:text-right flex-shrink-0 min-w-0 max-w-full mt-2 sm:mt-0">
                   <p className="text-[10px] sm:text-[11px] text-gray-500 mb-1.5 font-semibold uppercase tracking-wider">{t('Current Balance')}</p>
                   <div className="flex flex-col items-start sm:items-end gap-1.5">
@@ -164,7 +228,10 @@ const CustomerLedger = ({ customer, onClose }) => {
               </div>
             </div>
 
-            {/* Add Entry Form */}
+            {/**
+             * Quick Ledger Transaction Form
+             * Accepts credit (udhar) or cash recovery entry
+             */}
             <h4 className="font-semibold text-gray-800 mb-2 sm:mb-2.5 text-sm sm:text-base">{t('Add Entry')}</h4>
             <form onSubmit={handleTransaction} className="space-y-2.5 mb-5">
               <div className="flex rounded-lg p-1 bg-gray-100/80 border border-gray-200">
@@ -247,7 +314,10 @@ const CustomerLedger = ({ customer, onClose }) => {
               </div>
             </form>
 
-            {/* Transaction History */}
+            {/**
+             * Historical Ledger Statements
+             * Reverse chronological audit list of customer transactions
+             */}
             <h4 className="font-semibold text-gray-800 mb-3 flex items-center text-sm sm:text-base">
               <History className="w-4 h-4 mr-2" /> {t('Transaction History')}
             </h4>
@@ -352,7 +422,10 @@ const CustomerLedger = ({ customer, onClose }) => {
         </div>
       </div>
 
-      {/* View Description Modal */}
+      {/**
+       * Transaction Memo Modal
+       * Expands truncated billing description notes
+       */}
       {viewDescTx && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center px-4">
           <div className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" onClick={() => setViewDescTx(null)} />

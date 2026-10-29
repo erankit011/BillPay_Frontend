@@ -1,3 +1,8 @@
+/**
+ * Store Configuration & Merchant Workspace Settings
+ * Manages shop profile, invoice headers, UPI IDs, inventory thresholds, active sessions, and data exports.
+ */
+
 import { useState, useEffect } from 'react';
 import { Save, Store, FileText, Bell, ShoppingCart, CreditCard, ChevronRight, BriefcaseBusiness, Lock, Trash2, AlertTriangle, Loader2, Download, Upload, X, Laptop, Monitor, Smartphone, Tablet, Globe, LogOut, RefreshCw, Gem, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -10,8 +15,9 @@ import toast from 'react-hot-toast';
 import { formatShortDate, formatRelativeTime } from '../utils/dateUtils';
 import AppVersionCard from '../components/common/AppVersionCard';
 
-
-// ── Section Nav Item ──
+/**
+ * Settings Navigation Item
+ */
 const SectionNavItem = ({ icon: Icon, label, sectionId, activeSection, onClick }) => (
   <button
     type="button"
@@ -27,7 +33,10 @@ const SectionNavItem = ({ icon: Icon, label, sectionId, activeSection, onClick }
   </button>
 );
 
-// ── Toggle Switch Component ──
+/**
+ * Toggle Switch Component
+ * Reusable accessible boolean toggle control with label and description
+ */
 const ToggleSwitch = ({ name, checked, onChange, label, description }) => (
   <div className="flex items-center justify-between gap-4 py-3 border-b border-gray-100 last:border-b-0">
     <div className="min-w-0 flex-1">
@@ -64,7 +73,10 @@ const Settings = () => {
     localStorage.setItem('udharpay_settings_tab', activeSection);
   }, [activeSection]);
 
-  // Password state
+  /**
+   * Password Update State
+   * Controls form inputs and network state for credential rotation
+   */
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -72,7 +84,10 @@ const Settings = () => {
   });
   const [passwordLoading, setPasswordLoading] = useState(false);
 
-  // Delete account state
+  /**
+   * Account Deletion State
+   * Holds user verification inputs and loading state for account purging
+   */
   const dispatch = useDispatch();
   const [deleteAccountData, setDeleteAccountData] = useState({
     password: '',
@@ -81,7 +96,10 @@ const Settings = () => {
   const [deleteAccountLoading, setDeleteAccountLoading] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  // Active Devices state
+  /**
+   * Active Device & Session State
+   * Stores authenticated devices, active operations, and targeted logout modals
+   */
   const [devices, setDevices] = useState([]);
   const [devicesLoading, setDevicesLoading] = useState(false);
   const [deviceActionLoadingId, setDeviceActionLoadingId] = useState(null);
@@ -89,8 +107,11 @@ const Settings = () => {
   const [deviceToLogout, setDeviceToLogout] = useState(null);
   const [confirmLogoutOthersModal, setConfirmLogoutOthersModal] = useState(false);
 
+  /**
+   * Default Store Configuration
+   * Initial baseline values for billing, profile, tax rates, inventory, and notes
+   */
   const defaultSettings = {
-    // Billing & Invoice
     invoicePrefix: 'INV',
     currency: 'INR',
     taxEnabled: false,
@@ -104,27 +125,28 @@ const Settings = () => {
     gstSplit: false,
     defaultCreditLimit: 0,
     voiceLanguage: 'hi-IN',
-    // Shop / Business Info
     shopName: '',
     gstNumber: '',
     shopAddress: '',
     upiId: '',
     shopPhone: '',
     shopEmail: '',
-    // Notifications & Automation
     autoSendInvoices: true,
     emailNotifications: true,
-    // Inventory
     lowStockThreshold: 5,
     lowStockAlert: true,
-    // Invoice Footer / Notes
     invoiceFooterNote: '',
     termsAndConditions: '',
   };
 
   const [formData, setFormData] = useState(defaultSettings);
   const [initialData, setInitialData] = useState(defaultSettings);
-  const [userHasPassword, setUserHasPassword] = useState(true); // Default to true
+
+  /**
+   * Credential Authentication Flag
+   * Indicates whether account was created via password or passwordless OAuth (e.g. Google)
+   */
+  const [userHasPassword, setUserHasPassword] = useState(true);
   const [platformInvoices, setPlatformInvoices] = useState([]);
   const [uploadingLogo, setUploadingLogo] = useState(false);
 
@@ -239,7 +261,7 @@ const Settings = () => {
           voiceLanguage: s.voiceLanguage || 'hi-IN',
         };
         setFormData(savedSettings);
-        setInitialData(savedSettings); // Update initial data after successful save
+        setInitialData(savedSettings);
         toast.success(t('Settings updated successfully'));
       }
     } catch (error) {
@@ -296,7 +318,10 @@ const Settings = () => {
   };
 
   const handleDeleteAccountSubmit = () => {
-    // Basic validation
+    /**
+     * Client Validation Guard
+     * Validates required password or confirmation passphrase before opening modal
+     */
     if (userHasPassword && !deleteAccountData.password) {
       toast.error(t('Please enter your password to delete the account.'));
       return;
@@ -339,7 +364,10 @@ const Settings = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate size (e.g., 5MB)
+    /**
+     * File Size Guard
+     * Restricts logo file size to a maximum of 5MB
+     */
     if (file.size > 5 * 1024 * 1024) {
       toast.error(t('File is too large. Max 5MB allowed.'));
       return;
@@ -363,7 +391,6 @@ const Settings = () => {
       toast.error(t('Failed to upload logo. Please try again.'));
     } finally {
       setUploadingLogo(false);
-      // Reset input
       e.target.value = '';
     }
   };
@@ -490,7 +517,10 @@ const Settings = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 pb-24 lg:pb-0">
-      {/* Header */}
+      {/**
+       * Page Header Section
+       * Title and descriptive subtitle for shop settings
+       */}
       <div>
         <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Settings')}</h1>
         <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed">
@@ -499,7 +529,10 @@ const Settings = () => {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-        {/* ── Left Nav (Desktop) ── */}
+        {/**
+         * Desktop Sidebar Navigation
+         * Vertical navigation menu linking to distinct configuration categories
+         */}
         <div className="hidden lg:block w-56 xl:w-60 shrink-0">
           <nav className="sticky top-24 space-y-1">
             <SectionNavItem icon={BriefcaseBusiness} label={t('Business Info')} sectionId="business" activeSection={activeSection} onClick={scrollToSection} />
@@ -512,14 +545,20 @@ const Settings = () => {
             <SectionNavItem icon={Laptop} label={t('Active Devices')} sectionId="devices" activeSection={activeSection} onClick={scrollToSection} />
             <SectionNavItem icon={Trash2} label={t('Delete Account')} sectionId="account" activeSection={activeSection} onClick={scrollToSection} />
 
-            {/* App Version Card (Desktop) */}
+            {/**
+             * App Version Metadata Card
+             * Desktop sidebar badge displaying release version and build info
+             */}
             <div className="pt-4 border-t border-gray-100 mt-4">
               <AppVersionCard variant="sidebar" />
             </div>
           </nav>
         </div>
 
-        {/* ── Mobile Nav (Horizontal Scroll) ── */}
+        {/**
+         * Mobile Navigation Bar
+         * Horizontally scrollable pill tabs for touch-based category switching
+         */}
         <div className="lg:hidden flex items-center gap-2 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide">
           {[
             { id: 'business', icon: BriefcaseBusiness, label: t('Business Info') },
@@ -546,12 +585,18 @@ const Settings = () => {
           ))}
         </div>
 
-        {/* ── Right Content ── */}
+        {/**
+         * Main Settings Workspace
+         * Active configuration forms rendered dynamically based on selected navigation category
+         */}
         <div className="flex-1 min-w-0">
           <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
 
 
-            {/* ═══════════════ BUSINESS INFO ═══════════════ */}
+            {/**
+             * Business Profile Section
+             * Commercial identity details, GSTIN, UPI ID, logo asset, and official address
+             */}
             {activeSection === 'business' && (
               <section id="section-business" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
@@ -682,7 +727,10 @@ const Settings = () => {
               </section>
             )}
 
-            {/* ═══════════════ BILLING & INVOICE ═══════════════ */}
+            {/**
+             * Invoicing & Billing Preferences
+             * Serial numbering, currency, payment modes, print formats, and tax rules
+             */}
             {activeSection === 'billing' && (
               <section id="section-billing" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
@@ -832,7 +880,10 @@ const Settings = () => {
                     </div>
                   </div>
 
-                  {/* Settings Toggles */}
+                  {/**
+                   * Automation Preferences
+                   * Automated WhatsApp dispatch and direct print triggers
+                   */}
                   <div className="mt-6 pt-5 border-t border-gray-100 space-y-4">
                     <ToggleSwitch
                       name="autoSendInvoices"
@@ -850,7 +901,10 @@ const Settings = () => {
                     />
                   </div>
 
-                  {/* Tax Settings */}
+                  {/**
+                   * Tax & GST Calculations
+                   * Tax enablement, CGST/SGST split display, and percentage rates
+                   */}
                   <div className="mt-6 pt-5 border-t border-gray-100">
                     <ToggleSwitch
                       name="taxEnabled"
@@ -889,7 +943,10 @@ const Settings = () => {
               </section>
             )}
 
-            {/* ═══════════════ PLATFORM INVOICES ═══════════════ */}
+            {/**
+             * Platform Subscription Billing
+             * Subscription history, payment receipts, and plan auto-renewal status
+             */}
             {activeSection === 'platform-invoices' && (
               <section id="section-platform-invoices" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
@@ -899,7 +956,10 @@ const Settings = () => {
                   </div>
                 </div>
 
-                {/* Active Membership Banner */}
+                {/**
+                 * Subscription Status Banner
+                 * Active tier indicator, renewal dates, and plan management link
+                 */}
                 <div className="m-4 sm:m-6 bg-gradient-to-r from-[#093C5D]/5 via-white to-blue-50/50 border border-[#093C5D]/15 rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-3.5 min-w-0">
                     <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center shrink-0 border border-[#093C5D]/15">
@@ -942,7 +1002,10 @@ const Settings = () => {
                     </div>
                   ) : (
                     <div>
-                      {/* Desktop Table (Visible on lg and above) */}
+                      {/**
+                       * Desktop Invoices Table
+                       * Tabular billing history with downloadable platform receipts
+                       */}
                       <div className="hidden lg:block overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                           <thead>
@@ -1014,7 +1077,10 @@ const Settings = () => {
                         </table>
                       </div>
 
-                      {/* Mobile & Tablet Cards (Visible below lg) */}
+                      {/**
+                       * Mobile Invoices Card Feed
+                       * Responsive cards for reviewing past platform subscription charges
+                       */}
                       <div className="block lg:hidden space-y-3 p-1">
                         {platformInvoices.map((inv) => (
                           <div key={`card-${inv._id}`} className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 active:bg-gray-50 transition-colors duration-200">
@@ -1081,7 +1147,10 @@ const Settings = () => {
               </section>
             )}
 
-            {/* ═══════════════ NOTIFICATIONS & AUTOMATION ═══════════════ */}
+            {/**
+             * Notifications & Alerts Section
+             * Automated customer dispatches and administrative email notifications
+             */}
             {activeSection === 'notifications' && (
               <section id="section-notifications" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
@@ -1108,7 +1177,10 @@ const Settings = () => {
               </section>
             )}
 
-            {/* ═══════════════ PRODUCTS ═══════════════ */}
+            {/**
+             * Inventory & Stock Alerts
+             * Low stock quantity thresholds and automated merchant notifications
+             */}
             {activeSection === 'product' && (
               <section id="section-product" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
@@ -1143,7 +1215,10 @@ const Settings = () => {
               </section>
             )}
 
-            {/* ═══════════════ INVOICE NOTES ═══════════════ */}
+            {/**
+             * Invoice Notes & Legal Disclaimers
+             * Customizable footer greetings and terms of service printed on merchant bills
+             */}
             {activeSection === 'notes' && (
               <section id="section-notes" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
@@ -1181,7 +1256,10 @@ const Settings = () => {
               </section>
             )}
 
-            {/* ═══════════════ SECURITY / PASSWORD ═══════════════ */}
+            {/**
+             * Security & Password Management
+             * Password rotation form protected by current credential verification
+             */}
             {activeSection === 'security' && userHasPassword && (
               <section id="section-security" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
@@ -1276,10 +1354,16 @@ const Settings = () => {
               </section>
             )}
 
-            {/* ═══════════════ ACTIVE DEVICES & SESSIONS ═══════════════ */}
+            {/**
+             * Active Devices & Sessions Section
+             * Device fingerprinting, session activity tracking, and remote logout controls
+             */}
             {activeSection === 'devices' && (
               <section id="section-devices" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                {/* Section Header */}
+                {/**
+                 * Device Section Header
+                 * Section title, description, and global session refresh/terminate controls
+                 */}
                 <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
                     <div className="flex items-center gap-2">
@@ -1315,7 +1399,10 @@ const Settings = () => {
                   </div>
                 </div>
 
-                {/* Section Content */}
+                {/**
+                 * Active Sessions List
+                 * Rendered device items with platform, IP address, and activity timestamps
+                 */}
                 <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
                   {devicesLoading && devices.length === 0 ? (
                     <div className="py-12 flex flex-col items-center justify-center text-gray-500 gap-3">
@@ -1340,7 +1427,10 @@ const Settings = () => {
                                 : 'border-gray-200 bg-white hover:border-gray-300'
                             }`}
                           >
-                            {/* Top Row: Device Icon + Title on Left, Badge/Action on Right */}
+                            {/**
+                             * Device Title Row
+                             * Device category icon, operating system title, and logout trigger
+                             */}
                             <div className="flex items-center justify-between gap-2 mb-2">
                               <div className="flex items-center gap-2 min-w-0 flex-1">
                                 <div
@@ -1358,7 +1448,10 @@ const Settings = () => {
                                 </h3>
                               </div>
 
-                              {/* Right: Sleek Logout button for Other Device only */}
+                              {/**
+                               * Remote Logout Action
+                               * Revokes authentication token for remote session
+                               */}
                               {!device.isCurrentDevice && (
                                 <div className="shrink-0">
                                   <button
@@ -1378,14 +1471,20 @@ const Settings = () => {
                               )}
                             </div>
 
-                            {/* Middle Row: Full Browser & IP details on dedicated full-width line */}
+                            {/**
+                             * Connection Metadata
+                             * Browser agent and network IP address details
+                             */}
                             <div className="text-[11px] sm:text-xs text-gray-500 font-medium mb-2.5 flex items-center gap-1.5 flex-wrap">
                               <span className="text-gray-700 font-medium">{device.browser || 'Browser'}</span>
                               <span className="text-gray-300">•</span>
                               <span>IP: <span className="font-mono text-gray-700">{device.ip}</span></span>
                             </div>
 
-                            {/* Bottom Info Grid: Clean balanced 2-column metadata sub-box */}
+                            {/**
+                             * Session Activity Times
+                             * Live activity status and initial sign-in timestamp
+                             */}
                             <div className="grid grid-cols-2 gap-2 sm:gap-3 bg-gray-50/80 px-2.5 sm:px-3 py-2 sm:py-2.5 rounded-lg border border-gray-100">
                               <div className="min-w-0 text-left">
                                 <span className="text-[10px] sm:text-[11px] font-semibold text-gray-500 uppercase tracking-wider block leading-tight">
@@ -1421,7 +1520,10 @@ const Settings = () => {
               </section>
             )}
 
-            {/* ═══════════════ DELETE ACCOUNT ═══════════════ */}
+            {/**
+             * Account Purge Section
+             * Irreversible merchant profile and tenant data termination controls
+             */}
             {activeSection === 'account' && (
               <section id="section-account" className="bg-white rounded-lg border border-red-200 overflow-hidden">
                 <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-red-100 bg-red-50/50">
@@ -1476,7 +1578,10 @@ const Settings = () => {
               </section>
             )}
 
-            {/* ═══════════════ SAVE BUTTON ═══════════════ */}
+            {/**
+             * Floating Save Bar
+             * Sticky status indicator and form save trigger for pending configuration modifications
+             */}
             {activeSection !== 'security' && activeSection !== 'account' && activeSection !== 'platform-invoices' && activeSection !== 'devices' && (
               <div className="sticky bottom-16 lg:bottom-4 z-20 mt-8 pt-4 pb-4 lg:pb-0">
                 <div className="bg-white border border-gray-200 p-2 sm:px-4 sm:py-2.5 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 w-full">
@@ -1500,23 +1605,35 @@ const Settings = () => {
 
           </form>
 
-          {/* App Version Card (Mobile / Tablets) */}
+          {/**
+           * Mobile App Version Card
+           * Release metadata displayed at the foot of mobile viewport
+           */}
           <div className="lg:hidden pt-4 pb-2">
             <AppVersionCard variant="full" />
           </div>
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
+      {/**
+       * Account Deletion Confirmation Modal
+       * Final safety prompt verifying merchant intent to permanently destroy tenant data
+       */}
       {deleteModalOpen && (
         <div className="fixed inset-0 z-[100]">
-          {/* Backdrop */}
+          {/**
+           * Modal Backdrop Overlay
+           * Dimmed background dismissing dialog when clicked
+           */}
           <div
             className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
             onClick={() => setDeleteModalOpen(false)}
           />
 
-          {/* Modal Content */}
+          {/**
+           * Deletion Dialog Content
+           * Destructive confirmation card with warning and action triggers
+           */}
           <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
             <div
               className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
@@ -1553,7 +1670,10 @@ const Settings = () => {
         </div>
       )}
 
-      {/* Logout Single Device Confirmation Modal */}
+      {/**
+       * Single Device Logout Confirmation Modal
+       * Prompts confirmation before terminating a specific remote session
+       */}
       {deviceToLogout && (
         <div className="fixed inset-0 z-[100]">
           <div
@@ -1601,7 +1721,10 @@ const Settings = () => {
         </div>
       )}
 
-      {/* Logout All Other Devices Confirmation Modal */}
+      {/**
+       * Global Session Revocation Confirmation Modal
+       * Confirms bulk termination of all active sessions except the current device
+       */}
       {confirmLogoutOthersModal && (
         <div className="fixed inset-0 z-[100]">
           <div

@@ -30,7 +30,10 @@ export const PWAProvider = ({ children }) => {
       if (registration) {
         setSwRegistration(registration);
 
-        // 1. Periodic background check: Run every 60 minutes when user is online
+        /**
+         * Periodic Background Polling
+         * Queries for service worker updates at hourly intervals when online.
+         */
         const intervalId = setInterval(() => {
           if (navigator.onLine && registration) {
             registration.update().catch(() => {});
@@ -45,7 +48,10 @@ export const PWAProvider = ({ children }) => {
     },
   });
 
-  // 2. Window Focus Check: When user returns to tab/app, check for new release
+  /**
+   * Visibility Change Detection
+   * Triggers service worker registration update when browser window regains focus.
+   */
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible' && navigator.onLine) {
@@ -59,11 +65,17 @@ export const PWAProvider = ({ children }) => {
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, [swRegistration]);
 
-  // 3. User action: Execute instant zero-data-loss application update
+  /**
+   * Application Update Execution
+   * Activates waiting service worker and smoothly refreshes the document context.
+   */
   const updateApp = async () => {
     setIsUpdating(true);
     try {
-      // Safety Fallback: In dev simulation mode or if SW controller doesn't trigger reload within 1200ms, force reload
+      /**
+       * Reload Safety Fallback
+       * Ensures reload occurs within 1200ms if service worker controller fails to fire.
+       */
       setTimeout(() => {
         window.location.reload();
       }, 1200);
@@ -77,12 +89,18 @@ export const PWAProvider = ({ children }) => {
     }
   };
 
-  // 4. User action: Dismiss update banner
+  /**
+   * Update Prompt Dismissal
+   * Clears active refresh requirement state without reloading the document.
+   */
   const dismissUpdate = () => {
     setNeedRefresh(false);
   };
 
-  // 5. User action: Manual 'Check for updates' trigger (Hybrid Dual Detection)
+  /**
+   * Hybrid Dual Update Verification
+   * Manually checks server health API version and initiates service worker byte checks.
+   */
   const checkForUpdates = async () => {
     if (isCheckingRef.current) return;
 
@@ -95,7 +113,10 @@ export const PWAProvider = ({ children }) => {
     setIsChecking(true);
 
     try {
-      // Step A: Check Backend Version via Health API
+      /**
+       * Backend Health Endpoint Audit
+       * Verifies live server application version against client bundle build.
+       */
       let serverHasNewVersion = false;
       let serverVer = null;
       try {
@@ -107,10 +128,16 @@ export const PWAProvider = ({ children }) => {
           }
         }
       } catch (e) {
-        // Ignore API health error if offline or unreachable
+        /**
+         * Graceful Health Check Bypass
+         * Silently handles network failures when backend health endpoint is unreachable.
+         */
       }
 
-      // Step B: Trigger Service Worker Registration Update
+      /**
+       * Service Worker Update Trigger
+       * Initiates registration cycle to detect fresh service worker scripts.
+       */
       if (swRegistration) {
         try {
           await swRegistration.update();
@@ -119,25 +146,37 @@ export const PWAProvider = ({ children }) => {
         }
       }
 
-      // Natural delay for realistic UI feedback
+      /**
+       * UI Synchronization Delay
+       * Provides brief feedback period for realistic loading state presentation.
+       */
       setTimeout(() => {
         setIsChecking(false);
         isCheckingRef.current = false;
 
-        // If backend version is newer, trigger refresh prompt
+        /**
+         * Server Version Mismatch Handler
+         * Prompts client refresh when remote API advertises newer release build.
+         */
         if (serverHasNewVersion && serverVer) {
           setAvailableVersion(serverVer);
           setNeedRefresh(true);
           return;
         }
 
-        // If SW detected a waiting worker or needRefresh is true
+        /**
+         * Waiting Worker Verification
+         * Activates prompt if a worker script is parsed and waiting in lifecycle.
+         */
         if (swRegistration?.waiting || needRefresh) {
           setNeedRefresh(true);
           return;
         }
 
-        // If already latest version (de-duplicated toast ID prevents stacking)
+        /**
+         * Up-to-Date Status Feedback
+         * Displays confirmation toast with fixed identifier preventing duplicate popups.
+         */
         toast.success(t('You are using the latest version of UdharPay'), { id: 'pwa-update-toast' });
       }, 700);
     } catch (err) {

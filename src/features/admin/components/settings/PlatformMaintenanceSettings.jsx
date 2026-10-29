@@ -1,9 +1,17 @@
+/**
+ * Platform Scheduled Maintenance Settings
+ * Toggles system lockdown mode and broadcasts customizable maintenance notices to merchants in real time.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Wrench, AlertTriangle, ShieldCheck } from 'lucide-react';
 import ToggleSwitch from './ToggleSwitch';
 import SettingSaveButton from './SettingSaveButton';
 
+/**
+ * PlatformMaintenanceSettings Component
+ */
 const PlatformMaintenanceSettings = ({ settings, onUpdate, isUpdating }) => {
   const { t } = useTranslation();
 
@@ -47,7 +55,10 @@ const PlatformMaintenanceSettings = ({ settings, onUpdate, isUpdating }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
-      {/* ── Maintenance Mode Card ── */}
+      {/**
+       * Maintenance Mode Card Section
+       * Global operational kill-switch and public notice banner configuration.
+       */}
       <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
         <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -125,7 +136,10 @@ const PlatformMaintenanceSettings = ({ settings, onUpdate, isUpdating }) => {
         </div>
       </section>
 
-      {/* ── Save Settings Button ── */}
+      {/**
+       * Save Maintenance Settings Button Bar
+       * Commits maintenance flag and alert messaging to platform configuration.
+       */}
       <SettingSaveButton
         isUpdating={isUpdating}
         hasChanges={hasChanges}

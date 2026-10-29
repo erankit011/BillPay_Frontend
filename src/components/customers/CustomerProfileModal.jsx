@@ -1,13 +1,24 @@
+/**
+ * Customer Profile Details Modal
+ * Displays customer ledger balance, lifetime collections, contact information, and registration metadata.
+ */
+
 import React, { useEffect } from 'react';
 import { X, Phone, Mail, MapPin, Clock, IndianRupee, Wallet } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/dateUtils';
 
+/**
+ * CustomerProfileModal Component
+ */
 const CustomerProfileModal = ({ isOpen, onClose, customer }) => {
   const { t } = useTranslation();
 
-  // Prevent background scrolling when modal is open
+  /**
+   * Body Scroll Lock Controller
+   * Prevents window scroll manipulation while profile modal is displayed
+   */
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -35,22 +46,32 @@ const CustomerProfileModal = ({ isOpen, onClose, customer }) => {
 
   return (
     <div className="fixed inset-0 z-50">
-      {/* Backdrop */}
+      {/**
+       * Backdrop Dimmer Overlay
+       * Semi-transparent dark blur background capturing dismiss clicks
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
         onClick={onClose}
       />
 
-      {/* Mobile: bottom sheet | sm+: centered modal */}
+      {/**
+       * Responsive Dialog Container
+       * Bottom sheet on mobile viewports, centered dialog on desktop screens
+       */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
 
-          {/* Drag handle — mobile only */}
+          {/**
+           * Mobile Sheet Drag Indicator
+           */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
           </div>
 
-          {/* Header */}
+          {/**
+           * Modal Header & Dismiss Action
+           */}
           <div className="flex items-center justify-between px-5 md:px-6 py-4 md:py-5 border-b border-gray-100 flex-shrink-0 bg-white">
             <h3 className="text-lg md:text-xl font-semibold text-gray-900">
               {t('Customer Profile')}
@@ -63,7 +84,10 @@ const CustomerProfileModal = ({ isOpen, onClose, customer }) => {
             </button>
           </div>
 
-          {/* Body */}
+          {/**
+           * Customer Overview Content Area
+           * Monogram badge, contact metrics, and balance indicator
+           */}
           <div className="p-4 md:p-5 overflow-y-auto flex-1 bg-white">
             <div className="flex flex-col items-center mb-4 sm:mb-5">
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full p-[3px] border border-gray-200 bg-white mb-3 flex-shrink-0">
@@ -79,7 +103,10 @@ const CustomerProfileModal = ({ isOpen, onClose, customer }) => {
             </div>
 
             <div className="space-y-3 sm:space-y-4">
-              {/* Contact Details */}
+              {/**
+               * Contact Information Group
+               * Direct telephone dialer, email link, and billing address
+               */}
               <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <div className="divide-y divide-gray-100">
                   <a href={`tel:${customer.phone}`} className="flex items-center px-3.5 py-3 sm:px-4 sm:py-3.5 hover:bg-gray-50 transition-colors group cursor-pointer">

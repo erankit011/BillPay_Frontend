@@ -1,3 +1,8 @@
+/**
+ * Administrative Audit Log Event Inspection Modal
+ * Presents deep metadata inspection, IP address, user agent, target resource IDs, and JSON state diffs.
+ */
+
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -15,6 +20,9 @@ import toast from 'react-hot-toast';
 import { formatDate } from '../../../../utils/dateUtils';
 import AuditCategoryBadge from './AuditCategoryBadge';
 
+/**
+ * Format Audit Action Name
+ */
 const formatActionName = (action) => {
   if (!action) return 'Unknown Action';
   return action
@@ -36,7 +44,10 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Prevent background scrolling when modal is open
+  /**
+   * Scroll & Touch Prevention Hook
+   * Disables document scrolling and touch actions while modal dialog is open.
+   */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -68,7 +79,10 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 overscroll-contain">
-      {/* Backdrop */}
+      {/**
+       * Backdrop Overlay
+       * Darkened modal background overlay closing the view on backdrop click.
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
@@ -76,18 +90,27 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
         onTouchMove={(e) => e.preventDefault()}
       />
 
-      {/* Modal Container: Bottom Sheet on Mobile, Centered on sm+ */}
+      {/**
+       * Modal Viewport Container
+       * Positions bottom sheet on mobile screens and centered modal on desktop.
+       */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div
           className="relative w-full sm:max-w-3xl bg-white rounded-t-2xl sm:rounded-xl border border-gray-200 animate-modal-content overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[88vh] pointer-events-auto shadow-2xl sm:shadow-xl"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Mobile Drag Handle */}
+          {/**
+           * Mobile Drag Handle
+           * Visual drag pill handle displayed on mobile touch screens.
+           */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-gray-50/70">
             <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
           </div>
 
-          {/* Modal Header */}
+          {/**
+           * Audit Log Header
+           * Displays security icon, formatted action name, category badge, and log ID.
+           */}
           <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-gray-200 bg-gray-50/70 flex-shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="w-10 h-10 rounded bg-[#093C5D]/10 border border-[#093C5D]/20 text-[#093C5D] flex items-center justify-center shrink-0">
@@ -115,11 +138,20 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
             </button>
           </div>
 
-          {/* Modal Body */}
+          {/**
+           * Audit Details Body
+           * Scrollable container detailing actor, target, network, and payload data.
+           */}
           <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
-            {/* Metadata Cards Grid */}
+            {/**
+             * Actor & Target Entity Grid
+             * Paired metadata cards highlighting who performed the action and what resource was targeted.
+             */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Actor Card */}
+              {/**
+               * Executing Actor Card
+               * Displays name, system role, email, and internal database identifier.
+               */}
               <div className="p-4 rounded-lg border border-gray-200 bg-gray-50/50 space-y-2">
                 <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   <User className="w-3.5 h-3.5 text-[#093C5D]" />
@@ -141,7 +173,10 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
                 </div>
               </div>
 
-              {/* Target Card */}
+              {/**
+               * Target Resource Card
+               * Identifies target name, category type, and underlying entity ID.
+               */}
               <div className="p-4 rounded-lg border border-gray-200 bg-gray-50/50 space-y-2">
                 <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   <Target className="w-3.5 h-3.5 text-emerald-500" />
@@ -163,7 +198,10 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
               </div>
             </div>
 
-            {/* Network & Device Metadata */}
+            {/**
+             * Network & Client Fingerprint
+             * Captures IP address, localized timestamp, and raw user-agent string.
+             */}
             <div className="p-4 rounded-lg border border-gray-200 bg-gray-50/50 space-y-3">
               <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 <Globe className="w-3.5 h-3.5 text-sky-500" />
@@ -193,7 +231,10 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
               </div>
             </div>
 
-            {/* Action Details / Payload Diff */}
+            {/**
+             * Event Mutation Details & Payload
+             * Syntax-highlighted code block with interactive JSON clipboard copy.
+             */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-xs font-semibold text-gray-700 uppercase tracking-wider">
@@ -229,7 +270,10 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
             </div>
           </div>
 
-          {/* Modal Footer */}
+          {/**
+           * Modal Action Footer
+           * Controls to copy log ID to clipboard and dismiss the modal dialog.
+           */}
           <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
             <button
               type="button"

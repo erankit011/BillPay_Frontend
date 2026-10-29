@@ -1,7 +1,16 @@
+/**
+ * Universal Language Switcher Component
+ * Supports compact navbar icon dropdown and full expanded pill dropdown
+ * for toggling application locale between English and Hindi.
+ */
+
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronDown, Check, Globe } from 'lucide-react';
 
+/**
+ * LanguageSwitcher Component
+ */
 const LanguageSwitcher = ({ variant = 'default' }) => {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +29,10 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
     setIsOpen(false);
   };
 
-  // Close dropdown when clicking outside
+  /**
+   * Click-Outside Dropdown Dismissal
+   * Automatically closes flyout when user clicks outside boundaries
+   */
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -39,7 +51,10 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
     };
   }, [isOpen]);
 
-  // Compact variant for navbar
+  /**
+   * Compact Navbar Variant
+   * Icon-only trigger designed for tight navigation toolbars
+   */
   if (variant === 'compact') {
     return (
       <div className="relative flex items-center justify-center" ref={dropdownRef}>
@@ -72,7 +87,10 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
     );
   }
 
-  // Default variant (not used anymore, but keeping for compatibility)
+  /**
+   * Standard Dropdown Variant
+   * Button with text label and chevron for broad placement
+   */
   return (
     <div className="relative" ref={dropdownRef}>
       <button

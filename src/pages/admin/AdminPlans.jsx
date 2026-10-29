@@ -1,3 +1,8 @@
+/**
+ * Platform Subscription Plans & Pricing Catalog Management
+ * Configures dynamic pricing tiers, customer & billing caps, trial windows, and plan resets.
+ */
+
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -19,6 +24,9 @@ import EditPlanModal from '../../features/admin/components/plans/EditPlanModal';
 import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 
+/**
+ * AdminPlans Component
+ */
 const AdminPlans = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -70,7 +78,10 @@ const AdminPlans = () => {
     setIsEditModalOpen(true);
   };
 
-  // KPI Calculations
+  /**
+   * Plan Aggregate Calculations
+   * Computes subscriber sums, active tier count, and extracts baseline Free tier quota defaults.
+   */
   const totalSubscribers = plans.reduce((acc, p) => acc + (p.subscriberCount || 0), 0);
   const paidPlans = plans.filter((p) => p.price > 0);
   const activeTiersCount = plans.filter((p) => p.isActive).length;
@@ -78,7 +89,10 @@ const AdminPlans = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
-      {/* Header */}
+      {/**
+       * Page Header Toolbar
+       * Plan pricing overview, descriptions, and factory reset trigger button.
+       */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
@@ -103,7 +117,10 @@ const AdminPlans = () => {
         </div>
       </div>
 
-      {/* ── KPI Stat Cards Grid (Standardized with AdminStatCard) ── */}
+      {/**
+       * Plan KPI Metric Cards Grid
+       * Summarizes active subscription tiers, merchant subscribers, Pro count, and Free tier quotas.
+       */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         <AdminStatCard
           title={t('CONFIGURED TIERS')}
@@ -138,7 +155,10 @@ const AdminPlans = () => {
         />
       </div>
 
-      {/* ── Plan Cards Grid ── */}
+      {/**
+       * Subscription Plan Cards Grid
+       * 4-column responsive grid displaying each pricing tier and feature allowance.
+       */}
       {loading ? (
         <div className="bg-white rounded-lg border border-gray-200 p-16 text-center shadow-none">
           <SwirlingLoader className="w-10 h-10 text-[#093C5D] mx-auto mb-3" />
@@ -152,7 +172,10 @@ const AdminPlans = () => {
         </div>
       )}
 
-      {/* ── Edit Modal ── */}
+      {/**
+       * Plan Configuration Edit Modal
+       * Dialog enabling adjustments to tier pricing, quota caps, and feature toggles.
+       */}
       <EditPlanModal
         isOpen={isEditModalOpen}
         plan={selectedPlan}
@@ -163,16 +186,25 @@ const AdminPlans = () => {
         onSave={handleUpdatePlan}
       />
 
-      {/* ── Reset Defaults Confirmation Modal (Yes / No) ── */}
+      {/**
+       * Reset Factory Defaults Confirmation Dialog
+       * Confirms restoration of default subscription tiers and pricing models.
+       */}
       {confirmResetModal && (
         <div className="fixed inset-0 z-50 overscroll-contain">
-          {/* Backdrop */}
+          {/**
+           * Modal Backdrop Overlay
+           * Semi-transparent overlay blocking interaction with background.
+           */}
           <div
             className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
             onClick={() => !resetting && setConfirmResetModal(false)}
           />
 
-          {/* Modal Content */}
+          {/**
+           * Confirmation Modal Dialog Body
+           * Warning alert icon, prompt text, and action buttons.
+           */}
           <div className="fixed inset-0 flex items-center justify-center p-4 z-50 pointer-events-none">
             <div
               className="bg-white rounded-lg w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-200 shadow-none"

@@ -12,7 +12,10 @@ const UpdatePromptModal = () => {
   const { t } = useTranslation();
   const { needRefresh, updateApp, dismissUpdate, isUpdating, availableVersion } = usePWAUpdate();
 
-  // Handle Escape key to dismiss update prompt
+  /**
+   * Keyboard Navigation Hook
+   * Listens for Escape key presses to dismiss update prompt when not actively updating.
+   */
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && !isUpdating) {
@@ -25,7 +28,10 @@ const UpdatePromptModal = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [needRefresh, isUpdating, dismissUpdate]);
 
-  // Lock background scroll when modal is open
+  /**
+   * Scroll Lock Effect
+   * Disables background viewport scrolling while the update prompt modal is open.
+   */
   useEffect(() => {
     if (!needRefresh) return;
 
@@ -50,7 +56,10 @@ const UpdatePromptModal = () => {
       aria-labelledby="pwa-update-modal-title"
       className="fixed inset-0 z-[120] overscroll-contain"
     >
-      {/* Backdrop */}
+      {/**
+       * Backdrop Overlay
+       * Darkened semi-transparent overlay triggering prompt dismissal on backdrop tap.
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={() => {
@@ -58,7 +67,10 @@ const UpdatePromptModal = () => {
         }}
       />
 
-      {/* Mobile: bottom sheet | sm+: centered modal */}
+      {/**
+       * Responsive Modal Positioning
+       * Bottom sheet on mobile devices transitioning to centered dialog on desktop.
+       */}
       <div
         className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-[120] pointer-events-none"
         onClick={(e) => {
@@ -69,12 +81,18 @@ const UpdatePromptModal = () => {
           className="relative bg-white w-full sm:max-w-[400px] rounded-t-2xl sm:rounded-xl flex flex-col border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Drag handle for mobile */}
+          {/**
+           * Mobile Drag Handle
+           * Subtle visual indicator pill rendered exclusively on mobile views.
+           */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-white">
             <div className="w-10 h-1 bg-gray-200 rounded-full" />
           </div>
 
-          {/* Header - Clean typography without duplicate badge/icon */}
+          {/**
+           * Modal Header
+           * Direct title banner with clean typography and circular dismiss button.
+           */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-white flex-shrink-0">
             <h3
               id="pwa-update-modal-title"
@@ -83,7 +101,10 @@ const UpdatePromptModal = () => {
               {t('New Update Available')}
             </h3>
 
-            {/* Standard Round Close Button */}
+            {/**
+             * Close Modal Action Button
+             * Dismisses the prompt and maintains standard icon sizing.
+             */}
             <button
               type="button"
               onClick={dismissUpdate}
@@ -96,7 +117,10 @@ const UpdatePromptModal = () => {
             </button>
           </div>
 
-          {/* Body - Clean & Direct Message Only */}
+          {/**
+           * Notification Body
+           * Direct user message announcing availability of modern release version.
+           */}
           <div className="p-5 text-left bg-white">
             <p className="text-xs sm:text-sm font-medium text-gray-600 leading-relaxed">
               {availableVersion
@@ -105,7 +129,10 @@ const UpdatePromptModal = () => {
             </p>
           </div>
 
-          {/* Footer Actions */}
+          {/**
+           * Modal Action Footer
+           * Controls for postponing or executing the application update immediately.
+           */}
           <div className="p-4 sm:p-5 border-t border-gray-100 bg-gray-50/50 flex flex-col-reverse sm:flex-row gap-2.5 sm:gap-3 flex-shrink-0">
             <button
               type="button"

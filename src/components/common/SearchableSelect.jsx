@@ -1,8 +1,16 @@
+/**
+ * Portal-Rendered Searchable Select Dropdown
+ * Positions floating menu via createPortal with dynamic collision detection (renders above or below).
+ */
+
 import { useTranslation } from 'react-i18next';
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, ChevronDown } from 'lucide-react';
 import ReactDOM from 'react-dom';
 
+/**
+ * SearchableSelect Component
+ */
 const SearchableSelect = ({ options, value, onChange, placeholder, searchPlaceholder = "Search..." }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +42,10 @@ const SearchableSelect = ({ options, value, onChange, placeholder, searchPlaceho
 
   const closeDropdown = () => setIsOpen(false);
 
-  // Reposition on scroll/resize while open
+  /**
+   * Viewport Repositioning Listener
+   * Re-evaluates floating portal bounding rect upon window scroll or resize
+   */
   useEffect(() => {
     if (!isOpen) return;
     const reposition = () => setDropdownStyle(getDropdownStyle());
@@ -46,7 +57,10 @@ const SearchableSelect = ({ options, value, onChange, placeholder, searchPlaceho
     };
   }, [isOpen]);
 
-  // Close on outside click
+  /**
+   * Click-Outside Dropdown Dismissal
+   * Collapses portal popup when click event occurs outside trigger or dropdown bounds
+   */
   useEffect(() => {
     if (!isOpen) return;
     const handleClickOutside = (e) => {
@@ -70,7 +84,10 @@ const SearchableSelect = ({ options, value, onChange, placeholder, searchPlaceho
       style={dropdownStyle}
       className="bg-white border border-gray-200 rounded-lg flex flex-col overflow-hidden"
     >
-      {/* Search */}
+      {/**
+       * In-Menu Search Input
+       * Filters dropdown items dynamically with instant keyword matching
+       */}
       <div className="p-2 border-b border-gray-100 flex-shrink-0 relative">
         <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
         <input
@@ -82,7 +99,10 @@ const SearchableSelect = ({ options, value, onChange, placeholder, searchPlaceho
           autoFocus
         />
       </div>
-      {/* Options */}
+      {/**
+       * Filtered Options List
+       * Scrollable list of matches with highlighted selection
+       */}
       <div className="overflow-y-auto max-h-48">
         {filteredOptions.length === 0 ? (
           <div className="p-4 text-sm text-center text-gray-500 font-medium">{t("No results found")}</div>
@@ -107,7 +127,10 @@ const SearchableSelect = ({ options, value, onChange, placeholder, searchPlaceho
 
   return (
     <div className="relative w-full">
-      {/* Trigger */}
+      {/**
+       * Select Input Trigger
+       * Visual button presenting current selection with toggle chevron
+       */}
       <div
         ref={triggerRef}
         className="cursor-pointer w-full h-[42px] font-medium rounded-lg border border-gray-300 px-3 text-sm transition-all flex justify-between items-center bg-white hover:border-gray-400 select-none"
@@ -119,7 +142,10 @@ const SearchableSelect = ({ options, value, onChange, placeholder, searchPlaceho
         <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
       </div>
 
-      {/* Portal — renders outside all overflow containers */}
+      {/**
+       * Floating Portal Layer
+       * Teleports dropdown to document body escaping parent CSS clipping contexts
+       */}
       {typeof document !== 'undefined' && ReactDOM.createPortal(dropdown, document.body)}
     </div>
   );

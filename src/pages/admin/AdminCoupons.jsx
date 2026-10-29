@@ -1,3 +1,8 @@
+/**
+ * Administrative SaaS Promotional Coupons Management
+ * Oversees discount coupon campaigns, redemption quotas, usage logs, and status toggles.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -31,6 +36,9 @@ import CouponModal from '../../features/admin/components/coupons/CouponModal';
 import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 
+/**
+ * Coupon Status Filters
+ */
 const STATUS_OPTIONS = [
   { value: 'ALL', label: 'All Statuses' },
   { value: 'ACTIVE', label: 'Active Now' },
@@ -59,7 +67,10 @@ const AdminCoupons = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState(null);
 
-  // Debounce search input syncing to URL
+  /**
+   * Search Debounce & URL Synchronization
+   * Debounces promo code search queries and binds page parameters to URL state.
+   */
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchTerm);
@@ -99,7 +110,10 @@ const AdminCoupons = () => {
     });
   };
 
-  // React Query for Coupons List
+  /**
+   * Paginated Coupons List Query
+   * Fetches discount coupons matching search terms, status filter, and pagination index.
+   */
   const { data: couponsData, isLoading: loading } = useQuery({
     queryKey: ['adminCoupons', debouncedSearch, urlStatus, urlDiscountType, urlPage],
     queryFn: () =>
@@ -113,7 +127,10 @@ const AdminCoupons = () => {
     staleTime: 30 * 1000,
   });
 
-  // React Query for Coupon Stats
+  /**
+   * Coupon Metrics Aggregate Query
+   * Fetches lifetime redemption counts and cumulative monetary discounts disbursed.
+   */
   const { data: statsData, isLoading: statsLoading } = useQuery({
     queryKey: ['adminCouponStats'],
     queryFn: getAdminCouponStats,
@@ -125,7 +142,10 @@ const AdminCoupons = () => {
   const totalCount = couponsData?.pagination?.total ?? coupons.length;
   const stats = statsData || { total: 0, active: 0, expired: 0, totalRedemptions: 0, totalDiscountsGiven: 0 };
 
-  // Mutations
+  /**
+   * Coupon Mutation Operations
+   * Handles creating new promotional coupons with instant cache invalidation.
+   */
   const createMutation = useMutation({
     mutationFn: (data) => createAdminCoupon(data),
     onSuccess: () => {
@@ -206,7 +226,10 @@ const AdminCoupons = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
-      {/* Header */}
+      {/**
+       * Page Header Toolbar
+       * Displays coupon management title and action button to launch new promotional code.
+       */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
@@ -228,7 +251,10 @@ const AdminCoupons = () => {
         </div>
       </div>
 
-      {/* Top KPI Summary Cards (Matched with Admin Shops UI) */}
+      {/**
+       * Top KPI Summary Metrics Grid
+       * Summary metrics showcasing active coupons, redemption counts, monetary savings, and expired codes.
+       */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         <AdminStatCard
           title="ACTIVE COUPONS"
@@ -260,7 +286,10 @@ const AdminCoupons = () => {
         />
       </div>
 
-      {/* Filter Chips (Matched with Admin Shops UI) */}
+      {/**
+       * Coupon Status & Discount Type Filter Chips
+       * Horizontal pill chips allowing dual-filtering by active state and percentage vs fixed discount.
+       */}
       <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {STATUS_OPTIONS.map((opt) => (
           <button
@@ -308,7 +337,10 @@ const AdminCoupons = () => {
         )}
       </div>
 
-      {/* Search Bar (Matched with Admin Shops UI) */}
+      {/**
+       * Search Bar Filter Input
+       * Debounced search bar querying coupon promo codes, descriptions, and eligible plan tiers.
+       */}
       <div className="flex flex-col w-full mb-3 sm:mb-4">
         <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
@@ -342,7 +374,10 @@ const AdminCoupons = () => {
         </div>
       </div>
 
-      {/* Coupons Grid */}
+      {/**
+       * Coupons Card Grid Container
+       * Renders loading skeletons, empty state, or responsive grid of coupon discount cards.
+       */}
       {loading ? (
         <div className="py-16 md:py-20 text-center bg-white rounded-lg border border-gray-200 shadow-none">
           <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#093C5D] mx-auto mb-3" />
@@ -385,7 +420,10 @@ const AdminCoupons = () => {
         </div>
       )}
 
-      {/* Pagination Controls */}
+      {/**
+       * Pagination Navigation Controls
+       * Previous/next page buttons with page number indicator and total coupon count.
+       */}
       {totalPages > 1 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border border-gray-200 bg-gray-50/60 rounded-lg">
           <span className="text-xs text-gray-500 font-medium">
@@ -415,7 +453,10 @@ const AdminCoupons = () => {
         </div>
       )}
 
-      {/* Create / Edit Coupon Modal */}
+      {/**
+       * Coupon Creation & Edit Dialog Modal
+       * Modal handling discount percent, expiry dates, per-user limits, and plan tier eligibility.
+       */}
       <CouponModal
         isOpen={modalOpen}
         coupon={editingCoupon}

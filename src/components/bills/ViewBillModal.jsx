@@ -1,3 +1,8 @@
+/**
+ * Invoice Detail & Item Breakdown Modal
+ * Presents itemized billing lines, paid vs pending debt breakdown, and payment mode indicators.
+ */
+
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -5,6 +10,9 @@ import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../../utils/currency';
 import { formatDateOnly, formatTimeOnly } from '../../utils/dateUtils';
 
+/**
+ * Format Payment Mode Label
+ */
 const formatPaymentMode = (mode) => {
   if (!mode) return '';
   switch (mode) {
@@ -42,7 +50,10 @@ const ViewBillModal = ({ viewBill, setViewBill, shopSettings = {} }) => {
         <div className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" onClick={() => setViewBill(null)} />
         <div className="relative bg-white border border-gray-200 rounded-xl max-w-2xl w-[95%] sm:w-full p-4 sm:p-5 md:p-6 lg:p-8 animate-modal-content flex flex-col max-h-[90vh] mx-auto">
           
-          {/* Header */}
+          {/**
+           * Modal Header
+           * Invoice reference identifier and dismiss button
+           */}
           <div className="flex items-center justify-between mb-3 sm:mb-4 md:mb-5 pb-3 sm:pb-4 border-b border-gray-100 flex-shrink-0 gap-2">
             <h3 className="text-base sm:text-lg md:text-xl font-semibold text-gray-900 leading-tight truncate">
               {t('Bill Details')} - <span className="text-[#093C5D]">{viewBill.invoiceNumber}</span>
@@ -55,10 +66,16 @@ const ViewBillModal = ({ viewBill, setViewBill, shopSettings = {} }) => {
             </button>
           </div>
 
-          {/* Body */}
+          {/**
+           * Receipt Details Body
+           * Split view containing recipient info, items table, and totals
+           */}
           <div className="flex flex-col flex-1 min-h-0 space-y-1 sm:space-y-2">
              
-             {/* Customer & Date Info - Clean Receipt Style */}
+             {/**
+              * Customer & Timestamp Card
+              * Formats recipient details and settlement status badge
+              */}
              <div className="flex flex-row items-start justify-between border-b border-dashed border-gray-200 pb-3 sm:pb-4 mb-2 flex-shrink-0">
                <div className="flex-1 pr-2">
                  <p className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t('Billed To')}</p>
@@ -83,7 +100,10 @@ const ViewBillModal = ({ viewBill, setViewBill, shopSettings = {} }) => {
                </div>
              </div>
              
-             {/* Products Table - Clean Style */}
+             {/**
+              * Products Table
+              * Item description, quantity, unit rate, and row total
+              */}
              <div className="flex flex-col flex-1 min-h-0 overflow-hidden py-1">
                <div className="overflow-y-auto overflow-x-auto flex-1 min-h-0 custom-scrollbar">
                  <table className="w-full text-left min-w-[260px] sm:min-w-[400px]">
@@ -109,7 +129,10 @@ const ViewBillModal = ({ viewBill, setViewBill, shopSettings = {} }) => {
                </div>
              </div>
 
-             {/* Totals Section */}
+             {/**
+              * Financial Breakdown Section
+              * Formats net subtotal, discount, taxes, and balance
+              */}
              <div className="pt-3 sm:pt-4 border-t border-dashed border-gray-200 flex-shrink-0">
                <div className="w-full space-y-1.5 sm:space-y-2">
                  <div className="flex justify-between items-center text-xs sm:text-sm">
@@ -162,7 +185,9 @@ const ViewBillModal = ({ viewBill, setViewBill, shopSettings = {} }) => {
                </div>
              </div>
              
-             {/* Shop Settings Footer Notes */}
+             {/**
+              * Custom Shop Terms & Footer Memo
+              */}
              {(shopSettings?.invoiceFooterNote || shopSettings?.termsAndConditions) && (
                <div className="pt-3 sm:pt-4 border-t border-dashed border-gray-200 flex-shrink-0">
                  {shopSettings?.invoiceFooterNote && (

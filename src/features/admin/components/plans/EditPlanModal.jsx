@@ -1,3 +1,8 @@
+/**
+ * Administrative Subscription Tier Editor Dialog
+ * Modifies plan pricing, entitlement quotas (customers, bills, trial days), and feature toggles.
+ */
+
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -21,6 +26,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 
+/**
+ * Available Platform Support Tiers
+ */
 const SUPPORT_TIERS = [
   { value: 'COMMUNITY', label: 'Community Support' },
   { value: 'EMAIL', label: 'Standard Email Support' },
@@ -205,7 +213,10 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
     }
   };
 
-  // Prevent background scrolling when modal is open
+  /**
+   * Scroll & Touch Prevention Hook
+   * Disables document scrolling and touch moves while modal dialog is open.
+   */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -228,7 +239,10 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
 
   return (
     <div className="fixed inset-0 z-50 overscroll-contain">
-      {/* ── Backdrop ── */}
+      {/**
+       * Backdrop Overlay
+       * Darkened semi-transparent overlay closing dialog on background tap.
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
@@ -236,18 +250,27 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
         onTouchMove={(e) => e.preventDefault()}
       />
 
-      {/* ── Modal Container ── */}
+      {/**
+       * Modal Viewport Dialog
+       * Renders as mobile bottom sheet or desktop centered dialogue modal.
+       */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-6 z-50 pointer-events-none overscroll-contain">
         <div
           className="relative bg-white w-full sm:max-w-2xl lg:max-w-3xl rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-none"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Mobile Drag Handle */}
+          {/**
+           * Mobile Drag Pill
+           * Visual drag pill indicator displayed on mobile devices.
+           */}
           <div className="sm:hidden flex justify-center pt-2.5 pb-1 flex-shrink-0 bg-white">
             <div className="w-10 h-1 bg-gray-300 rounded-full" />
           </div>
 
-          {/* ── Modal Header (App Theme Standard) ── */}
+          {/**
+           * Modal Header Banner
+           * Title banner, plan ID badge, and round dismiss button.
+           */}
           <div className="px-5 sm:px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-white flex-shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="w-10 h-10 rounded-lg bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center border border-[#093C5D]/20 shrink-0">
@@ -278,11 +301,17 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
             </button>
           </div>
 
-          {/* ── Form Body (Properly Scrollable with min-h-0 and ample bottom padding) ── */}
+          {/**
+           * Modal Form Scrollable Body
+           * Multi-section configuration form for tier pricing, quotas, features, and flags.
+           */}
           <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0 overflow-hidden">
             <div className="p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto flex-1 min-h-0 overscroll-contain pb-10">
               
-              {/* 1. Plan Basic Information Card */}
+              {/**
+               * Tier Identification Parameters
+               * Plan display name, marketing description, and promotional badge text.
+               */}
               <div className="p-4 sm:p-5 rounded-lg border border-gray-200 bg-white space-y-4 shadow-none">
                 <div className="flex items-center gap-2 pb-2.5 border-b border-gray-100">
                   <Sparkles className="w-4 h-4 text-[#093C5D]" />
@@ -334,7 +363,10 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                 </div>
               </div>
 
-              {/* 2. Pricing & Validity Card */}
+              {/**
+               * Pricing & Duration Settings
+               * Base tier price, billing cycle duration in days, and optional free trial period.
+               */}
               <div className="p-4 sm:p-5 rounded-lg border border-gray-200 bg-white space-y-4 shadow-none">
                 <div className="flex items-center gap-2 pb-2.5 border-b border-gray-100">
                   <IndianRupee className="w-4 h-4 text-[#093C5D]" />
@@ -402,9 +434,15 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                 </div>
               </div>
 
-              {/* 3. Operational Limits (Side by side cards) */}
+              {/**
+               * Operational Quotas & Limits
+               * Side-by-side quota management for customer records and invoice volume.
+               */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-                {/* Customer Limit Card */}
+                {/**
+                 * Customer Quota Parameter
+                 * Toggle for unlimited customer records or explicit numerical cap.
+                 */}
                 <div className="p-4 rounded-lg border border-gray-200 bg-white space-y-3 shadow-none">
                   <div className="flex items-center justify-between pb-2 border-b border-gray-100">
                     <span className="text-xs sm:text-sm font-semibold text-gray-900 flex items-center gap-1.5">
@@ -441,7 +479,10 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                   )}
                 </div>
 
-                {/* Bill Limit Card */}
+                {/**
+                 * Invoice Billing Quota Parameter
+                 * Toggle for unlimited bills or explicit numerical transaction threshold.
+                 */}
                 <div className="p-4 rounded-lg border border-gray-200 bg-white space-y-3 shadow-none">
                   <div className="flex items-center justify-between pb-2 border-b border-gray-100">
                     <span className="text-xs sm:text-sm font-semibold text-gray-900 flex items-center gap-1.5">
@@ -479,7 +520,10 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                 </div>
               </div>
 
-              {/* 4. Feature Entitlements & Switches Card */}
+              {/**
+               * Feature Entitlement Toggles
+               * High-level feature flags for WhatsApp reminders, voice billing, and analytics.
+               */}
               <div className="p-4 sm:p-5 rounded-lg border border-gray-200 bg-white space-y-3.5 shadow-none">
                 <div className="flex items-center justify-between pb-2.5 border-b border-gray-100">
                   <div className="flex items-center gap-2">
@@ -494,7 +538,10 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {/* WhatsApp Alerts Tile */}
+                  {/**
+                   * WhatsApp Notifications Feature
+                   * Entitlement toggle granting merchant automated WhatsApp reminder sending.
+                   */}
                   <div
                     onClick={() => setHasWhatsAppReminders(!hasWhatsAppReminders)}
                     className={`group flex items-start gap-3 p-3.5 rounded-lg border transition-all duration-150 cursor-pointer select-none ${
@@ -517,7 +564,10 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                     </div>
                   </div>
 
-                  {/* Voice Billing Tile */}
+                  {/**
+                   * Hands-Free Voice Billing
+                   * Entitlement toggle enabling speech-to-invoice transcription features.
+                   */}
                   <div
                     onClick={() => setHasVoiceBilling(!hasVoiceBilling)}
                     className={`group flex items-start gap-3 p-3.5 rounded-lg border transition-all duration-150 cursor-pointer select-none ${
@@ -540,7 +590,10 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                     </div>
                   </div>
 
-                  {/* Advanced Analytics Tile */}
+                  {/**
+                   * Advanced Analytics Feature
+                   * Entitlement toggle unlocking deep financial analytics and charts.
+                   */}
                   <div
                     onClick={() => setHasAdvancedAnalytics(!hasAdvancedAnalytics)}
                     className={`group flex items-start gap-3 p-3.5 rounded-lg border transition-all duration-150 cursor-pointer select-none ${
@@ -565,7 +618,10 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                 </div>
               </div>
 
-              {/* 5. Support Level Tier & Visibility Card */}
+              {/**
+               * Support Tier & Visibility Configuration
+               * Helpdesk service level agreement, recommended highlight, and public active status.
+               */}
               <div className="p-4 sm:p-5 rounded-lg border border-gray-200 bg-white space-y-4 shadow-none">
                 <div className="flex items-center gap-2 pb-2.5 border-b border-gray-100">
                   <Headphones className="w-4 h-4 text-[#093C5D]" />
@@ -603,7 +659,10 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                   </div>
 
                   <div className="space-y-2.5">
-                    {/* Recommended Tier Tile */}
+                    {/**
+                     * Recommended Highlight Badge
+                     * Displays visually featured 'Most Popular' banner on pricing checkout.
+                     */}
                     <div
                       onClick={() => setIsRecommended(!isRecommended)}
                       className={`flex items-start gap-3 p-3 rounded-lg border transition-all duration-150 cursor-pointer select-none ${
@@ -624,7 +683,10 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                       </div>
                     </div>
 
-                    {/* Active Tier Tile */}
+                    {/**
+                     * Plan Activation Switch
+                     * Controls whether this tier is actively purchasable by merchants.
+                     */}
                     <div
                       onClick={() => setIsActive(!isActive)}
                       className={`flex items-start gap-3 p-3 rounded-lg border transition-all duration-150 cursor-pointer select-none ${
@@ -647,7 +709,10 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                 </div>
               </div>
 
-              {/* 6. Feature Highlights List Card */}
+              {/**
+               * Feature Bullets Showcase
+               * Configurable list of bullet points presented on public pricing cards.
+               */}
               <div className="p-4 sm:p-5 rounded-lg border border-gray-200 bg-white space-y-3.5 shadow-none">
                 <div className="flex items-center justify-between pb-2.5 border-b border-gray-100">
                   <div className="flex items-center gap-2">
@@ -712,9 +777,15 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
 
             </div>
 
-            {/* ── Modal Footer (Pinned at Bottom, Never Overlaps) ── */}
+            {/**
+             * Modal Action Footer
+             * Bottom-pinned action bar with change status indicator and save action.
+             */}
             <div className="px-4 sm:px-6 py-3 sm:py-3.5 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 flex-shrink-0">
-              {/* Changes Status Indicator (Same as Settings Page) */}
+              {/**
+               * Unsaved Changes Indicator
+               * Visual prompt notifying whether form modifications exist.
+               */}
               <div className="flex items-center gap-2 text-xs sm:text-sm">
                 <div
                   className={`w-2 h-2 rounded-full shrink-0 ${
@@ -734,7 +805,10 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                 </span>
               </div>
 
-              {/* Action Buttons */}
+              {/**
+               * Action Controls
+               * Cancel button and save changes submission button with loading state.
+               */}
               <div className="flex items-center justify-end gap-2.5 sm:gap-3 w-full sm:w-auto">
                 <button
                   type="button"

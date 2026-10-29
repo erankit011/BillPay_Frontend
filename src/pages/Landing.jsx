@@ -1,3 +1,8 @@
+/**
+ * Public Product Marketing & Landing Page
+ * Showcases core feature highlights, pricing plans, automated recovery benefits, and merchant testimonials.
+ */
+
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
@@ -12,12 +17,18 @@ import {
 } from 'lucide-react';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 
+/**
+ * Landing Component
+ */
 const Landing = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { isAuthenticated } = useSelector((state) => state.auth);
 
-  // Redirect to dashboard if already logged in
+  /**
+   * Session Guard
+   * Redirects authenticated shopkeeper sessions immediately to dashboard
+   */
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/dashboard', { replace: true });
@@ -71,16 +82,25 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen bg-white font-sans">
-      {/* Header */}
+      {/**
+       * Top Navigation Header
+       * Brand identity logo, regional language switcher, and authentication entry point
+       */}
       <header className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 safe-top">
         <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
           <div className="flex items-center justify-between h-14 sm:h-16 w-full">
-            {/* Logo */}
+            {/**
+             * Brand Logo
+             * Interactive brand marker routing users back to root landing view
+             */}
             <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
               <span className="text-[22px] sm:text-[24px] md:text-[28px] font-semibold tracking-tight text-[#093C5D] select-none">UdharPay<span className="inline-block w-[6px] h-[6px] sm:w-[7px] sm:h-[7px] md:w-2 md:h-2 rounded-full bg-[#2ECC71] ml-[2px] mb-[2px] align-baseline"></span></span>
             </div>
 
-            {/* Right Side */}
+            {/**
+             * Navigation Actions
+             * Localization dropdown and login button controls
+             */}
             <div className="flex items-center gap-3 sm:gap-4 shrink-0">
               <LanguageSwitcher variant="default" />
               <button
@@ -94,13 +114,22 @@ const Landing = () => {
         </div>
       </header>
 
-      {/* Main Content */}
+      {/**
+       * Primary Landing Body
+       * Container for hero presentation, interactive mockup, features, statistics, and CTA
+       */}
       <main className="pt-20 sm:pt-24 pb-10 sm:pb-16 flex flex-col gap-10 sm:gap-20">
         
-        {/* HERO SECTION */}
+        {/**
+         * Hero Value Proposition Section
+         * High-impact headlines, trust badge, and registration call-to-action
+         */}
         <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center w-full">
           <div className="max-w-4xl mx-auto flex flex-col items-center">
-            {/* Trust Badge */}
+            {/**
+             * Retailer Trust Badge
+             * Social proof pill showcasing active shopkeeper adoption
+             */}
             <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[#093C5D]/5 border border-[#093C5D]/10 text-[#093C5D] text-xs sm:text-sm font-medium mb-6 sm:mb-8">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#093C5D] opacity-75"></span>
@@ -132,7 +161,10 @@ const Landing = () => {
             </p>
           </div>
 
-          {/* Hero Image/Mockup Block */}
+          {/**
+           * Interactive Product Mockup Block
+           * Simulated interface preview demonstrating simplicity and elegance of the merchant dashboard
+           */}
           <div className="mt-16 sm:mt-24 w-full max-w-5xl mx-auto text-center px-4 sm:px-0">
             <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-3 tracking-tight">
               {t('A dashboard designed for simplicity')}
@@ -143,11 +175,17 @@ const Landing = () => {
 
             <div className="rounded-2xl bg-white p-6 sm:p-10 mb-[-1px] sm:mb-0 relative overflow-hidden border border-gray-200 hover:border-[#093C5D]/30">
               
-              {/* Background ambient glow inside the container */}
+              {/**
+               * Ambient Lighting Accents
+               * Soft colorful blurred gradients enhancing depth and container aesthetics
+               */}
               <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-blue-50 blur-3xl opacity-50 pointer-events-none"></div>
               <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-orange-50 blur-3xl opacity-50 pointer-events-none"></div>
 
-              {/* Mac-style Window Header */}
+              {/**
+               * Window Controls Frame
+               * macOS-style decorative titlebar dots and URL placeholder bar
+               */}
               <div className="relative z-10 flex items-center gap-2 mb-6 sm:mb-8 border-b border-gray-100 pb-4">
                 <div className="w-3 h-3 rounded-full bg-[#FF5F56]"></div>
                 <div className="w-3 h-3 rounded-full bg-[#FFBD2E]"></div>
@@ -155,17 +193,29 @@ const Landing = () => {
                 <div className="ml-3 sm:ml-4 h-6 w-32 sm:w-48 bg-gray-50/80 rounded border border-gray-100"></div>
               </div>
 
-              {/* Layout Wrapper */}
+              {/**
+               * App Workspace Preview
+               * Split layout demonstrating sidebar navigation and main metrics dashboard
+               */}
               <div className="relative z-10 flex gap-6 sm:gap-8 pt-2 ">
-                {/* Abstract Sidebar */}
+                {/**
+                 * Sidebar Navigation Skeleton
+                 * Decorative placeholder items simulating dashboard navigational hierarchy
+                 */}
                 <div className="hidden sm:flex flex-col gap-6 w-40 shrink-0 border-r border-gray-50 pr-6">
-                  {/* Logo Skeleton */}
+                  {/**
+                   * Sidebar Header Skeleton
+                   * Mock brand icon and label placeholder
+                   */}
                   <div className="flex items-center gap-2 mb-2">
                     <div className="h-6 w-6 rounded-md bg-[#093C5D]/20"></div>
                     <div className="h-5 w-20 bg-gray-100 rounded-md"></div>
                   </div>
                   
-                  {/* Nav Items Skeletons */}
+                  {/**
+                   * Navigation Link Placeholders
+                   * Pill indicators simulating active and inactive route tabs
+                   */}
                   <div className="flex flex-col gap-4">
                     <div className="h-6 w-full bg-[#093C5D]/10 rounded border border-[#093C5D]/20"></div>
                     <div className="h-5 w-4/5 bg-gray-50 rounded border border-gray-100"></div>
@@ -174,15 +224,24 @@ const Landing = () => {
                   </div>
                 </div>
 
-                {/* Main Content Area */}
+                {/**
+                 * Main Workspace Area
+                 * Simulated top bar, financial stat widgets, and performance metrics charts
+                 */}
                 <div className="flex-1">
-                  {/* Top Bar Skeleton */}
+                  {/**
+                   * Header Bar Skeleton
+                   * Search bar and avatar placeholder elements
+                   */}
                   <div className="flex justify-between items-center mb-8 pb-4 border-b border-gray-50">
                      <div className="h-7 w-48 sm:w-64 bg-gray-100 rounded-md border border-gray-50"></div>
                      <div className="h-9 w-9 bg-gray-100 rounded-full hidden sm:block border border-gray-200/60"></div>
                   </div>
 
-                  {/* Cards Skeleton */}
+                  {/**
+                   * Metrics Summary Cards
+                   * Key metric indicator tiles for sales volume, pending udhar, and active collections
+                   */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
                     <div className="rounded-xl p-5 text-left border border-green-100/50 bg-green-50/30 backdrop-blur-sm">
                       <div className="flex items-center gap-2 mb-3">
@@ -212,19 +271,31 @@ const Landing = () => {
                     </div>
                   </div>
 
-                  {/* Chart Area */}
+                  {/**
+                   * Performance Visualizer
+                   * Graphical chart container simulating daily transaction rhythms
+                   */}
                   <div className="relative h-48 sm:h-56 w-full border border-gray-100 rounded-xl bg-gray-50/30 flex items-end justify-between gap-3 sm:gap-6 px-4 pt-4 overflow-hidden">
-                    {/* Chart Header */}
+                    {/**
+                     * Chart Header Skeleton
+                     * Metric legend and date range placeholders
+                     */}
                     <div className="absolute top-4 left-5 right-5 flex justify-between items-center text-xs">
                         <div className="h-3 w-28 bg-gray-200/80 rounded-full"></div>
                         <div className="h-3 w-16 bg-gray-200/80 rounded-full"></div>
                     </div>
 
-                    {/* Grid lines */}
+                    {/**
+                     * Visual Gridlines
+                     * Dashed horizontal dividers providing data reference lines
+                     */}
                     <div className="absolute inset-x-0 bottom-1/3 border-b border-gray-200/60 border-dashed"></div>
                     <div className="absolute inset-x-0 bottom-2/3 border-b border-gray-200/60 border-dashed"></div>
                     
-                    {/* Abstract Bars */}
+                    {/**
+                     * Bimodal Data Bars
+                     * Stylized dual-color vertical bars representing cash vs credit ratios
+                     */}
                     {[
                       { h1: 30, h2: 15 },
                       { h1: 45, h2: 10 },
@@ -235,9 +306,15 @@ const Landing = () => {
                       { h1: 55, h2: 20 }
                     ].map((data, i) => (
                       <div key={i} className="relative flex-1 flex flex-col justify-end items-center h-full z-10 w-full group">
-                        {/* Upper portion */}
+                        {/**
+                         * Credit Segment Bar
+                         * Visualizes credit transactions proportion
+                         */}
                         <div className="w-full max-w-[24px] sm:max-w-[40px] bg-orange-200/80 rounded-t-md transition-all duration-300 group-hover:bg-orange-300" style={{ height: `${data.h2}%` }}></div>
-                        {/* Lower portion */}
+                        {/**
+                         * Cash Settled Segment Bar
+                         * Visualizes cash settled transactions proportion
+                         */}
                         <div className="w-full max-w-[24px] sm:max-w-[40px] bg-gray-200/90 rounded-b-md transition-all duration-300 group-hover:bg-gray-300" style={{ height: `${data.h1 - data.h2}%` }}></div>
                       </div>
                     ))}
@@ -248,7 +325,10 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* FEATURES GRID */}
+        {/**
+         * Key Platform Features Grid
+         * Highlights core capabilities including billing, customer ledger, voice input, and insights
+         */}
         <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
           <div className="bg-[#F5F5F5] rounded-2xl border border-gray-200 hover:border-[#093C5D]/30 sm:rounded-3xl py-12 sm:py-16 px-4 sm:px-8">
             <div className="text-center mb-10 sm:mb-12">
@@ -281,7 +361,10 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* STATS SECTION */}
+        {/**
+         * Platform Scale & Impact Statistics
+         * Numerical proof points highlighting transaction volumes, merchant count, and store ratings
+         */}
         <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full ">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center max-w-4xl mx-auto border-y border-gray-200 border hover:border-[#093C5D]/30 sm:border sm:border-gray-200 bg-white sm:rounded-2xl rounded-2xl py-8 sm:py-10">
             <div className="p-2 sm:p-4">
@@ -299,7 +382,10 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* CTA */}
+        {/**
+         * Merchant Conversion Call-To-Action (CTA)
+         * High-conversion prompt encouraging new merchants to create a free account
+         */}
         <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
           <div className="bg-[#093C5D] rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center flex flex-col items-center">
             <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-3 sm:mb-4">
@@ -318,7 +404,10 @@ const Landing = () => {
         </section>
       </main>
 
-      {/* Footer */}
+      {/**
+       * Global Footer
+       * Secondary navigation links, compliance notices, and developer credits
+       */}
       <footer className="bg-white border-t border-gray-200 py-8 md:py-12 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-5 md:gap-6">

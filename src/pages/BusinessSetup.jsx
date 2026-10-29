@@ -1,3 +1,8 @@
+/**
+ * Merchant Business Profile Onboarding Page
+ * Collects shop legal name, store phone, address, GSTIN, UPI VPA, and invoice branding logo.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +12,9 @@ import { Store, Save, Loader2, AlertCircle, Upload, X } from 'lucide-react';
 import api from '../api/axios';
 import { setUser } from '../redux/slices/authSlice';
 
+/**
+ * BusinessSetup Component
+ */
 const BusinessSetup = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -28,7 +36,10 @@ const BusinessSetup = () => {
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // Checking if changes are made to enable the Save button
+  /**
+   * Save State Validation
+   * Checks whether essential mandatory business fields are populated
+   */
   const hasChanges = formData.shopName.trim() !== '' && formData.shopPhone.trim() !== '' && formData.shopAddress.trim() !== '';
 
   useEffect(() => {
@@ -151,7 +162,10 @@ const BusinessSetup = () => {
     <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 font-sans flex flex-col justify-center">
       <div className="mx-auto max-w-4xl w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
 
-        {/* Intro */}
+        {/**
+         * Page Introduction Header
+         * Greets new merchant and explains purpose of profile completion
+         */}
         <div className="mb-6">
           <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 tracking-tight">
             {t('Welcome to UdharPay!')}
@@ -162,7 +176,10 @@ const BusinessSetup = () => {
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* Card (Matching Settings.jsx EXACTLY) */}
+          {/**
+           * Business Details Form Container
+           * Card housing business identity, billing, and address fields
+           */}
           <section className="bg-white rounded-lg border border-gray-200 overflow-hidden">
 
             <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex justify-between items-center">
@@ -179,7 +196,10 @@ const BusinessSetup = () => {
 
             <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
 
-              {/* Global Error Message */}
+              {/**
+               * Global Form Error Banner
+               * Displays top-level API validation failure messages
+               */}
               {errors.global && (
                 <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-6 text-sm font-medium flex items-start gap-2 border border-red-100">
                   <AlertCircle className="w-5 h-5 shrink-0" />
@@ -189,7 +209,10 @@ const BusinessSetup = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
 
-                {/* Shop Name */}
+                {/**
+                 * Business / Shop Name Field
+                 * Primary merchant identification used on invoices
+                 */}
                 <div className="md:col-span-2">
                   <label htmlFor="shopName" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
                     {t('Business / Shop Name')} <span className="text-red-500">*</span>
@@ -206,7 +229,10 @@ const BusinessSetup = () => {
                   {errors.shopName && <p className="text-red-500 text-xs mt-1 font-medium">{errors.shopName}</p>}
                 </div>
 
-                {/* GST Number */}
+                {/**
+                 * GST Number Input Field
+                 * Optional tax registration identifier for GST invoices
+                 */}
                 <div>
                   <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('GST Number')}</label>
                   <input
@@ -220,7 +246,10 @@ const BusinessSetup = () => {
                   {errors.gstNumber && <p className="text-red-500 text-xs mt-1 font-medium">{errors.gstNumber}</p>}
                 </div>
 
-                {/* UPI Id */}
+                {/**
+                 * UPI VPA Payment Address
+                 * Merchant UPI ID printed on invoices for direct customer payments
+                 */}
                 <div>
                   <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('UPI Id')}</label>
                   <input
@@ -233,7 +262,10 @@ const BusinessSetup = () => {
                   />
                 </div>
 
-                {/* Business Phone */}
+                {/**
+                 * Business Contact Phone
+                 * Public store telephone number displayed to customers
+                 */}
                 <div>
                   <label htmlFor="shopPhone" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
                     {t('Business Phone')} <span className="text-red-500">*</span>
@@ -254,7 +286,10 @@ const BusinessSetup = () => {
                   )}
                 </div>
 
-                {/* Business Email */}
+                {/**
+                 * Business Contact Email
+                 * Official support email printed on transaction receipts
+                 */}
                 <div>
                   <label htmlFor="shopEmail" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
                     {t('Business Email')}
@@ -275,7 +310,10 @@ const BusinessSetup = () => {
                   )}
                 </div>
 
-                {/* Invoice Logo */}
+                {/**
+                 * Invoice Branding Logo
+                 * Image uploader and URL input for customized invoice header branding
+                 */}
                 <div className="md:col-span-2">
                   <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Invoice Logo')}</label>
 
@@ -324,7 +362,10 @@ const BusinessSetup = () => {
                   </div>
                 </div>
 
-                {/* Currency */}
+                {/**
+                 * Default Store Currency Selector
+                 * Specifies default currency symbol and formatting for billing
+                 */}
                 <div>
                   <label htmlFor="currency" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
                     {t('Default Currency')}
@@ -348,7 +389,10 @@ const BusinessSetup = () => {
                   </select>
                 </div>
 
-                {/* Address */}
+                {/**
+                 * Physical Store Address
+                 * Complete postal address rendered on billings and receipts
+                 */}
                 <div className="md:col-span-2">
                   <label htmlFor="shopAddress" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
                     {t('Shop Address')} <span className="text-red-500">*</span>
@@ -368,7 +412,10 @@ const BusinessSetup = () => {
             </div>
           </section>
 
-          {/* Action Buttons (Matching Settings.jsx sticky button bar exactly) */}
+          {/**
+           * Sticky Form Action Bar
+           * Submit button and status indicator anchored at the viewport base
+           */}
           <div className="sticky bottom-4 z-20 mt-8">
             <div className="bg-white border border-gray-200 p-2 sm:px-4 sm:py-2.5 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 w-full shadow-none">
               <div className="flex items-center gap-2 text-sm ml-1">

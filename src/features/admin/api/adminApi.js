@@ -5,13 +5,19 @@ import api from '../../../api/axios';
  * Clean, feature-modular service abstraction for UdharPay Admin Panel
  */
 
-// 1. Overview & Executive Platform Analytics
+/**
+ * Platform Executive Overview & Analytics
+ * Fetches platform-wide KPIs, store counts, transaction totals, and active subscription statistics.
+ */
 export const getAdminOverview = async () => {
   const res = await api.get('/admin/overview');
   return res.data?.data;
 };
 
-// 2. Shops & Merchants Management
+/**
+ * Merchant Store Management Endpoints
+ * Provides administration endpoints for merchant search, suspension toggling, plan overrides, and force-logout.
+ */
 export const getAdminShops = async (params = {}) => {
   const res = await api.get('/admin/shops', { params });
   return res.data?.data;
@@ -42,31 +48,46 @@ export const sendDirectShopNotice = async (shopId, noticeData) => {
   return res.data;
 };
 
-// 3. Platform Customer Bills Audit & Ledger
+/**
+ * Customer Invoices & Ledger Audit Endpoints
+ * Queries platform-wide customer invoices, payment breakdowns, and settlement history.
+ */
 export const getAdminBills = async (params = {}) => {
   const res = await api.get('/admin/bills', { params });
   return res.data?.data;
 };
 
-// 5. Platform Financial Reports & Analytics
+/**
+ * Platform Financial Reports Endpoints
+ * Retrieves platform revenue figures, GMV metrics, and subscription renewal volume.
+ */
 export const getAdminReports = async () => {
   const res = await api.get('/admin/reports');
   return res.data?.data;
 };
 
-// 6. Platform Subscriptions & SaaS Invoices
+/**
+ * SaaS Subscriptions & Invoice Receipts Endpoints
+ * Queries platform subscription logs, merchant payment receipts, and billing cycles.
+ */
 export const getAdminSubscriptions = async (params = {}) => {
   const res = await api.get('/admin/subscriptions', { params });
   return res.data?.data;
 };
 
-// 7. Infrastructure & External Services Health
+/**
+ * Infrastructure & System Health Telemetry
+ * Queries operational status of database clusters, Redis cache, memory, and gateway services.
+ */
 export const getAdminSystemHealth = async () => {
   const res = await api.get('/admin/health');
   return res.data?.data;
 };
 
-// 8. Platform System & Admin Settings
+/**
+ * Platform Configuration & Settings Endpoints
+ * Fetches and updates global operational preferences, maintenance flags, and security policies.
+ */
 export const getPlatformSettings = async () => {
   const res = await api.get('/admin/settings');
   return res.data?.data;
@@ -77,7 +98,10 @@ export const updatePlatformSettings = async (settingsData) => {
   return res.data;
 };
 
-// 9. Platform Announcements & Broadcasts
+/**
+ * Platform Broadcast Announcements Endpoints
+ * Admin operations to author, update, schedule, and delete global merchant broadcast banners.
+ */
 export const getAdminBroadcasts = async (params = {}) => {
   const res = await api.get('/admin/broadcasts', { params });
   return res.data?.data;
@@ -103,7 +127,10 @@ export const getActiveBroadcasts = async () => {
   return res.data?.data || [];
 };
 
-// 10. Platform Support & Helpdesk Desk
+/**
+ * Helpdesk & Support Ticket Endpoints
+ * Manages ticket triaging, priority updates, admin responses, and public ticket submissions.
+ */
 export const getAdminTickets = async (params = {}) => {
   const res = await api.get('/admin/support/tickets', { params });
   return res.data?.data;
@@ -139,7 +166,10 @@ export const getPublicContactInfo = async () => {
   return res.data?.data;
 };
 
-// 11. SaaS Coupons & Promo Codes Management
+/**
+ * SaaS Promotional Coupons Endpoints
+ * Administrative operations for discount coupon lifecycle, analytics, and status toggles.
+ */
 export const getAdminCoupons = async (params = {}) => {
   const res = await api.get('/admin/coupons', { params });
   return res.data?.data;
@@ -170,7 +200,10 @@ export const deleteAdminCoupon = async (id) => {
   return res.data;
 };
 
-// Shopkeeper/Merchant Coupon Validation
+/**
+ * Merchant Coupon Verification Endpoint
+ * Validates promo discount codes against specified subscription tier limits.
+ */
 export const validateSubscriptionCoupon = async (code, plan) => {
   const payload = { code };
   if (plan) payload.plan = plan;
@@ -178,13 +211,19 @@ export const validateSubscriptionCoupon = async (code, plan) => {
   return res.data?.data;
 };
 
-// Shopkeeper Auto-Pay Cancellation
+/**
+ * Merchant Auto-Pay Cancellation Endpoint
+ * Cancels recurring billing mandate for the authenticated shopkeeper account.
+ */
 export const cancelSubscription = async () => {
   const res = await api.post('/subscription/cancel-subscription');
   return res.data;
 };
 
-// 12. Platform Security & Immutable Audit Logs
+/**
+ * Security & Immutable Audit Trail Endpoints
+ * Accesses system audit logs, administrative mutations, and log CSV/JSON exports.
+ */
 export const getAdminAuditLogs = async (params = {}) => {
   const res = await api.get('/admin/audit-logs', { params });
   return res.data?.data;
@@ -200,7 +239,10 @@ export const exportAdminAuditLogs = async (params = {}) => {
   return res.data?.data;
 };
 
-// 13. Dynamic SaaS Plan Limits & Pricing
+/**
+ * Subscription Plan Matrix Endpoints
+ * Configures plan quotas, feature flags, tier pricing, and default plan restoration.
+ */
 export const getAdminPlans = async () => {
   const res = await api.get('/admin/plans');
   return res.data?.data;
@@ -221,7 +263,10 @@ export const getPublicPlans = async () => {
   return res.data?.data;
 };
 
-// 14. WhatsApp Business Gateway
+/**
+ * WhatsApp Business Gateway Endpoints
+ * Manages WhatsApp session health, pairing QR codes, gateway restarts, and session termination.
+ */
 export const getWhatsAppStatus = async () => {
   const res = await api.get('/admin/whatsapp/status');
   return res.data?.data;

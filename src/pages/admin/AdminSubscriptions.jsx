@@ -1,3 +1,8 @@
+/**
+ * Platform SaaS Subscription Receipts & Revenue Ledger
+ * Tracks store subscription payment receipts, Razorpay transaction IDs, and invoice reconciliations.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -26,6 +31,9 @@ import { formatCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/dateUtils';
 import { getInitials } from '../../utils/stringUtils';
 
+/**
+ * Invoice Status Filter Presets
+ */
 const STATUS_FILTERS = [
   { label: 'All Invoices', value: 'ALL' },
   { label: 'Paid (Successful)', value: 'SUCCESS' },
@@ -63,7 +71,7 @@ const AdminSubscriptions = () => {
       setSearchTerm(urlSearch);
       setDebouncedSearch(urlSearch);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [urlSearch]);
 
   const setStatusFilter = (status) => {
@@ -146,7 +154,10 @@ const AdminSubscriptions = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
-      {/* Header */}
+      {/**
+       * Subscriptions Directory Header
+       * Page title and summary description for platform subscriptions and payment receipts.
+       */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
@@ -158,7 +169,10 @@ const AdminSubscriptions = () => {
         </div>
       </div>
 
-      {/* KPI Stat Cards */}
+      {/**
+       * KPI Stat Cards
+       * Summarizes gross revenue, total checkout orders, captured payments, and failed attempts.
+       */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         <AdminStatCard
           title="TOTAL REVENUE"
@@ -193,7 +207,10 @@ const AdminSubscriptions = () => {
         />
       </div>
 
-      {/* Filter Chips (Matched with Customer/Shopkeeper Pages UI) */}
+      {/**
+       * Payment Status Filter Chips
+       * Interactive pill filters for filtering billing records by success, pending, or failed status.
+       */}
       <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {STATUS_FILTERS.map((f) => (
           <button
@@ -224,7 +241,10 @@ const AdminSubscriptions = () => {
         )}
       </div>
 
-      {/* Search Bar (Matched with Customer/Shopkeeper Pages UI) */}
+      {/**
+       * Search Bar Filter
+       * Full-text search for payment ID, Razorpay reference, shop name, and merchant owner.
+       */}
       <div className="flex flex-col w-full mb-3 sm:mb-4">
         <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
@@ -249,7 +269,10 @@ const AdminSubscriptions = () => {
         </div>
       </div>
 
-      {/* Table & Cards Container (Separated Shop Name and Merchant Owner Columns) */}
+      {/**
+       * Subscriptions Records Container
+       * Desktop data table and responsive mobile cards for platform invoices.
+       */}
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-none">
         {isLoading ? (
           <div className="flex justify-center items-center py-16">
@@ -265,7 +288,10 @@ const AdminSubscriptions = () => {
           </div>
         ) : (
           <div>
-            {/* Desktop Table View */}
+            {/**
+             * Desktop Table View
+             * Tabular invoice list with payment ID, shop info, plan badge, amount, and receipt link.
+             */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse whitespace-nowrap">
                 <thead className="bg-gray-50/80 border-b border-gray-200">
@@ -305,14 +331,20 @@ const AdminSubscriptions = () => {
 
                     return (
                       <tr key={inv._id} className="hover:bg-gray-50/60 transition-colors">
-                        {/* Payment ID */}
+                        {/**
+                         * Razorpay Payment Identifier
+                         * Transaction reference number or shortened order ID.
+                         */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-left">
                           <span className="font-semibold text-xs text-[#093C5D]">
                             {paymentId}
                           </span>
                         </td>
 
-                        {/* Store & Merchant (Matching AdminShops Avatar + Name) */}
+                        {/**
+                         * Store & Business Details
+                         * Store brand avatar initials and registered business name.
+                         */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-left">
                           <div className="flex items-center gap-2.5">
                             <div className="w-8 h-8 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#093C5D] shrink-0">
@@ -324,7 +356,10 @@ const AdminSubscriptions = () => {
                           </div>
                         </td>
 
-                        {/* Merchant Owner */}
+                        {/**
+                         * Merchant Owner Profile
+                         * Display name and verified email of the store administrator.
+                         */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-left">
                           <div className="text-sm font-semibold text-gray-900 truncate max-w-[160px]" title={ownerName}>
                             {ownerName}
@@ -334,7 +369,10 @@ const AdminSubscriptions = () => {
                           </div>
                         </td>
 
-                        {/* Plan */}
+                        {/**
+                         * Subscription Plan Tier
+                         * Tier badge indicating billing cycle (Monthly, Quarterly, Yearly).
+                         */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-center">
                           <span
                             className={`inline-block px-2.5 py-1 rounded text-[10px] font-semibold uppercase tracking-wide border ${getPlanBadge(
@@ -345,22 +383,34 @@ const AdminSubscriptions = () => {
                           </span>
                         </td>
 
-                        {/* Amount */}
+                        {/**
+                         * Billed Amount Column
+                         * Total INR transaction value charged for the subscription.
+                         */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-right font-semibold text-gray-900 text-sm">
                           {formatCurrency(inv.amount ?? 0)}
                         </td>
 
-                        {/* Status */}
+                        {/**
+                         * Payment Status Badge
+                         * Visual badge showing captured, pending, or failed payment status.
+                         */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-center">
                           {getStatusBadge(inv.status)}
                         </td>
 
-                        {/* Date */}
+                        {/**
+                         * Transaction Timestamp
+                         * Date and time when the payment order was initiated or processed.
+                         */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-left text-xs text-gray-600 font-medium">
                           {formatDate(inv.createdAt)}
                         </td>
 
-                        {/* Action */}
+                        {/**
+                         * Receipt Action Link
+                         * Direct link to view and print official UdharPay tax invoice receipt.
+                         */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-right">
                           <Link
                             to={`/platform-receipt/${inv._id}`}
@@ -378,7 +428,10 @@ const AdminSubscriptions = () => {
               </table>
             </div>
 
-            {/* Mobile / Tablet Cards View (Clean Card Layout matching AdminShops) */}
+            {/**
+             * Mobile & Tablet Cards View
+             * Responsive card list optimized for touch screens and compact displays.
+             */}
             <div className="md:hidden space-y-3 p-3 bg-gray-50/50">
               {invoices.map((inv) => {
                 const shopName = inv.shopId?.businessName || inv.shopId?.name || 'Shop';
@@ -391,7 +444,10 @@ const AdminSubscriptions = () => {
                     key={inv._id}
                     className="bg-white border border-gray-200 rounded-lg p-3.5 sm:p-4 space-y-3 shadow-none pt-3 first:pt-0"
                   >
-                    {/* Header: Shop Avatar, Name, Payment ID & Badges */}
+                    {/**
+                     * Card Header Strip
+                     * Shop initials avatar, business name, payment ID, and status badge.
+                     */}
                     <div className="flex items-center justify-between gap-2.5">
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="w-9 h-9 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#093C5D] shrink-0">
@@ -419,7 +475,10 @@ const AdminSubscriptions = () => {
                       </div>
                     </div>
 
-                    {/* Merchant Owner & Date Info Strip */}
+                    {/**
+                     * Merchant Owner & Date Info Strip
+                     * Quick summary of owner name and transaction date.
+                     */}
                     <div className="bg-gray-50/80 border border-gray-200/80 rounded-lg p-2.5 flex items-center justify-between gap-2 text-xs">
                       <div className="flex items-center gap-1.5 text-gray-900 font-semibold truncate min-w-0">
                         <User className="w-3.5 h-3.5 text-[#093C5D] shrink-0" />
@@ -431,7 +490,10 @@ const AdminSubscriptions = () => {
                       </div>
                     </div>
 
-                    {/* Metric Pills */}
+                    {/**
+                     * Transaction Metrics Grid
+                     * Compact pills displaying billed amount and merchant contact.
+                     */}
                     <div className="grid grid-cols-2 gap-2 text-center">
                       <div className="bg-gray-50 border border-gray-200 rounded-lg py-2 px-1">
                         <span className="text-[10px] font-semibold text-gray-500 uppercase block">Billed Amount</span>
@@ -445,7 +507,10 @@ const AdminSubscriptions = () => {
                       </div>
                     </div>
 
-                    {/* Bottom Action */}
+                    {/**
+                     * Mobile Receipt Action
+                     * Full-width button linking to the official platform receipt document.
+                     */}
                     <div className="pt-2 border-t border-gray-100">
                       <Link
                         to={`/platform-receipt/${inv._id}`}
@@ -460,7 +525,10 @@ const AdminSubscriptions = () => {
               })}
             </div>
 
-            {/* Pagination Controls */}
+            {/**
+             * Pagination Controls
+             * Page counter display and previous/next page navigation buttons.
+             */}
             {totalPages > 1 && (
               <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border-t border-gray-200 bg-gray-50/60">
                 <span className="text-xs text-gray-500 font-medium">

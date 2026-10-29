@@ -1,5 +1,13 @@
+/**
+ * Accessible Toggle Switch Component
+ * Form-compatible binary switch element with smooth transitions and ARIA switch attributes.
+ */
+
 import React from 'react';
 
+/**
+ * ToggleSwitch Component
+ */
 const ToggleSwitch = ({ name, checked, onChange, label, description }) => (
   <div className="flex items-center justify-between gap-4 py-3 border-b border-gray-100 last:border-b-0">
     <div className="min-w-0 flex-1">

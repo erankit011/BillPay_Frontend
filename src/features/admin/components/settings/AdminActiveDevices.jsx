@@ -1,3 +1,8 @@
+/**
+ * Administrator Active Device & Session Manager
+ * Inspects authenticated browser sessions, IP origins, device fingerprints, and triggers individual/bulk session revocation.
+ */
+
 import React, { useState, useEffect } from 'react';
 import {
   Laptop,
@@ -16,6 +21,9 @@ import { logout } from '../../../../redux/slices/authSlice';
 import toast from 'react-hot-toast';
 import { formatShortDate, formatRelativeTime } from '../../../../utils/dateUtils';
 
+/**
+ * AdminActiveDevices Component
+ */
 const AdminActiveDevices = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -133,7 +141,10 @@ const AdminActiveDevices = () => {
   return (
     <>
       <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
-        {/* Section Header */}
+        {/**
+         * Devices Section Header
+         * Section title, device management description, refresh button, and logout all others action.
+         */}
         <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
@@ -178,7 +189,10 @@ const AdminActiveDevices = () => {
           </div>
         </div>
 
-        {/* Section Content */}
+        {/**
+         * Device Sessions Listing
+         * Cards displaying active browser sessions, IP addresses, and logout triggers.
+         */}
         <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
           {devicesLoading && devices.length === 0 ? (
             <div className="py-12 flex flex-col items-center justify-center text-gray-500 gap-3">
@@ -203,7 +217,10 @@ const AdminActiveDevices = () => {
                         : 'border-gray-200 bg-white hover:border-gray-300'
                     }`}
                   >
-                    {/* Top Row: Device Icon + Title on Left, Badge/Action on Right */}
+                    {/**
+                     * Device Header Row
+                     * Hardware icon, operating system title, and single device logout trigger.
+                     */}
                     <div className="flex items-center justify-between gap-2 mb-2">
                       <div className="flex items-center gap-2 min-w-0 flex-1">
                         <div
@@ -224,7 +241,10 @@ const AdminActiveDevices = () => {
                         </h3>
                       </div>
 
-                      {/* Right: Sleek Logout button for Other Device only */}
+                      {/**
+                       * Remote Device Logout Action
+                       * Individual session termination button available on remote devices.
+                       */}
                       {!device.isCurrentDevice && (
                         <div className="shrink-0">
                           <button
@@ -244,7 +264,10 @@ const AdminActiveDevices = () => {
                       )}
                     </div>
 
-                    {/* Middle Row: Full Browser & IP details on dedicated full-width line */}
+                    {/**
+                     * Client Fingerprint Row
+                     * Displays browser vendor string and remote network IP address.
+                     */}
                     <div className="text-[11px] sm:text-xs text-gray-500 font-medium mb-2.5 flex items-center gap-1.5 flex-wrap">
                       <span className="text-gray-700 font-medium">{device.browser || 'Browser'}</span>
                       <span className="text-gray-300">•</span>
@@ -253,7 +276,10 @@ const AdminActiveDevices = () => {
                       </span>
                     </div>
 
-                    {/* Bottom Info Grid: Clean balanced 2-column metadata sub-box */}
+                    {/**
+                     * Session Chronology Grid
+                     * Timestamps for initial authentication and most recent network activity.
+                     */}
                     <div className="grid grid-cols-2 gap-2 sm:gap-3 bg-gray-50/80 px-2.5 sm:px-3 py-2 sm:py-2.5 rounded-lg border border-gray-100">
                       <div className="min-w-0 text-left">
                         <span className="text-[10px] sm:text-[11px] font-semibold text-gray-500 uppercase tracking-wider block leading-tight">
@@ -290,7 +316,10 @@ const AdminActiveDevices = () => {
         </div>
       </section>
 
-      {/* Logout Single Device Confirmation Modal */}
+      {/**
+       * Single Device Logout Confirmation Modal
+       * Confirms session invalidation for a specific remote client.
+       */}
       {deviceToLogout && (
         <div className="fixed inset-0 z-[100]">
           <div
@@ -338,7 +367,10 @@ const AdminActiveDevices = () => {
         </div>
       )}
 
-      {/* Logout All Other Devices Confirmation Modal */}
+      {/**
+       * Logout All Other Sessions Modal
+       * Confirms revocation of all authenticated sessions excluding the current browser.
+       */}
       {confirmLogoutOthersModal && (
         <div className="fixed inset-0 z-[100]">
           <div

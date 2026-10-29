@@ -1,10 +1,18 @@
+/**
+ * Application Routing Architecture
+ * Declares lazy-loaded route chunks, role-based route guards (RBAC),
+ * public auth redirects, and suspense loading fallbacks.
+ */
+
 import { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import MainLayout from '../components/layout/MainLayout';
 import AuthLayout from '../components/layout/AuthLayout';
 
-// Lazy load pages for code splitting
+/**
+ * Lazy Loaded Page Modules for Code Splitting
+ */
 const Landing = lazy(() => import('../pages/Landing'));
 const Login = lazy(() => import('../pages/Login'));
 const Register = lazy(() => import('../pages/Register'));
@@ -26,7 +34,9 @@ const PlatformReceipt = lazy(() => import('../pages/PlatformReceipt'));
 const PublicInvoice = lazy(() => import('../pages/PublicInvoice'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
-// Admin Feature Pages
+/**
+ * Dedicated Admin Feature Pages
+ */
 const AdminDashboard = lazy(() => import('../pages/admin/AdminDashboard'));
 const AdminShops = lazy(() => import('../pages/admin/AdminShops'));
 const AdminBills = lazy(() => import('../pages/admin/AdminBills'));
@@ -40,19 +50,27 @@ const AdminCoupons = lazy(() => import('../pages/admin/AdminCoupons'));
 const AdminAuditLogs = lazy(() => import('../pages/admin/AdminAuditLogs'));
 const AdminPlans = lazy(() => import('../pages/admin/AdminPlans'));
 
-// Static pages
+/**
+ * Public Legal & Information Pages
+ */
 const PrivacyPolicy = lazy(() => import('../pages/PrivacyPage'));
 const TermsOfService = lazy(() => import('../pages/TermsOfService'));
 const ContactSupport = lazy(() => import('../pages/ContactSupport'));
 
 import SwirlingLoader from '../components/common/SwirlingLoader';
 
-// Onboarding
+/**
+ * Onboarding & OAuth Callbacks
+ */
 const BusinessSetup = lazy(() => import('../pages/BusinessSetup'));
 const OAuthCallback = lazy(() => import('../pages/OAuthCallback'));
 
 import { ROLES } from '../constants/roles';
 
+/**
+ * Role-Based Protected Route Guard (RBAC)
+ * Enforces session authentication and validates user role permissions
+ */
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { isAuthenticated, isLoading, user } = useSelector((state) => state.auth);
 
@@ -78,12 +96,18 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   return children;
 };
 
+/**
+ * Onboarding Access Wrapper
+ * Grants merchants immediate workspace exploration while contextual alerts prompt business setup
+ */
 const OnboardingRoute = ({ children }) => {
-  // Allow shopkeepers to freely explore the dashboard and features;
-  // business setup is prompted contextually and via the persistent banner
   return children;
 };
 
+/**
+ * Public Route Guard
+ * Redirects authenticated sessions directly to their corresponding role dashboard
+ */
 const PublicRoute = ({ children }) => {
   const { isAuthenticated, isLoading, user } = useSelector((state) => state.auth);
 
@@ -102,6 +126,10 @@ const PublicRoute = ({ children }) => {
   return children;
 };
 
+/**
+ * Dynamic Settings Router
+ * Routes merchants to shop settings and administrators to platform settings
+ */
 const SettingsRoute = () => {
   const { user } = useSelector((state) => state.auth);
   if (user?.role === ROLES.ADMIN) {
@@ -110,6 +138,9 @@ const SettingsRoute = () => {
   return <Settings />;
 };
 
+/**
+ * Root Application Route Tree Definition
+ */
 const AppRoutes = () => {
   return (
     <Suspense fallback={
@@ -118,20 +149,29 @@ const AppRoutes = () => {
       </div>
     }>
       <Routes>
-        {/* Landing Page - Public */}
+        {/**
+         * Landing Page Route
+         * Public landing presentation showcasing platform features and pricing
+         */}
         <Route path="/" element={
           <PublicRoute>
             <Landing />
           </PublicRoute>
         } />
         
-        {/* Static Pages - Public */}
+        {/**
+         * Static Information Routes
+         * Public access legal guidelines, terms of service, and support channels
+         */}
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/contact-support" element={<ContactSupport />} />
         <Route path="/support" element={<Navigate to="/contact-support" replace />} />
 
-        {/* Auth Routes - Redirect to dashboard if already logged in */}
+        {/**
+         * Authentication Access Routes
+         * Sign-in and account registration flows with redirect guards for active sessions
+         */}
         <Route path="/login" element={
           <PublicRoute>
             <AuthLayout />
@@ -148,22 +188,34 @@ const AppRoutes = () => {
           <Route index element={<Register />} />
         </Route>
 
-        {/* OTP Verification Routes - No redirect, can be accessed anytime */}
+        {/**
+         * One-Time Password Verification Routes
+         * Multi-factor verification endpoints for account signup and step-up auth
+         */}
         <Route element={<AuthLayout />}>
           <Route path="/verify-email" element={<VerifyOTP type="registration" />} />
           <Route path="/verify-login-otp" element={<VerifyOTP type="login" />} />
         </Route>
 
-        {/* Password Reset Routes */}
+        {/**
+         * Credential Recovery Routes
+         * Password reset token request and validation workflow
+         */}
         <Route element={<AuthLayout />}>
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:resetToken" element={<ResetPassword />} />
         </Route>
 
-        {/* OAuth Callback Route */}
+        {/**
+         * Single Sign-On Callback Route
+         * Processes third-party OAuth redirect exchanges
+         */}
         <Route path="/oauth-callback" element={<OAuthCallback />} />
 
-        {/* Protected Admin Routes */}
+        {/**
+         * Protected Administration Routes
+         * Administrative controls scoped strictly to super-admin privileges
+         */}
         <Route element={
           <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
             <MainLayout />
@@ -186,7 +238,10 @@ const AppRoutes = () => {
           <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
         </Route>
 
-        {/* Protected Common / Profile Routes */}
+        {/**
+         * Common Authenticated Routes
+         * User profile settings and notification history shared across roles
+         */}
         <Route element={
           <ProtectedRoute allowedRoles={[ROLES.SHOPKEEPER, ROLES.ADMIN]}>
             <MainLayout />
@@ -197,7 +252,10 @@ const AppRoutes = () => {
           <Route path="/notifications" element={<Notifications />} />
         </Route>
 
-        {/* Protected Shopkeeper Dashboard Routes */}
+        {/**
+         * Merchant Dashboard Routes
+         * Core commerce operations for inventory, billing, customers, and reports
+         */}
         <Route element={
           <ProtectedRoute allowedRoles={[ROLES.SHOPKEEPER]}>
             <OnboardingRoute>
@@ -215,24 +273,36 @@ const AppRoutes = () => {
           <Route path="/subscription" element={<Subscription />} />
         </Route>
 
-        {/* Protected Standalone Routes (No MainLayout for Print/Full page) */}
+        {/**
+         * Standalone Protected Views
+         * Printing views and full-page customer receipts bypassing sidebar chrome
+         */}
         <Route path="/platform-receipt/:id" element={
           <ProtectedRoute>
             <PlatformReceipt />
           </ProtectedRoute>
         } />
 
-        {/* Onboarding Route (Protected but not behind OnboardingRoute) */}
+        {/**
+         * Merchant Onboarding Wizard
+         * First-time business registration and profile setup screen
+         */}
         <Route path="/setup-business" element={
           <ProtectedRoute>
             <BusinessSetup />
           </ProtectedRoute>
         } />
 
-        {/* Public Routes */}
+        {/**
+         * Public Shareable Invoices
+         * Client-facing digital invoice preview without authentication requirement
+         */}
         <Route path="/invoice/public/:id" element={<PublicInvoice />} />
 
-        {/* Fallback 404 Route */}
+        {/**
+         * Fallback Not-Found Handler
+         * 404 destination for unregistered URL paths
+         */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>

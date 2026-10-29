@@ -1,7 +1,15 @@
+/**
+ * Internationalization (i18n) Configuration Module
+ * Manages multilingual dictionary bundles (English, Hindi) and language persistence across user sessions.
+ */
+
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-// Translations
+/**
+ * Localization Translation Catalogs
+ * Maps UI label strings and status messages to localized language representations
+ */
 const resources = {
   en: {
     translation: {
@@ -179,7 +187,10 @@ const resources = {
       "Send reminder before (days)": "Send reminder before",
       "Save Changes": "Save Changes",
 
-      // Landing Page
+      /**
+       * Landing Page Content Translations (English)
+       * Hero marketing copy, platform statistics, feature matrix, and value propositions
+       */
       "Get Started Free": "Get Started Free",
       "Trusted by 10,000+ Shopkeepers": "Trusted by 10,000+ Shopkeepers",
       "Your Shop's": "Your Shop's",
@@ -236,7 +247,10 @@ const resources = {
       "Smart Billing & Udhar Management": "Smart Billing & Udhar Management",
       "All rights reserved": "All rights reserved",
 
-      // Voice Billing Page - New Translations
+      /**
+       * Voice-Enabled Billing Translations (English)
+       * Voice synthesis statuses, microphone permission alerts, and fallback messages
+       */
       "Record voice or type manually": "Record voice or type manually",
       "Voice Input": "Voice Input",
       "Manual Input": "Manual Input",
@@ -992,7 +1006,10 @@ const resources = {
       "Send reminder before (days)": "रिमाइंडर कितने दिन पहले भेजें?",
       "Save Changes": "बदलाव सेव करें",
 
-      // Landing Page
+      /**
+       * Landing Page Content Translations (Hindi)
+       * Hero marketing copy, platform statistics, feature matrix, and value propositions
+       */
       "Get Started Free": "मुफ्त शुरू करें",
       "Trusted by 10,000+ Shopkeepers": "10,000+ दुकानदारों का भरोसा",
       "Your Shop's": "आपकी दुकान का",
@@ -1049,7 +1066,10 @@ const resources = {
       "Smart Billing & Udhar Management": "स्मार्ट बिलिंग और उधार प्रबंधन",
       "All rights reserved": "सर्वाधिकार सुरक्षित",
 
-      // Voice Billing Page - New Translations
+      /**
+       * Voice-Enabled Billing Translations (Hindi)
+       * Voice synthesis statuses, microphone permission alerts, and fallback messages
+       */
       "Record voice or type manually": "आवाज़ रिकॉर्ड करें या टाइप करें",
       "Voice Input": "आवाज़ से इनपुट",
       "Manual Input": "टाइप करके इनपुट",
@@ -1594,14 +1614,18 @@ const resources = {
   }
 };
 
+/**
+ * i18next Client Configuration
+ * Initializes multilingual dictionaries and sets default runtime language
+ */
 i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: localStorage.getItem('language') || 'en', // default language
+    lng: localStorage.getItem('language') || 'en',
     fallbackLng: 'en',
     interpolation: {
-      escapeValue: false // react already safes from xss
+      escapeValue: false
     }
   });
 

@@ -1,11 +1,22 @@
+/**
+ * Merchant Account Suspension Notice Modal
+ * Non-dismissible security overlay displayed in real time when an administrator suspends a shop.
+ */
+
 import React, { useEffect } from 'react';
 import { ShieldAlert, AlertOctagon, Mail, LogOut, ExternalLink } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * SuspendedAccountModal Component
+ */
 const SuspendedAccountModal = ({ isOpen, reason, onLogout }) => {
   const { t } = useTranslation();
 
-  // Prevent background scrolling when modal is active
+  /**
+   * Body Scroll Lock Controller
+   * Prevents window scroll manipulation while suspension modal is displayed
+   */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -30,20 +41,30 @@ const SuspendedAccountModal = ({ isOpen, reason, onLogout }) => {
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 overscroll-contain animate-fade-in">
-      {/* Non-dismissible Backdrop */}
+      {/**
+       * Non-Dismissible Dark Backdrop
+       * Blocks user interaction with underlying workspace
+       */}
       <div
         className="fixed inset-0 bg-gray-950/75 backdrop-blur-sm transition-opacity"
         onWheel={(e) => e.preventDefault()}
         onTouchMove={(e) => e.preventDefault()}
       />
 
-      {/* Modal Dialog Card */}
+      {/**
+       * Suspension Notice Card
+       * Central dialog window presenting administrative reason and appeals route
+       */}
       <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-rose-200 overflow-hidden z-10 animate-modal-content">
-        {/* Top Warning Accent Bar */}
+        {/**
+         * Warning Color Accent Bar
+         */}
         <div className="h-1.5 w-full bg-gradient-to-r from-rose-500 via-red-500 to-amber-500" />
 
         <div className="p-6 sm:p-7 text-left space-y-5">
-          {/* Header with Icon */}
+          {/**
+           * Dialog Heading & Severity Badge
+           */}
           <div className="flex items-start gap-4">
             <div className="relative shrink-0">
               <div className="w-12 h-12 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center shadow-sm">
@@ -70,7 +91,10 @@ const SuspendedAccountModal = ({ isOpen, reason, onLogout }) => {
             </div>
           </div>
 
-          {/* Reason Box */}
+          {/**
+           * Administrative Reason Box
+           * Surfaces specific suspension reasoning recorded by system operators
+           */}
           <div className="p-4 rounded-xl bg-rose-50/60 border border-rose-200/90 space-y-1.5">
             <div className="flex items-center gap-1.5 text-xs font-semibold text-rose-800 uppercase tracking-wider">
               <AlertOctagon className="w-3.5 h-3.5 text-rose-600" />
@@ -81,7 +105,10 @@ const SuspendedAccountModal = ({ isOpen, reason, onLogout }) => {
             </p>
           </div>
 
-          {/* Information Notice */}
+          {/**
+           * Operational Impact Clarification
+           * Informs merchant that tenant database assets remain intact
+           */}
           <div className="text-xs text-gray-600 leading-relaxed space-y-1 bg-gray-50 p-3.5 rounded-xl border border-gray-200/80">
             <p className="font-semibold text-gray-800">
               {t('What does this mean for your store?')}
@@ -91,7 +118,9 @@ const SuspendedAccountModal = ({ isOpen, reason, onLogout }) => {
             </p>
           </div>
 
-          {/* Support Info & Action Buttons */}
+          {/**
+           * Support Escalation & Logout Actions
+           */}
           <div className="pt-2 flex flex-col sm:flex-row items-center gap-2.5">
             <a
               href="mailto:support@udharpay.com?subject=Appeal%20Store%20Suspension"

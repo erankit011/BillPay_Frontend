@@ -1,3 +1,8 @@
+/**
+ * SaaS Subscription Plan Pricing Card
+ * Displays tier pricing, customer quota caps, billing invoice limits, and feature entitlements.
+ */
+
 import React from 'react';
 import {
   Check,
@@ -12,6 +17,9 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * PlanCard Component
+ */
 const PlanCard = ({ plan, onEdit }) => {
   const { t } = useTranslation();
   const isFree = plan.planId === 'FREE';
@@ -24,7 +32,10 @@ const PlanCard = ({ plan, onEdit }) => {
           : 'border-gray-200 hover:border-gray-300'
       }`}
     >
-      {/* ── Top Banner (Recommended) or Desktop Alignment Spacer ── */}
+      {/**
+       * Top Recommendation Banner
+       * Crown highlight banner for recommended plans, or desktop alignment spacer.
+       */}
       {plan.isRecommended ? (
         <div className="bg-[#093C5D] text-white text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider py-1.5 px-4 text-center flex items-center justify-center gap-1.5 shrink-0">
           <Crown className="w-3.5 h-3.5 fill-current" />
@@ -34,9 +45,15 @@ const PlanCard = ({ plan, onEdit }) => {
         <div className="hidden xl:block h-[31px] bg-transparent shrink-0" />
       )}
 
-      {/* ── Card Main Content ── */}
+      {/**
+       * Plan Metric Presentation
+       * Primary content column containing pricing, quotas, features, and bullets.
+       */}
       <div className="p-4 sm:p-5 flex flex-col flex-1 space-y-4">
-        {/* Tier Title & Status Row */}
+        {/**
+         * Tier Title & Status Row
+         * Displays tier display name and operational status badge.
+         */}
         <div>
           <div className="flex items-center justify-between gap-2">
             <h3 className="text-base sm:text-lg font-semibold text-gray-900 tracking-tight whitespace-nowrap">
@@ -53,7 +70,10 @@ const PlanCard = ({ plan, onEdit }) => {
             </span>
           </div>
 
-          {/* Badges Row: Plan ID & Promo Badge */}
+          {/**
+           * Plan Badges Row
+           * Monospace plan identifier and marketing badge tag.
+           */}
           <div className="flex items-center gap-1.5 mt-1.5">
             <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 font-medium border border-gray-200">
               {plan.planId}
@@ -65,13 +85,19 @@ const PlanCard = ({ plan, onEdit }) => {
             )}
           </div>
 
-          {/* Subtitle Description */}
+          {/**
+           * Tier Subtitle Description
+           * Brief marketing synopsis of the plan tier.
+           */}
           <p className="text-xs text-gray-500 mt-2 line-clamp-2 font-medium min-h-[2.25rem] leading-relaxed">
             {plan.description || t('Configured SaaS subscription tier')}
           </p>
         </div>
 
-        {/* Pricing Display */}
+        {/**
+         * Tier Pricing & Billing Frequency
+         * Formatted currency price, cycle duration, and trial terms.
+         */}
         <div className="pt-3 border-t border-gray-100 min-h-[4.25rem] flex flex-col justify-center">
           <div className="flex items-baseline gap-1.5">
             <span className="text-2xl sm:text-3xl font-semibold text-gray-900 tracking-tight">
@@ -92,7 +118,10 @@ const PlanCard = ({ plan, onEdit }) => {
           )}
         </div>
 
-        {/* Operational Quotas */}
+        {/**
+         * Operational Quotas
+         * Dual cards displaying maximum allowed customers and bills per cycle.
+         */}
         <div className="grid grid-cols-2 gap-2.5 pt-3 border-t border-gray-100">
           <div className="bg-gray-50/80 rounded-lg p-2.5 sm:p-3 border border-gray-200 shadow-none">
             <div className="flex items-center gap-1.5 text-gray-500 text-[10px] sm:text-[11px] font-medium mb-1 uppercase tracking-wide">
@@ -115,7 +144,10 @@ const PlanCard = ({ plan, onEdit }) => {
           </div>
         </div>
 
-        {/* Core Feature Switches */}
+        {/**
+         * Feature Entitlements Checklist
+         * Indicators for WhatsApp reminders, voice billing, and advanced analytics.
+         */}
         <div className="space-y-2 pt-3 border-t border-gray-100 text-xs font-medium">
           <div className="flex items-center justify-between text-gray-700">
             <span className="flex items-center gap-1.5 truncate">
@@ -154,7 +186,10 @@ const PlanCard = ({ plan, onEdit }) => {
           </div>
         </div>
 
-        {/* Feature Bullets / Highlights */}
+        {/**
+         * Marketing Feature Bullets
+         * Bulletpoint list detailing key tier highlights.
+         */}
         {plan.features && plan.features.length > 0 && (
           <div className="pt-3 border-t border-gray-100 flex-1 space-y-1.5">
             <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">
@@ -175,7 +210,10 @@ const PlanCard = ({ plan, onEdit }) => {
         )}
       </div>
 
-      {/* ── Card Footer: Subscribed Stores & Configure Button ── */}
+      {/**
+       * Card Action Footer
+       * Active merchant subscriber count and configuration modal trigger.
+       */}
       <div className="px-4 py-3 bg-gray-50/80 border-t border-gray-200 flex items-center justify-between gap-3 shrink-0 shadow-none">
         <div className="text-xs">
           <span className="text-gray-500 block text-[10px] font-medium uppercase tracking-wider">

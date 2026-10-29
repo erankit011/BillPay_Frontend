@@ -1,4 +1,9 @@
-import { useState, useEffect, Fragment } from 'react';
+/**
+ * Storekeeper Account Registration Page
+ * Single-step onboarding collecting merchant name, contact email, phone, and password credentials.
+ */
+
+import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -6,9 +11,12 @@ import * as yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { getPublicContactInfo } from '../features/admin/api/adminApi';
-import { Loader2, User, Mail, Phone, Store, Lock, ArrowRight, Eye, EyeOff, Camera, UserPlus, AlertCircle, AlertTriangle } from 'lucide-react';
+import { Eye, EyeOff, AlertCircle, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Registration Form Yup Schema
+ */
 const registerSchema = yup.object({
   name: yup.string().required('Name is required'),
   email: yup.string().email('Please provide a valid email address').required('Email is required'),
@@ -16,14 +24,15 @@ const registerSchema = yup.object({
   password: yup.string().min(6, 'Must be at least 6 characters').required('Password is required'),
 });
 
+/**
+ * Register Component
+ */
 const Register = () => {
-
   const [isLoading, setIsLoading] = useState(false);
-  const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [allowRegistration, setAllowRegistration] = useState(true);
   const [maintenanceMessage, setMaintenanceMessage] = useState(null);
-  
+
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -45,20 +54,17 @@ const Register = () => {
       isMounted = false;
     };
   }, []);
-  
-  const { register, handleSubmit, formState: { errors }, watch, trigger } = useForm({
-    resolver: yupResolver(registerSchema),
-    mode: 'onChange'
-  });
 
-  const watchedFields = watch();
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(registerSchema),
+  });
 
   const onSubmit = async (data) => {
     setIsLoading(true);
 
     try {
       const res = await api.post('/auth/register', data);
-      
+
       if (res.data.success) {
         toast.success(t('Registration successful! Please verify OTP.'));
         navigate('/verify-email', {
@@ -69,45 +75,35 @@ const Register = () => {
         });
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Something went wrong. Please try again.');
+      toast.error(err.response?.data?.message || t('Something went wrong. Please try again.'));
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleNext = async () => {
-    let fieldsToValidate = [];
-    if (step === 1) {
-      fieldsToValidate = ['name', 'email'];
-    } else if (step === 2) {
-      fieldsToValidate = ['phone'];
-    }
-    
-    const isValid = await trigger(fieldsToValidate);
-    if (isValid) {
-      setStep(step + 1);
-    }
-  };
-
   return (
     <div className="w-full animate-fade-in text-center lg:text-left">
-      {/* Header */}
+      {/**
+       * Page Header Section
+       * Displays registration title and subtitle
+       */}
       <div className="mb-5 sm:mb-6">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 mb-1 tracking-tight">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 mb-1.5 tracking-tight">
           {t('Create Account')}
         </h2>
         <p className="text-gray-500 font-medium text-xs sm:text-sm leading-relaxed">
-          {step === 1 && 'Tell us about yourself to get started.'}
-          {step === 2 && 'Your business details'}
-          {step === 3 && 'Secure your account'}
+          {t('Tell us about yourself to get started.')}
         </p>
       </div>
 
-      {/* Maintenance or Registration Closed Banners */}
+      {/**
+       * Platform Maintenance & Closed Registration Alerts
+       * Flat informational banners if signups or operations are suspended
+       */}
       {maintenanceMessage && (
-        <div className="mb-5 p-3.5 rounded-lg bg-amber-50/90 border border-amber-300 text-amber-950 text-xs sm:text-sm font-medium flex items-start gap-2.5 text-left">
+        <div className="mb-5 p-3.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-950 text-xs sm:text-sm font-medium flex items-start gap-2.5 text-left">
           <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 shrink-0 mt-0.5" />
-          <div>
+          <div className="flex-1">
             <p className="font-semibold text-xs sm:text-sm text-amber-900">{t('Platform Maintenance Active')}</p>
             <p className="mt-0.5 text-xs text-amber-800 leading-relaxed font-normal">{maintenanceMessage}</p>
           </div>
@@ -117,7 +113,7 @@ const Register = () => {
       {!allowRegistration && (
         <div className="mb-5 p-3.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-950 text-xs sm:text-sm font-medium flex items-start gap-2.5 text-left">
           <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-rose-600 shrink-0 mt-0.5" />
-          <div>
+          <div className="flex-1">
             <p className="font-semibold text-xs sm:text-sm text-rose-900">{t('Registrations Temporarily Closed')}</p>
             <p className="mt-0.5 text-xs text-rose-800 leading-relaxed font-normal">
               {t('New store signups are currently paused by the platform administrator. Please check back later or contact support.')}
@@ -126,236 +122,167 @@ const Register = () => {
         </div>
       )}
 
-      {/* Modern Progress Steps */}
-      <div className="mb-6 sm:mb-8">
-        <div className="flex items-center justify-between mb-2 px-1">
-            <span className="text-xs sm:text-sm font-semibold text-[#093C5D]">
-               {step === 1 ? 'Personal Info' : step === 2 ? 'Shop Details' : 'Security'}
-            </span>
-            <span className="text-[11px] sm:text-xs font-medium text-gray-400">
-               Step {step} of 3
-            </span>
+      {/**
+       * Unified Single-Step Registration Form
+       * Collects merchant profile, contact, and security credentials in one clean step
+       */}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3.5 sm:space-y-4">
+        {/**
+         * Full Name Field
+         */}
+        <div>
+          <label htmlFor="name" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5 text-left">
+            {t('Full Name')} <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="name"
+            {...register('name')}
+            className={`block w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none ${
+              errors.name
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:border-[#093C5D] focus:ring-[#093C5D]'
+            }`}
+            placeholder={t('Enter full name (e.g. Ramesh Kumar)')}
+            autoFocus
+          />
+          {errors.name && (
+            <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{errors.name.message}</span>
+            </p>
+          )}
         </div>
-        <div className="flex gap-2 sm:gap-4">
-          {[1, 2, 3].map((s) => (
-            <div 
-               key={s} 
-               className="h-1.5 flex-1 rounded-full bg-gray-100 overflow-hidden"
-            >
-               <div 
-                 className={`h-full bg-[#093C5D] rounded-full transition-all duration-500 ease-out ${
-                   step >= s ? 'w-full' : 'w-0'
-                 }`}
-               ></div>
-            </div>
-          ))}
+
+        {/**
+         * Email Address Field
+         */}
+        <div>
+          <label htmlFor="email" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5 text-left">
+            {t('Email Address')} <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="email"
+            type="email"
+            {...register('email')}
+            className={`block w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none ${
+              errors.email
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:border-[#093C5D] focus:ring-[#093C5D]'
+            }`}
+            placeholder={t('Enter business or personal email')}
+          />
+          {errors.email && (
+            <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{errors.email.message}</span>
+            </p>
+          )}
         </div>
-      </div>
 
-      {/* Profile Image Upload (Step 1 only) */}
-      {step === 1 && (
-        <div className="flex mb-6 justify-center lg:justify-start">
-          <div className="relative group cursor-pointer">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-50 flex items-center justify-center border border-dashed border-gray-300 group-hover:border-[#093C5D] group-hover:bg-[#093C5D]/5 transition-all">
-              <User className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
-            </div>
-            <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-              <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-            </div>
-          </div>
+        {/**
+         * Phone Number Field
+         */}
+        <div>
+          <label htmlFor="phone" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5 text-left">
+            {t('Phone Number')} <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="phone"
+            type="tel"
+            {...register('phone')}
+            className={`block w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none ${
+              errors.phone
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:border-[#093C5D] focus:ring-[#093C5D]'
+            }`}
+            placeholder={t('Enter 10-digit mobile number')}
+            maxLength={10}
+          />
+          {errors.phone && (
+            <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{errors.phone.message}</span>
+            </p>
+          )}
         </div>
-      )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
-        {/* Step 1: Personal Info */}
-        {step === 1 && (
-          <div className="space-y-3 sm:space-y-4 animate-fade-in">
-            <div>
-              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 text-left">
-                {t("Full Name")}
-              </label>
-              <div className="relative">
-                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-[18px] sm:h-[18px] text-gray-400 pointer-events-none" />
-                <input 
-                  {...register('name')}
-                  className={`w-full rounded-full border bg-white pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none ${errors.name ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' : 'border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]'}`}
-                  placeholder="Enter Your Name"
-                  autoFocus
-                />
-              </div>
-              {errors.name && (
-                <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1 text-left">
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                  <span className="leading-snug">{errors.name.message}</span>
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 text-left">
-                {t("Email Address")}
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-[18px] sm:h-[18px] text-gray-400 pointer-events-none" />
-                <input 
-                  type="email"
-                  {...register('email')}
-                  className={`w-full rounded-full border bg-white pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' : 'border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]'}`}
-                  placeholder="Enter Your Email"
-                />
-              </div>
-              {errors.email && (
-                <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1 text-left">
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                  <span className="leading-snug">{errors.email.message}</span>
-                </p>
-              )}
-            </div>
-
-            <button 
+        {/**
+         * Password Field with Eye Toggle
+         */}
+        <div>
+          <label htmlFor="password" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5 text-left">
+            {t('Password')} <span className="text-red-500">*</span>
+          </label>
+          <div className="relative">
+            <input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              {...register('password')}
+              className={`block w-full rounded-lg border bg-white pl-3.5 pr-11 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none ${
+                errors.password
+                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                  : 'border-gray-300 focus:border-[#093C5D] focus:ring-[#093C5D]'
+              }`}
+              placeholder={t('Create password (min 6 characters)')}
+            />
+            <button
               type="button"
-              onClick={handleNext}
-              disabled={!allowRegistration}
-              className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#072C44] text-white rounded-full py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition-all active:scale-[0.98] mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+              className="cursor-pointer absolute right-2 sm:right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1.5 rounded-md flex items-center justify-center focus:outline-none"
             >
-              <span>{t("Continue")}</span>
-              <ArrowRight className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
+              {showPassword ? (
+                <EyeOff className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+              ) : (
+                <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+              )}
             </button>
           </div>
-        )}
+          {errors.password && (
+            <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{errors.password.message}</span>
+            </p>
+          )}
+        </div>
 
-        {/* Step 2: Business Info */}
-        {step === 2 && (
-          <div className="space-y-3 sm:space-y-4 animate-fade-in">
-            <div>
-              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 text-left">
-                {t("Phone Number")}
-              </label>
-              <div className="relative">
-                <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-[18px] sm:h-[18px] text-gray-400 pointer-events-none" />
-                <input 
-                  {...register('phone')}
-                  className={`w-full rounded-full border bg-white pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none ${errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' : 'border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]'}`}
-                  placeholder="Mobile Number"
-                  maxLength={10}
-                />
-              </div>
-              {errors.phone && (
-                <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1 text-left">
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                  <span className="leading-snug">{errors.phone.message}</span>
-                </p>
-              )}
-            </div>
-
-            <div className="flex flex-col-reverse sm:flex-row gap-2.5 sm:gap-4 mt-6">
-              <button 
-                type="button"
-                onClick={() => setStep(1)}
-                className="cursor-pointer w-full sm:w-1/3 py-2.5 sm:py-3 flex items-center justify-center rounded-full text-sm sm:text-base font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-all active:scale-95"
-              >
-                {t("Back")}
-              </button>
-              <button 
-                type="button"
-                onClick={handleNext}
-                className="cursor-pointer w-full sm:w-2/3 bg-[#093C5D] hover:bg-[#072C44] text-white rounded-full py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
-              >
-                <span>{t("Continue")}</span>
-                <ArrowRight className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Step 3: Security */}
-        {step === 3 && (
-          <div className="space-y-3 sm:space-y-4 animate-fade-in">
-            <div>
-              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 text-left">
-                {t("Password")}
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-[18px] sm:h-[18px] text-gray-400 pointer-events-none" />
-                <input 
-                  type={showPassword ? "text" : "password"}
-                  {...register('password')}
-                  className={`w-full rounded-full border bg-white pl-10 sm:pl-11 pr-10 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none ${errors.password ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' : 'border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]'}`}
-                  placeholder="••••••••"
-                  autoFocus
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="cursor-pointer absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none p-1.5 sm:p-1 rounded-md"
-                >
-                  {showPassword ? (
-                    <EyeOff className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
-                  ) : (
-                    <Eye className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
-                  )}
-                </button>
-              </div>
-              {errors.password && (
-                <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1 text-left">
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                  <span className="leading-snug">{errors.password.message}</span>
-                </p>
-              )}
-              <p className="text-[11px] sm:text-xs text-gray-500 mt-1.5 font-medium text-left">{t("At least 6 characters")}</p>
-            </div>
-
-            {/* Summary */}
-            <div className="bg-gray-50 rounded-xl p-4 sm:p-5 border border-gray-100 text-left">
-              <p className="text-[10px] sm:text-xs font-bold text-gray-400 mb-3 sm:mb-4 uppercase tracking-wider">{t("Account Summary")}</p>
-              <div className="space-y-2.5 sm:space-y-3 text-xs sm:text-sm text-gray-900 font-medium border-l-2 border-[#093C5D] pl-3 sm:pl-4">
-                <div className="flex flex-col"><span className="text-gray-500 text-[10px] sm:text-xs">{t("Name")}</span> <span>{watchedFields.name || '-'}</span></div>
-                <div className="flex flex-col"><span className="text-gray-500 text-[10px] sm:text-xs">{t("Email")}</span> <span className="truncate">{watchedFields.email || '-'}</span></div>
-              </div>
-            </div>
-
-            <div className="flex flex-col-reverse sm:flex-row gap-2.5 sm:gap-4 mt-6">
-              <button 
-                type="button"
-                onClick={() => setStep(2)}
-                className="cursor-pointer w-full sm:w-1/3 py-2.5 sm:py-3 flex items-center justify-center rounded-full text-sm sm:text-base font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-all active:scale-95"
-              >
-                Back
-              </button>
-              <button 
-                type="submit"
-                disabled={isLoading || !allowRegistration}
-                className="cursor-pointer w-full sm:w-2/3 bg-[#093C5D] hover:bg-[#072C44] text-white rounded-full py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-white/30 rounded-full animate-spin" />
-                    <span>{t("Creating...")}</span>
-                  </>
-                ) : (
-                  <span>{t("Create Account")}</span>
-                )}
-              </button>
-            </div>
-          </div>
-        )}
+        {/**
+         * Submit Action Button
+         */}
+        <button
+          type="submit"
+          disabled={isLoading || !allowRegistration}
+          className="w-full cursor-pointer bg-[#093C5D] hover:bg-[#072c44] text-white rounded-lg py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition-colors active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+        >
+          {isLoading ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <span>{t('Creating Account...')}</span>
+            </>
+          ) : (
+            <span>{t('Create Account')}</span>
+          )}
+        </button>
       </form>
 
-      {/* Social Auth */}
-      <div className="mt-6 sm:mt-8">
+      {/**
+       * Third-Party Social Authentication
+       * Alternative OAuth registration via Google account
+       */}
+      <div className="mt-6 sm:mt-7">
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-200"></div>
           </div>
-          <div className="relative flex justify-center text-[11px] sm:text-xs">
-            <span className="px-2 bg-white text-gray-500 font-medium">{t('Or continue with')}</span>
+          <div className="relative flex justify-center text-xs">
+            <span className="px-2.5 bg-white text-gray-500 font-medium">{t('Or continue with')}</span>
           </div>
         </div>
 
         {allowRegistration ? (
           <a
             href={`${import.meta.env.VITE_API_URL}/auth/google`}
-            className="mt-4 sm:mt-6 w-full cursor-pointer py-2.5 sm:py-3 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full font-semibold text-sm sm:text-base flex items-center justify-center gap-2 sm:gap-3 transition-all active:scale-[0.98]"
+            className="mt-4 sm:mt-5 w-full cursor-pointer py-2.5 sm:py-3 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg font-semibold text-sm sm:text-base flex items-center justify-center gap-2.5 transition-colors active:scale-[0.99]"
           >
             <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -366,15 +293,23 @@ const Register = () => {
             {t('Continue With Google')}
           </a>
         ) : (
-          <div className="mt-4 sm:mt-6 w-full py-2.5 sm:py-3 bg-gray-50 border border-gray-200 text-gray-400 rounded-full font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-not-allowed">
+          <div className="mt-4 sm:mt-5 w-full py-2.5 sm:py-3 bg-gray-50 border border-gray-200 text-gray-400 rounded-lg font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-not-allowed">
             {t('Google registration is temporarily paused')}
           </div>
         )}
       </div>
 
-      {/* Bottom Actions */}
-      <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm">
-        <span className="text-gray-500 font-medium">{t("Already have an account?")} <Link to="/login" className="text-[#093C5D] font-semibold cursor-pointer ml-1 hover:underline">{t("Login Here")}</Link></span>
+      {/**
+       * Bottom Navigation Actions
+       * Direct link redirecting existing users to login view
+       */}
+      <div className="mt-6 sm:mt-7 text-center text-xs sm:text-sm">
+        <span className="text-gray-500 font-medium">
+          {t('Already have an account?')}
+          <Link to="/login" className="text-[#093C5D] font-semibold cursor-pointer ml-1.5 hover:underline">
+            {t('Login Here')}
+          </Link>
+        </span>
       </div>
     </div>
   );

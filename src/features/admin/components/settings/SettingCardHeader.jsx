@@ -1,5 +1,13 @@
+/**
+ * Settings Card Section Header
+ * Standardized header component displaying section icon, title, description, and status tag.
+ */
+
 import React from 'react';
 
+/**
+ * SettingCardHeader Component
+ */
 const SettingCardHeader = ({
   icon: Icon,
   title,

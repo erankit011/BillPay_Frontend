@@ -1,6 +1,14 @@
+/**
+ * Admin KPI Metric Summary Card
+ * Renders statistical indicators with left-border accents, category badges, and smooth entrance transitions.
+ */
+
 import React from 'react';
 import { motion } from 'framer-motion';
 
+/**
+ * AdminStatCard Component
+ */
 const AdminStatCard = ({
   title,
   value,
@@ -13,7 +21,10 @@ const AdminStatCard = ({
 }) => {
   const displaySubtext = subtext || subtitle;
 
-  // Map legacy color prop to variant if variant not explicitly set
+  /**
+   * Color Prop Normalization
+   * Maps legacy color string names to modern design system variant identifiers.
+   */
   let resolvedVariant = variant;
   if (variant === 'default' && color) {
     if (color === 'emerald' || color === 'green') resolvedVariant = 'success';
@@ -22,7 +33,10 @@ const AdminStatCard = ({
     else if (color === 'teal' || color === 'blue') resolvedVariant = 'primary';
   }
 
-  // Exact Admin Dashboard card styling (icon box + colored left border)
+  /**
+   * Card Accent Variant Tokens
+   * Defines border, icon, and typography styles for each analytical metric type.
+   */
   const variantStyles = {
     default: {
       card: 'border border-gray-200 hover:border-gray-300',
@@ -70,14 +84,20 @@ const AdminStatCard = ({
       transition={{ delay, duration: 0.2 }}
       className={`bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] transition-all duration-200 overflow-hidden cursor-default shadow-none ${style.card}`}
     >
-      {/* Top Left Icon Box */}
+      {/**
+       * Metric Icon Emblem
+       * Rounded badge displaying contextual metric iconography.
+       */}
       <div className="flex justify-between items-start gap-1">
         <div className={`w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg flex items-center justify-center ${style.iconBg}`}>
           {Icon && <Icon className="w-4 h-4 md:w-5 md:h-5" />}
         </div>
       </div>
 
-      {/* Metric Content */}
+      {/**
+       * Quantitative Metric Presentation
+       * Renders KPI label, primary value count, and dynamic trend subtext.
+       */}
       <div className="mt-auto pt-2 min-w-0">
         <p
           className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate"

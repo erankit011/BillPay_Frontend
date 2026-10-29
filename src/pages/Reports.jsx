@@ -1,3 +1,8 @@
+/**
+ * Store Financial Reports & Statement Export Page
+ * Generates periodic collection vs revenue charts and exports printable PDF statements.
+ */
+
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -13,6 +18,9 @@ import toast from 'react-hot-toast';
 import { formatCurrency } from '../utils/currency';
 import { formatDate } from '../utils/dateUtils';
 
+/**
+ * Reports Component
+ */
 const Reports = () => {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth);
@@ -62,18 +70,22 @@ const Reports = () => {
           break;
       }
 
+      const isoStartDate = startDate.getTime() > 0 ? startDate.toISOString() : undefined;
+      const billParams = new URLSearchParams({ limit: '1000', includeStats: 'false' });
+      if (isoStartDate) billParams.set('startDate', isoStartDate);
+
+      const txParams = new URLSearchParams({ type: 'PAYMENT' });
+      if (isoStartDate) txParams.set('startDate', isoStartDate);
+
       const [billsRes, txRes, settingsRes] = await Promise.all([
-        api.get('/bills?limit=10000'), // Large limit to ensure we get all for the report
-        api.get('/transactions'),
+        api.get(`/bills?${billParams.toString()}`),
+        api.get(`/transactions?${txParams.toString()}`),
         api.get('/settings')
       ]);
 
-      const allBills = billsRes.data.data?.data || billsRes.data.data || [];
-      const allTransactions = txRes.data.data || [];
+      const filteredBills = billsRes.data.data?.data || billsRes.data.data || [];
+      const filteredTransactions = txRes.data.data || [];
       const shopSettings = settingsRes.data.data || {};
-
-      const filteredBills = allBills.filter(bill => new Date(bill.createdAt) >= startDate);
-      const filteredTransactions = allTransactions.filter(tx => new Date(tx.createdAt) >= startDate && tx.type === 'PAYMENT');
 
       generateStatementPDF(filteredBills, filteredTransactions, statementPeriod, shopSettings, t, formatCurrency, formatDate);
     } catch (error) {
@@ -94,7 +106,10 @@ const Reports = () => {
 
   return (
     <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
-      {/* Header */}
+      {/**
+       * Reports Page Header
+       * Page title, overview summary, and period statement PDF export controls.
+       */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Reports & Analytics')}</h1>
@@ -127,7 +142,10 @@ const Reports = () => {
         </div>
       </div>
 
-      {/* Summary Cards */}
+      {/**
+       * Monthly Financial Metrics
+       * Metric cards showing monthly sales turnover, customer collections, and pending udhar.
+       */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
         <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden animate-fade-in cursor-default">
           <div className="flex justify-between items-start gap-1">
@@ -169,9 +187,15 @@ const Reports = () => {
         </div>
       </div>
 
-      {/* Charts */}
+      {/**
+       * Analytical Visualizations Grid
+       * Comparative charts for recent 7-day sales trend and monthly revenue collections.
+       */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-5 lg:gap-6">
-        {/* Sales Trend */}
+        {/**
+         * Sales Trend Area Chart
+         * Visualizes daily sales performance curve over the last 7 recorded days.
+         */}
         <div className="bg-white border border-gray-200 rounded-xl p-4 md:p-5 lg:p-6 animate-fade-in" style={{ animationDelay: '300ms' }}>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 md:mb-5 gap-2">
             <div>
@@ -239,7 +263,10 @@ const Reports = () => {
           </div>
         </div>
 
-        {/* Revenue Growth */}
+        {/**
+         * Revenue Collections Bar Chart
+         * Displays cash and digital collections growth across previous reporting months.
+         */}
         <div className="bg-white border border-gray-200 rounded-xl p-4 md:p-5 lg:p-6 animate-fade-in" style={{ animationDelay: '400ms' }}>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 md:mb-5 gap-2">
             <div>

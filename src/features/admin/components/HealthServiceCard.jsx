@@ -1,7 +1,15 @@
+/**
+ * System Health Service Status Card
+ * Displays real-time operational status, roundtrip latency, and connection diagnostics for platform services.
+ */
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Clock } from 'lucide-react';
 
+/**
+ * HealthServiceCard Component
+ */
 const HealthServiceCard = ({
   name,
   status,
@@ -31,7 +39,10 @@ const HealthServiceCard = ({
           </div>
         </div>
 
-        {/* Status Pill matching shopkeeper badge */}
+        {/**
+         * Service Health Status Pill
+         * Color-coded badge reflecting operational, service down, or pending check state.
+         */}
         <div>
           {isHealthy ? (
             <span className="inline-block px-2.5 py-1 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide bg-green-50 text-green-700 border border-green-200">

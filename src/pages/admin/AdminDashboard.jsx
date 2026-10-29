@@ -1,3 +1,8 @@
+/**
+ * Administrator Executive Dashboard & Master Operations Command Center
+ * Displays platform-wide KPIs, revenue trends, live merchant activity, and direct store intervention actions.
+ */
+
 import React, { useMemo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -55,7 +60,10 @@ const formatMonthYear = (val) => {
   return val;
 };
 
-// Custom interactive glassmorphic tooltip for growth chart
+/**
+ * Interactive Growth Tooltip Component
+ * Glassmorphic tooltip showing dual metrics for new store acquisition and subscription revenue.
+ */
 const CustomGrowthTooltip = ({ active, payload, label }) => {
   if (!active || !payload || !payload.length) return null;
 
@@ -74,7 +82,10 @@ const CustomGrowthTooltip = ({ active, payload, label }) => {
       </div>
 
       <div className="space-y-2">
-        {/* Stores row */}
+        {/**
+         * New Stores Metric Row
+         * Shows onboarded store volume for the hovered monthly timeline period.
+         */}
         <div className="flex items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-[#093C5D] shrink-0" />
@@ -85,7 +96,10 @@ const CustomGrowthTooltip = ({ active, payload, label }) => {
           </span>
         </div>
 
-        {/* Revenue row */}
+        {/**
+         * Subscription Revenue Metric Row
+         * Shows monetary revenue generated from plan purchases in the hovered period.
+         */}
         <div className="flex items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-[#10B981] shrink-0" />
@@ -106,7 +120,11 @@ const AdminDashboard = () => {
   const [suspendModalShop, setSuspendModalShop] = useState(null);
   const [planModalShop, setPlanModalShop] = useState(null);
   const [logoutModalShop, setLogoutModalShop] = useState(null);
-  const [chartViewMode, setChartViewMode] = useState('ALL'); // 'ALL' | 'REVENUE' | 'STORES'
+  /**
+   * Analytics Chart View Mode State
+   * Controls display filtering between consolidated, revenue, and store creation metrics ('ALL' | 'REVENUE' | 'STORES')
+   */
+  const [chartViewMode, setChartViewMode] = useState('ALL');
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['adminOverview'],
@@ -130,7 +148,10 @@ const AdminDashboard = () => {
   const signupTrend = data?.signupTrend || [];
   const revenueTrend = data?.revenueTrend || [];
 
-  // Mutations
+  /**
+   * Administrative Action Mutations
+   * Handles remote store suspensions, plan overrides, and force-logout session purges.
+   */
   const suspendMutation = useMutation({
     mutationFn: ({ shopId, isSuspended, reason }) =>
       toggleShopSuspension(shopId, { isSuspended, reason }),
@@ -173,7 +194,10 @@ const AdminDashboard = () => {
     },
   });
 
-  // Prepare Chart Data
+  /**
+   * Growth Analytics Chart Dataset Memo
+   * Merges merchant registration counts and subscription revenues into monthly timeline nodes.
+   */
   const chartData = useMemo(() => {
     const map = new Map();
     signupTrend.forEach((item) => {
@@ -286,7 +310,10 @@ const AdminDashboard = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
-      {/* Header */}
+      {/**
+       * Page Header Toolbar
+       * Introductory title and description of executive administrative controls.
+       */}
       <div>
         <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
           Admin Dashboard Overview
@@ -296,7 +323,10 @@ const AdminDashboard = () => {
         </p>
       </div>
 
-      {/* KPI Cards Row (4-column real platform calculations, shadow-none, rounded-lg) */}
+      {/**
+       * KPI Stat Cards Grid
+       * 4-column overview displaying merchant count, platform GMV turnover, subscription earnings, and aggregate credit.
+       */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         <AdminStatCard
           title="REGISTERED MERCHANTS"
@@ -346,7 +376,10 @@ const AdminDashboard = () => {
         </div>
       ) : (
         <>
-          {/* Secondary Quick Metrics Strip */}
+          {/**
+           * Secondary Quick Metrics Bar
+           * 3-tile strip showing platform bill counts, customer profiles, and active pro stores.
+           */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="bg-white border border-gray-200 rounded-lg p-3.5 flex items-center justify-between shadow-none">
               <div className="flex items-center gap-3">
@@ -402,12 +435,21 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Visual Analytics Grid */}
+      {/**
+       * Visual Analytics & Tier Distribution Grid
+       * Houses growth trajectory chart on 2 columns alongside subscription plan share breakdown.
+       */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-5">
-        {/* Growth Trends Chart (2 Columns) */}
+        {/**
+         * Growth Trends Composed Chart Section
+         * Interactive multi-axis graph plotting new merchant registrations and subscription revenue.
+         */}
         <div className="lg:col-span-2 bg-white rounded-lg border border-gray-200 p-4 sm:p-5 shadow-none flex flex-col justify-between">
           <div>
-            {/* Header: Title + View Switcher */}
+            {/**
+             * Chart Header & Segmented View Controller
+             * Section title with interactive tab switcher for Combined, Revenue, or Stores perspectives.
+             */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
               <div>
                 <h3 className="text-sm sm:text-base font-semibold text-gray-900">
@@ -418,7 +460,10 @@ const AdminDashboard = () => {
                 </p>
               </div>
 
-              {/* Segmented View Switcher */}
+              {/**
+               * Segmented View Switcher Control
+               * Toggles data series between Combined view, Revenue curve, or Store acquisition bars.
+               */}
               <div
                 role="tablist"
                 aria-label="Filter chart by series"
@@ -469,9 +514,15 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            {/* 3 Executive Stat Tiles */}
+            {/**
+             * Executive Stat Mini-Tiles
+             * High-level summary of store volume, subscription earnings, and average revenue per store.
+             */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-3 sm:mb-4">
-              {/* Card 1: New Stores */}
+              {/**
+               * Onboarded Store Volume Tile
+               * Total stores registered within active analytics timeline.
+               */}
               <div className="p-2.5 rounded-lg bg-gray-50/90 border border-gray-200/80 flex items-center justify-between">
                 <div>
                   <span className="text-[10px] uppercase font-medium text-gray-500 tracking-wider block">Stores Onboarded</span>
@@ -484,7 +535,10 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              {/* Card 2: Subscription Revenue */}
+              {/**
+               * Subscription Earnings Tile
+               * Cumulative plan billing revenue across selected interval.
+               */}
               <div className="p-2.5 rounded-lg bg-emerald-50/50 border border-emerald-200/70 flex items-center justify-between">
                 <div>
                   <span className="text-[10px] uppercase font-medium text-emerald-800 tracking-wider block">Subscription Revenue</span>
@@ -497,7 +551,10 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              {/* Card 3: Avg per Store */}
+              {/**
+               * Average Revenue Per Store Tile
+               * Average monetization calculated across registered merchant base.
+               */}
               <div className="p-2.5 rounded-lg bg-blue-50/50 border border-blue-200/70 flex items-center justify-between">
                 <div>
                   <span className="text-[10px] uppercase font-medium text-blue-800 tracking-wider block">Avg Revenue / Store</span>
@@ -512,7 +569,10 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          {/* Chart Canvas */}
+          {/**
+           * Recharts Responsive Container Canvas
+           * Composed bar-area graph with dual Y axes and custom tooltips.
+           */}
           <div className="h-[270px] sm:h-[310px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={chartData} margin={{ top: 12, right: 8, left: -10, bottom: 0 }}>
@@ -536,7 +596,10 @@ const AdminDashboard = () => {
                   tickFormatter={formatMonthYear}
                   dy={4}
                 />
-                {/* Left Y Axis: Revenue or Stores depending on mode */}
+                {/**
+                 * Primary Left Y-Axis
+                 * Dynamically renders revenue scale or store volume depending on active tab.
+                 */}
                 <YAxis
                   yAxisId="left"
                   stroke="#9CA3AF"
@@ -553,7 +616,10 @@ const AdminDashboard = () => {
                       : `₹${v}`
                   }
                 />
-                {/* Right Y Axis: Stores (only in combined mode) */}
+                {/**
+                 * Secondary Right Y-Axis
+                 * Dedicated store acquisition scale visible during combined dual-series view.
+                 */}
                 <YAxis
                   yAxisId="right"
                   orientation="right"
@@ -571,7 +637,10 @@ const AdminDashboard = () => {
                   cursor={{ fill: 'rgba(9, 60, 93, 0.04)', radius: 6 }}
                 />
 
-                {/* Hybrid: Stores rendered as crisp rounded modern bars */}
+                {/**
+                 * Store Acquisition Bar Series
+                 * Rendered as modern rounded vertical bars.
+                 */}
                 {(chartViewMode === 'ALL' || chartViewMode === 'STORES') && (
                   <Bar
                     yAxisId={chartViewMode === 'STORES' ? 'left' : 'right'}
@@ -583,7 +652,10 @@ const AdminDashboard = () => {
                   />
                 )}
 
-                {/* Hybrid: Revenue rendered as smooth glowing area wave */}
+                {/**
+                 * Subscription Revenue Area Series
+                 * Rendered as smooth monotone wave with soft green gradient fill.
+                 */}
                 {(chartViewMode === 'ALL' || chartViewMode === 'REVENUE') && (
                   <Area
                     yAxisId="left"
@@ -603,7 +675,10 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Subscription Tier Share (1 Column) */}
+        {/**
+         * Subscription Tier Share Card
+         * Displays SaaS plan tier distribution bars and paid conversion insights.
+         */}
         <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-5 shadow-none flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-1">
@@ -619,7 +694,10 @@ const AdminDashboard = () => {
               Active shop accounts categorized by billing plan.
             </p>
 
-            {/* Executive 3-Badge Summary Strip */}
+            {/**
+             * Executive 3-Badge Summary Strip
+             * Compact glance at total stores, paid pro members, and free trial accounts.
+             */}
             <div className="grid grid-cols-3 gap-2 p-2.5 bg-gray-50/90 rounded-lg border border-gray-200/80 mb-4">
               <div className="text-center">
                 <span className="text-[10px] uppercase font-medium text-gray-500 tracking-wider block">Total Stores</span>
@@ -635,9 +713,15 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            {/* Plan Rows */}
+            {/**
+             * Plan Distribution Breakdown Rows
+             * Percentage progress bars for Free, Monthly, Quarterly, and Yearly plan tiers.
+             */}
             <div className="space-y-3.5">
-              {/* Free Plan */}
+              {/**
+               * Free Plan Tier Bar
+               * Complimentary 7-day trial store accounts.
+               */}
               <div>
                 <div className="flex justify-between items-baseline text-xs font-semibold text-gray-700 mb-1.5">
                   <span className="flex items-center gap-1.5 text-[#093C5D]">
@@ -664,7 +748,10 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              {/* Monthly Plan */}
+              {/**
+               * Monthly Pro Plan Tier Bar
+               * Standard 30-day recurring paid store subscriptions.
+               */}
               <div>
                 <div className="flex justify-between items-baseline text-xs font-semibold text-gray-700 mb-1.5">
                   <span className="flex items-center gap-1.5 text-green-700">
@@ -691,7 +778,10 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              {/* Quarterly Plan */}
+              {/**
+               * Quarterly Pro Plan Tier Bar
+               * 90-day discounted tier subscriptions.
+               */}
               <div>
                 <div className="flex justify-between items-baseline text-xs font-semibold text-gray-700 mb-1.5">
                   <span className="flex items-center gap-1.5 text-emerald-700">
@@ -718,7 +808,10 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              {/* Yearly Plan */}
+              {/**
+               * Yearly Pro Plan Tier Bar
+               * Annual recurring membership tier.
+               */}
               <div>
                 <div className="flex justify-between items-baseline text-xs font-semibold text-gray-700 mb-1.5">
                   <span className="flex items-center gap-1.5 text-purple-700">
@@ -746,7 +839,10 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            {/* Paid Conversion Insight Banner */}
+            {/**
+             * Paid Conversion Ratio Insight Banner
+             * Visual callout displaying overall paid subscriber conversion rate.
+             */}
             <div className="mt-3.5 p-2.5 bg-emerald-50/80 border border-emerald-200/90 rounded-lg flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0 animate-pulse"></span>
@@ -779,9 +875,15 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Two Columns: Recent Shops and Recent Bills */}
+      {/**
+       * Two-Column Recent Activity Tables
+       * Houses newly registered merchant stores on left and recent SaaS subscription invoices on right.
+       */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-        {/* Recently Joined Shops Table */}
+        {/**
+         * Recently Registered Merchant Stores Table Card
+         * Quick glance at newly onboarded merchants with instant inspection action.
+         */}
         <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-none flex flex-col justify-between h-full">
           <div className="p-4 sm:p-5 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-h-[78px]">
             <div>
@@ -805,7 +907,10 @@ const AdminDashboard = () => {
             </div>
           ) : (
             <>
-              {/* Mobile Card List (< sm) */}
+              {/**
+               * Mobile Card List View
+               * Handheld cards for recently registered stores.
+               */}
               <div className="block sm:hidden divide-y divide-gray-100 flex-1">
                 {recentShops.map((shop) => (
                   <div key={shop._id} className="p-3.5 space-y-2.5 hover:bg-gray-50/50 transition-colors">
@@ -836,7 +941,10 @@ const AdminDashboard = () => {
                 ))}
               </div>
 
-              {/* Desktop Table View (>= sm) */}
+              {/**
+               * Desktop Table View
+               * Multi-column table showing trade name, owner details, plan tier, and inspection triggers.
+               */}
               <div className="hidden sm:block overflow-x-auto flex-1">
                 <table className="w-full text-left whitespace-nowrap">
                   <thead className="bg-gray-50/80 border-b border-gray-200 font-semibold text-gray-500 uppercase text-[11px] tracking-wider">
@@ -891,7 +999,10 @@ const AdminDashboard = () => {
                 </table>
               </div>
 
-              {/* Bottom Footer */}
+              {/**
+               * Store Card Footer
+               * Displays store count indicator.
+               */}
               <div className="p-3 sm:px-4 bg-gray-50/60 border-t border-gray-200 flex items-center text-xs text-gray-500 font-medium">
                 <span>Showing {recentShops.length} registered {recentShops.length === 1 ? 'store' : 'stores'}</span>
               </div>
@@ -899,7 +1010,10 @@ const AdminDashboard = () => {
           )}
         </div>
 
-        {/* Recent Subscription Invoices Table */}
+        {/**
+         * Recent Subscription Invoices Table Card
+         * Financial transactions list logging incoming merchant subscription payments.
+         */}
         <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-none flex flex-col justify-between h-full">
           <div className="p-4 sm:p-5 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-h-[78px]">
             <div>
@@ -923,7 +1037,10 @@ const AdminDashboard = () => {
             </div>
           ) : (
             <>
-              {/* Mobile Card List (< sm) */}
+              {/**
+               * Mobile Invoice Cards
+               * Handheld cards for subscription invoices.
+               */}
               <div className="block sm:hidden divide-y divide-gray-100 flex-1">
                 {recentInvoices.map((inv) => (
                   <div key={inv._id} className="p-3.5 space-y-2 hover:bg-gray-50/50 transition-colors">
@@ -955,7 +1072,10 @@ const AdminDashboard = () => {
                 ))}
               </div>
 
-              {/* Desktop Table View (>= sm) */}
+              {/**
+               * Desktop Invoices Table
+               * Multi-column table of payment receipts with transaction IDs, amounts, and statuses.
+               */}
               <div className="hidden sm:block overflow-x-auto flex-1">
                 <table className="w-full text-left whitespace-nowrap">
                   <thead className="bg-gray-50/80 border-b border-gray-200 font-semibold text-gray-500 uppercase text-[11px] tracking-wider">
@@ -1003,7 +1123,10 @@ const AdminDashboard = () => {
                 </table>
               </div>
 
-              {/* Bottom Footer */}
+              {/**
+               * Invoice Card Footer
+               * Displays total invoice count indicator.
+               */}
               <div className="p-3 sm:px-4 bg-gray-50/60 border-t border-gray-200 flex items-center text-xs text-gray-500 font-medium">
                 <span>Showing {recentInvoices.length} recent subscription {recentInvoices.length === 1 ? 'receipt' : 'receipts'}</span>
               </div>
@@ -1014,7 +1137,10 @@ const AdminDashboard = () => {
     </>
   )}
 
-      {/* Modals */}
+      {/**
+       * Administrative Management Modals
+       * Popups for merchant store inspection, suspension toggling, plan overrides, and forced logout.
+       */}
       <ShopDetailsModal
         isOpen={!!inspectShop}
         onClose={() => setInspectShop(null)}

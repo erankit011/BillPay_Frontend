@@ -1,3 +1,8 @@
+/**
+ * AI Voice & Natural Language Billing Entry Page
+ * Processes speech and natural Hindi/English input into structured retail invoices and debt records.
+ */
+
 import { useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Mic, Loader2, CheckCircle2, Keyboard } from 'lucide-react';
@@ -9,10 +14,13 @@ import SwirlingLoader from '../components/common/SwirlingLoader';
 import BusinessSetupModal from '../components/common/BusinessSetupModal';
 import toast from 'react-hot-toast';
 
+/**
+ * VoiceBilling Component
+ */
 const VoiceBilling = () => {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const inputMode = searchParams.get('mode') || 'manual'; // 'manual' or 'voice'
+  const inputMode = searchParams.get('mode') || 'manual'; /* 'manual' or 'voice' */
 
   const setInputMode = (value) => {
     setSearchParams(prev => {
@@ -41,7 +49,10 @@ const VoiceBilling = () => {
       staleTime: 5 * 60 * 1000,
   });
   
-  // Form data state for editing parsed data
+  /**
+   * Parsed Data Form State
+   * Holds verified customer name, total amount, intent, and settlement type
+   */
   const [formData, setFormData] = useState({
     customerName: '',
     amount: '',
@@ -99,7 +110,10 @@ const VoiceBilling = () => {
         
         if (event.error === 'network') {
           setTranscript(t('Network error. Switching to manual input...'));
-          // Auto-switch to manual input after 2 seconds
+          /**
+           * Automatic Fallback Switch
+           * Transitions to text mode after 2 seconds on recognition errors
+           */
           setTimeout(() => {
             setInputMode('manual');
             setTranscript('');
@@ -164,7 +178,10 @@ const VoiceBilling = () => {
         setResult(res.data.data);
         setTranscript(res.data.data.transcript || text);
         
-        // Populate form with parsed data
+        /**
+         * Form Pre-population
+         * Maps structured natural language response into interactive form controls
+         */
         if (res.data.data.parsedIntent) {
           const parsed = res.data.data.parsedIntent;
           setFormData({
@@ -219,7 +236,10 @@ const VoiceBilling = () => {
 
     setIsSaving(true);
     try {
-      // Create transaction with the edited data
+      /**
+       * Transaction Record Persistence
+       * Sends finalized credit or cash ledger transaction to server API
+       */
       const response = await api.post('/transactions', {
         customerName: formData.customerName,
         amount: parseFloat(formData.amount),
@@ -230,7 +250,10 @@ const VoiceBilling = () => {
 
       if (response.data.success) {
         toast.success(t('Transaction saved successfully!'));
-        // Reset form
+        /**
+         * State Reset
+         * Restores form and temporary speech transcript to blank defaults
+         */
         setFormData({
           customerName: '',
           amount: '',
@@ -264,7 +287,10 @@ const VoiceBilling = () => {
   return (
     <div className="w-full">
       <div className="max-w-xl mx-auto space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
-        {/* Header */}
+        {/**
+         * Voice Assistant Header
+         * Displays feature title, instruction subtitle, and syntax example
+         */}
         <div className="text-center animate-fade-in">
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Voice Assistant')}</h1>
           <p className="text-xs sm:text-sm font-medium text-gray-600 mt-1 sm:mt-1.5">{t('Record voice or type manually')}</p>
@@ -273,7 +299,10 @@ const VoiceBilling = () => {
           </p>
         </div>
 
-        {/* Mode Toggle - Mobile Optimized */}
+        {/**
+         * Mode Switcher Toggle
+         * Toggles between speech microphone and typed keyboard input
+         */}
         <div className="flex justify-center animate-slide-up" style={{ animationDelay: '100ms' }}>
           <div className="inline-flex bg-white/80 backdrop-blur-md rounded-lg p-1 border border-gray-200 w-full max-w-md">
             <button
@@ -301,17 +330,26 @@ const VoiceBilling = () => {
           </div>
         </div>
 
-        {/* Voice Input Mode */}
+        {/**
+         * Voice Input Mode Container
+         * Interactive speech recognition interface with active mic animation
+         */}
         {inputMode === 'voice' && (
           <div className="bg-gradient-to-br from-[#F5F5F5] via-purple-50 to-white rounded-lg p-6 md:p-8 lg:p-10 text-center flex flex-col items-center justify-center min-h-[400px] md:min-h-[450px] relative overflow-hidden animate-slide-up border border-[#E5E7EB]" style={{ animationDelay: '200ms' }}>
             
 
 
             <div className="relative z-10 flex flex-col items-center w-full space-y-6">
-              {/* Mic Button Wrapper with its own Relative Context */}
+              {/**
+               * Microphone Action Button Wrapper
+               * Centers the action button with relative pulse ring bounds
+               */}
               <div className="relative flex items-center justify-center mt-4 md:mt-8">
                 
-                {/* Premium Animated Rings (Centered exactly on the button) */}
+                {/**
+                 * Animated Audio Rings
+                 * Radiates pulse wave animations during active voice capture
+                 */}
                 {isRecording && (
                   <>
                     <div className="absolute w-[140%] h-[140%] bg-red-400/20 rounded-full animate-ping pointer-events-none" style={{ animationDuration: '2s' }}></div>
@@ -319,7 +357,10 @@ const VoiceBilling = () => {
                   </>
                 )}
 
-                {/* Large Circular Mic Button */}
+                {/**
+                 * Primary Microphone Trigger
+                 * Toggles speech recognition listening and processing states
+                 */}
               <button
                 onClick={isRecording ? stopVoiceRecognition : startVoiceRecognition}
                 disabled={isProcessing}
@@ -337,7 +378,10 @@ const VoiceBilling = () => {
               </button>
             </div>
 
-              {/* Tap to speak text */}
+              {/**
+               * Voice Prompt & Live Speech Feedback
+               * Displays real-time spoken sentence transcription
+               */}
               <div className="h-14 flex flex-col items-center justify-center">
                 <p className="text-base md:text-lg lg:text-xl font-semibold text-gray-900 px-4">
                   {transcript || (isRecording ? t('Listening...') : t('Tap to speak'))}
@@ -347,7 +391,10 @@ const VoiceBilling = () => {
                 </p>
               </div>
 
-              {/* Requirements Box - Orange Theme */}
+              {/**
+               * System Compatibility & Guidance Banner
+               * Details browser microphone permissions and offline fallback advice
+               */}
               <div className={`mt-4 w-full max-w-sm text-left space-y-3 bg-gradient-to-br from-orange-50 to-yellow-50 p-4 md:p-5 rounded-lg border border-orange-200 transition-opacity duration-300 ${(!isRecording && !isProcessing) ? 'opacity-100' : 'opacity-0 pointer-events-none select-none'}`}>
                 <div className="flex items-start gap-2">
                   <div className="mt-0.5 text-orange-500 text-lg flex-shrink-0">⚠️</div>
@@ -369,7 +416,10 @@ const VoiceBilling = () => {
           </div>
         )}
 
-        {/* Manual Input Mode */}
+        {/**
+         * Manual Text Input Mode
+         * Fallback command entry for typed natural language prompts
+         */}
         {inputMode === 'manual' && (
           <form onSubmit={handleManualSubmit} className="bg-white border border-gray-200 rounded-lg p-5 md:p-6 lg:p-8 animate-slide-up" style={{ animationDelay: '200ms' }}>
             <div className="space-y-4 md:space-y-5">
@@ -424,7 +474,10 @@ const VoiceBilling = () => {
           </form>
         )}
 
-        {/* Result Display */}
+        {/**
+         * Recognized Command Summary Card
+         * Quick preview of parsed merchant intent before manual confirmation
+         */}
         {result && result.parsedIntent && !showForm && (
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-5 md:p-6 lg:p-8 border border-green-200 animate-scale-in">
             <div className="flex items-center text-green-700 mb-4 md:mb-5">
@@ -455,7 +508,10 @@ const VoiceBilling = () => {
           </div>
         )}
 
-        {/* Editable Form */}
+        {/**
+         * Transaction Review & Edit Form
+         * Allows merchant to inspect and correct extracted bill details
+         */}
         {showForm && (
           <div className="bg-white border border-gray-200 rounded-lg p-5 md:p-6 lg:p-8 animate-slide-up">
             <div className="flex items-center justify-between mb-5 md:mb-6">
@@ -469,7 +525,10 @@ const VoiceBilling = () => {
             </div>
 
             <form onSubmit={handleFormSubmit} className="space-y-4 md:space-y-5">
-              {/* Customer Name */}
+              {/**
+               * Customer Name Input
+               * Recipient or debtor customer associated with the transaction
+               */}
               <div>
                 <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">
                   👤 {t('Customer Name')}
@@ -485,7 +544,10 @@ const VoiceBilling = () => {
                 />
               </div>
 
-              {/* Amount */}
+              {/**
+               * Transaction Amount Input
+               * Numeric monetary sum in INR
+               */}
               <div>
                 <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">
                   💰 {t('Amount')} (₹)
@@ -503,7 +565,10 @@ const VoiceBilling = () => {
                 />
               </div>
 
-              {/* Transaction Type */}
+              {/**
+               * Intent & Direction Selector
+               * Identifies transaction as credit given (Udhar) or payment received
+               */}
               <div>
                 <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">
                   🎯 {t('Transaction Type')}
@@ -519,7 +584,10 @@ const VoiceBilling = () => {
                 </select>
               </div>
 
-              {/* Payment Mode */}
+              {/**
+               * Payment Method Selector
+               * Specifies payment channel (Cash, UPI, Card, Bank Transfer)
+               */}
               <div>
                 <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">
                   💳 {t('Payment Mode')}
@@ -537,7 +605,10 @@ const VoiceBilling = () => {
                 </select>
               </div>
 
-              {/* Original Command */}
+              {/**
+               * Spoken Voice Command Reference
+               * Retains original raw voice transcript for verification
+               */}
               {transcript && (
                 <div className="bg-[#F5F5F5] rounded-lg p-4 border border-[#D1D5DB]">
                   <p className="text-xs font-semibold text-[#093C5D] mb-1">{t('Original Command:')}</p>
@@ -545,7 +616,10 @@ const VoiceBilling = () => {
                 </div>
               )}
 
-              {/* Action Buttons */}
+              {/**
+               * Form Action Triggers
+               * Cancel button and submit confirmation button
+               */}
               <div className="flex flex-col md:flex-row gap-3 pt-2">
                 <button
                   type="button"
