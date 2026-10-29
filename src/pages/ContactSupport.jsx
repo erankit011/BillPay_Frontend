@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { ChevronLeft, Mail, Phone, MapPin, Send, User, MessageCircle, Tag, Loader2, CheckCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Loader2, CheckCircle, AlertCircle, ChevronDown } from 'lucide-react';
 import toast from 'react-hot-toast';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import { submitPublicSupportTicket, getPublicContactInfo } from '../features/admin/api/adminApi';
@@ -28,6 +28,7 @@ const ContactSupport = () => {
     subject: '',
     message: '',
   });
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [submittedTicket, setSubmittedTicket] = useState(null);
   const [contactInfo, setContactInfo] = useState({
@@ -68,21 +69,86 @@ const ContactSupport = () => {
     }
   }, [user]);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next[name];
+        return next;
+      });
+    }
+  };
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.name || !formData.name.trim()) {
+      newErrors.name = t('Full name is required');
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = t('Name must be at least 2 characters');
+    } else if (formData.name.trim().length > 100) {
+      newErrors.name = t('Name cannot exceed 100 characters');
+    }
+
+    if (!formData.email || !formData.email.trim()) {
+      newErrors.email = t('Email address is required');
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email.trim())) {
+        newErrors.email = t('Please enter a valid email address');
+      }
+    }
+
+    if (formData.phone && formData.phone.trim()) {
+      const phoneClean = formData.phone.trim().replace(/[\s\-]/g, '');
+      const phoneRegex = /^(?:\+?91)?[6-9]\d{9}$/;
+      if (!phoneRegex.test(phoneClean)) {
+        newErrors.phone = t('Please enter a valid 10-digit mobile number');
+      }
+    }
+
+    if (formData.subject && formData.subject.trim() && formData.subject.trim().length < 3) {
+      newErrors.subject = t('Subject must be at least 3 characters');
+    }
+
+    if (!formData.message || !formData.message.trim()) {
+      newErrors.message = t('Message is required');
+    } else if (formData.message.trim().length < 5) {
+      newErrors.message = t('Message must be at least 5 characters');
+    } else if (formData.message.trim().length > 3000) {
+      newErrors.message = t('Message cannot exceed 3000 characters');
+    }
+
+    return Object.keys(newErrors).length > 0 ? newErrors : null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const validationErrors = validate();
+    if (validationErrors) {
+      setErrors(validationErrors);
+      const firstError = Object.values(validationErrors)[0];
+      toast.error(firstError || t('Please correct the errors in the form'));
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await submitPublicSupportTicket(formData);
       setSubmittedTicket(res?.data || { ticketId: 'SUBMITTED' });
       toast.success(t('Message sent successfully!'));
       setFormData({
-        name: '',
-        email: '',
-        phone: '',
+        name: user?.name || '',
+        email: user?.email || '',
+        phone: user?.phone || '',
         category: 'GENERAL',
         subject: '',
         message: '',
       });
+      setErrors({});
     } catch (err) {
       toast.error(err?.response?.data?.message || t('Failed to send message. Please try again.'));
     } finally {
@@ -199,7 +265,7 @@ const ContactSupport = () => {
                   {t('Thank you for reaching out. Your support inquiry has been registered with our team.')}
                 </p>
                 {submittedTicket.ticketId && (
-                  <div className="inline-block bg-white border border-emerald-300 px-4 py-2 rounded-lg text-xs font-mono font-bold text-[#093C5D] tracking-wider shadow-xs">
+                  <div className="inline-block bg-white border border-emerald-300 px-4 py-2 rounded-lg text-xs font-mono font-bold text-[#093C5D] tracking-wider">
                     Ticket Reference: #{submittedTicket.ticketId}
                   </div>
                 )}
@@ -214,70 +280,93 @@ const ContactSupport = () => {
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} noValidate className="space-y-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">{t('Your Name')}</label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                      <User className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <input
-                      type="text"
-                      id="name"
-                      required
-                      value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-shadow"
-                      placeholder={t('Enter your full name')}
-                    />
-                  </div>
+                  <label htmlFor="name" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                    {t('Your Name')} <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className={`block w-full rounded-lg border ${
+                      errors.name
+                        ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                        : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'
+                    } px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                    placeholder={t('Enter your full name')}
+                  />
+                  {errors.name && (
+                    <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{errors.name}</span>
+                    </p>
+                  )}
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">{t('Email Address')}</label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                        <Mail className="h-5 w-5 text-gray-400" />
-                      </div>
-                      <input
-                        type="email"
-                        id="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-shadow"
-                        placeholder={t('Enter your email')}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">{t('Phone Number')} <span className="text-gray-400 text-xs font-normal">({t('Optional')})</span></label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                        <Phone className="h-5 w-5 text-gray-400" />
-                      </div>
-                      <input
-                        type="tel"
-                        id="phone"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-shadow"
-                        placeholder="+91 98765 43210"
-                      />
-                    </div>
-                  </div>
+                <div>
+                  <label htmlFor="email" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                    {t('Email Address')} <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={`block w-full rounded-lg border ${
+                      errors.email
+                        ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                        : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'
+                    } px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                    placeholder={t('Enter your email address')}
+                  />
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{errors.email}</span>
+                    </p>
+                  )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">{t('Topic / Category')}</label>
+                <div>
+                  <label htmlFor="phone" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                    {t('Phone Number')}
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className={`block w-full rounded-lg border ${
+                      errors.phone
+                        ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                        : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'
+                    } px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                    placeholder={t('Enter phone number')}
+                  />
+                  {errors.phone && (
+                    <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{errors.phone}</span>
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="category" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                    {t('Topic / Category')} <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
                     <select
                       id="category"
+                      name="category"
                       value={formData.category}
-                      onChange={(e) => setFormData({...formData, category: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-shadow text-sm"
+                      onChange={handleChange}
+                      className="block w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] cursor-pointer appearance-none pr-9"
                     >
                       <option value="GENERAL">{t('General Inquiry')}</option>
                       <option value="BILLING">{t('Billing & Subscriptions')}</option>
@@ -286,47 +375,70 @@ const ContactSupport = () => {
                       <option value="FEATURE_REQUEST">{t('Feature Suggestion')}</option>
                       <option value="BUG_REPORT">{t('Report a Bug')}</option>
                     </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">{t('Subject')}</label>
-                    <input
-                      type="text"
-                      id="subject"
-                      value={formData.subject}
-                      onChange={(e) => setFormData({...formData, subject: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-shadow text-sm"
-                      placeholder={t('Brief summary of issue')}
-                    />
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500">
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">{t('Message')}</label>
-                  <div className="relative">
-                    <div className="absolute top-2.5 left-0 pl-3.5 pointer-events-none">
-                      <MessageCircle className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <textarea
-                      id="message"
-                      required
-                      rows={4}
-                      value={formData.message}
-                      onChange={(e) => setFormData({...formData, message: e.target.value})}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none transition-shadow resize-none"
-                      placeholder={t('How can we help you? Describe in detail...')}
-                    ></textarea>
-                  </div>
+                  <label htmlFor="subject" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                    {t('Subject')}
+                  </label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    className={`block w-full rounded-lg border ${
+                      errors.subject
+                        ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                        : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'
+                    } px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                    placeholder={t('Enter subject')}
+                  />
+                  {errors.subject && (
+                    <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{errors.subject}</span>
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                    {t('Message')} <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={4}
+                    value={formData.message}
+                    onChange={handleChange}
+                    className={`block w-full rounded-lg border ${
+                      errors.message
+                        ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                        : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'
+                    } px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none resize-none`}
+                    placeholder={t('Enter message')}
+                  />
+                  {errors.message && (
+                    <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{errors.message}</span>
+                    </p>
+                  )}
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full cursor-pointer h-12 bg-[#093C5D] text-white rounded-lg font-semibold text-base hover:bg-[#072C44] transition-colors flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
+                  className="w-full cursor-pointer py-2.5 sm:py-3 bg-[#093C5D] text-white rounded-lg font-semibold text-sm sm:text-base hover:bg-[#072C44] transition-colors flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
                       <span>{t('Sending inquiry...')}</span>
                     </>
                   ) : (
