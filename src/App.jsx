@@ -1,3 +1,9 @@
+/**
+ * Primary Application Shell & Context Provider Root
+ * Orchestrates Redux store hydration, TanStack Query caching policies,
+ * global routing context, authentication lifecycle, PWA lifecycle, and toast notifications.
+ */
+
 import { useEffect, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
@@ -12,19 +18,34 @@ import SwirlingLoader from './components/common/SwirlingLoader';
 import { Toaster } from 'react-hot-toast';
 import { PWAProvider, UpdatePromptModal } from './features/pwa';
 
+/**
+ * Global TanStack Query Configuration
+ * Establishes caching intervals, garbage collection cycles, and background refetch behavior.
+ */
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
       retry: 1,
-      // Caching time: 1 minute (Data refresh background me tabhi hoga jab 1 min ho chuka ho)
+      /**
+       * Fresh Data Window (1 Minute)
+       * Background refetch initiates only after cache lifetime exceeds one minute
+       */
       staleTime: 1 * 60 * 1000,
-      // Garbage Collection Time: 5 minutes (Memory se data tab hatega jab 5 min tak page use na ho)
+      /**
+       * Garbage Collection Cycle (5 Minutes)
+       * Evicts unmounted and inactive query cache from browser memory
+       */
       gcTime: 5 * 60 * 1000, 
     },
   },
 });
 
+/**
+ * Authentication Initializer Wrapper
+ * Verifies active session state via httpOnly cookies on initial boot,
+ * skips redundant queries on public landing pages, and handles connection downtime.
+ */
 const AuthInitializer = ({ children }) => {
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.auth);
@@ -32,7 +53,10 @@ const AuthInitializer = ({ children }) => {
 
   useEffect(() => {
     const initAuth = async () => {
-      // Only skip network call on public pages when not logged in
+      /**
+       * Public Route Bypass Check
+       * Prevents unnecessary auth verification requests for unauthenticated visitors
+       */
       const isPublicPath = () => {
         const path = window.location.pathname;
         return (
@@ -57,7 +81,10 @@ const AuthInitializer = ({ children }) => {
         return;
       }
 
-      // Hydrate authenticated user via secure httpOnly cookies
+      /**
+       * Session Verification Request
+       * Hydrates authenticated user state via secure credentials
+       */
       try {
         const res = await api.get('/auth/me');
         if (res.data.success) {
@@ -65,7 +92,10 @@ const AuthInitializer = ({ children }) => {
         }
       } catch (error) {
         if (!error.response) {
-          // Network error or Server Down
+          /**
+           * Network Connection Failure Handler
+           * Detects offline status or unreachable API server
+           */
           setIsNetworkError(true);
           dispatch(setLoading(false));
         } else {
@@ -76,10 +106,16 @@ const AuthInitializer = ({ children }) => {
     initAuth();
   }, [dispatch]);
 
+  /**
+   * Network Offline Fallback Screen
+   */
   if (isNetworkError) {
     return <ServerUnreachable />;
   }
 
+  /**
+   * Initial Session Hydration Loader
+   */
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-gray-50">
@@ -91,6 +127,9 @@ const AuthInitializer = ({ children }) => {
   return children;
 };
 
+/**
+ * Root Application Component Hierarchy
+ */
 const App = () => {
   return (
     <Provider store={store}>
@@ -98,6 +137,10 @@ const App = () => {
         <BrowserRouter>
           <PWAProvider>
             <AuthInitializer>
+              {/**
+               * Universal Notification Toast Container
+               * Global toast overlay for mutations, feedback notifications, and network alerts
+               */}
               <Toaster 
                 position="bottom-right" 
                 toastOptions={{
@@ -110,9 +153,9 @@ const App = () => {
                   },
                   success: {
                     style: {
-                      border: '1px solid #bbf7d0', // green-200
-                      background: '#f0fdf4',       // green-50
-                      color: '#15803d',            // green-700
+                      border: '1px solid #bbf7d0',
+                      background: '#f0fdf4',
+                      color: '#15803d',
                     },
                     iconTheme: {
                       primary: '#16a34a',
@@ -121,9 +164,9 @@ const App = () => {
                   },
                   error: {
                     style: {
-                      border: '1px solid #fecaca', // red-200
-                      background: '#fef2f2',       // red-50
-                      color: '#b91c1c',            // red-700
+                      border: '1px solid #fecaca',
+                      background: '#fef2f2',
+                      color: '#b91c1c',
                     },
                     iconTheme: {
                       primary: '#dc2626',
@@ -132,7 +175,15 @@ const App = () => {
                   }
                 }}
               />
+              {/**
+               * PWA Service Worker Update Prompt Dialog
+               * Notifies user when a new application version has been pre-cached
+               */}
               <UpdatePromptModal />
+              {/**
+               * Dynamic Application Routes
+               * Lazy-loaded route definitions with suspense boundaries
+               */}
               <AppRoutes />
             </AuthInitializer>
           </PWAProvider>

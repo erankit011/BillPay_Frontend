@@ -1,3 +1,8 @@
+/**
+ * Official SaaS Subscription Tax Receipt Page
+ * Renders verified subscription payment receipts with Razorpay payment references and GST breakdowns.
+ */
+
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -7,6 +12,9 @@ import { Printer, ArrowLeft, CheckCircle } from 'lucide-react';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import { formatShortDate } from '../utils/dateUtils';
 
+/**
+ * PlatformReceipt Component
+ */
 const PlatformReceipt = () => {
   const { id } = useParams();
   const { t } = useTranslation();
@@ -63,7 +71,10 @@ const PlatformReceipt = () => {
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4 font-sans print:bg-white print:py-0 print:px-0">
       <div className="max-w-3xl mx-auto">
-        {/* Actions (Hidden on Print) */}
+        {/**
+         * Navigation & Printing Controls
+         * Back button and direct print / cloud PDF download triggers (hidden during print).
+         */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 print:hidden">
           <Link to={backLink} className="flex w-full sm:w-auto items-center justify-center gap-2 text-gray-600 hover:text-gray-900 transition-colors font-medium text-sm bg-white px-4 py-2.5 rounded-lg border border-gray-200">
             <ArrowLeft className="w-4 h-4" />
@@ -92,10 +103,16 @@ const PlatformReceipt = () => {
           </div>
         </div>
 
-        {/* Invoice Paper */}
+        {/**
+         * Printable Invoice Paper Canvas
+         * High-fidelity structured invoice document matching formal tax receipt layout.
+         */}
         <div className="bg-white border border-gray-200 print:border-none">
           
-          {/* Header */}
+          {/**
+           * Invoice Document Header
+           * Platform corporate branding banner and transaction reference number.
+           */}
           <div className="bg-[#093C5D] text-white p-6 sm:p-10 flex flex-col sm:flex-row justify-between items-center gap-6 text-center sm:text-left">
             <div className="w-full border-b border-white/10 pb-6 sm:border-b-0 sm:pb-0">
               <h1 className="text-3xl font-semibold tracking-tight mb-1">UdharPay</h1>
@@ -108,7 +125,10 @@ const PlatformReceipt = () => {
           </div>
 
           <div className="p-6 sm:p-10">
-            {/* Meta Info */}
+            {/**
+             * Invoice Metadata Strip
+             * Generation timestamp and verified payment capture status badge.
+             */}
             <div className="flex flex-col sm:flex-row justify-between gap-6 pb-8 border-b border-gray-100 text-center sm:text-left">
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{t('Invoice Date')}</p>
@@ -123,7 +143,10 @@ const PlatformReceipt = () => {
               </div>
             </div>
 
-            {/* Addresses */}
+            {/**
+             * Merchant & Issuer Addresses
+             * Billed merchant profile information alongside registered company corporate details.
+             */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 py-8 border-b border-gray-100 text-center sm:text-left">
               <div className="border-b border-gray-100 pb-8 sm:pb-0 sm:border-none">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">{t('Billed To')}</p>
@@ -147,7 +170,10 @@ const PlatformReceipt = () => {
               </div>
             </div>
 
-            {/* Line Items */}
+            {/**
+             * Subscription Line Items Table
+             * Plan name, billing period duration, and itemized fee total.
+             */}
             <div className="py-8">
               <table className="w-full text-left">
                 <thead>
@@ -172,7 +198,10 @@ const PlatformReceipt = () => {
               </table>
             </div>
 
-            {/* Totals */}
+            {/**
+             * Financial Summary Block
+             * Subtotal, tax breakdown, and total captured payment amount.
+             */}
             <div className="flex justify-end pt-4">
               <div className="w-full sm:w-1/2 md:w-1/3">
                 <div className="flex justify-between py-2 text-sm text-gray-600">
@@ -190,7 +219,10 @@ const PlatformReceipt = () => {
               </div>
             </div>
 
-            {/* Footer */}
+            {/**
+             * Legal Disclaimer Footer
+             * Computer-generated document certification and customer acknowledgment.
+             */}
             <div className="mt-12 pt-8 border-t border-gray-100 text-center text-xs text-gray-400">
               <p>{t('This is a computer-generated invoice and requires no signature.')}</p>
               <p className="mt-1">Thank you for choosing UdharPay.</p>

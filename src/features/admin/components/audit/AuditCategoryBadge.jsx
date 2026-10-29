@@ -1,6 +1,14 @@
+/**
+ * Audit Log Category Visual Badge
+ * Maps administrative action categories to distinct icon badges and color accents.
+ */
+
 import React from 'react';
 import { Store, Sliders, Megaphone, Tag, Headphones, Shield, FileText } from 'lucide-react';
 
+/**
+ * Category Visual Configurations
+ */
 const CATEGORY_CONFIG = {
   MERCHANT_MGMT: {
     label: 'Merchant Mgmt',

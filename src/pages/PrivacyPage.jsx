@@ -1,20 +1,33 @@
+/**
+ * Public Privacy Policy & Data Protection Statement Page
+ */
+
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft } from 'lucide-react';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import { formatShortDate } from '../utils/dateUtils';
 
+/**
+ * PrivacyPage Component
+ */
 const PrivacyPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] font-sans">
-      {/* Header */}
+      {/**
+       * Public Navigation Header
+       * Top navbar with brand logo, language switcher, and sign-in action button.
+       */}
       <header className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
         <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
           <div className="flex items-center justify-between h-14 sm:h-16 w-full">
-            {/* Logo & Back */}
+            {/**
+             * Brand Logo & Home Link
+             * Direct route trigger to homepage.
+             */}
             <div className="flex items-center gap-4">
 
               <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
@@ -22,7 +35,10 @@ const PrivacyPage = () => {
               </div>
             </div>
 
-            {/* Right Side */}
+            {/**
+             * Right Navigation Controls
+             * Language selector and authentication link.
+             */}
             <div className="flex items-center gap-3 sm:gap-4 shrink-0">
               <LanguageSwitcher variant="default" />
               <button
@@ -36,7 +52,10 @@ const PrivacyPage = () => {
         </div>
       </header>
 
-      {/* Main Content */}
+      {/**
+       * Privacy Policy Content Container
+       * Formatted legal document outlining data collection, processing, and security practices.
+       */}
       <main className="pt-24 sm:pt-28 pb-12 sm:pb-16 lg:pb-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
         <div className="bg-white rounded-2xl p-6 sm:p-8 md:p-12 transition-colors border border-gray-200 hover:border-[#093C5D]/30">
           <h1 className="text-3xl sm:text-4xl tracking-tight font-semibold text-gray-900 mb-2">{t('Privacy Policy')}</h1>
@@ -79,7 +98,10 @@ const PrivacyPage = () => {
         </div>
       </main>
 
-      {/* Footer */}
+      {/**
+       * Public Footer Section
+       * Links to legal agreements, developer credentials, and copyright information.
+       */}
       <footer className="bg-white border-t border-gray-200 py-8 md:py-12 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-5 md:gap-6">

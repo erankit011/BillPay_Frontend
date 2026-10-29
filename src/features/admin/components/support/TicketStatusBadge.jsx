@@ -1,5 +1,13 @@
+/**
+ * Support Ticket Status Badge
+ * Visual status pill (Open, In Progress, Resolved, Closed) with colored indicators.
+ */
+
 import React from 'react';
 
+/**
+ * Ticket Status Styling Map
+ */
 const STATUS_CONFIG = {
   OPEN: {
     label: 'Open',

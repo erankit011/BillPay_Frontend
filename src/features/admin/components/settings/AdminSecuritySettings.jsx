@@ -1,9 +1,17 @@
+/**
+ * Administrator Security & Password Management Form
+ * Handles master password rotation with confirmation matching, complexity enforcement, and session re-authentication.
+ */
+
 import React, { useState } from 'react';
 import { Lock, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import api from '../../../../api/axios';
 import toast from 'react-hot-toast';
 
+/**
+ * AdminSecuritySettings Component
+ */
 const AdminSecuritySettings = () => {
   const { t } = useTranslation();
 
@@ -59,7 +67,10 @@ const AdminSecuritySettings = () => {
 
   return (
     <div className="space-y-6 md:space-y-8">
-      {/* ── Change Admin Password Card ── */}
+      {/**
+       * Change Admin Password Card Section
+       * Form card for rotating administrative credentials securely.
+       */}
       <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
         <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
           <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Change Admin Password')}</h2>
@@ -68,7 +79,10 @@ const AdminSecuritySettings = () => {
 
         <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
           <form onSubmit={handlePasswordSubmit} className="max-w-md space-y-4">
-            {/* Current Password */}
+            {/**
+             * Current Password Field
+             * Validates active credential authenticity before allowing changes.
+             */}
             <div>
               <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
                 {t('Current Password')} <span className="text-red-500">*</span>
@@ -93,7 +107,10 @@ const AdminSecuritySettings = () => {
               </div>
             </div>
 
-            {/* New Password */}
+            {/**
+             * New Password Field
+             * Captures new master credential meeting minimum complexity rules.
+             */}
             <div>
               <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
                 {t('New Password')} <span className="text-red-500">*</span>
@@ -118,7 +135,10 @@ const AdminSecuritySettings = () => {
               </div>
             </div>
 
-            {/* Confirm New Password */}
+            {/**
+             * Confirm New Password Field
+             * Verifies match consistency to prevent accidental typos.
+             */}
             <div>
               <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
                 {t('Confirm New Password')} <span className="text-red-500">*</span>

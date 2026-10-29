@@ -137,7 +137,10 @@ const VerifyOTP = ({ type = 'registration' }) => {
   return (
     <div className="w-full animate-fade-in text-center lg:text-left">
 
-      {/* Header */}
+      {/**
+       * Verification Header
+       * Screen title and masked user recipient email display.
+       */}
       <div className="mb-5 sm:mb-6">
         <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 mb-1 tracking-tight">
           {t('Verify Your Identity')}
@@ -152,7 +155,10 @@ const VerifyOTP = ({ type = 'registration' }) => {
 
       <form onSubmit={handleVerify} className="space-y-3 sm:space-y-4">
         
-        {/* OTP Input */}
+        {/**
+         * Numeric Code Input
+         * Single unified 6-digit PIN input with icon and validation error display.
+         */}
         <div>
           <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 text-left">
             {t('Verification Code')}
@@ -184,7 +190,10 @@ const VerifyOTP = ({ type = 'registration' }) => {
           )}
         </div>
 
-        {/* Timer / Resend Bar */}
+        {/**
+         * Countdown Timer & Resend Trigger
+         * Circular countdown visualizer with automated resend activation on expiry.
+         */}
         <div className="flex items-center justify-between py-2 px-3 bg-[#F5F5F5] rounded-lg border border-gray-200">
           {timer > 0 ? (
             <>
@@ -238,7 +247,10 @@ const VerifyOTP = ({ type = 'registration' }) => {
           )}
         </div>
 
-        {/* Verify Button */}
+        {/**
+         * Verification Action Button
+         * Submits credentials for account authentication or email verification.
+         */}
         <button
           type="submit"
           disabled={isLoading || otpValue.length !== 6}
@@ -258,7 +270,10 @@ const VerifyOTP = ({ type = 'registration' }) => {
         </button>
       </form>
 
-      {/* Support Section */}
+      {/**
+       * Helpdesk Support Shortcut
+       * Navigation button for reaching support when experiencing verification issues.
+       */}
       <div className="mt-8 pt-6 border-t border-gray-200 flex flex-col items-center">
         <p className="text-xs sm:text-sm text-gray-500 font-medium mb-3">
           {t('Need help accessing your account?')}

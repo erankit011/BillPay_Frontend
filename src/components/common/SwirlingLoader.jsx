@@ -1,5 +1,13 @@
+/**
+ * Smooth SVG Swirling Loader Indicator
+ * Provides high-performance hardware-accelerated CSS spinner animation.
+ */
+
 import React from 'react';
 
+/**
+ * SwirlingLoader Component
+ */
 export default function SwirlingLoader({ className = "w-12 h-12 text-[#093C5D]", strokeWidth = 50, ...props }) {
   return (
     <>

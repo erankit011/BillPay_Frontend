@@ -1,3 +1,8 @@
+/**
+ * Product Inventory Creation & Editing Modal
+ * Yup-validated inventory form with reactive stock checks, numeric casting, and modal focus management.
+ */
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -5,12 +10,18 @@ import * as yup from 'yup';
 import { X, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Product Validation Schema
+ */
 const productSchema = yup.object({
   name: yup.string().required('Name is required'),
   price: yup.number().transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value).min(0, 'Price cannot be negative').required('Price is required'),
   stock: yup.number().transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value).min(0, 'Stock cannot be negative').required('Stock is required'),
 });
 
+/**
+ * ProductFormModal Component
+ */
 const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending, serverError }) => {
   const { t } = useTranslation();
 
@@ -56,14 +67,22 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
 
   return (
     <div className="fixed inset-0 z-50">
-      {/* Backdrop */}
+      {/**
+       * Backdrop Dimmer Overlay
+       * Semi-transparent dark blur background capturing dismiss clicks
+       */}
       <div className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" onClick={handleClose} />
 
-      {/* Mobile: bottom sheet | sm+: centered modal */}
+      {/**
+       * Responsive Dialog Frame
+       * Bottom sheet on mobile devices, centered window on desktop
+       */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-lg flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-none">
 
-          {/* Drag handle — mobile only */}
+          {/**
+           * Mobile Sheet Drag Indicator
+           */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
           </div>

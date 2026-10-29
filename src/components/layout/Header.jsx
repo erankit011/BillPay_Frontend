@@ -12,7 +12,10 @@ import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../LanguageSwitcher';
 import NotificationsPopover from './NotificationsPopover';
 
-// HeroUI-style Sidebar Rail Icon
+/**
+ * Sidebar Rail Collapse Icon
+ * Minimalist geometric glyph indicating sidebar collapse state
+ */
 const SidebarRailIcon = ({ className = "w-4 h-4", strokeWidth = 1.75 }) => (
   <svg
     className={className}
@@ -65,9 +68,15 @@ const Header = ({
       style={{ top: 'var(--top-announcement-height, 0px)' }}
     >
       <header className="h-14 bg-white/95 backdrop-blur-md border-b border-gray-100 flex items-center justify-between px-3 sm:px-6 shrink-0">
-        {/* Left Side: Sidebar Trigger + Vertical Divider + Breadcrumb */}
+        {/**
+         * Navigation Trigger & Breadcrumb Trail
+         * Handles desktop rail toggle, mobile drawer trigger, and active page breadcrumbs
+         */}
         <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-          {/* Desktop: Rail Collapse Trigger Button */}
+          {/**
+           * Desktop Rail Collapse Trigger
+           * Toggles sidebar between expanded mode and compact rail view
+           */}
           <button
             type="button"
             onClick={toggleSidebarCollapse}
@@ -78,7 +87,10 @@ const Header = ({
             <SidebarRailIcon className="w-[18px] h-[18px] text-gray-600" strokeWidth={1.75} />
           </button>
 
-          {/* Mobile / Tablet: Hamburger Menu Button */}
+          {/**
+           * Mobile Menu Trigger
+           * Opens responsive sliding navigation drawer on touch viewports
+           */}
           <button
             type="button"
             onClick={() => setMobileDrawerOpen(true)}
@@ -88,10 +100,12 @@ const Header = ({
             <Menu className="w-5 h-5 text-gray-600" strokeWidth={1.75} />
           </button>
 
-          {/* Subtle Vertical Divider */}
           <div className="hidden lg:block w-px h-4 bg-gray-200 shrink-0 mx-0.5" aria-hidden="true" />
 
-          {/* Breadcrumb Trail */}
+          {/**
+           * Contextual Breadcrumb Indicator
+           * Displays active route icon and human-readable page name
+           */}
           <div aria-label="Breadcrumb" className="flex items-center gap-2 min-w-0 select-none">
             <span className="inline-flex items-center justify-center text-gray-600 shrink-0">
               <BreadcrumbIcon className="w-4 h-4 text-gray-600" strokeWidth={1.75} />
@@ -105,12 +119,17 @@ const Header = ({
           </div>
         </div>
 
-        {/* Right Side: Language Switcher, Search, Notifications, Separator, Avatar */}
+        {/**
+         * Quick Actions Toolbar
+         * Houses language switcher, command palette trigger, notifications, and profile menu
+         */}
         <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-          {/* Language Switcher */}
           <LanguageSwitcher variant="compact" />
 
-          {/* Quick Search Trigger (Ctrl+K) */}
+          {/**
+           * Spotlight Search Trigger
+           * Opens global command palette search modal (Ctrl+K)
+           */}
           <button
             type="button"
             onClick={onOpenSearch}
@@ -121,7 +140,10 @@ const Header = ({
             <Search className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-gray-600" strokeWidth={1.75} />
           </button>
 
-          {/* Notification Bell & Popover */}
+          {/**
+           * Notifications Dropdown Trigger
+           * Displays real-time tenant alerts and system announcements
+           */}
           <NotificationsPopover
             notificationCount={notificationCount}
             notifications={notifications}
@@ -133,10 +155,12 @@ const Header = ({
             menuRef={notificationMenuRef}
           />
 
-          {/* Vertical Separator */}
           <div className="h-4 sm:h-5 w-px bg-gray-200 mx-1 sm:mx-1.5 self-center shrink-0" />
 
-          {/* User Avatar & Floating Popover Menu */}
+          {/**
+           * Merchant Profile Menu Trigger
+           * Shows merchant avatar with flyout menu for profile, billing, and logout
+           */}
           <div className="relative flex items-center justify-center shrink-0" ref={profileMenuRef}>
             <button
               type="button"
@@ -163,7 +187,10 @@ const Header = ({
               )}
             </button>
 
-            {/* Profile Dropdown Menu */}
+            {/**
+             * Profile Flyout Context Menu
+             * Links to profile settings, subscription tier, and sign-out action
+             */}
             {profileDropdownOpen && (
               <div className="absolute right-0 top-11 w-48 sm:w-52 bg-white border border-gray-100 shadow-xl shadow-gray-200/70 rounded-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
                 <div className="px-3 py-2 border-b border-gray-100 mb-1 flex items-center gap-2.5">

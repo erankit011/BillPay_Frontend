@@ -12,7 +12,10 @@ const BusinessSetupModal = ({ isOpen, onClose }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  // Strictly lock background body and html scroll when modal is open
+  /**
+   * Body Scroll Lock Controller
+   * Freezes document scrolling when modal dialog is active
+   */
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -37,13 +40,19 @@ const BusinessSetupModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50">
-      {/* Backdrop */}
+      {/**
+       * Backdrop Dimmer Overlay
+       * Semi-transparent dark blur background capturing dismiss clicks
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
         onClick={onClose}
       />
 
-      {/* Mobile: bottom sheet | sm+: centered modal */}
+      {/**
+       * Responsive Dialog Container
+       * Positions as bottom sheet on mobile viewports and centered modal on desktop
+       */}
       <div 
         className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50"
         onClick={(e) => {
@@ -52,12 +61,17 @@ const BusinessSetupModal = ({ isOpen, onClose }) => {
       >
         <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-lg flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden shadow-none">
           
-          {/* Drag handle for mobile */}
+          {/**
+           * Mobile Sheet Drag Indicator
+           */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-white">
             <div className="w-10 h-1 bg-gray-200 rounded-full" />
           </div>
 
-          {/* Header */}
+          {/**
+           * Dialog Header
+           * Displays business setup title and dismissal action button
+           */}
           <div className="flex items-center justify-between px-5 md:px-6 py-4 md:py-5 border-b border-gray-100 bg-white flex-shrink-0">
             <h3 className="text-base sm:text-lg font-semibold text-gray-900 flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#093C5D] border border-blue-100 flex items-center justify-center shrink-0 shadow-none">
@@ -75,16 +89,24 @@ const BusinessSetupModal = ({ isOpen, onClose }) => {
             </button>
           </div>
 
-          {/* Body */}
+          {/**
+           * Dialog Content Body
+           * Describes prerequisites and benefits of completing business profile
+           */}
           <div className="p-5 md:p-6 text-left space-y-4 sm:space-y-5 overflow-y-auto flex-1">
             <p className="text-xs sm:text-sm font-medium text-gray-600 leading-relaxed">
               {t('Before creating your first bill, please set up your shop profile so your invoices have proper business identification and branding.')}
             </p>
 
-            {/* Feature Highlights Card (No Shadow, clean border) */}
+            {/**
+             * Feature Matrix Card
+             * Outlines core merchant capabilities unlocked upon setup completion
+             */}
             <div className="bg-gray-50/80 rounded-lg p-3.5 sm:p-4 border border-gray-200 space-y-3.5 shadow-none">
               
-              {/* Item 1: Shop details on receipts */}
+              {/**
+               * Feature Item 1: Invoice Header Branding
+               */}
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-lg bg-white border border-gray-200 flex items-center justify-center shrink-0 mt-0.5 shadow-none">
                   <Receipt className="w-4 h-4 text-[#093C5D]" />
@@ -99,7 +121,9 @@ const BusinessSetupModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              {/* Item 2: Custom payment QR */}
+              {/**
+               * Feature Item 2: Dynamic UPI QR Generation
+               */}
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-lg bg-white border border-gray-200 flex items-center justify-center shrink-0 mt-0.5 shadow-none">
                   <QrCode className="w-4 h-4 text-[#093C5D]" />
@@ -114,7 +138,9 @@ const BusinessSetupModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              {/* Item 3: Quick 1-minute setup */}
+              {/**
+               * Feature Item 3: Streamlined Onboarding
+               */}
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-lg bg-white border border-gray-200 flex items-center justify-center shrink-0 mt-0.5 shadow-none">
                   <Clock className="w-4 h-4 text-emerald-600" />
@@ -131,7 +157,10 @@ const BusinessSetupModal = ({ isOpen, onClose }) => {
 
             </div>
 
-            {/* Action Buttons */}
+            {/**
+             * Modal Navigation Actions
+             * Offers option to defer setup or proceed to configuration wizard
+             */}
             <div className="flex flex-col-reverse sm:flex-row gap-2.5 sm:gap-3 pt-2">
               <button
                 type="button"

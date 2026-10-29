@@ -1,10 +1,17 @@
+/**
+ * Product Specification & Inventory Audit Modal
+ * Displays product price, stock availability badge, valuation totals, and creation timestamp.
+ */
+
 import React, { useEffect } from 'react';
 import { X, Package, Clock, IndianRupee, Wallet } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/dateUtils';
 
-// Product icon/emoji mapping
+/**
+ * Product icon/emoji category resolver
+ */
 const getProductIcon = (name) => {
   const nameLower = name.toLowerCase();
   if (nameLower.includes('atta') || nameLower.includes('flour')) return '🌾';
@@ -22,7 +29,10 @@ const getProductIcon = (name) => {
 const ProductViewModal = ({ isOpen, onClose, product }) => {
   const { t } = useTranslation();
 
-  // Prevent background scrolling when modal is open
+  /**
+   * Scroll Lock Effect
+   * Prevents background document scrolling when the modal view is active.
+   */
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -50,22 +60,34 @@ const ProductViewModal = ({ isOpen, onClose, product }) => {
 
   return (
     <div className="fixed inset-0 z-50">
-      {/* Backdrop */}
+      {/**
+       * Backdrop Overlay
+       * Darkened semi-transparent overlay closing modal on backdrop click.
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
         onClick={onClose}
       />
 
-      {/* Mobile: bottom sheet | sm+: centered modal */}
+      {/**
+       * Modal Container
+       * Positions bottom sheet on mobile viewports and centered modal on desktop.
+       */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
           
-          {/* Drag handle — mobile only */}
+          {/**
+           * Drag Handle Indicator
+           * Visual drag pill handle rendered exclusively on mobile devices.
+           */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
           </div>
 
-          {/* Header */}
+          {/**
+           * Modal Header
+           * Title banner with product details and modal dismiss action button.
+           */}
           <div className="flex items-center justify-between px-5 md:px-6 py-4 md:py-5 border-b border-gray-100 flex-shrink-0 bg-white">
             <h3 className="text-lg md:text-xl font-semibold text-gray-900">
               {t('Product Details')}
@@ -78,7 +100,10 @@ const ProductViewModal = ({ isOpen, onClose, product }) => {
             </button>
           </div>
 
-          {/* Body */}
+          {/**
+           * Modal Content Body
+           * Scrollable area detailing product icon, title, timestamp, and metrics.
+           */}
           <div className="p-4 md:p-5 overflow-y-auto flex-1 bg-white">
             <div className="flex flex-col items-center mb-4 sm:mb-5">
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full p-[3px] border border-gray-200 bg-white mb-3 flex-shrink-0">
@@ -94,7 +119,10 @@ const ProductViewModal = ({ isOpen, onClose, product }) => {
             </div>
 
             <div className="space-y-3 sm:space-y-4">
-              {/* Product Info */}
+              {/**
+               * Product Information Breakdown
+               * Structured listing of price, stock quantity units, and total inventory value.
+               */}
               <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <div className="divide-y divide-gray-100">
                   <div className="flex items-center px-3.5 py-3 sm:px-4 sm:py-3.5">

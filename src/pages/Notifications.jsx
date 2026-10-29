@@ -1,3 +1,8 @@
+/**
+ * Merchant Notifications Center Page
+ * Paginated infinite-scroll activity feed of billing alerts, customer udhar events, and admin broadcasts.
+ */
+
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Bell, Check, CheckCheck, Loader2 } from 'lucide-react';
 import api from '../api/axios';
@@ -6,6 +11,9 @@ import LoadMoreButton from '../components/common/LoadMoreButton';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import { formatRelativeTime } from '../utils/dateUtils';
 
+/**
+ * Notifications Component
+ */
 const Notifications = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -24,9 +32,12 @@ const Notifications = () => {
       return res.data.data;
     },
     getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
-    // Explicitly defining Garbage Collection and Caching to show how it works
-    staleTime: 1 * 60 * 1000, // Data is fresh for 1 min
-    gcTime: 5 * 60 * 1000,   // Garbage collect (delete from memory) if unused for 5 mins
+    /**
+     * Stale Time & Garbage Collection
+     * Keeps notification feed fresh for 1 min and caches historical items for 5 mins in memory.
+     */
+    staleTime: 1 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
   });
 
   const notifications = data?.pages?.flatMap(page => page.data || []) || [];
@@ -96,7 +107,10 @@ const Notifications = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
-      {/* Header */}
+      {/**
+       * Notifications Page Header
+       * Summary badge showing unread notification counter and mark-all-read trigger.
+       */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 flex items-center gap-2">
@@ -127,7 +141,10 @@ const Notifications = () => {
         )}
       </div>
 
-      {/* Notifications List */}
+      {/**
+       * Notifications Stream
+       * Paginated list of user notifications, status indicators, and category tags.
+       */}
       <div className="space-y-3 md:space-y-4">
         {isLoading ? (
           <div className="bg-white rounded-xl p-8 md:p-10 lg:p-12 text-center border border-gray-200 flex justify-center">
@@ -158,12 +175,18 @@ const Notifications = () => {
                 style={{ animationDelay: `${index * 40}ms` }}
               >
                 <div className="flex items-start gap-3 md:gap-4">
-                  {/* Icon */}
+                  {/**
+                   * Notification Category Icon
+                   * Type-specific iconography for reminders, bills, payments, and admin alerts.
+                   */}
                   <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-lg md:text-xl border border-gray-200">
                     {getNotificationIcon(notification.type)}
                   </div>
 
-                  {/* Content */}
+                  {/**
+                   * Notification Body & Metadata
+                   * Notification headline, description text, priority tag, and relative timestamp.
+                   */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2 mb-1 md:mb-1.5">
                       <h3 className={`text-sm md:text-base font-semibold leading-snug ${!notification.isRead ? 'text-gray-900' : 'text-gray-700'
@@ -206,7 +229,10 @@ const Notifications = () => {
                 </div>
               </div>
             ))}
-            {/* Load More Button */}
+            {/**
+             * Pagination Load More Trigger
+             * Incremental page fetch button showing loaded and total record count.
+             */}
             <LoadMoreButton
               hasNextPage={hasNextPage}
               isFetchingNextPage={isFetchingNextPage}

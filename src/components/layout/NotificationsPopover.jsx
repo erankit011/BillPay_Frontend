@@ -20,7 +20,10 @@ const NotificationsPopover = ({
 
   return (
     <div className="relative flex items-center justify-center" ref={menuRef}>
-      {/* Bell Trigger Button */}
+      {/**
+       * Notification Bell Trigger
+       * Interactive bell icon displaying unread counter badge
+       */}
       <button
         type="button"
         onClick={onToggle}
@@ -38,7 +41,10 @@ const NotificationsPopover = ({
         )}
       </button>
 
-      {/* Popover Panel */}
+      {/**
+       * Floating Notification Flyout
+       * Interactive drawer listing latest tenant announcements and system notices
+       */}
       {isOpen && (
         <div className="fixed sm:absolute right-4 sm:right-0 top-14 sm:top-11 w-[calc(100vw-2rem)] sm:w-96 bg-white border border-gray-100 shadow-xl shadow-gray-200/70 rounded-2xl p-0 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
           <div className="p-4 border-b border-gray-100 flex items-center justify-between">

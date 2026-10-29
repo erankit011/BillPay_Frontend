@@ -1,6 +1,15 @@
+/**
+ * Authentication Redux Slice
+ * Manages user profile state, session authentication status, hydration loading flags,
+ * and localStorage session markers for httpOnly cookie workflows.
+ */
+
 import { createSlice } from '@reduxjs/toolkit';
 
-// Purge any legacy token from localStorage to enforce strict httpOnly cookie security
+/**
+ * Legacy Token Purge
+ * Enforces httpOnly cookie security by removing any stale localStorage tokens
+ */
 if (typeof window !== 'undefined') {
   try {
     localStorage.removeItem('accessToken');
@@ -15,6 +24,9 @@ const initialState = {
   isLoading: hasSession,
 };
 
+/**
+ * Auth State Slice Definition
+ */
 const authSlice = createSlice({
   name: 'auth',
   initialState,

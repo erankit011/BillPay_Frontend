@@ -1,7 +1,15 @@
+/**
+ * Sticky Settings Form Submission Bar
+ * Provides persistent save button with dirty-state indicator and asynchronous loading animation.
+ */
+
 import React from 'react';
 import { Save } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * SettingSaveButton Component
+ */
 const SettingSaveButton = ({
   isUpdating,
   hasChanges = true,

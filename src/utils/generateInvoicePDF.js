@@ -1,5 +1,15 @@
+/**
+ * Retail Invoice PDF Generation Engine
+ * Supports standard A4 invoices and 2-inch/3-inch thermal POS receipt layouts
+ * with dynamic branding, GSTIN breakdown, itemized tables, and UPI payment QR codes.
+ */
+
 import { formatDate } from './dateUtils';
 
+/**
+ * Dynamic PDF Engine Loader
+ * Dynamically imports jsPDF and autoTable chunks to optimize initial bundle weight
+ */
 const loadPdfEngine = async () => {
   const [{ jsPDF }, { default: autoTable }] = await Promise.all([
     import('jspdf'),
@@ -33,6 +43,10 @@ const fetchImageAsBase64 = async (url) => {
   });
 };
 
+/**
+ * Generate Invoice PDF Handler
+ * Constructs vector PDF document and triggers download, print dialog, or raw blob return
+ */
 export const generateInvoicePDF = async (bill, shopDetails, action = 'download', t = (str) => str, settings = {}) => {
   const { jsPDF, autoTable } = await loadPdfEngine();
 
@@ -43,7 +57,10 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
 
   const doc = new jsPDF();
   
-  // Use settings for business info, fall back to user profile
+  /**
+   * Business Metadata Extraction
+   * Resolves store profile properties with fallback settings
+   */
   const shopPhone = settings.shopPhone || '';
   const shopEmail = settings.shopEmail || '';
   const shopAddress = settings.shopAddress || '';
@@ -51,18 +68,24 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
   const footerNote = settings.invoiceFooterNote || '';
   const termsText = settings.termsAndConditions || '';
 
-  // Header: Shop Name and Invoice Title
+  /**
+   * Invoice Header & Merchant Identity
+   * Formats top banner title and typography
+   */
   doc.setFontSize(22);
-  doc.setTextColor(9, 60, 93); // #093C5D
+  doc.setTextColor(9, 60, 93);
   
   let headerX = 14;
   
-  // Render Logo if available
+  /**
+   * Store Brand Logo Rendering
+   * Injects merchant brand mark when asset exists
+   */
   if (settings.invoiceLogo) {
     const base64Logo = await fetchImageAsBase64(settings.invoiceLogo);
     if (base64Logo) {
       doc.addImage(base64Logo, 'JPEG', 14, 15, 25, 25, undefined, 'FAST');
-      headerX = 43; // Push text to the right of the logo
+      headerX = 43;
     }
   }
 
@@ -88,7 +111,10 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
       doc.text(`${t('GST')}: ${gstNumber}`, headerX, headerY);
   }
 
-  // Invoice Text (Right aligned)
+  /**
+   * Invoice Number & Metadata Section (Right-Aligned)
+   * Displays invoice code, billing date, and payment status
+   */
   doc.setFontSize(22);
   doc.setTextColor(9, 60, 93);
   doc.text(t('INVOICE'), 196, 22, { align: 'right' });
@@ -99,7 +125,10 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
   doc.text(`${t('Date')}: ${formatDate(bill.createdAt)}`, 196, 33, { align: 'right' });
   doc.text(`${t('Status')}: ${bill.paymentStatus}`, 196, 38, { align: 'right' });
 
-  // Customer Details Section
+  /**
+   * Customer Details Section
+   * Shows recipient contact, customer phone, and email records
+   */
   doc.setFontSize(16);
   doc.setTextColor(9, 60, 93);
   doc.setFont('helvetica', 'normal');
@@ -118,7 +147,10 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
     doc.text(`${t('Email')}: ${bill.customerId.email}`, 14, customerY);
   }
 
-  // Items Table
+  /**
+   * Invoice Line Items Tabular Grid
+   * Formats columns for item description, quantity, unit price, and extended total
+   */
   const tableColumn = [
     { content: t("Item"), styles: { halign: 'left' } },
     { content: t("Quantity"), styles: { halign: 'left' } },
@@ -154,7 +186,10 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
     }
   });
 
-  // Totals Section
+  /**
+   * Financial Summary & Taxation
+   * Calculates subtotal, GST split (CGST + SGST), discounts, and net payable
+   */
   const finalY = doc.lastAutoTable.finalY || 68;
   const rightColX = 140;
   const valuesX = 196;
@@ -187,9 +222,9 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
   
   if (bill.discount > 0) {
     doc.text(t('Discount') + ':', rightColX, totalsY);
-    doc.text(`-${formatCurrency(bill.discount)}`, valuesX, totalsY, { align: 'right', textColor: [220, 38, 38] }); // Red color for discount
+    doc.text(`-${formatCurrency(bill.discount)}`, valuesX, totalsY, { align: 'right', textColor: [220, 38, 38] });
     totalsY += 6;
-    doc.setTextColor(0); // Reset
+    doc.setTextColor(0);
   }
 
   doc.setFontSize(11);
@@ -197,7 +232,10 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
   doc.text(t('Grand Total') + ':', rightColX, totalsY + 3);
   doc.text(formatCurrency(bill.grandTotal || 0), valuesX, totalsY + 3, { align: 'right' });
 
-  // Paid and Balance
+  /**
+   * Settlement & Outstanding Balance
+   * Displays amount collected, remaining credit, or advance payment surplus
+   */
   totalsY += 10;
   doc.setFontSize(10);
   
@@ -210,24 +248,27 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
   
   doc.setTextColor(0);
   doc.text(t('Amount Paid') + ':', rightColX, totalsY);
-  doc.setTextColor(22, 163, 74); // Green
+  doc.setTextColor(22, 163, 74);
   doc.text(formatCurrency(bill.amountPaid || 0), valuesX, totalsY, { align: 'right' });
   doc.setTextColor(0);
 
   totalsY += 6;
   if (bill.grandTotal > (bill.amountPaid || 0)) {
     doc.text(t('Pending Amount') + ':', rightColX, totalsY);
-    doc.setTextColor(220, 38, 38); // Red
+    doc.setTextColor(220, 38, 38);
     doc.text(formatCurrency(bill.grandTotal - (bill.amountPaid || 0)), valuesX, totalsY, { align: 'right' });
     doc.setTextColor(0);
   } else if ((bill.amountPaid || 0) > bill.grandTotal) {
     doc.text(t('Advance Amount') + ':', rightColX, totalsY);
-    doc.setTextColor(22, 163, 74); // Green
+    doc.setTextColor(22, 163, 74);
     doc.text(formatCurrency((bill.amountPaid || 0) - bill.grandTotal), valuesX, totalsY, { align: 'right' });
     doc.setTextColor(0);
   }
 
-  // Notes
+  /**
+   * Invoice Annotations & Memo
+   * Renders optional shopkeeper comments and billing notes
+   */
   if (bill.notes) {
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
@@ -237,7 +278,10 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
     doc.text(splitNotes, 14, finalY + 15);
   }
 
-  // Terms & Conditions (from settings)
+  /**
+   * Terms & Conditions Clause
+   * Prints merchant return, refund, and warranty policy notes
+   */
   const pageHeight = doc.internal.pageSize.height;
 
   if (termsText) {
@@ -251,7 +295,10 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
     doc.text(splitTerms, 14, termsStartY + 5);
   }
 
-  // Signature
+  /**
+   * Merchant Authorized Signature
+   * Designated line for legal authorization and seal placement
+   */
   doc.setFontSize(10);
   doc.setTextColor(0);
   doc.setFont('helvetica', 'normal');
@@ -259,14 +306,16 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
   doc.setDrawColor(0);
   doc.line(156, pageHeight - 40, 196, pageHeight - 40);
 
-  // Footer
+  /**
+   * Document Footer & Attribution
+   * Displays custom merchant gratitude note and platform watermark
+   */
   doc.setDrawColor(220, 220, 220);
-  doc.line(14, pageHeight - 20, 196, pageHeight - 20); // Divider line
+  doc.line(14, pageHeight - 20, 196, pageHeight - 20);
 
   doc.setFontSize(9);
   doc.setTextColor(150);
   doc.setFont('helvetica', 'italic');
-  // Use custom footer note from settings, or default message
   const footerMessage = footerNote || t('Thank you for your business!');
   doc.text(footerMessage, 105, pageHeight - 14, { align: 'center' });
   
@@ -275,15 +324,21 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
   doc.setFontSize(8);
   doc.text(`${t('Generated by UdharPay')} | ${generatedDateStr}`, 105, pageHeight - 8, { align: 'center' });
 
+  /**
+   * PDF Dispatch Action
+   * Triggers native print preview dialog or triggers immediate file download
+   */
   if (action === 'print') {
-    // Open print dialog
     window.open(doc.output('bloburl'), '_blank');
   } else {
-    // Download PDF
     doc.save(`Invoice_${bill.invoiceNumber}.pdf`);
   }
 };
 
+/**
+ * Thermal POS Receipt Generator
+ * Produces continuous receipt slip for 58mm / 80mm thermal printers
+ */
 const generateThermalPDF = async (bill, shopDetails, action, t, settings, jsPDF) => {
   const width = settings.printerType === 'THERMAL_2INCH' ? 58 : 80;
   const height = 100 + (bill.products?.length || 0) * 15;
@@ -298,7 +353,10 @@ const generateThermalPDF = async (bill, shopDetails, action, t, settings, jsPDF)
 
   let y = 10;
   
-  // Thermal Logo
+  /**
+   * Thermal Receipt Header Logo
+   * Compact grayscale logo rendering for thermal print heads
+   */
   if (settings.invoiceLogo) {
     const base64Logo = await fetchImageAsBase64(settings.invoiceLogo);
     if (base64Logo) {

@@ -1,3 +1,8 @@
+/**
+ * Immutable Administrative Audit Trail & Compliance Log Page
+ * Records staff mutations, merchant plan overrides, store suspensions, and configuration change events.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -66,7 +71,10 @@ const AdminAuditLogs = () => {
   const [selectedLog, setSelectedLog] = useState(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
-  // Search debounce syncing with URL
+  /**
+   * Search Query Debounce Effect
+   * Debounces user input and synchronizes search parameter with URL state.
+   */
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchTerm);
@@ -106,7 +114,10 @@ const AdminAuditLogs = () => {
     });
   };
 
-  // Fetch KPI Stats via React Query
+  /**
+   * KPI Aggregate Metrics Query
+   * Fetches overall audit log totals and category breakdowns with 30s cache.
+   */
   const { data: statsData, isLoading: statsLoading } = useQuery({
     queryKey: ['adminAuditStats'],
     queryFn: getAdminAuditStats,
@@ -120,7 +131,10 @@ const AdminAuditLogs = () => {
     last24Hours: 0,
   };
 
-  // Fetch Logs via React Query
+  /**
+   * Paginated Audit Logs Stream Query
+   * Fetches filtered log records matching search keyword, category, and page index.
+   */
   const { data: logsData, isLoading: loading } = useQuery({
     queryKey: ['adminAuditLogs', debouncedSearch, urlCategory, urlPage],
     queryFn: () =>
@@ -140,7 +154,10 @@ const AdminAuditLogs = () => {
     totalPages: logsData?.pagination?.totalPages || logsData?.pagination?.pages || 1,
   };
 
-  // Export CSV
+  /**
+   * Audit Logs CSV Export Handler
+   * Streams filtered audit trail data to browser as downloadable CSV spreadsheet.
+   */
   const handleExportCSV = async () => {
     try {
       setExporting(true);
@@ -209,7 +226,10 @@ const AdminAuditLogs = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
-      {/* Header */}
+      {/**
+       * Page Header Toolbar
+       * Displays page title, security audit subtext, and CSV export action button.
+       */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
@@ -232,7 +252,10 @@ const AdminAuditLogs = () => {
         </div>
       </div>
 
-      {/* Top KPI Summary Cards (Matched with Admin Shops UI) */}
+      {/**
+       * Top KPI Summary Metrics Grid
+       * 4-stat overview cards reflecting total events, merchant mutations, security events, and daily activity.
+       */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         <AdminStatCard
           title="TOTAL RECORDED EVENTS"
@@ -269,7 +292,10 @@ const AdminAuditLogs = () => {
         />
       </div>
 
-      {/* Filter Chips (Matched with Admin Shops UI) */}
+      {/**
+       * Category Filter Chips Bar
+       * Scrollable pill chips enabling rapid filtering across audit categories.
+       */}
       <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {CATEGORY_OPTIONS.map((opt) => (
           <button
@@ -301,7 +327,10 @@ const AdminAuditLogs = () => {
         )}
       </div>
 
-      {/* Search Bar (Matched with Admin Shops UI) */}
+      {/**
+       * Full-Text Audit Log Search Input
+       * Debounced search bar querying actor names, actions, target identifiers, and IP addresses.
+       */}
       <div className="flex flex-col w-full mb-3 sm:mb-4">
         <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
@@ -335,7 +364,10 @@ const AdminAuditLogs = () => {
         </div>
       </div>
 
-      {/* Audit Logs Table / Stream */}
+      {/**
+       * Audit Logs Main Data Container
+       * Renders loading skeletons, empty state, or responsive log tables and cards.
+       */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
         {loading ? (
           <div className="py-16 text-center text-gray-400">
@@ -356,7 +388,10 @@ const AdminAuditLogs = () => {
           </div>
         ) : (
           <div>
-            {/* Desktop Table View */}
+            {/**
+             * Desktop Table View
+             * Multi-column tabular presentation with IST timestamp, actor, category, and target.
+             */}
             <div className="hidden lg:block overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               <table className="w-full text-left border-collapse whitespace-nowrap">
                 <thead>
@@ -380,7 +415,10 @@ const AdminAuditLogs = () => {
                         className="hover:bg-[#F5F5F5]/60 transition-colors group cursor-pointer"
                         onClick={() => openLogDetails(log)}
                       >
-                        {/* Timestamp */}
+                        {/**
+                         * Event Timestamp Column
+                         * Displays execution timestamp in localized Indian Standard Time.
+                         */}
                         <td className="py-3.5 px-4 lg:px-6 text-gray-600 font-medium">
                           <div className="flex items-center gap-1.5">
                             <Clock className="w-3.5 h-3.5 text-gray-400 shrink-0" />
@@ -388,19 +426,28 @@ const AdminAuditLogs = () => {
                           </div>
                         </td>
 
-                        {/* Action */}
+                        {/**
+                         * Action Name Column
+                         * Displays human-readable label of the triggered system mutation.
+                         */}
                         <td className="py-3.5 px-4 lg:px-6">
                           <span className="font-semibold text-gray-900 group-hover:text-[#093C5D] transition-colors">
                             {formatActionName(log.action)}
                           </span>
                         </td>
 
-                        {/* Category */}
+                        {/**
+                         * Category Classification Column
+                         * Colored badge categorizing action as security, billing, or store management.
+                         */}
                         <td className="py-3.5 px-4 lg:px-6">
                           <AuditCategoryBadge category={log.actionCategory} size="xs" />
                         </td>
 
-                        {/* Executing Actor */}
+                        {/**
+                         * Executing Actor Column
+                         * Shows administrator or automated system identity with initials badge.
+                         */}
                         <td className="py-3.5 px-4 lg:px-6">
                           <div className="flex items-center gap-2.5">
                             <div className="w-8 h-8 rounded-lg p-[2px] border border-gray-200 bg-white shrink-0">
@@ -419,7 +466,10 @@ const AdminAuditLogs = () => {
                           </div>
                         </td>
 
-                        {/* Target Resource */}
+                        {/**
+                         * Target Resource Column
+                         * Resource ID or merchant name affected by the administrative mutation.
+                         */}
                         <td className="py-3.5 px-4 lg:px-6">
                           <div className="truncate max-w-[150px]">
                             <span className="font-semibold text-gray-900 block truncate">
@@ -431,12 +481,18 @@ const AdminAuditLogs = () => {
                           </div>
                         </td>
 
-                        {/* Network / IP */}
+                        {/**
+                         * Originating IP Address Column
+                         * Client IP address captured during the HTTP request lifecycle.
+                         */}
                         <td className="py-3.5 px-4 lg:px-6 font-mono text-[11px] text-gray-600">
                           {log.ipAddress || '127.0.0.1'}
                         </td>
 
-                        {/* Actions */}
+                        {/**
+                         * Snapshot Details Action Trigger
+                         * Opens complete change diff modal for granular forensic analysis.
+                         */}
                         <td className="py-3.5 px-4 lg:px-6 text-right">
                           <button
                             onClick={(e) => {
@@ -457,7 +513,10 @@ const AdminAuditLogs = () => {
               </table>
             </div>
 
-            {/* Mobile / Tablet Card Stream */}
+            {/**
+             * Mobile / Tablet Card Stream View
+             * Card layout presenting audit records for compact handheld screens.
+             */}
             <div className="lg:hidden flex flex-col gap-2.5 p-3">
               {logs.map((log) => {
                 const dateStr = formatDate(log.createdAt) || 'N/A';
@@ -468,7 +527,10 @@ const AdminAuditLogs = () => {
                     onClick={() => openLogDetails(log)}
                     className="bg-white border border-gray-200 rounded-lg p-3.5 transition-colors cursor-pointer active:bg-gray-50 shadow-none space-y-3"
                   >
-                    {/* Top Row: Actor Avatar + Action + Category */}
+                    {/**
+                     * Card Header
+                     * Actor avatar initials, formatted action event title, and category indicator.
+                     */}
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2.5 min-w-0">
                         <div className="w-8 h-8 rounded-lg p-[2px] border border-gray-200 bg-white shrink-0">
@@ -489,13 +551,19 @@ const AdminAuditLogs = () => {
                       <AuditCategoryBadge category={log.actionCategory} size="xs" />
                     </div>
 
-                    {/* Middle Details */}
+                    {/**
+                     * Card Context Row
+                     * Target resource identifier and originating IP address.
+                     */}
                     <div className="flex flex-wrap items-center justify-between text-[11px] text-gray-500 gap-2 pt-1 border-t border-gray-100">
                       <span>Target: <strong className="text-gray-800 font-semibold">{log.targetName || log.targetType || 'Platform'}</strong></span>
                       <span className="font-mono text-[10px] text-gray-500">{log.ipAddress || '127.0.0.1'}</span>
                     </div>
 
-                    {/* Bottom Row */}
+                    {/**
+                     * Card Footer Controls
+                     * Formatted timestamp alongside modal inspection trigger button.
+                     */}
                     <div className="flex items-center justify-between text-xs text-gray-500 pt-1">
                       <div className="flex items-center gap-1.5">
                         <Clock className="w-3.5 h-3.5 text-gray-400" />
@@ -520,7 +588,10 @@ const AdminAuditLogs = () => {
           </div>
         )}
 
-        {/* Pagination Controls */}
+        {/**
+         * Pagination Navigation Toolbar
+         * Previous/next page pagination with total recorded event count.
+         */}
         {pagination.total > 0 && (
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border-t border-gray-200 bg-gray-50/60">
             <span className="text-xs text-gray-500 font-medium">
@@ -551,7 +622,10 @@ const AdminAuditLogs = () => {
         )}
       </div>
 
-      {/* Audit Snapshot Modal */}
+      {/**
+       * Audit Snapshot Inspection Modal
+       * Displays deep metadata diff, JSON state snapshots, and request headers.
+       */}
       <AuditDetailsModal
         isOpen={isDetailsOpen}
         log={selectedLog}

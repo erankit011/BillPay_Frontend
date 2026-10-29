@@ -1,3 +1,8 @@
+/**
+ * Token-Verified Password Reset Page
+ * Validates reset token parameter from URL, verifies password matching, and updates account credentials.
+ */
+
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Lock, Eye, EyeOff, Loader2, CheckCircle2 } from 'lucide-react';
@@ -5,7 +10,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 
-
+/**
+ * ResetPassword Component
+ */
 const ResetPassword = () => {
   const { t } = useTranslation();
   const { resetToken } = useParams();
@@ -23,7 +30,10 @@ const ResetPassword = () => {
     e.preventDefault();
 
 
-    // Validation
+    /**
+     * Client-Side Password Validation
+     * Ensures minimum password length and exact confirmation match before submitting reset request.
+     */
     if (password.length < 6) {
       toast.error('Password must be at least 6 characters long');
       return;

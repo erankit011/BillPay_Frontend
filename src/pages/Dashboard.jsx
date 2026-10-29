@@ -1,3 +1,8 @@
+/**
+ * Merchant Business Analytics & KPI Dashboard
+ * Renders daily sales collections, outstanding debt counters, sales trend graphs, and quick shortcut actions.
+ */
+
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -9,6 +14,9 @@ import SwirlingLoader from '../components/common/SwirlingLoader';
 
 import { formatCurrency } from '../utils/currency';
 
+/**
+ * Dashboard Component
+ */
 const Dashboard = () => {
   const { t } = useTranslation();
 
@@ -18,14 +26,20 @@ const Dashboard = () => {
       const res = await api.get('/reports/dashboard');
       return res.data.data;
     },
-    staleTime: 1 * 60 * 1000, // Data is fresh for 1 min
-    gcTime: 5 * 60 * 1000,   // Garbage collect (delete from memory) if unused for 5 mins
+    staleTime: 1 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
   });
 
-  // Use actual chart data, default to empty array if none
+  /**
+   * Chart Dataset Initialization
+   * Retrieves aggregated analytics or defaults to an empty dataset
+   */
   const salesData = data?.chartData || [];
 
-  // Memoize chart data to avoid re-allocating array on every minor re-render
+  /**
+   * Chart Data Memoization
+   * Normalizes time series date points and metrics without unnecessary recalculation
+   */
   const chartData = useMemo(() => {
     return salesData.map(item => ({
       date: item.name || item.date,
@@ -43,7 +57,10 @@ const Dashboard = () => {
   return (
     <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
 
-      {/* Hero Section */}
+      {/**
+       * Dashboard Header Section
+       * Displays primary overview title and performance tagline
+       */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -57,9 +74,15 @@ const Dashboard = () => {
         </p>
       </motion.div>
 
-      {/* Metrics Cards - 4 Cards in Row */}
+      {/**
+       * Business Metrics KPI Cards
+       * Four-card summary grid tracking daily sales, collections, pending debts, and merchant customers
+       */}
       <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
-        {/* Today's Sales */}
+        {/**
+         * Today's Sales Metric Card
+         * Sum of revenue earned on current day
+         */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -80,7 +103,10 @@ const Dashboard = () => {
           </div>
         </motion.div>
 
-        {/* Today's Collections */}
+        {/**
+         * Today's Collections Metric Card
+         * Total cash and online debt payments collected today
+         */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -101,7 +127,10 @@ const Dashboard = () => {
           </div>
         </motion.div>
 
-        {/* Pending Udhar - With Red Left Border */}
+        {/**
+         * Pending Udhar Debt Card
+         * Highlights outstanding customer credit requiring collection
+         */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -124,7 +153,10 @@ const Dashboard = () => {
           </div>
         </motion.div>
 
-        {/* Total Customers */}
+        {/**
+         * Total Registered Customers Card
+         * Total count of active customer ledgers
+         */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -146,7 +178,10 @@ const Dashboard = () => {
         </motion.div>
       </div>
 
-      {/* Historical Sales - Small Cards */}
+      {/**
+       * Historical Performance Comparison Cards
+       * Summarizes yesterday, weekly, monthly, and lifetime sales totals
+       */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -176,7 +211,10 @@ const Dashboard = () => {
         </div>
       </motion.div>
 
-      {/* Chart Section */}
+      {/**
+       * Revenue vs Collections Bar Chart
+       * Visual bar comparison between generated revenue and received payments
+       */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -278,9 +316,15 @@ const Dashboard = () => {
         </div>
       </motion.div>
 
-      {/* Area Charts - Sales Trend & Revenue Growth */}
+      {/**
+       * Trend Analysis Area Charts
+       * Renders dual charts for 7-day sales curve and cash collection volume
+       */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-5">
-        {/* Sales Trend (Last 7 Days) */}
+        {/**
+         * Weekly Sales Trend Chart
+         * Area graph displaying daily sales fluctuation over recent week
+         */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -355,7 +399,10 @@ const Dashboard = () => {
           </div>
         </motion.div>
 
-        {/* Revenue Growth */}
+        {/**
+         * Revenue Collection Growth Chart
+         * Visual area indicator tracking steady cash realization
+         */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

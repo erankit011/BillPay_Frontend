@@ -1,3 +1,8 @@
+/**
+ * User & Administrator Sign-In Authentication Page
+ * Handles credential verification via secure httpOnly cookies, maintenance alerts, and session redirection.
+ */
+
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
@@ -8,11 +13,17 @@ import api from '../api/axios';
 import { Loader2, Mail, Lock, Eye, EyeOff, LogIn, AlertCircle, ShieldAlert } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Login Form Validation Schema
+ */
 const loginSchema = yup.object({
   email: yup.string().email('Please provide a valid email address').required('Email is required'),
   password: yup.string().required('Password is required'),
 });
 
+/**
+ * Login Component
+ */
 const Login = () => {
 
   const [isLoading, setIsLoading] = useState(false);
@@ -86,7 +97,10 @@ const Login = () => {
 
   return (
     <div className="w-full animate-fade-in text-center lg:text-left">
-      {/* Header */}
+      {/**
+       * Authentication Header
+       * Screen title and brief instructional prompt for merchant sign-in.
+       */}
       <div className="mb-5 sm:mb-6">
         <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 mb-1 tracking-tight">
           {t('Sign In')}
@@ -96,7 +110,10 @@ const Login = () => {
         </p>
       </div>
 
-      {/* Maintenance Notice Banner */}
+      {/**
+       * Platform Maintenance Notice
+       * Alert banner displayed when system administrator enables maintenance mode.
+       */}
       {maintenanceMessage && (
         <div className="mb-5 p-3.5 rounded-lg bg-amber-50/90 border border-amber-300 text-amber-950 text-xs sm:text-sm font-medium flex items-start gap-2.5 text-left">
           <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 shrink-0 mt-0.5" />
@@ -107,7 +124,10 @@ const Login = () => {
         </div>
       )}
 
-      {/* Account Suspended Alert Banner */}
+      {/**
+       * Account Suspension Notification
+       * Critical warning card shown when storekeeper account has been suspended by admin.
+       */}
       {suspensionMessage && (
         <div className="mb-5 p-4 rounded-xl bg-rose-50 border border-rose-300 text-rose-950 text-xs sm:text-sm font-medium flex items-start gap-3 text-left animate-fade-in shadow-sm">
           <ShieldAlert className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
@@ -135,9 +155,15 @@ const Login = () => {
         </div>
       )}
 
-      {/* Form */}
+      {/**
+       * User Credentials Form
+       * Validated form inputs for email address, password, and remember state.
+       */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
-        {/* Email */}
+        {/**
+         * Email Input Field
+         * Validated email address input with Mail icon and error text feedback.
+         */}
         <div>
           <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 text-left">
             {t('Email')}
@@ -160,7 +186,10 @@ const Login = () => {
           )}
         </div>
 
-        {/* Password */}
+        {/**
+         * Password Input Field
+         * Password entry field with toggleable show/hide visibility and forgot password link.
+         */}
         <div>
           <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 text-left">
             {t('Password')}
@@ -203,7 +232,10 @@ const Login = () => {
           </div>
         </div>
 
-        {/* Submit Button */}
+        {/**
+         * Authentication Submit Action
+         * Submits credentials for API verification and displays swirling loading state.
+         */}
         <button
           type="submit"
           disabled={isLoading}
@@ -220,7 +252,10 @@ const Login = () => {
         </button>
       </form>
 
-      {/* Social Auth */}
+      {/**
+       * Third-Party Social Authentication
+       * One-click Google OAuth single sign-on redirect button.
+       */}
       <div className="mt-6 sm:mt-8">
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
@@ -244,7 +279,10 @@ const Login = () => {
           {t('Continue With Google')}
         </a>
 
-        {/* Bottom Actions */}
+        {/**
+         * Registration Link Footer
+         * Navigation redirect for new merchants wishing to register a business account.
+         */}
         <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm">
           <span className="text-gray-500 font-medium">{t('Don’t have an account?')} <Link to="/register" className="text-[#093C5D] font-semibold cursor-pointer ml-1 hover:underline">{t('Sign Up')}</Link></span>
         </div>

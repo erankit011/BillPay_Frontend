@@ -1,5 +1,14 @@
+/**
+ * Periodic Store Statement PDF Generator
+ * Compiles chronological sales bills, customer payments, and debt ledger records into a unified financial summary.
+ */
+
 import toast from 'react-hot-toast';
 
+/**
+ * Generate Store Statement PDF Handler
+ * Compiles bills and transactions over chosen date range into an exportable document
+ */
 export const generateStatementPDF = async (filteredBills, filteredTransactions, statementPeriod, shopSettings, t, formatCurrency, formatDate) => {
   if (filteredBills.length === 0 && filteredTransactions.length === 0) {
     toast.error(t("No data available for the selected period."));
@@ -14,7 +23,10 @@ export const generateStatementPDF = async (filteredBills, filteredTransactions, 
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.width;
 
-  // Left side: Title and Date
+  /**
+   * Header Left Section
+   * Renders statement report title, selected accounting period, and generation timestamp
+   */
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(18);
   doc.setTextColor(9, 60, 93);
@@ -32,7 +44,10 @@ export const generateStatementPDF = async (filteredBills, filteredTransactions, 
   doc.text(`${t('Period')}: ${periodLabels[statementPeriod]}`, 14, 30);
   doc.text(`${t('Generated on')}: ${formatDate(new Date())}`, 14, 36);
 
-  // Right side: Shop Details
+  /**
+   * Header Right Section
+   * Renders store name, phone number, and support email contact
+   */
   if (shopSettings) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12);

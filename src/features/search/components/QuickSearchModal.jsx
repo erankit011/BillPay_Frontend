@@ -1,3 +1,9 @@
+/**
+ * Global Omnibar & Quick Search Command Palette (Ctrl+K)
+ * Keyboard-navigable quick command palette routing merchants and administrators
+ * to top-level feature pages and management actions.
+ */
+
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -29,6 +35,9 @@ import {
   HelpCircle
 } from 'lucide-react';
 
+/**
+ * QuickSearchModal Component
+ */
 const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -38,7 +47,10 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
   const listRef = useRef(null);
   const itemRefs = useRef([]);
 
-  // Define searchable pages based on user role (1:1 synced with MainLayout)
+  /**
+   * Searchable Navigation Catalog
+   * Generates route manifests mapped to merchant or administrative permissions.
+   */
   const searchablePages = useMemo(() => {
     if (isAdmin) {
       return [
@@ -74,7 +86,10 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
     ];
   }, [isAdmin, t]);
 
-  // Filter items matching query
+  /**
+   * Search Filter Pipeline
+   * Filters accessible pages by query matching against title, description, and category.
+   */
   const filteredPages = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return searchablePages;
@@ -85,12 +100,18 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
     );
   }, [searchQuery, searchablePages]);
 
-  // Reset selected index when query changes
+  /**
+   * Search Selection Reset
+   * Resets active keyboard selection highlight to the first result upon query mutation.
+   */
   useEffect(() => {
     setSelectedIndex(0);
   }, [searchQuery]);
 
-  // Focus input on open & reset state
+  /**
+   * Search Input Auto-Focus Effect
+   * Resets input state and focuses search field whenever modal opens.
+   */
   useEffect(() => {
     if (isOpen) {
       setSearchQuery('');
@@ -102,7 +123,10 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
     }
   }, [isOpen]);
 
-  // Smooth scroll selected item into view during keyboard navigation
+  /**
+   * Keyboard Scroll Sync
+   * Smoothly scrolls selected menu item into visible viewport during arrow navigation.
+   */
   useEffect(() => {
     if (itemRefs.current[selectedIndex]) {
       itemRefs.current[selectedIndex].scrollIntoView({
@@ -112,7 +136,10 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
     }
   }, [selectedIndex]);
 
-  // Keyboard navigation inside search results
+  /**
+   * Keyboard Navigation Controller
+   * Handles Escape, ArrowUp, ArrowDown, and Enter key bindings for fast navigation.
+   */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -149,7 +176,10 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, filteredPages, selectedIndex, onClose, navigate]);
 
-  // Prevent background page scrolling across all screen sizes
+  /**
+   * Scroll & Touch Lock Effect
+   * Prevents underlying page scroll and touch events across mobile and desktop devices.
+   */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -172,7 +202,10 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
 
   return (
     <div className="fixed inset-0 z-50 overscroll-contain">
-      {/* Backdrop: standardized dark overlay without blur */}
+      {/**
+       * Backdrop Overlay
+       * Darkened semi-transparent backdrop closing search palette upon click.
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
@@ -181,7 +214,10 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
         onTouchMove={(e) => e.preventDefault()}
       />
 
-      {/* Modal Positioning */}
+      {/**
+       * Search Palette Container
+       * Positions search palette at top on desktop and bottom sheet on mobile.
+       */}
       <div
         className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-start sm:justify-center sm:pt-20 sm:px-4 z-50 pointer-events-none overscroll-contain"
         onWheel={(e) => {
@@ -196,14 +232,23 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
           aria-modal="true"
           aria-label={t('Quick Search')}
         >
-          {/* Mobile Drag Handle */}
+          {/**
+           * Mobile Drag Pill
+           * Visual drag handle indicator shown exclusively on mobile viewports.
+           */}
           <div className="sm:hidden flex justify-center pt-2.5 pb-1 flex-shrink-0 bg-gray-50/50">
             <div className="w-10 h-1 bg-gray-300 rounded-full" />
           </div>
 
-          {/* Search Header */}
+          {/**
+           * Search Header
+           * Contains live search input bar, search icon, clear button, and dismiss trigger.
+           */}
           <div className="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-3 sm:py-3.5 border-b border-gray-100 bg-white flex-shrink-0">
-            {/* Search Input Container - Matched with all pages UI */}
+            {/**
+             * Search Input Container
+             * Standardized search input field styled consistently with app layout.
+             */}
             <div className="relative flex-1">
               <div className="absolute inset-y-0 left-0 pl-3 sm:pl-3.5 flex items-center pointer-events-none">
                 <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
@@ -221,7 +266,10 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
                 className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-11 bg-white border border-gray-300 rounded-lg text-[13px] sm:text-sm font-normal text-gray-900 placeholder-gray-400 placeholder:font-normal focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
               />
 
-              {/* Clear Query button inside search bar */}
+              {/**
+               * Clear Search Input Button
+               * Clears the current search query string when active.
+               */}
               {searchQuery && (
                 <button
                   type="button"
@@ -234,7 +282,10 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
               )}
             </div>
 
-            {/* Right side controls: Close button (standard across all modals) */}
+            {/**
+             * Modal Close Action
+             * Circular button to dismiss search dialog.
+             */}
             <button
               type="button"
               onClick={onClose}
@@ -246,7 +297,10 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
             </button>
           </div>
 
-          {/* Search Results List */}
+          {/**
+           * Search Results Scroll List
+           * Interactive list of matched routes with keyboard highlight and empty state.
+           */}
           <div
             ref={listRef}
             className="overflow-y-auto overscroll-contain p-2 pr-2.5 pb-3 sm:pb-2.5 space-y-1 flex-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-300"
@@ -307,7 +361,10 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
                       </div>
                     </div>
 
-                    {/* Category Chip - Centered flex container with proper height, padding and line-height */}
+                    {/**
+                     * Category Badge Chip
+                     * Visual chip identifying the architectural category of the route item.
+                     */}
                     {item.category && (
                       <span
                         className={`inline-flex items-center justify-center text-center whitespace-nowrap text-[10px] font-semibold leading-none h-5 px-2.5 rounded border transition-colors shrink-0 shadow-none uppercase tracking-wide select-none ml-2 ${
@@ -325,10 +382,16 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
             )}
           </div>
 
-          {/* Modal Footer with quick instructions */}
+          {/**
+           * Desktop Shortcut Instructions Footer
+           * Explains keyboard shortcuts for navigate, select, and modal dismiss actions.
+           */}
           <div className="hidden sm:flex items-center px-4 py-2.5 border-t border-gray-100 bg-gray-50/80 text-[11px] font-medium text-gray-500">
             <div className="flex items-center gap-2">
-              {/* Navigate Button Chip */}
+              {/**
+               * Keyboard Arrow Navigation Badge
+               * Visual indicator for up and down arrow key navigation.
+               */}
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-gray-200 rounded text-gray-600 shadow-none h-7">
                 <span className="inline-flex items-center gap-0.5 text-gray-500">
                   <ArrowUp className="w-3 h-3 text-gray-500 shrink-0" strokeWidth={2} />
@@ -337,13 +400,19 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
                 <span className="text-[11px] font-medium text-gray-600 leading-none">{t('Navigate')}</span>
               </div>
 
-              {/* Select Button Chip */}
+              {/**
+               * Enter Key Selection Badge
+               * Visual indicator for enter key route activation.
+               */}
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-gray-200 rounded text-gray-600 shadow-none h-7">
                 <CornerDownLeft className="w-3 h-3 text-gray-500 shrink-0" strokeWidth={2} />
                 <span className="text-[11px] font-medium text-gray-600 leading-none">{t('Select')}</span>
               </div>
 
-              {/* Close Button Chip (interactive) */}
+              {/**
+               * Escape Key Dismissal Badge
+               * Interactive chip to dismiss modal with Escape key or click.
+               */}
               <button
                 type="button"
                 onClick={onClose}

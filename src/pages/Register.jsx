@@ -1,3 +1,8 @@
+/**
+ * Storekeeper Account Registration Page
+ * Collects merchant name, contact phone, credentials, and transitions to mobile OTP verification.
+ */
+
 import { useState, useEffect, Fragment } from 'react';
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
@@ -9,6 +14,9 @@ import { getPublicContactInfo } from '../features/admin/api/adminApi';
 import { Loader2, User, Mail, Phone, Store, Lock, ArrowRight, Eye, EyeOff, Camera, UserPlus, AlertCircle, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Registration Form Yup Schema
+ */
 const registerSchema = yup.object({
   name: yup.string().required('Name is required'),
   email: yup.string().email('Please provide a valid email address').required('Email is required'),
@@ -16,6 +24,9 @@ const registerSchema = yup.object({
   password: yup.string().min(6, 'Must be at least 6 characters').required('Password is required'),
 });
 
+/**
+ * Register Component
+ */
 const Register = () => {
 
   const [isLoading, setIsLoading] = useState(false);
@@ -91,7 +102,10 @@ const Register = () => {
 
   return (
     <div className="w-full animate-fade-in text-center lg:text-left">
-      {/* Header */}
+      {/**
+       * Page Header Section
+       * Displays registration title and subtitle based on current step
+       */}
       <div className="mb-5 sm:mb-6">
         <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 mb-1 tracking-tight">
           {t('Create Account')}
@@ -103,7 +117,10 @@ const Register = () => {
         </p>
       </div>
 
-      {/* Maintenance or Registration Closed Banners */}
+      {/**
+       * Platform Maintenance & Closed Registration Alerts
+       * Displays informational banners if signups or operations are suspended
+       */}
       {maintenanceMessage && (
         <div className="mb-5 p-3.5 rounded-lg bg-amber-50/90 border border-amber-300 text-amber-950 text-xs sm:text-sm font-medium flex items-start gap-2.5 text-left">
           <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 shrink-0 mt-0.5" />
@@ -126,7 +143,10 @@ const Register = () => {
         </div>
       )}
 
-      {/* Modern Progress Steps */}
+      {/**
+       * Multi-Step Progress Tracker
+       * Shows visual indicators and labels for 3-step registration flow
+       */}
       <div className="mb-6 sm:mb-8">
         <div className="flex items-center justify-between mb-2 px-1">
             <span className="text-xs sm:text-sm font-semibold text-[#093C5D]">
@@ -152,7 +172,10 @@ const Register = () => {
         </div>
       </div>
 
-      {/* Profile Image Upload (Step 1 only) */}
+      {/**
+       * Profile Image Placeholder
+       * Optional avatar upload trigger displayed during step 1
+       */}
       {step === 1 && (
         <div className="flex mb-6 justify-center lg:justify-start">
           <div className="relative group cursor-pointer">
@@ -167,7 +190,10 @@ const Register = () => {
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
-        {/* Step 1: Personal Info */}
+        {/**
+         * Step 1: Personal Info
+         * Form inputs for merchant full name and email address
+         */}
         {step === 1 && (
           <div className="space-y-3 sm:space-y-4 animate-fade-in">
             <div>
@@ -224,7 +250,10 @@ const Register = () => {
           </div>
         )}
 
-        {/* Step 2: Business Info */}
+        {/**
+         * Step 2: Business Contact Info
+         * Form inputs for merchant contact phone number
+         */}
         {step === 2 && (
           <div className="space-y-3 sm:space-y-4 animate-fade-in">
             <div>
@@ -268,7 +297,10 @@ const Register = () => {
           </div>
         )}
 
-        {/* Step 3: Security */}
+        {/**
+         * Step 3: Account Security Setup
+         * Form inputs for password creation and credential validation
+         */}
         {step === 3 && (
           <div className="space-y-3 sm:space-y-4 animate-fade-in">
             <div>
@@ -305,7 +337,10 @@ const Register = () => {
               <p className="text-[11px] sm:text-xs text-gray-500 mt-1.5 font-medium text-left">{t("At least 6 characters")}</p>
             </div>
 
-            {/* Summary */}
+            {/**
+             * Registration Summary Card
+             * Previews gathered merchant name and email before submission
+             */}
             <div className="bg-gray-50 rounded-xl p-4 sm:p-5 border border-gray-100 text-left">
               <p className="text-[10px] sm:text-xs font-bold text-gray-400 mb-3 sm:mb-4 uppercase tracking-wider">{t("Account Summary")}</p>
               <div className="space-y-2.5 sm:space-y-3 text-xs sm:text-sm text-gray-900 font-medium border-l-2 border-[#093C5D] pl-3 sm:pl-4">
@@ -341,7 +376,10 @@ const Register = () => {
         )}
       </form>
 
-      {/* Social Auth */}
+      {/**
+       * Third-Party Social Authentication
+       * Alternative OAuth registration via Google account
+       */}
       <div className="mt-6 sm:mt-8">
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
@@ -372,7 +410,10 @@ const Register = () => {
         )}
       </div>
 
-      {/* Bottom Actions */}
+      {/**
+       * Bottom Navigation Actions
+       * Direct link redirecting existing users to login view
+       */}
       <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm">
         <span className="text-gray-500 font-medium">{t("Already have an account?")} <Link to="/login" className="text-[#093C5D] font-semibold cursor-pointer ml-1 hover:underline">{t("Login Here")}</Link></span>
       </div>

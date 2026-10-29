@@ -1,14 +1,28 @@
+/**
+ * Universal Axios HTTP Client Instance
+ * Configures base URL routing, credentials handling, CSRF token negotiation,
+ * seamless JWT refresh queueing, account suspension intercepts, and rate limit toasts.
+ */
+
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
+/**
+ * Pre-configured Axios Instance
+ * Enforces httpOnly cookie exchange and standard payload formats across all tenant requests
+ */
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true, // Automatically sends and receives httpOnly cookies on every request
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
+/**
+ * Token Refresh Request Queue
+ * Buffers concurrent 401 requests while a single background token refresh completes
+ */
 let isRefreshing = false;
 let failedQueue = [];
 
@@ -26,13 +40,23 @@ const processQueue = (error) => {
 let csrfToken = null;
 let fetchingCsrf = null;
 
+/**
+ * Request Interceptor
+ * Dynamically resolves multipart boundaries and attaches fresh CSRF verification headers
+ */
 api.interceptors.request.use(async (config) => {
-  // If sending FormData, delete Content-Type so the browser sets multipart/form-data with the correct boundary
+  /**
+   * Multipart Form Boundary Handling
+   * Strips explicit content-type so browser binds accurate boundary metadata
+   */
   if (config.data instanceof FormData) {
     delete config.headers['Content-Type'];
   }
 
-  // Methods that require CSRF token
+  /**
+   * CSRF Token Verification Attachment
+   * Attaches anti-forgery token to all state-mutating HTTP methods
+   */
   if (['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase())) {
     if (!csrfToken) {
       if (!fetchingCsrf) {
@@ -49,6 +73,11 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
+/**
+ * Response Interceptor
+ * Intercepts expired CSRF errors, merchant account suspensions, remote session revocations,
+ * transparent JWT cookie refreshes, and rate-limiting responses
+ */
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -73,7 +102,10 @@ api.interceptors.response.use(
       );
     };
 
-    // 1. Auto-recover from expired CSRF token (transparent retry)
+    /**
+     * 1. Automatic CSRF Token Recovery
+     * Invalidates cached token and transparently retries state-mutating requests once
+     */
     if (
       error.response?.status === 403 &&
       (error.response?.data?.message?.toLowerCase().includes('csrf') ||
@@ -87,7 +119,10 @@ api.interceptors.response.use(
       }
     }
 
-    // 2. Handle account suspension by admin
+    /**
+     * 2. Merchant Account Suspension Intercept
+     * Purges local session markers and redirects suspended storekeeper to notification portal
+     */
     if (
       error.response?.status === 403 &&
       error.response?.data?.message?.toLowerCase().includes('suspended')
@@ -108,7 +143,9 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // Handle business setup required 403 error centrally
+    /**
+     * Business Setup Prerequisite Notification
+     */
     if (
       error.response?.status === 403 &&
       (error.response?.data?.code === 'BUSINESS_SETUP_REQUIRED' ||
@@ -121,7 +158,10 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // 3. If this session was explicitly logged out remotely or revoked:
+    /**
+     * 3. Remote Invalidation & Force Logout Intercept
+     * Terminates revoked sessions and redirects to login with session_expired parameter
+     */
     if (
       error.response?.status === 401 &&
       (error.response?.data?.message?.includes('logged out remotely') ||
@@ -135,9 +175,15 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // 3. Handle Token Refresh on 401 via httpOnly cookies
+    /**
+     * 4. Transparent Access Token Refresh via httpOnly Cookies
+     * Automatically requests new access token on 401 and replays queued requests seamlessly
+     */
     if (error.response?.status === 401 && !originalRequest._retry) {
-      // Don't attempt token refresh on auth endpoints (login, register, OTP, forgot/reset password, or refresh itself)
+      /**
+       * Auth Endpoint Refresh Bypass
+       * Prevents cyclical renewal loops on public or auth-specific endpoints
+       */
       const isAuthEndpoint =
         originalRequest.url?.includes('/auth/refresh') ||
         originalRequest.url?.includes('/auth/login') ||
@@ -152,12 +198,18 @@ api.interceptors.response.use(
         return Promise.reject(error);
       }
 
-      // If user was never logged in, don't attempt refresh
+      /**
+       * Session Authenticity Verification
+       * Aborts refresh attempt when no active user session flag exists
+       */
       if (localStorage.getItem('isLoggedIn') !== 'true') {
         return Promise.reject(error);
       }
 
-      // Queue concurrent requests while a single refresh is in-flight
+      /**
+       * Concurrent Request Buffer
+       * Queues parallel requests while access token renewal is in flight
+       */
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -188,6 +240,9 @@ api.interceptors.response.use(
       }
     }
 
+    /**
+     * 5. Rate Limit (HTTP 429) Throttling Alert
+     */
     if (error.response?.status === 429) {
       const serverMessage = error.response?.data?.message;
       const retryAfter = error.response?.data?.retryAfter;

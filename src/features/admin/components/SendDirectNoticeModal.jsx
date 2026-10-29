@@ -1,3 +1,8 @@
+/**
+ * Direct Administrative Notice Dispatch Modal
+ * Dispatches targeted real-time alerts and dashboard notifications to specific storekeepers.
+ */
+
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -15,6 +20,9 @@ import {
 import toast from 'react-hot-toast';
 import { sendDirectShopNotice } from '../api/adminApi';
 
+/**
+ * Notice Message Preset Templates
+ */
 const PRESET_TEMPLATES = [
   {
     label: 'Store Verification Pending',
@@ -55,7 +63,10 @@ const SendDirectNoticeModal = ({ isOpen, onClose, shop, onSuccess }) => {
   const [priority, setPriority] = useState('NORMAL');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Sync state and prevent background page scrolling
+  /**
+   * Scroll & Touch Prevention Hook
+   * Disables document scrolling and touch moves while modal dialog is open.
+   */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -126,7 +137,10 @@ const SendDirectNoticeModal = ({ isOpen, onClose, shop, onSuccess }) => {
 
   return (
     <div className="fixed inset-0 z-[60] overscroll-contain">
-      {/* Backdrop */}
+      {/**
+       * Backdrop Overlay
+       * Darkened semi-transparent overlay closing dialog on background tap.
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
@@ -134,16 +148,25 @@ const SendDirectNoticeModal = ({ isOpen, onClose, shop, onSuccess }) => {
         onTouchMove={(e) => e.preventDefault()}
       />
 
-      {/* Modal Container: Bottom Sheet on Mobile, Centered on sm+ */}
+      {/**
+       * Modal Viewport Dialog
+       * Renders as mobile bottom sheet or desktop centered dialogue modal.
+       */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-[60] pointer-events-none">
         <div className="relative bg-white w-full sm:max-w-xl rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
           
-          {/* Mobile Drag Handle */}
+          {/**
+           * Mobile Drag Pill
+           * Visual drag pill indicator displayed on mobile devices.
+           */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-white">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
           </div>
 
-          {/* Modal Header */}
+          {/**
+           * Modal Header
+           * Bell icon, title banner, direct push tag, and circular close action.
+           */}
           <div className="px-5 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white flex-shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border bg-[#093C5D]/10 text-[#093C5D] border-[#093C5D]/20">
@@ -174,10 +197,16 @@ const SendDirectNoticeModal = ({ isOpen, onClose, shop, onSuccess }) => {
             </button>
           </div>
 
-          {/* Form Body */}
+          {/**
+           * Direct Notice Form
+           * Form fields for templates, priority, title, message body, and live preview.
+           */}
           <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
             <div className="p-4 sm:p-5 space-y-4 overflow-y-auto flex-1">
-              {/* Store Summary Callout */}
+              {/**
+               * Store Recipient Summary
+               * Information strip displaying target shop name, merchant owner, and plan tier.
+               */}
               <div className="p-3 bg-gray-50/80 border border-gray-200 rounded-lg flex items-center justify-between gap-3 text-xs">
                 <div className="flex items-center gap-2.5 min-w-0">
                   <Store className="w-4 h-4 text-[#093C5D] shrink-0" />
@@ -200,7 +229,10 @@ const SendDirectNoticeModal = ({ isOpen, onClose, shop, onSuccess }) => {
                 </div>
               </div>
 
-              {/* Quick Preset Templates */}
+              {/**
+               * Quick Preset Templates
+               * Clickable chips pre-filling common administrative notices.
+               */}
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1.5 flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-[#093C5D]" />
@@ -228,7 +260,10 @@ const SendDirectNoticeModal = ({ isOpen, onClose, shop, onSuccess }) => {
                 </div>
               </div>
 
-              {/* Priority Selector */}
+              {/**
+               * Priority Level Selector
+               * Granular urgency levels: normal, high, urgent, or broadcast.
+               */}
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                   Notice Priority Level
@@ -254,7 +289,10 @@ const SendDirectNoticeModal = ({ isOpen, onClose, shop, onSuccess }) => {
                 </div>
               </div>
 
-              {/* Notice Title Input */}
+              {/**
+               * Notice Title Input
+               * Headline subject line for the in-app merchant notice.
+               */}
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="block text-xs font-semibold text-gray-700">
@@ -275,7 +313,10 @@ const SendDirectNoticeModal = ({ isOpen, onClose, shop, onSuccess }) => {
                 />
               </div>
 
-              {/* Notice Message Textarea */}
+              {/**
+               * Notice Message Body
+               * Multi-line textarea detailing formal instructions for the shopkeeper.
+               */}
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="block text-xs font-semibold text-gray-700">
@@ -296,7 +337,10 @@ const SendDirectNoticeModal = ({ isOpen, onClose, shop, onSuccess }) => {
                 />
               </div>
 
-              {/* Live Preview Card */}
+              {/**
+               * Live In-App Notification Preview
+               * Demonstrates how the alert will appear in the shopkeeper's notifications drawer.
+               */}
               <div>
                 <label className="block text-[11px] font-semibold uppercase tracking-wider text-gray-500 mb-1.5">
                   Live Merchant Box Preview
@@ -325,7 +369,10 @@ const SendDirectNoticeModal = ({ isOpen, onClose, shop, onSuccess }) => {
               </div>
             </div>
 
-            {/* Modal Footer */}
+            {/**
+             * Modal Action Footer
+             * Cancel button and submit trigger to deliver direct notification to store.
+             */}
             <div className="px-4 sm:px-5 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-end gap-2.5 flex-shrink-0">
               <button
                 type="button"

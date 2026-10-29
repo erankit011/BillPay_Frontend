@@ -1,3 +1,8 @@
+/**
+ * SaaS Discount Coupon Creation & Editing Dialog
+ * Manages promotional voucher codes, percentage/flat discounts, plan applicability, and usage limits.
+ */
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -14,6 +19,9 @@ import {
 import toast from 'react-hot-toast';
 import { getAdminPlans } from '../../api/adminApi';
 
+/**
+ * Fallback Subscription Tier Options
+ */
 const DEFAULT_AVAILABLE_PLANS = [
   { id: 'MONTHLY', label: 'Monthly Pro (₹299)' },
   { id: 'QUARTERLY', label: 'Quarterly Pro (₹799)' },
@@ -37,7 +45,10 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
   const [isActive, setIsActive] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  // Live query for dynamically configured plans
+  /**
+   * Dynamic Plans Query
+   * Fetches latest SaaS subscription plan definitions from administrative endpoints.
+   */
   const { data: adminPlans } = useQuery({
     queryKey: ['adminPlans'],
     queryFn: getAdminPlans,
@@ -147,7 +158,10 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
     }
   };
 
-  // Prevent background scrolling when modal is open
+  /**
+   * Scroll & Touch Prevention Hook
+   * Disables document scrolling and touch moves while modal dialog is open.
+   */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -170,7 +184,10 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
 
   return (
     <div className="fixed inset-0 z-50 overscroll-contain">
-      {/* Backdrop */}
+      {/**
+       * Backdrop Overlay
+       * Darkened semi-transparent overlay closing dialog on background tap.
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
@@ -178,18 +195,27 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
         onTouchMove={(e) => e.preventDefault()}
       />
 
-      {/* Modal Container: Bottom Sheet on Mobile, Centered on sm+ */}
+      {/**
+       * Modal Viewport Dialog
+       * Renders as mobile bottom sheet or desktop centered dialogue modal.
+       */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div
           className="relative w-full sm:max-w-4xl bg-white rounded-t-2xl sm:rounded-xl border border-gray-200 animate-modal-content overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[88vh] pointer-events-auto shadow-2xl sm:shadow-xl"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Mobile Drag Handle */}
+          {/**
+           * Mobile Drag Pill
+           * Visual drag pill indicator displayed on mobile devices.
+           */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-gray-50/80">
             <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
           </div>
 
-          {/* Header */}
+          {/**
+           * Modal Header
+           * Coupon tag icon, headline title, subtitle explanation, and close button.
+           */}
           <div className="px-5 sm:px-6 py-4 border-b border-gray-200 bg-gray-50/80 flex items-center justify-between shrink-0 gap-3">
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
               <div className="w-9 h-9 rounded bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center shrink-0">
@@ -214,11 +240,20 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
             </button>
           </div>
 
-          {/* Modal Body: Split Layout */}
+          {/**
+           * Modal Body Layout
+           * Two-column split layout with configuration form and live voucher preview.
+           */}
           <div className="grid grid-cols-1 lg:grid-cols-12 overflow-y-auto flex-1">
-            {/* Left Form: 7 Columns */}
+            {/**
+             * Form Configuration Pane
+             * Input controls for coupon rules, discounts, quotas, and Razorpay offer integration.
+             */}
             <form onSubmit={handleSubmit} id="coupon-form" className="lg:col-span-7 p-6 space-y-4">
-              {/* Coupon Code Input */}
+              {/**
+               * Coupon Code Field
+               * Upper-cased voucher code input with quick random generator button.
+               */}
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="text-xs font-semibold text-gray-700">Coupon Code *</label>
@@ -241,7 +276,10 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                 />
               </div>
 
-              {/* Description */}
+              {/**
+               * Promotional Description
+               * Brief human explanation describing the promo campaign.
+               */}
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">Description</label>
                 <input
@@ -253,7 +291,10 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                 />
               </div>
 
-              {/* Discount Type & Value */}
+              {/**
+               * Discount Calculation Parameters
+               * Toggle between percentage discount and flat cash deduction.
+               */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Discount Type</label>
@@ -297,7 +338,10 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                 </div>
               </div>
 
-              {/* Max Discount & Min Order Amount */}
+              {/**
+               * Financial Cap Safeguards
+               * Configures maximum discount ceiling and minimum transaction thresholds.
+               */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {discountType === 'PERCENTAGE' && (
                   <div>
@@ -330,7 +374,10 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                 </div>
               </div>
 
-              {/* Applicable Plans */}
+              {/**
+               * Eligible Subscription Tiers
+               * Selectable checkboxes restricting coupon applicability to specific plans.
+               */}
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                   Eligible Plans *
@@ -353,7 +400,10 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                 </div>
               </div>
 
-              {/* Usage Limits */}
+              {/**
+               * Redemptions Allocation Caps
+               * Enforces global usage limits and per-merchant redemption boundaries.
+               */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">
@@ -383,7 +433,10 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                 </div>
               </div>
 
-              {/* Expiry Date */}
+              {/**
+               * Temporal Expiration Date
+               * Optional calendar date after which the promo coupon is rejected.
+               */}
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">
                   Expiration Date (Optional)
@@ -396,7 +449,10 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                 />
               </div>
 
-              {/* Razorpay Offer ID (Model 1 NPCI-Compliant AutoPay) */}
+              {/**
+               * Razorpay Recurring Offer Integration
+               * Direct offer identifier for first-cycle discounts in NPCI-compliant AutoPay mandates.
+               */}
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="block text-xs font-semibold text-gray-700">
@@ -417,13 +473,19 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
               </div>
             </form>
 
-            {/* Right Live Voucher Preview: 5 Columns */}
+            {/**
+             * Live Voucher Preview Pane
+             * Visual demonstration of merchant-facing coupon design and terms.
+             */}
             <div className="lg:col-span-5 bg-gray-50/70 p-6 border-t lg:border-t-0 lg:border-l border-gray-200 flex flex-col justify-center">
               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
                 Live Voucher Preview
               </span>
 
-              {/* Live Voucher Card */}
+              {/**
+               * Merchant Voucher Preview Card
+               * Live rendering of percentage discount, promo badge, and terms.
+               */}
               <div className="bg-white rounded-lg border-2 border-dashed border-[#093C5D]/30 p-5 space-y-4 relative overflow-hidden">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-[#093C5D]/10 text-[#093C5D]">
@@ -443,7 +505,10 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                   </p>
                 </div>
 
-                {/* Code Box */}
+                {/**
+                 * Promo Code Display Frame
+                 * Monospace visual box highlighting the voucher coupon code.
+                 */}
                 <div className="p-2.5 bg-gray-100 rounded-xl flex items-center justify-between">
                   <span className="font-mono font-bold text-sm tracking-wider text-[#093C5D]">
                     {code || 'ENTER_CODE'}
@@ -464,7 +529,10 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
             </div>
           </div>
 
-          {/* Footer */}
+          {/**
+           * Modal Action Footer
+           * Immediate activation checkbox switch, cancel action, and save trigger.
+           */}
           <div className="px-6 py-4 border-t border-gray-200 bg-gray-50/80 flex items-center justify-between shrink-0">
             <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-gray-700">
               <input

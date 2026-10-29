@@ -19,7 +19,10 @@ const AppVersionCard = ({ variant = 'sidebar', className = '' }) => {
   if (variant === 'full') {
     return (
       <div className={`bg-white rounded-lg border border-gray-200/80 p-4 shadow-none ${className}`}>
-        {/* Top Row: App Name + Version */}
+        {/**
+         * Platform Monogram & Semver Tag
+         * Displays brand identity and current semantic build version
+         */}
         <div className="flex items-center justify-between gap-2">
           <div>
             <h4 className="text-sm font-semibold text-gray-900 tracking-tight leading-none">
@@ -34,7 +37,10 @@ const AppVersionCard = ({ variant = 'sidebar', className = '' }) => {
           </span>
         </div>
 
-        {/* Bottom Row: Release Date & Check for Updates */}
+        {/**
+         * Release Date & Service Worker Refresh Trigger
+         * Renders build timestamp and on-demand cache validation action
+         */}
         <div className="flex items-center justify-between gap-3 text-xs mt-3 pt-3 border-t border-gray-100">
           <div className="flex items-center gap-1.5 text-gray-500 font-normal">
             <span>{t('Release')}:</span>
@@ -59,10 +65,15 @@ const AppVersionCard = ({ variant = 'sidebar', className = '' }) => {
     );
   }
 
-  // Default: 'sidebar' variant for desktop sticky navigation rails
+  /**
+   * Compact Sidebar Variant
+   * Formatted specifically for navigation sidebars and drawer footers
+   */
   return (
     <div className={`bg-white rounded-lg border border-gray-200/80 p-3.5 shadow-none transition-colors duration-150 ${className}`}>
-      {/* Top Row: App Name + Version */}
+      {/**
+       * Header Monogram & Build Version
+       */}
       <div className="flex items-center justify-between gap-2">
         <div>
           <h4 className="text-xs font-semibold text-gray-900 tracking-tight leading-none">
@@ -77,7 +88,9 @@ const AppVersionCard = ({ variant = 'sidebar', className = '' }) => {
         </span>
       </div>
 
-      {/* Bottom Row: Release Date & Check for Updates */}
+      {/**
+       * Release Timestamp & Verification Trigger
+       */}
       <div className="flex items-center justify-between gap-2 text-[10.5px] mt-2.5 pt-2.5 border-t border-gray-100">
         <span className="text-gray-500 font-normal truncate">{BUILD_DATE}</span>
         <button

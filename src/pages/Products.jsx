@@ -1,3 +1,8 @@
+/**
+ * Merchant Inventory & Catalog Management Page
+ * Handles item creation, price updates, stock alerts, thermal PDF inventory report, and barcode lookups.
+ */
+
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
@@ -15,7 +20,10 @@ import toast from 'react-hot-toast';
 import { formatCurrency } from '../utils/currency';
 import { formatDate } from '../utils/dateUtils';
 
-// Product icon/emoji mapping
+/**
+ * Product Item Category Emoji Resolution
+ * Derives visual icon identifier based on common product keywords
+ */
 const getProductIcon = (name) => {
   const nameLower = name.toLowerCase();
   if (nameLower.includes('atta') || nameLower.includes('flour')) return '🌾';
@@ -30,7 +38,9 @@ const getProductIcon = (name) => {
   return '📦';
 };
 
-
+/**
+ * Products Component
+ */
 const Products = () => {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth);
@@ -49,7 +59,10 @@ const Products = () => {
 
   const queryClient = useQueryClient();
 
-  // Handle body scroll for modals
+  /**
+   * Modal Scroll Lock Effect
+   * Prevents background document scrolling when interactive dialogs are mounted
+   */
   useEffect(() => {
     if (isModalOpen || deleteModalOpen || viewProduct) {
       document.body.style.overflow = 'hidden';
@@ -73,7 +86,10 @@ const Products = () => {
     }, { replace: true });
   };
 
-  // Debounce search term and sync URL
+  /**
+   * Debounced Search Synchronization
+   * Updates URL query parameter with 500ms delay to prevent rapid query refetches
+   */
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchTerm);
@@ -87,14 +103,17 @@ const Products = () => {
     return () => clearTimeout(handler);
   }, [searchTerm, setSearchParams]);
 
-  // Sync URL back to local state (for back/forward navigation)
+  /**
+   * History Navigation URL Sync
+   * Restores search field state when traversing browser history forward or backward
+   */
   useEffect(() => {
     const urlSearch = searchParams.get('search') || '';
     if (urlSearch !== debouncedSearch) {
       setSearchTerm(urlSearch);
       setDebouncedSearch(urlSearch);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [searchParams]);
 
   const {
@@ -111,8 +130,8 @@ const Products = () => {
       return res.data.data;
     },
     getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
-    staleTime: 1 * 60 * 1000, // Data is fresh for 1 min
-    gcTime: 5 * 60 * 1000,   // Garbage collect (delete from memory) if unused for 5 mins
+    staleTime: 1 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
     placeholderData: keepPreviousData,
   });
   
@@ -234,7 +253,10 @@ const Products = () => {
     }
   };
 
-  // Get EXACT stats from the first page backend response
+  /**
+   * Backend Aggregated Inventory Statistics
+   * Derives catalog valuation and stock tier counts from initial page payload
+   */
   const firstPage = data?.pages?.[0];
   const totalCount = firstPage?.totalCount || 0;
   const stats = {
@@ -247,7 +269,10 @@ const Products = () => {
 
   return (
     <div className="w-full space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12">
-      {/* Header */}
+      {/**
+       * Inventory Page Header
+       * Primary header with catalog description and action buttons
+       */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Inventory & Products')}</h1>
@@ -276,10 +301,16 @@ const Products = () => {
         </div>
       </div>
 
-      {/* Stats Section */}
+      {/**
+       * Inventory Analytics & Valuation Card
+       * Displays total financial value of on-hand inventory and stock health counters
+       */}
       <div className="w-full bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default mb-6 md:mb-8">
 
-        {/* Top Part: Inventory Value */}
+        {/**
+         * Total Inventory Valuation Section
+         * Cumulative purchase or sales value of entire stock
+         */}
         <div className="p-4 md:p-5 xl:p-6 flex items-center gap-3 md:gap-4">
           <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg p-[2px] border border-gray-200 bg-white">
             <div className="w-full h-full rounded-md flex items-center justify-center bg-gray-50 text-[#093C5D]">
@@ -293,7 +324,10 @@ const Products = () => {
           </div>
         </div>
 
-        {/* Bottom Part: Mini Stats Footer */}
+        {/**
+         * Stock Level Breakdown Bar
+         * Mini counters showing in-stock, low-stock, and out-of-stock items
+         */}
         <div className="bg-gray-50/80 px-4 py-3 md:px-5 md:py-3.5 border-t border-gray-100 flex flex-wrap items-center gap-x-4 gap-y-2.5 sm:gap-x-6">
           <div className="flex items-center gap-1.5 sm:gap-2"><span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-blue-700 shrink-0"></span><span className="text-[11px] sm:text-xs md:text-sm text-gray-500 font-medium whitespace-nowrap">{t('Total Stock')}: <span className="font-semibold text-gray-900">{stats.activeItems}</span></span></div>
           <div className="flex items-center gap-1.5 sm:gap-2"><span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-green-700 shrink-0"></span><span className="text-[11px] sm:text-xs md:text-sm text-gray-500 font-medium whitespace-nowrap">{t('In Stock')}: <span className="font-semibold text-gray-900">{stats.inStockItems}</span></span></div>
@@ -303,8 +337,10 @@ const Products = () => {
 
       </div>
 
-      {/* Search Bar + Filter */}
-      {/* Filter Chips */}
+      {/**
+       * Stock Availability Filter Chips
+       * Filters catalog by in-stock, low-stock, and exhausted stock items
+       */}
       <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {[
           { label: 'All Stocks', value: 'All' },
@@ -325,7 +361,10 @@ const Products = () => {
         ))}
       </div>
 
-      {/* Search Bar */}
+      {/**
+       * Inventory Search Bar
+       * Instant keyword filter matching product name, barcode, and category
+       */}
       <div className="flex flex-col w-full mb-3 sm:mb-4">
         <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
@@ -341,7 +380,10 @@ const Products = () => {
         </div>
       </div>
 
-      {/* Products List View */}
+      {/**
+       * Product Catalog Listing
+       * Renders responsive product list with desktop table and mobile cards
+       */}
       <div className="bg-white md:border md:border-gray-100 md:rounded-lg overflow-hidden">
         {isLoading ? (
           <div className="flex justify-center items-center py-12">
@@ -358,7 +400,10 @@ const Products = () => {
           </div>
         ) : (
           <div>
-            {/* Desktop Table */}
+            {/**
+             * Desktop Product Table View
+             * Tabular catalog layout for wide desktop displays
+             */}
             <div className="hidden md:block overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               <table className="w-full min-w-[900px] whitespace-nowrap">
                 <thead className="bg-gray-50/80 border-b border-gray-200">
@@ -431,7 +476,10 @@ const Products = () => {
               </table>
             </div>
 
-            {/* Mobile Cards */}
+            {/**
+             * Mobile & Tablet Product Cards View
+             * Touch-friendly card listing for handheld screens
+             */}
             <div className="md:hidden flex flex-col gap-2.5">
               {products.map((product, index) => (
                 <div
@@ -473,10 +521,16 @@ const Products = () => {
                     </div>
                   </div>
 
-                  {/* Divider */}
+                  {/**
+                   * Product Card Divider
+                   * Separates product details from management actions
+                   */}
                   <div className="border-t border-gray-100 my-2.5 sm:my-3"></div>
 
-                  {/* Actions */}
+                  {/**
+                   * Product Management Actions
+                   * Edit and delete triggers for mobile card view
+                   */}
                   <div className="flex items-center justify-end flex-nowrap gap-1.5 sm:gap-2 w-full mt-1.5 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                     <button
                       onClick={() => openEditModal(product)}
@@ -495,7 +549,10 @@ const Products = () => {
               ))}
             </div>
 
-            {/* Load More Button */}
+            {/**
+             * Pagination Load More Trigger
+             * Fetches next chunk of inventory products
+             */}
             <LoadMoreButton
               hasNextPage={hasNextPage}
               isFetchingNextPage={isFetchingNextPage}
@@ -508,9 +565,10 @@ const Products = () => {
         )}
       </div>
 
-
-
-      {/* Add/Edit Product Modal */}
+      {/**
+       * Product Form Modal
+       * Modal dialog for creating new product or editing existing item details
+       */}
       {isModalOpen && (
         <ProductFormModal
           isOpen={isModalOpen}
@@ -522,17 +580,26 @@ const Products = () => {
         />
       )}
 
-      {/* View Product Modal */}
+      {/**
+       * Product Detail Preview Modal
+       * Displays complete specification and barcode details for selected item
+       */}
       <ProductViewModal
         isOpen={viewProduct !== null}
         onClose={() => setViewProduct(null)}
         product={viewProduct}
       />
 
-      {/* Delete Confirmation Modal */}
+      {/**
+       * Product Deletion Confirmation Modal
+       * Dialog verifying permanent removal of an item from store inventory
+       */}
       {deleteModalOpen && productToDelete && (
         <div className="fixed inset-0 z-[100]">
-          {/* Backdrop */}
+          {/**
+           * Modal Backdrop Overlay
+           * Dark translucent backdrop closing dialog on outside click
+           */}
           <div
             className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
             onClick={() => {
@@ -541,7 +608,10 @@ const Products = () => {
             }}
           />
 
-          {/* Modal Content */}
+          {/**
+           * Modal Content Container
+           * Warning prompt and confirmation action buttons
+           */}
           <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
             <div
               className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
@@ -581,7 +651,10 @@ const Products = () => {
         </div>
       )}
 
-      {/* Mobile & Tablet Extended FAB (No Shadow) */}
+      {/**
+       * Mobile Floating Action Button
+       * Quick-access button for adding new products on handheld devices
+       */}
       {!isModalOpen && (
         <button
           onClick={() => setIsModalOpen(true)}

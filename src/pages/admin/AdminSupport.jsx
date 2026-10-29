@@ -1,3 +1,8 @@
+/**
+ * Administrative Support Helpdesk & Merchant Inquiries Desk
+ * Resolves merchant support tickets, updates priority queues, and maintains staff resolution audit notes.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -77,7 +82,10 @@ const AdminSupport = () => {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Debounce search input syncing to URL
+  /**
+   * Search Input Debouncing
+   * Synchronizes search query to URL query params with 450ms debounce delay.
+   */
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchTerm);
@@ -117,7 +125,10 @@ const AdminSupport = () => {
     });
   };
 
-  // Fetch KPI statistics via React Query
+  /**
+   * Support KPI Statistics Query
+   * Fetches aggregate metrics for open, in-progress, resolved, and urgent inquiries.
+   */
   const { data: statsData, isLoading: statsLoading } = useQuery({
     queryKey: ['adminTicketStats'],
     queryFn: getAdminTicketStats,
@@ -132,7 +143,10 @@ const AdminSupport = () => {
     urgent: 0,
   };
 
-  // Fetch tickets list via React Query
+  /**
+   * Support Tickets Query
+   * Fetches paginated support tickets filtered by search, status, priority, and category.
+   */
   const { data: ticketsData, isLoading: loading } = useQuery({
     queryKey: ['adminTickets', debouncedSearch, urlStatus, urlPriority, urlCategory, urlPage],
     queryFn: () =>
@@ -190,7 +204,10 @@ const AdminSupport = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
-      {/* Header */}
+      {/**
+       * Helpdesk Header Section
+       * Displays page title and overview description for administrative support desk.
+       */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
@@ -202,7 +219,10 @@ const AdminSupport = () => {
         </div>
       </div>
 
-      {/* KPI Stat Cards (Matched with Admin Shops UI) */}
+      {/**
+       * Support KPI Stat Cards
+       * Summarizes total inquiries, pending/open tickets, tickets in investigation, and resolved issues.
+       */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         <AdminStatCard
           title="TOTAL INQUIRIES"
@@ -234,7 +254,10 @@ const AdminSupport = () => {
         />
       </div>
 
-      {/* Filter Chips (Matched with Admin Shops UI) */}
+      {/**
+       * Filter Chips Toolbar
+       * Interactive pill buttons for ticket status, priority level, category, and reset option.
+       */}
       <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {STATUS_OPTIONS.map((opt) => (
           <button
@@ -298,7 +321,10 @@ const AdminSupport = () => {
         )}
       </div>
 
-      {/* Search Bar (Matched with Admin Shops UI) */}
+      {/**
+       * Search Bar Filter
+       * Full-text search across ticket ID, requester name, store name, subject, and email.
+       */}
       <div className="flex flex-col w-full mb-3 sm:mb-4">
         <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
@@ -332,7 +358,10 @@ const AdminSupport = () => {
         </div>
       </div>
 
-      {/* Content Stream: Desktop Table + Mobile Cards */}
+      {/**
+       * Support Tickets Stream
+       * Renders responsive desktop table layout or touch-friendly mobile cards.
+       */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
         {loading ? (
           <div className="p-8 md:p-12 text-center text-gray-500 flex flex-col items-center justify-center">
@@ -355,7 +384,10 @@ const AdminSupport = () => {
           </div>
         ) : (
           <div>
-            {/* Desktop Table View */}
+            {/**
+             * Desktop Table View
+             * Tabular presentation of support tickets with status badges and quick action controls.
+             */}
             <div className="hidden lg:block overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               <table className="w-full text-left text-sm text-gray-600 whitespace-nowrap">
                 <thead className="bg-gray-50/80 border-b border-gray-200 text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -376,14 +408,20 @@ const AdminSupport = () => {
                       onClick={() => handleOpenTicket(ticket)}
                       className="hover:bg-[#F5F5F5]/60 transition-colors cursor-pointer group"
                     >
-                      {/* Ticket ID */}
+                      {/**
+                       * Ticket Identifier
+                       * Unique hexadecimal/numeric ticket reference code.
+                       */}
                       <td className="py-3.5 px-4 lg:px-6 align-middle">
                         <span className="font-mono text-xs font-semibold bg-gray-100 group-hover:bg-[#093C5D]/10 group-hover:text-[#093C5D] px-2.5 py-1 rounded transition-colors text-gray-800">
                           #{ticket.ticketId}
                         </span>
                       </td>
 
-                      {/* Requester */}
+                      {/**
+                       * Requester Profile
+                       * User avatar initials, full name, email, and associated store.
+                       */}
                       <td className="py-3.5 px-4 lg:px-6 align-middle">
                         <div className="flex items-center gap-3">
                           <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-lg p-[2px] border border-gray-200 bg-white shrink-0">
@@ -406,7 +444,10 @@ const AdminSupport = () => {
                         </div>
                       </td>
 
-                      {/* Subject & Category */}
+                      {/**
+                       * Subject & Category
+                       * Ticket subject line and categorized inquiry badge.
+                       */}
                       <td className="py-3.5 px-4 lg:px-6 align-middle">
                         <div className="max-w-[280px]">
                           <div className="text-xs lg:text-sm font-semibold text-gray-900 truncate">
@@ -418,22 +459,34 @@ const AdminSupport = () => {
                         </div>
                       </td>
 
-                      {/* Priority */}
+                      {/**
+                       * Priority Badge
+                       * Visual badge indicating Low, Medium, High, or Urgent priority.
+                       */}
                       <td className="py-3.5 px-4 lg:px-6 align-middle">
                         <TicketPriorityBadge priority={ticket.priority} />
                       </td>
 
-                      {/* Status */}
+                      {/**
+                       * Status Badge
+                       * Visual badge showing Open, In Progress, Resolved, or Closed.
+                       */}
                       <td className="py-3.5 px-4 lg:px-6 align-middle">
                         <TicketStatusBadge status={ticket.status} />
                       </td>
 
-                      {/* Date */}
+                      {/**
+                       * Submission Date
+                       * Timestamp when the support ticket was opened.
+                       */}
                       <td className="py-3.5 px-4 lg:px-6 align-middle text-xs font-medium text-gray-600 whitespace-nowrap">
                         {formatDate(ticket.createdAt)}
                       </td>
 
-                      {/* Actions */}
+                      {/**
+                       * Action Buttons
+                       * Quick resolve toggle and full ticket inspection trigger.
+                       */}
                       <td className="py-3.5 px-4 lg:px-6 align-middle text-right">
                         <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
                           {ticket.status !== 'RESOLVED' && ticket.status !== 'CLOSED' && (
@@ -464,7 +517,10 @@ const AdminSupport = () => {
               </table>
             </div>
 
-            {/* Mobile / Tablet Cards */}
+            {/**
+             * Mobile & Tablet Cards View
+             * Compact card layout for touch screens with quick triage actions.
+             */}
             <div className="lg:hidden flex flex-col gap-2.5 p-3">
               {tickets.map((ticket) => (
                 <div
@@ -472,7 +528,10 @@ const AdminSupport = () => {
                   onClick={() => handleOpenTicket(ticket)}
                   className="bg-white border border-gray-200 rounded-lg p-3.5 transition-colors cursor-pointer active:bg-gray-50 shadow-none space-y-3"
                 >
-                  {/* Top Row: Avatar + Name + Status */}
+                  {/**
+                   * Top Row: Avatar, Name & Status
+                   * Requester initials, ticket ID, timestamp, and active status indicator.
+                   */}
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2.5 min-w-0">
                       <div className="w-9 h-9 rounded-lg p-[2px] border border-gray-200 bg-white shrink-0">
@@ -497,7 +556,10 @@ const AdminSupport = () => {
                     <TicketStatusBadge status={ticket.status} />
                   </div>
 
-                  {/* Middle Row: Subject & Tags */}
+                  {/**
+                   * Middle Row: Subject & Tags
+                   * Support inquiry subject line and category metadata tags.
+                   */}
                   <div className="space-y-1">
                     <p className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-1">
                       {ticket.subject}
@@ -515,7 +577,10 @@ const AdminSupport = () => {
                     </div>
                   </div>
 
-                  {/* Bottom Row: Priority & Actions */}
+                  {/**
+                   * Bottom Row: Priority & Actions
+                   * Priority indicator badge and buttons to resolve or view full thread.
+                   */}
                   <div className="pt-2 border-t border-gray-100 flex items-center justify-between gap-2">
                     <TicketPriorityBadge priority={ticket.priority} />
 
@@ -547,7 +612,10 @@ const AdminSupport = () => {
           </div>
         )}
 
-        {/* Pagination Controls */}
+        {/**
+         * Pagination Controls Bar
+         * Page index summary and previous/next page navigation buttons.
+         */}
         {pagination.totalPages > 1 && (
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border-t border-gray-200 bg-gray-50/60">
             <span className="text-xs text-gray-500 font-medium">
@@ -578,7 +646,10 @@ const AdminSupport = () => {
         )}
       </div>
 
-      {/* Ticket Management Slide-Over / Modal */}
+      {/**
+       * Ticket Management Slide-Over Modal
+       * Detailed ticket viewer and conversation thread drawer for administrative replies.
+       */}
       <TicketDetailsModal
         isOpen={modalOpen}
         ticket={selectedTicket}

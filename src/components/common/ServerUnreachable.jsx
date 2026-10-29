@@ -1,6 +1,14 @@
+/**
+ * Offline / Server Unreachable Error Fallback Screen
+ * Displayed when initial network handshake fails or the backend service is offline.
+ */
+
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * ServerUnreachable Component
+ */
 const ServerUnreachable = () => {
   const { t } = useTranslation();
 

@@ -1,13 +1,24 @@
+/**
+ * SaaS Subscription Tier Upgrade Modal
+ * Prompts merchants to unlock additional customer capacity, billing quotas, and premium features.
+ */
+
 import React from 'react';
 import { X, Lock, Crown, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * UpgradeModal Component
+ */
 const UpgradeModal = ({ isOpen, onClose, title, message }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  // Prevent background scrolling when modal is open
+  /**
+   * Body Scroll Lock Controller
+   * Prevents window background scrolling during modal presentation
+   */
   React.useEffect(() => {
     if (!isOpen) return;
 
@@ -35,7 +46,10 @@ const UpgradeModal = ({ isOpen, onClose, title, message }) => {
 
   return (
     <div className="fixed inset-0 z-[60] overscroll-contain">
-      {/* Backdrop */}
+      {/**
+       * Modal Backdrop Overlay
+       * Obscures underlying viewport and captures dismiss clicks
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
@@ -43,16 +57,23 @@ const UpgradeModal = ({ isOpen, onClose, title, message }) => {
         onTouchMove={(e) => e.preventDefault()}
       />
 
-      {/* Mobile: bottom sheet | sm+: centered modal */}
+      {/**
+       * Responsive Dialog Frame
+       * Bottom sheet layout on mobile devices, centered window on desktop
+       */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-[60] pointer-events-none">
         <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] animate-modal-content overflow-hidden pointer-events-auto">
           
-          {/* Drag handle — mobile only */}
+          {/**
+           * Mobile Sheet Drag Indicator
+           */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-red-50/50">
             <div className="w-10 h-1.5 bg-red-200 rounded-full" />
           </div>
 
-          {/* Header */}
+          {/**
+           * Modal Header & Warning Glyph
+           */}
           <div className="flex items-center justify-between px-5 md:px-6 py-4 md:py-5 border-b border-red-100 bg-red-50/50 flex-shrink-0">
             <h3 className="text-lg md:text-xl font-semibold text-gray-900 flex items-center gap-2">
               <Lock className="w-5 h-5 text-red-500" /> {title || t('Limit Reached')}
@@ -65,7 +86,9 @@ const UpgradeModal = ({ isOpen, onClose, title, message }) => {
             </button>
           </div>
 
-          {/* Body */}
+          {/**
+           * Modal Content Body & Plan Benefits
+           */}
           <div className="p-5 md:p-6 text-left space-y-5 md:space-y-6 overflow-y-auto flex-1">
             <p className="text-[13px] sm:text-sm text-gray-700 font-medium leading-relaxed">
               {message}

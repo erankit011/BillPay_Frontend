@@ -12,13 +12,19 @@ const LogoutConfirmModal = ({ isOpen, onClose, onConfirm }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+      {/**
+       * Modal Backdrop Overlay
+       * Obscures background contents and captures dismiss click events
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
         onClick={onClose}
       />
 
-      {/* Modal Dialog */}
+      {/**
+       * Dialog Window Container
+       * Prompts user confirmation to invalidate session and log out
+       */}
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center z-10 border border-gray-100 animate-in fade-in zoom-in-95 duration-150">
         <div className="w-12 h-12 rounded-full bg-red-50 text-red-600 mx-auto flex items-center justify-center mb-4 border border-red-100">
           <LogOut className="w-6 h-6 ml-0.5" />

@@ -1,3 +1,8 @@
+/**
+ * Merchant Account Profile Settings
+ * Handles personal contact details, email updates, and avatar image uploads.
+ */
+
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,7 +12,9 @@ import api from '../api/axios';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import toast from 'react-hot-toast';
 
-
+/**
+ * Profile Component
+ */
 const Profile = () => {
   const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth);

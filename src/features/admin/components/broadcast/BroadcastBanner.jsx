@@ -1,7 +1,15 @@
+/**
+ * Interactive Broadcast Message Alert Banner
+ * Renders categorized dismissible announcement cards with action CTAs and external link navigation.
+ */
+
 import React from 'react';
 import { Info, AlertTriangle, AlertCircle, CheckCircle2, X, ExternalLink, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+/**
+ * Broadcast Type Visual Styles
+ */
 const TYPE_CONFIG = {
   INFO: {
     bg: 'bg-blue-50/90',
@@ -55,7 +63,10 @@ const BroadcastBanner = ({ broadcast, onDismiss, isPreview = false }) => {
       className={`relative w-full rounded-lg border p-3.5 sm:p-4 transition-all shadow-none ${config.bg} ${config.border} ${config.text}`}
     >
       <div className="flex items-start justify-between gap-3 sm:gap-4">
-        {/* Left Side: Icon & Content */}
+        {/**
+         * Announcement Content Column
+         * Icon, announcement title, audience badges, and message description.
+         */}
         <div className="flex items-start gap-3 min-w-0 flex-1">
           <div className="shrink-0 mt-0.5">
             <Icon className={`w-5 h-5 ${config.iconColor}`} />
@@ -84,7 +95,10 @@ const BroadcastBanner = ({ broadcast, onDismiss, isPreview = false }) => {
               {broadcast.message || 'Announcement message content will appear here...'}
             </p>
 
-            {/* Optional CTA Button */}
+            {/**
+             * Call-to-Action Link Button
+             * Renders external link anchor or internal React router navigation button.
+             */}
             {broadcast.actionUrl && (
               <div className="mt-2.5">
                 {isExternal ? (
@@ -111,7 +125,10 @@ const BroadcastBanner = ({ broadcast, onDismiss, isPreview = false }) => {
           </div>
         </div>
 
-        {/* Dismiss Button */}
+        {/**
+         * Dismiss Announcement Action
+         * Dismisses broadcast banner when configured as dismissible by administrator.
+         */}
         {broadcast.dismissible && onDismiss && !isPreview && (
           <button
             type="button"

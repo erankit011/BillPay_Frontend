@@ -1,3 +1,8 @@
+/**
+ * Payment Reminders Management Page
+ * Handles automated WhatsApp/SMS credit payment collection schedules, manual triggers, and recovery analytics.
+ */
+
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery, keepPreviousData } from '@tanstack/react-query';
@@ -41,7 +46,10 @@ const Reminders = () => {
     }, { replace: true });
   };
 
-  // Debounce search and sync URL
+  /**
+   * Search Query Debounce & URL Synchronization
+   * Defers filter query updates to prevent rapid API requests and keeps browser URL search params in sync
+   */
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchName);
@@ -55,16 +63,23 @@ const Reminders = () => {
     return () => clearTimeout(handler);
   }, [searchName, setSearchParams]);
 
-  // Sync URL back to local state (for back/forward navigation)
+  /**
+   * Browser Navigation Synchronization
+   * Reflects external URL changes and browser history events into local search state
+   */
   useEffect(() => {
     const urlSearch = searchParams.get('search') || '';
     if (urlSearch !== debouncedSearch) {
       setSearchName(urlSearch);
       setDebouncedSearch(urlSearch);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [searchParams]);
 
+  /**
+   * Infinite Reminders Query
+   * Fetches paginated collection reminders filtered by delivery status and search keyword
+   */
   const {
     data,
     isLoading,
@@ -79,12 +94,15 @@ const Reminders = () => {
       return res.data.data;
     },
     getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
-    staleTime: 1 * 60 * 1000, // Data is fresh for 1 min
-    gcTime: 5 * 60 * 1000,   // Garbage collect (delete from memory) if unused for 5 mins
+    staleTime: 1 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
     placeholderData: keepPreviousData,
   });
 
-  // Fetch minimal customer fields only when create reminder modal is open
+  /**
+   * Customer Dropdown Query
+   * Retrieves minimal customer records to populate recipient selector when reminder modal is active
+   */
   const { data: customers = [] } = useQuery({
     queryKey: ['customers', 'minimal-dropdown'],
     queryFn: async () => {
@@ -164,8 +182,6 @@ const Reminders = () => {
     }
   });
 
-  // Removed invalid import
-
   const handleSendNow = async (reminder) => {
     if (sendingReminderId) return;
     if (!user?.isBusinessSetupCompleted) {
@@ -189,8 +205,11 @@ const Reminders = () => {
     }
   };
 
+  /**
+   * Direct Dispatch Handler
+   * Placeholder dispatcher retained for modal interaction compatibility
+   */
   const confirmSend = () => {
-    // Deprecated for now since we share immediately
   };
 
   const handleEdit = (reminder) => {
@@ -261,7 +280,10 @@ const Reminders = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
-      {/* Header */}
+      {/**
+       * Page Header Section
+       * Title, subtitle, and primary reminder creation action trigger
+       */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Reminders')}</h1>
@@ -288,9 +310,15 @@ const Reminders = () => {
         </button>
       </div>
 
-      {/* Stats Cards */}
+      {/**
+       * Payment Recovery Metrics Overview
+       * Real-time metrics tracking pending reminders, sent alerts, outstanding udhar, and recovered amounts
+       */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
-        {/* Total Reminders (Pending) */}
+        {/**
+         * Pending Reminders Metric Tile
+         * Number of scheduled reminders awaiting dispatch
+         */}
         <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
@@ -304,7 +332,10 @@ const Reminders = () => {
           </div>
         </div>
 
-        {/* Reminders Sent */}
+        {/**
+         * Sent Reminders Metric Tile
+         * Count of reminders successfully delivered to customers
+         */}
         <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
@@ -318,7 +349,10 @@ const Reminders = () => {
           </div>
         </div>
 
-        {/* Total Pending Udhar */}
+        {/**
+         * Outstanding Credit Metric Tile
+         * Cumulative overdue balance across all debtor customers
+         */}
         <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-700 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-red-50 flex items-center justify-center text-red-700 border border-red-100">
@@ -336,7 +370,10 @@ const Reminders = () => {
           </div>
         </div>
 
-        {/* Amount Recovered */}
+        {/**
+         * Recovered Credit Metric Tile
+         * Total monetary recovery achieved through reminder collections
+         */}
         <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-green-700 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
           <div className="flex justify-between items-start gap-1">
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-green-50 flex items-center justify-center text-green-700 border border-green-100">
@@ -355,7 +392,10 @@ const Reminders = () => {
         </div>
       </div>
 
-      {/* Filter Chips */}
+      {/**
+       * Delivery Status Filter Tabs
+       * Filter controls toggling between all, pending, and sent reminders
+       */}
       <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {[
           { label: 'All', value: 'All' },
@@ -375,7 +415,10 @@ const Reminders = () => {
         ))}
       </div>
 
-      {/* Search Bar */}
+      {/**
+       * Customer Search Bar
+       * Search reminders by associated customer name or mobile number
+       */}
       <div className="flex flex-col w-full mb-3 sm:mb-4">
         <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
@@ -391,7 +434,10 @@ const Reminders = () => {
         </div>
       </div>
 
-      {/* Main Content Area */}
+      {/**
+       * Reminders Data Directory
+       * Main container rendering loading states, empty placeholders, tables, or mobile cards
+       */}
       <div className="bg-white md:border md:border-gray-100 md:rounded-lg overflow-hidden">
         {isLoading ? (
           <div className="flex justify-center items-center py-12 border border-gray-100 rounded-lg md:border-none">
@@ -424,7 +470,10 @@ const Reminders = () => {
           </div>
         ) : (
           <>
-            {/* Desktop Table View */}
+            {/**
+             * Desktop Tabular Reminders View
+             * Tabular display of customer profile, schedule, outstanding due, delivery status, and action triggers
+             */}
             <div className="hidden md:block overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-[400px]">
               <table className="w-full min-w-[950px] whitespace-nowrap text-left">
                 <thead className="bg-gray-50/80 border-b border-gray-200">
@@ -440,7 +489,10 @@ const Reminders = () => {
                   {reminders.map((reminder) => (
                     <tr key={reminder._id} className="bg-white border-b border-gray-100 last:border-b-0 hover:bg-[#F5F5F5]/60 transition-colors duration-150 relative">
 
-                      {/* Customer */}
+                      {/**
+                       * Customer Profile Column
+                       * Customer initial avatar, full name, and registered phone number
+                       */}
                       <td className="w-[30%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
                         <div className="flex items-center gap-3 lg:gap-4">
                           <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center text-[10px] lg:text-xs font-semibold flex-shrink-0 border border-gray-200 bg-gray-50 text-[#093C5D]">
@@ -457,7 +509,10 @@ const Reminders = () => {
                         </div>
                       </td>
 
-                      {/* Schedule */}
+                      {/**
+                       * Schedule & Channel Column
+                       * Target delivery date and communication medium badge (WhatsApp/SMS)
+                       */}
                       <td className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
                         <span className="text-xs lg:text-sm text-gray-900 font-medium block whitespace-nowrap">
                           {formatDate(reminder.scheduledDate)}
@@ -472,14 +527,20 @@ const Reminders = () => {
                         </span>
                       </td>
 
-                      {/* Due */}
+                      {/**
+                       * Outstanding Balance Column
+                       * Current overdue amount recorded on the customer ledger
+                       */}
                       <td className="w-[15%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
                         <span className={`text-xs lg:text-sm font-semibold block ${reminder.customerId?.balance > 0 ? 'text-red-700' : 'text-gray-900'}`}>
                           {reminder.customerId?.balance > 0 ? `₹${reminder.customerId.balance.toLocaleString('en-IN')}` : '-'}
                         </span>
                       </td>
 
-                      {/* Status */}
+                      {/**
+                       * Delivery Status Badge Column
+                       * Visual indicator reflecting pending, delivered, or failed status
+                       */}
                       <td className="w-[10%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
                         <div className="flex items-center justify-end w-full h-full">
                           <span className={`inline-block px-2.5 py-1 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide text-center ${reminder.status === 'PENDING' ? 'bg-red-50 text-red-700 border border-red-200' :
@@ -491,7 +552,10 @@ const Reminders = () => {
                         </div>
                       </td>
 
-                      {/* Actions */}
+                      {/**
+                       * Row Action Controls
+                       * Interactive buttons to view message text, dispatch instantly, edit, or delete
+                       */}
                       <td className="w-[30%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
                         <div className="flex items-center justify-end gap-2 lg:gap-2.5" onClick={(e) => e.stopPropagation()}>
                           <button
@@ -546,7 +610,10 @@ const Reminders = () => {
               </table>
             </div>
 
-            {/* Mobile Cards View */}
+            {/**
+             * Mobile Reminders Card Feed
+             * Responsive touch-optimized cards displaying reminder details and action buttons
+             */}
             <div className="md:hidden flex flex-col gap-2.5">
               {reminders.map((reminder) => (
                 <div
@@ -586,7 +653,10 @@ const Reminders = () => {
                     </div>
                   </div>
 
-                  {/* Actions (Aligned like Bills.jsx) */}
+                  {/**
+                   * Card Action Bar
+                   * Action buttons for quick preview, immediate dispatch, edit, and deletion
+                   */}
                   <div className="flex justify-end gap-2 w-full mt-3 pt-3 border-t border-gray-100">
                     <button
                       onClick={(e) => { e.stopPropagation(); setReminderToView(reminder); }}
@@ -629,7 +699,10 @@ const Reminders = () => {
               ))}
             </div>
 
-            {/* Load More Button */}
+            {/**
+             * Pagination Controls
+             * Interactive trigger to fetch and append the next page of reminders
+             */}
             <LoadMoreButton
               hasNextPage={hasNextPage}
               isFetchingNextPage={isFetchingNextPage}
@@ -642,7 +715,10 @@ const Reminders = () => {
         )}
       </div>
 
-      {/* Mobile & Tablet Extended FAB (No Shadow) */}
+      {/**
+       * Mobile Floating Action Trigger (FAB)
+       * Floating button for creating new reminders on mobile and tablet screens
+       */}
       {!isAnyModalOpen && !businessSetupModalOpen && (
         <button
           onClick={() => {
@@ -659,17 +735,29 @@ const Reminders = () => {
         </button>
       )}
 
-      {/* Reminder Modal */}
+      {/**
+       * Create / Edit Reminder Dialog
+       * Modal form for setting up customer recipients, scheduled dates, channels, and custom text
+       */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50">
-          {/* Backdrop */}
+          {/**
+           * Modal Backdrop Overlay
+           * Dimmed background dismissing modal when clicked
+           */}
           <div className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" onClick={handleCloseModal} />
 
-          {/* Mobile: bottom sheet | sm+: centered modal */}
+          {/**
+           * Modal Content Container
+           * Bottom sheet on mobile devices transitioning to centered modal on larger viewports
+           */}
           <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
             <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
 
-              {/* Drag handle — mobile only */}
+              {/**
+               * Mobile Bottom Sheet Handle
+               * Decorative touch affordance for mobile viewports
+               */}
               <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
                 <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
               </div>
@@ -685,7 +773,10 @@ const Reminders = () => {
 
               <div className="p-5 md:p-6 overflow-y-auto">
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                  {/* Customer */}
+                  {/**
+                   * Customer Selector Field
+                   * Searchable dropdown selecting customer recipient
+                   */}
                   <div>
                     <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
                       {t('Customer')} <span className="text-red-500">*</span>
@@ -723,7 +814,10 @@ const Reminders = () => {
                     )}
                   </div>
 
-                  {/* Message */}
+                  {/**
+                   * Notification Message Field
+                   * Customizable reminder text template with customer balance details
+                   */}
                   <div>
                     <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
                       {t('Message')} <span className="text-red-500">*</span>
@@ -742,7 +836,10 @@ const Reminders = () => {
                     )}
                   </div>
 
-                  {/* Scheduled Date */}
+                  {/**
+                   * Scheduled Date Field
+                   * Calendar date picker defining when the reminder is dispatched
+                   */}
                   <div>
                     <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
                       {t('Scheduled Date')} <span className="text-red-500">*</span>
@@ -760,7 +857,10 @@ const Reminders = () => {
                     )}
                   </div>
 
-                  {/* Channel */}
+                  {/**
+                   * Delivery Channel Selector
+                   * Communication pathway (WhatsApp)
+                   */}
                   <div>
                     <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
                       {t('Channel')} <span className="text-red-500">*</span>
@@ -773,7 +873,10 @@ const Reminders = () => {
                     </select>
                   </div>
 
-                  {/* Submit Button */}
+                  {/**
+                   * Form Submission Trigger
+                   * Saves or updates reminder schedule
+                   */}
                   <div className="pt-2">
                     <button
                       type="submit"
@@ -790,16 +893,25 @@ const Reminders = () => {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/**
+       * Reminder Deletion Confirmation Dialog
+       * Verifies user intent before removing reminder schedule
+       */}
       {reminderToDelete && (
         <div className="fixed inset-0 z-[100]">
-          {/* Backdrop */}
+          {/**
+           * Modal Backdrop Overlay
+           * Dimmed background dismissing modal when clicked
+           */}
           <div
             className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
             onClick={() => setReminderToDelete(null)}
           />
 
-          {/* Modal Content */}
+          {/**
+           * Deletion Confirmation Dialog Content
+           * Warning prompt and destructive confirmation buttons
+           */}
           <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
             <div
               className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
@@ -836,16 +948,25 @@ const Reminders = () => {
         </div>
       )}
 
-      {/* Send Confirmation Modal */}
+      {/**
+       * Send Confirmation Dialog
+       * Confirms immediate manual dispatch of selected reminder
+       */}
       {reminderToSend && (
         <div className="fixed inset-0 z-[100]">
-          {/* Backdrop */}
+          {/**
+           * Modal Backdrop Overlay
+           * Dimmed background dismissing modal when clicked
+           */}
           <div
             className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
             onClick={() => setReminderToSend(null)}
           />
 
-          {/* Modal Content */}
+          {/**
+           * Send Confirmation Dialog Content
+           * Immediate dispatch prompt and confirmation controls
+           */}
           <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
             <div
               className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
@@ -880,7 +1001,10 @@ const Reminders = () => {
         </div>
       )}
 
-      {/* View Message Modal */}
+      {/**
+       * Reminder Message Preview Dialog
+       * Modal displaying full reminder text for merchant inspection
+       */}
       {reminderToView && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
           <div className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" onClick={() => setReminderToView(null)} />
@@ -901,7 +1025,10 @@ const Reminders = () => {
         </div>
       )}
 
-      {/* Business Setup Prompt Modal */}
+      {/**
+       * Business Setup Prompt Modal
+       * Prompts merchant to configure store profile before dispatching customer notifications
+       */}
       <BusinessSetupModal
         isOpen={businessSetupModalOpen}
         onClose={() => setBusinessSetupModalOpen(false)}

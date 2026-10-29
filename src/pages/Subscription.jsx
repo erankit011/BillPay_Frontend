@@ -1,3 +1,8 @@
+/**
+ * Merchant SaaS Subscription & Billing Upgrade Portal
+ * Manages plan selection, promotional coupon redemptions, Razorpay checkout, and subscription cancellation.
+ */
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +30,9 @@ import toast from 'react-hot-toast';
 import { validateSubscriptionCoupon, getPublicPlans, cancelSubscription } from '../features/admin/api/adminApi';
 import { getDaysRemaining, getTrialEndDate, formatDate } from '../utils/dateUtils';
 
+/**
+ * Fallback Subscription Tiers
+ */
 const DEFAULT_PLANS = [
   {
     id: 'FREE',
@@ -97,8 +105,10 @@ const Subscription = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancellingSubscription, setCancellingSubscription] = useState(false);
 
-  // Real-time synchronization: Fetch live plans using React Query
-  // When Admin updates pricing or limits, MainLayout invalidates 'publicPlans' and this automatically re-renders instantly!
+  /**
+   * Real-Time Plan Synchronization
+   * Automatically refreshes tiers and limits via React Query cache invalidations
+   */
   const { data: livePlansData } = useQuery({
     queryKey: ['publicPlans'],
     queryFn: getPublicPlans,
@@ -145,8 +155,11 @@ const Subscription = () => {
     return DEFAULT_PLANS;
   }, [livePlansData, t]);
 
+  /**
+   * Razorpay Checkout Script Loader
+   * Dynamically injects payment gateway SDK on initial component mount
+   */
   useEffect(() => {
-    // Load Razorpay Script
     const loadRazorpayScript = () => {
       return new Promise((resolve) => {
         const script = document.createElement('script');
@@ -217,7 +230,10 @@ const Subscription = () => {
     setLoadingPlan(plan.id);
 
     try {
-      // 1. Create subscription on backend with Auto-Pay
+      /**
+       * Server Subscription Creation
+       * Initiates recurring Auto-Pay mandate order via gateway endpoint
+       */
       const resData = await api.post('/subscription/create-subscription', {
         plan: plan.id,
         couponCode: appliedCoupon?.code,
@@ -227,7 +243,10 @@ const Subscription = () => {
         throw new Error('Invalid subscription response');
       }
 
-      // Handle 100% free promotional code activation directly
+      /**
+       * Promotional Discount Activation
+       * Auto-activates subscription immediately if 100% coupon discount applies
+       */
       if (resData.data.data.activated) {
         toast.success(t('Subscription upgraded successfully with 100% promo discount!'));
         dispatch(
@@ -246,7 +265,10 @@ const Subscription = () => {
         throw new Error('Subscription identifier missing from gateway response');
       }
 
-      // 2. Open Razorpay Checkout for Auto-Pay Subscription
+      /**
+       * Razorpay Modal Checkout
+       * Launches payment gateway interface to authorize mandate
+       */
       const options = {
         key: razorpayKeyId || import.meta.env.VITE_RAZORPAY_KEY_ID || '',
         name: "UdharPay",
@@ -254,7 +276,10 @@ const Subscription = () => {
         subscription_id: subscriptionId,
         handler: async function (response) {
           try {
-            // 3. Verify subscription locally for immediate UX update
+            /**
+             * Gateway Subscription Verification
+             * Verifies cryptographic signature for immediate client authorization
+             */
             const verifyRes = await api.post('/subscription/verify-subscription', {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_subscription_id: response.razorpay_subscription_id,
@@ -265,7 +290,10 @@ const Subscription = () => {
 
             if (verifyRes.data.success || verifyRes.status === 200) {
               toast.success(t('Subscription and Auto-Pay activated successfully!'));
-              // Update user context
+              /**
+               * User Authentication Store Synchronization
+               * Updates local Redux store with upgraded plan details
+               */
               dispatch(setUser({
                 ...user,
                 subscriptionStatus: verifyRes.data.data.subscriptionStatus || 'active',
@@ -329,7 +357,10 @@ const Subscription = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
-      {/* Header */}
+      {/**
+       * Subscription Header Section
+       * Displays title and description of plan management portal
+       */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Subscription')}</h1>
@@ -339,7 +370,10 @@ const Subscription = () => {
         </div>
       </div>
 
-      {/* Current Plan Status Card */}
+      {/**
+       * Current Plan Status Overview
+       * Highlights active subscription tier, auto-pay status, and validity period
+       */}
       <div className="bg-white rounded-xl border border-gray-200 p-5 sm:p-6 hover:border-gray-300 transition-colors duration-200 shadow-xs">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4 sm:gap-5 min-w-0">
@@ -387,7 +421,10 @@ const Subscription = () => {
             </div>
           </div>
 
-          {/* Action Buttons for Active Subscriptions */}
+          {/**
+           * Subscription Action Controls
+           * Quick navigation to platform invoices or mandate cancellation modal
+           */}
           <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-100">
             <Link
               to="/settings"
@@ -411,7 +448,10 @@ const Subscription = () => {
         </div>
       </div>
 
-      {/* Auto-Pay Trust & Highlights Strip */}
+      {/**
+       * Auto-Pay Benefits Strip
+       * Displays trust guarantees, RBI compliance, and invoice download perks
+       */}
       <div className="bg-gradient-to-r from-blue-50/80 via-white to-blue-50/80 border border-blue-200/80 rounded-xl p-4 sm:p-5">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4 text-xs">
           <div className="flex items-start gap-2.5">
@@ -446,7 +486,10 @@ const Subscription = () => {
         </div>
       </div>
 
-      {/* Promo Code Input Card */}
+      {/**
+       * Promotional Coupon Section
+       * Discount input field or active coupon tag with removal trigger
+       */}
       <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5 shadow-xs">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -500,7 +543,10 @@ const Subscription = () => {
         </div>
       </div>
 
-      {/* Pricing Grid */}
+      {/**
+       * Subscription Pricing Matrix
+       * Comparison grid displaying free trial, monthly, quarterly, and yearly tiers
+       */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 lg:gap-6">
         {plans.map((plan) => {
           const discountedPrice = getDiscountedPrice(plan);
@@ -575,11 +621,17 @@ const Subscription = () => {
         })}
       </div>
 
-      {/* Cancel Auto-Pay Confirmation Modal */}
+      {/**
+       * Cancel Auto-Pay Confirmation Modal
+       * Confirmation dialog preventing accidental mandate cancellation
+       */}
       {showCancelModal && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-gray-900/60 backdrop-blur-xs overscroll-contain animate-modal-overlay">
           <div className="bg-white rounded-t-2xl sm:rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-gray-200 space-y-4 animate-modal-content">
-            {/* Mobile drag handle */}
+            {/**
+             * Mobile Bottom-Sheet Grab Handle
+             * Visual pull indicator for compact mobile viewport view
+             */}
             <div className="sm:hidden flex justify-center -mt-2 pb-1">
               <div className="w-10 h-1 bg-gray-300 rounded-full" />
             </div>

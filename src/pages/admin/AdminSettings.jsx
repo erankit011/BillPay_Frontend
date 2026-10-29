@@ -1,3 +1,8 @@
+/**
+ * Master Platform Configuration & System Operations Settings
+ * Tabbed administrative portal managing global branding, operational policies, maintenance mode, security, and WhatsApp gateway.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -24,7 +29,10 @@ import WhatsAppGatewaySettings from '../../features/admin/components/settings/Wh
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 import AppVersionCard from '../../components/common/AppVersionCard';
 
-// ── Section Nav Item (Exact pattern from Shopkeeper Settings) ──
+/**
+ * Navigation Item Component
+ * Renders selectable tab button in the desktop administrative settings sidebar.
+ */
 const SectionNavItem = ({ icon: Icon, label, sectionId, activeSection, onClick }) => (
   <button
     type="button"
@@ -101,7 +109,10 @@ const AdminSettings = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 pb-24 lg:pb-0">
-      {/* ── Page Header (Identical to Shopkeeper Settings) ── */}
+      {/**
+       * Administrative Settings Header
+       * Displays page title and concise context for global platform configuration.
+       */}
       <div>
         <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Platform Settings')}</h1>
         <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-normal">
@@ -110,7 +121,10 @@ const AdminSettings = () => {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-        {/* ── Left Nav (Desktop) ── */}
+        {/**
+         * Desktop Sidebar Navigation
+         * Fixed-width panel with quick navigation links and system version information.
+         */}
         <div className="hidden lg:block w-56 xl:w-60 shrink-0">
           <nav className="sticky top-24 space-y-1">
             {sections.map(({ id, icon: Icon, label }) => (
@@ -124,14 +138,20 @@ const AdminSettings = () => {
               />
             ))}
 
-            {/* App Version Card (Desktop) */}
+            {/**
+             * Application Version Badge (Desktop)
+             * Embedded build version info within the sidebar navigation.
+             */}
             <div className="pt-4 border-t border-gray-100 mt-4">
               <AppVersionCard variant="sidebar" />
             </div>
           </nav>
         </div>
 
-        {/* ── Mobile Nav (Horizontal Scroll) ── */}
+        {/**
+         * Mobile Navigation Bar
+         * Horizontally scrollable pill tabs for switching platform configuration sections.
+         */}
         <div className="lg:hidden flex items-center gap-2 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide">
           {sections.map(({ id, icon: Icon, label }) => (
             <div
@@ -149,7 +169,10 @@ const AdminSettings = () => {
           ))}
         </div>
 
-        {/* ── Right Content Panels ── */}
+        {/**
+         * Content Panels Container
+         * Dynamic settings sub-panel rendering based on the active navigation section.
+         */}
         <div className="flex-1 min-w-0">
           {isLoading ? (
             <div className="bg-white rounded-lg border border-gray-200 p-16 text-center shadow-none">
@@ -208,7 +231,10 @@ const AdminSettings = () => {
             </>
           )}
 
-          {/* App Version Card (Mobile / Tablets) */}
+          {/**
+           * Application Version Card (Mobile / Tablet)
+           * Footer version info display for smaller screen layouts.
+           */}
           <div className="lg:hidden pt-4 pb-2">
             <AppVersionCard variant="full" />
           </div>

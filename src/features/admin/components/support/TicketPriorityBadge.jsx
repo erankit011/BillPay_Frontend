@@ -1,6 +1,14 @@
+/**
+ * Support Ticket Priority Visual Badge
+ * Highlights urgency level (Urgent, High, Medium, Low) with directional arrow indicators.
+ */
+
 import React from 'react';
 import { AlertCircle, ArrowUp, ArrowRight, ArrowDown } from 'lucide-react';
 
+/**
+ * Priority Visual Styling Map
+ */
 const PRIORITY_CONFIG = {
   URGENT: {
     label: 'Urgent',

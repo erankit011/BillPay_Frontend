@@ -1,20 +1,33 @@
+/**
+ * Public Terms of Service & Merchant Agreement Page
+ */
+
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft } from 'lucide-react';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import { formatShortDate } from '../utils/dateUtils';
 
+/**
+ * TermsOfService Component
+ */
 const TermsOfService = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] font-sans">
-      {/* Header */}
+      {/**
+       * Public Navigation Header
+       * Top navigation bar with brand mark, language switcher, and sign-in action button.
+       */}
       <header className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
         <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
           <div className="flex items-center justify-between h-14 sm:h-16 w-full">
-            {/* Logo & Back */}
+            {/**
+             * Brand Logo & Home Route
+             * Direct navigation link to platform landing page.
+             */}
             <div className="flex items-center gap-4">
 
               <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
@@ -22,7 +35,10 @@ const TermsOfService = () => {
               </div>
             </div>
 
-            {/* Right Side */}
+            {/**
+             * Action Controls Toolbar
+             * Locale switcher selector and user authentication link.
+             */}
             <div className="flex items-center gap-3 sm:gap-4 shrink-0">
               <LanguageSwitcher variant="default" />
               <button
@@ -36,7 +52,10 @@ const TermsOfService = () => {
         </div>
       </header>
 
-      {/* Main Content */}
+      {/**
+       * Terms of Service Body
+       * Legal provisions covering usage terms, provision of service, user duties, and liability limits.
+       */}
       <main className="pt-24 sm:pt-28 pb-12 sm:pb-16 lg:pb-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
         <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 md:p-12 transition-colors hover:border-[#093C5D]/30">
           <h1 className="text-3xl sm:text-4xl tracking-tight font-semibold text-gray-900 mb-2">{t('Terms of Service')}</h1>
@@ -71,7 +90,10 @@ const TermsOfService = () => {
         </div>
       </main>
 
-      {/* Footer */}
+      {/**
+       * Public Footer Section
+       * Links to legal policies, developer attribution, and platform copyright notice.
+       */}
       <footer className="bg-white border-t border-gray-200 py-8 md:py-12 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-5 md:gap-6">

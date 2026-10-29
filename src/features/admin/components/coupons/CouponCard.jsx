@@ -1,3 +1,8 @@
+/**
+ * SaaS Discount Coupon Promotional Card
+ * Displays voucher promo code, discount type, redemption quota progress bar, and validity windows.
+ */
+
 import React, { useState } from 'react';
 import {
   Tag,
@@ -16,6 +21,9 @@ import {
 import toast from 'react-hot-toast';
 import { formatShortDate, isDateExpired } from '../../../../utils/dateUtils';
 
+/**
+ * CouponCard Component
+ */
 const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
   const [copied, setCopied] = useState(false);
 
@@ -29,7 +37,10 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
   const isExpired = isDateExpired(coupon.expiresAt);
   const isStarted = !coupon.startsAt || new Date(coupon.startsAt) <= new Date();
 
-  // Usage percentage
+  /**
+   * Redemptions Ratio Calculation
+   * Computes percentage ratio of redeemed coupons against max allocation threshold.
+   */
   const usedCount = Number(coupon.usedCount) || 0;
   const usageLimit = Number(coupon.usageLimit) || null;
   const usagePercentage = usageLimit && usageLimit > 0
@@ -48,7 +59,10 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
           : 'border-gray-200'
       }`}
     >
-      {/* Top Banner: Discount Value & Status */}
+      {/**
+       * Banner Header
+       * Displays discount amount badge, promotional description, and active status tag.
+       */}
       <div className="p-4 sm:p-5 flex items-start justify-between gap-3 border-b border-dashed border-gray-200">
         <div className="flex items-center gap-3">
           <div
@@ -83,7 +97,10 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
           </div>
         </div>
 
-        {/* Status Badge */}
+        {/**
+         * Operational Status Tag
+         * Visual chip indicating expired, paused, scheduled, or active status.
+         */}
         <div>
           {isExpired ? (
             <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-red-50 text-red-700 border border-red-200 uppercase tracking-wide">
@@ -109,7 +126,10 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
         </div>
       </div>
 
-      {/* Code Snippet Box */}
+      {/**
+       * Promo Code Voucher Frame
+       * Dashed code container with single-click clipboard copy utility button.
+       */}
       <div className="p-4 sm:p-5 space-y-4">
         <div className="flex items-center justify-between gap-2 p-2.5 bg-gray-50 rounded-lg border border-dashed border-gray-300">
           <div className="flex items-center gap-2 overflow-hidden">
@@ -137,7 +157,10 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
           </button>
         </div>
 
-        {/* Applicable Plans */}
+        {/**
+         * Eligible Subscription Plans
+         * List of subscription tier tags for which this coupon discount is applicable.
+         */}
         <div className="space-y-1">
           <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
             Valid For Plans
@@ -158,7 +181,10 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
           </div>
         </div>
 
-        {/* Usage Progress */}
+        {/**
+         * Redemption Quota Progress
+         * Progress bar and textual counts for used coupons versus maximum limit.
+         */}
         <div className="space-y-1.5 pt-1">
           <div className="flex items-center justify-between text-xs text-gray-600">
             <span className="flex items-center gap-1 font-medium">
@@ -189,7 +215,10 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
           )}
         </div>
 
-        {/* Validity Dates */}
+        {/**
+         * Temporal Validity & Criteria
+         * Expiration date and minimum order purchase threshold requirements.
+         */}
         <div className="flex items-center justify-between text-[11px] text-gray-500 pt-1 border-t border-gray-100 font-medium">
           <span className="flex items-center gap-1">
             <Calendar className="w-3.5 h-3.5 text-gray-400" />
@@ -201,7 +230,10 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
         </div>
       </div>
 
-      {/* Action Toolbar */}
+      {/**
+       * Action Toolbar
+       * Pause/activate toggle switch and edit/delete coupon controls.
+       */}
       <div className="px-4 py-3 bg-gray-50/80 border-t border-gray-200 flex items-center justify-between text-xs">
         <button
           type="button"

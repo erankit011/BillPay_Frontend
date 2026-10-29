@@ -1,3 +1,9 @@
+/**
+ * Merchant Store Master Inspection Modal
+ * Displays comprehensive merchant profile, active plan tier, revenue KPIs, customer counts,
+ * and quick administrative actions (suspension, plan override, notice dispatch).
+ */
+
 import React, { useEffect } from 'react';
 import {
   X,
@@ -15,6 +21,9 @@ import { formatCurrency } from '../../../utils/currency';
 import { formatDate, isDateExpired } from '../../../utils/dateUtils';
 import { getInitials } from '../../../utils/stringUtils';
 
+/**
+ * ShopDetailsModal Component
+ */
 const ShopDetailsModal = ({
   isOpen,
   onClose,
@@ -24,7 +33,10 @@ const ShopDetailsModal = ({
   onForceLogout,
   onOpenDirectNoticeModal,
 }) => {
-  // Prevent background scrolling when modal is open
+  /**
+   * Modal Scroll Lock Effect
+   * Disables background viewport scrolling and mobile touch gestures while modal is active.
+   */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -94,7 +106,10 @@ const ShopDetailsModal = ({
 
   return (
     <div className="fixed inset-0 z-50 overscroll-contain">
-      {/* Backdrop */}
+      {/**
+       * Backdrop Overlay
+       * Darkened semi-transparent overlay intercepting outside clicks.
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
@@ -102,16 +117,25 @@ const ShopDetailsModal = ({
         onTouchMove={(e) => e.preventDefault()}
       />
 
-      {/* Modal Container: Bottom Sheet on Mobile, Centered on sm+ */}
+      {/**
+       * Modal Container Shell
+       * Renders as responsive bottom drawer on mobile and centered card on tablet/desktop.
+       */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div className="relative bg-white w-full sm:max-w-2xl lg:max-w-3xl rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
           
-          {/* Mobile Drag Handle */}
+          {/**
+           * Mobile Gesture Drag Indicator
+           * Visual affordance handle for mobile touch interactions.
+           */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-white">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
           </div>
 
-          {/* Header */}
+          {/**
+           * Modal Header Toolbar
+           * Displays store avatar initials, store name, status pill, and close button.
+           */}
           <div className="px-5 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white flex-shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="w-10 h-10 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#093C5D] shrink-0">
@@ -161,9 +185,15 @@ const ShopDetailsModal = ({
             </button>
           </div>
 
-          {/* Body Content */}
+          {/**
+           * Scrollable Body Content
+           * Houses account alert banners, metric tiles, owner profiles, and plan cards.
+           */}
           <div className="p-4 sm:p-6 overflow-y-auto space-y-3.5 flex-1">
-            {/* Suspended Alert Banner */}
+            {/**
+             * Suspension Alert Notice Banner
+             * Highlights operational lock with stated administrative justification.
+             */}
             {isSuspended && (
               <div className="p-3.5 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3 text-red-800 text-xs sm:text-sm">
                 <ShieldAlert className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
@@ -176,7 +206,10 @@ const ShopDetailsModal = ({
               </div>
             )}
 
-            {/* Quick Metrics Grid */}
+            {/**
+             * Merchant Quick Metrics Grid
+             * High-level glance at total customers, bill count, and outstanding credit ledger.
+             */}
             <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
               <div className="p-3 rounded-lg bg-gray-50/80 border border-gray-200">
                 <div className="flex items-center gap-1.5 text-gray-500 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider">
@@ -209,7 +242,10 @@ const ShopDetailsModal = ({
               </div>
             </div>
 
-            {/* Shopkeeper Owner Details */}
+            {/**
+             * Shopkeeper Owner Details Card
+             * Contact identifiers including name, email, phone, and registration timestamp.
+             */}
             <div className="bg-white rounded-lg border border-gray-200 p-3.5 sm:p-4">
               <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">
                 Shopkeeper Information
@@ -240,7 +276,10 @@ const ShopDetailsModal = ({
               </div>
             </div>
 
-            {/* Business Profile Details */}
+            {/**
+             * Business Profile Details Card
+             * Commercial identity attributes including trade name, GSTIN, and UPI ID.
+             */}
             <div className="bg-white rounded-lg border border-gray-200 p-3.5 sm:p-4">
               <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">
                 Business Settings & Store Info
@@ -273,7 +312,10 @@ const ShopDetailsModal = ({
               </div>
             </div>
 
-            {/* Subscription & Validity */}
+            {/**
+             * Subscription & Validity Management Card
+             * Displays current tier, validity window, and plan modification action trigger.
+             */}
             <div className="bg-white rounded-lg border border-gray-200 p-3.5 sm:p-4">
               <div className="flex items-center justify-between mb-3 gap-2">
                 <div className="flex items-center gap-1.5">
@@ -295,7 +337,10 @@ const ShopDetailsModal = ({
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {/* Plan Tier Tile */}
+                {/**
+                 * Plan Tier Information Tile
+                 * Indicates whether merchant is on Free or Pro subscription tier.
+                 */}
                 <div className="p-3 bg-gray-50/80 border border-gray-200/80 rounded-lg flex flex-col justify-between">
                   <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
                     Current Plan Tier
@@ -314,7 +359,10 @@ const ShopDetailsModal = ({
                   </div>
                 </div>
 
-                {/* Expiry Tile */}
+                {/**
+                 * Subscription Expiry Information Tile
+                 * Calculates days remaining or shows perpetual Free tier status.
+                 */}
                 <div className="p-3 bg-gray-50/80 border border-gray-200/80 rounded-lg flex flex-col justify-between">
                   <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
                     Subscription Validity
@@ -331,7 +379,10 @@ const ShopDetailsModal = ({
               </div>
             </div>
 
-            {/* Active Sessions & Security */}
+            {/**
+             * Active Sessions & Security Controls Card
+             * Displays connected device count with instant remote termination action.
+             */}
             <div className="bg-white rounded-lg border border-gray-200 p-3.5 sm:p-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
                 <div className="flex items-center gap-3 min-w-0">
@@ -361,7 +412,10 @@ const ShopDetailsModal = ({
             </div>
           </div>
 
-          {/* Footer Actions */}
+          {/**
+           * Modal Footer Controls
+           * Houses suspension toggling, broadcast notice dispatch, and close actions.
+           */}
           <div className="px-5 py-3.5 bg-gray-50 border-t border-gray-200 flex flex-wrap items-center justify-between flex-shrink-0 gap-3">
             <div className="flex items-center gap-2 flex-wrap">
               <button

@@ -1,3 +1,8 @@
+/**
+ * Public Customer Care & Helpdesk Ticket Submission Page
+ * Submits technical issues and billing inquiries directly to the administrative support queue.
+ */
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -7,6 +12,9 @@ import toast from 'react-hot-toast';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import { submitPublicSupportTicket, getPublicContactInfo } from '../features/admin/api/adminApi';
 
+/**
+ * ContactSupport Component
+ */
 const ContactSupport = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -40,7 +48,10 @@ const ContactSupport = () => {
           });
         }
       } catch (e) {
-        // Fallback to default contact details
+        /**
+         * Fallback Contact Information
+         * Uses hardcoded company address, email, and phone if settings endpoint fails.
+         */
       }
     };
     fetchContactInfo();
@@ -81,11 +92,17 @@ const ContactSupport = () => {
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] font-sans flex flex-col">
-      {/* Header */}
+      {/**
+       * Support Page Navigation Bar
+       * Top navbar with UdharPay branding, locale switcher, and sign-in action button.
+       */}
       <header className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
         <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
           <div className="flex items-center justify-between h-14 sm:h-16 w-full">
-            {/* Logo & Back */}
+            {/**
+             * Brand Logo & Homepage Link
+             * Direct route trigger to homepage.
+             */}
             <div className="flex items-center gap-4">
 
               <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
@@ -93,7 +110,10 @@ const ContactSupport = () => {
               </div>
             </div>
 
-            {/* Right Side */}
+            {/**
+             * Right Action Controls
+             * Language selector dropdown and login route link.
+             */}
             <div className="flex items-center gap-3 sm:gap-4 shrink-0">
               <LanguageSwitcher variant="default" />
               <button
@@ -107,7 +127,10 @@ const ContactSupport = () => {
         </div>
       </header>
 
-      {/* Main Content */}
+      {/**
+       * Main Support Content Container
+       * Grid layout separating company contact info and interactive inquiry form.
+       */}
       <main className="flex-1 pt-24 sm:pt-28 pb-12 sm:pb-16 lg:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
         <div className="mb-10 text-center">
           <h1 className="text-3xl sm:text-4xl tracking-tight font-semibold text-gray-900 mb-4">{t('Contact Support')}</h1>
@@ -115,7 +138,10 @@ const ContactSupport = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Contact Information */}
+          {/**
+           * Company Contact Information Card
+           * Official corporate office address, support email, and helpline phone numbers.
+           */}
           <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 transition-colors hover:border-[#093C5D]/30">
             <h2 className="text-xl sm:text-2xl tracking-tight font-semibold text-gray-900 mb-6">{t('Get in Touch')}</h2>
             
@@ -154,7 +180,10 @@ const ContactSupport = () => {
             </div>
           </div>
 
-          {/* Contact Form */}
+          {/**
+           * Public Support Inquiry Form
+           * Contact form for registered merchants and prospective users to submit helpdesk tickets.
+           */}
           <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 transition-colors hover:border-[#093C5D]/30">
             <h2 className="text-xl sm:text-2xl tracking-tight font-semibold text-gray-900 mb-6">{t('Send us a Message')}</h2>
             
@@ -313,7 +342,10 @@ const ContactSupport = () => {
         </div>
       </main>
 
-      {/* Footer */}
+      {/**
+       * Support Page Footer
+       * Links to privacy policy, terms of service, and developer credentials.
+       */}
       <footer className="bg-white border-t border-gray-200 py-8 md:py-12 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-5 md:gap-6">

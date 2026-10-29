@@ -19,11 +19,16 @@ const LoadMoreButton = ({
 }) => {
   const { t } = useTranslation();
 
-  // 1. If no data exists, don't render anything
+  /**
+   * Empty State Check
+   * Avoids rendering footer when dataset has no records
+   */
   if (!totalCount && !currentCount) return null;
 
-  // 2. If there's only 1 page of data or total records <= pageSize, and no next page,
-  // do NOT show any load more button or end footer (clean, uncluttered UI)
+  /**
+   * Single-Page Clean View Check
+   * Conceals pagination footer when all records fit comfortably on current screen
+   */
   if (!hasNextPage && (totalCount <= pageSize || currentCount <= pageSize)) {
     return null;
   }
@@ -32,7 +37,10 @@ const LoadMoreButton = ({
     <div
       className={`flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3 sm:py-3.5 border-t border-gray-100 bg-white ${className}`}
     >
-      {/* Record counter display */}
+      {/**
+       * Records Metrics Counter
+       * Outlines current window position versus grand total
+       */}
       <div className="text-xs sm:text-sm text-gray-500 font-medium">
         {hasNextPage ? (
           <>
@@ -51,7 +59,10 @@ const LoadMoreButton = ({
         )}
       </div>
 
-      {/* Action button when more items available, or subtle completion badge */}
+      {/**
+       * Pagination Trigger Action
+       * Renders loading spinner or completion indicator badge
+       */}
       <div className="flex items-center gap-2">
         {hasNextPage ? (
           <button

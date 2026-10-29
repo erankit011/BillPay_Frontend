@@ -1,3 +1,8 @@
+/**
+ * Administrative WhatsApp Baileys Gateway Settings
+ * Provides live QR-code scanner, gateway connection status, phone pairing, and session restart controls.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -25,13 +30,19 @@ import {
 } from '../../api/adminApi';
 import SwirlingLoader from '../../../../components/common/SwirlingLoader';
 
+/**
+ * WhatsAppGatewaySettings Component
+ */
 const WhatsAppGatewaySettings = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [showDisconnectModal, setShowDisconnectModal] = useState(false);
   const [copiedPhone, setCopiedPhone] = useState(false);
 
-  // Prevent background scrolling when disconnect confirmation modal is open
+  /**
+   * Modal Scroll Lock Effect
+   * Prevents background viewport scrolling when disconnect confirmation modal is open.
+   */
   useEffect(() => {
     if (!showDisconnectModal) return;
 
@@ -46,11 +57,17 @@ const WhatsAppGatewaySettings = () => {
     };
   }, [showDisconnectModal]);
 
-  // Fetch Live WhatsApp Gateway Status
+  /**
+   * Live WhatsApp Gateway Status Query
+   * Polls gateway status with accelerated interval during QR code pairing mode.
+   */
   const { data: statusData, isLoading, isError, refetch } = useQuery({
     queryKey: ['whatsappStatus'],
     queryFn: getWhatsAppStatus,
-    // Fast polling when waiting for scan, standard 30s when connected
+    /**
+     * Polling Interval Strategy
+     * Fast 8s polling during scan phase and standard 30s when session is established.
+     */
     refetchInterval: (query) => {
       const data = query.state.data;
       return data?.status === 'SCAN_QR' ? 8000 : 30000;
@@ -58,7 +75,10 @@ const WhatsAppGatewaySettings = () => {
     staleTime: 5000,
   });
 
-  // Restart / Refresh QR Mutation
+  /**
+   * Restart / Refresh QR Code Mutation
+   * Re-instantiates gateway engine and forces generation of a new QR authentication key.
+   */
   const restartMutation = useMutation({
     mutationFn: restartWhatsAppGateway,
     onSuccess: () => {
@@ -71,7 +91,10 @@ const WhatsAppGatewaySettings = () => {
     },
   });
 
-  // Logout / Disconnect Mutation
+  /**
+   * Session Logout & Disconnect Mutation
+   * Explicitly closes WhatsApp web socket and deletes persistent device session.
+   */
   const logoutMutation = useMutation({
     mutationFn: logoutWhatsAppGateway,
     onSuccess: () => {
@@ -88,7 +111,10 @@ const WhatsAppGatewaySettings = () => {
   const isConnected = statusData?.status === 'CONNECTED';
   const isScanQR = statusData?.status === 'SCAN_QR';
 
-  // Format phone number with country code
+  /**
+   * Phone Number Display Formatter
+   * Cleans raw sender ID and formats with country code grouping.
+   */
   const formatPhoneNumber = (rawId) => {
     if (!rawId) return 'N/A';
     const digits = rawId.toString().replace(/\D/g, '');
@@ -101,7 +127,10 @@ const WhatsAppGatewaySettings = () => {
     return `+${digits}`;
   };
 
-  // Format date & time precisely (DD/MM/YYYY • HH:MM AM/PM)
+  /**
+   * Session Date & Time Formatter
+   * Parses timestamp into standard DD/MM/YYYY • HH:MM AM/PM presentation.
+   */
   const formatSessionDate = (dateStr) => {
     if (!dateStr) return t('Active Session');
     try {
@@ -131,9 +160,15 @@ const WhatsAppGatewaySettings = () => {
 
   return (
     <div className="space-y-6 md:space-y-8">
-      {/* ── Main Section Card Matching App Theme ── */}
+      {/**
+       * WhatsApp Business Gateway Section Card
+       * Central hub for device pairing, real-time Baileys status, and anti-ban metrics.
+       */}
       <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
-        {/* Card Header */}
+        {/**
+         * Gateway Header Toolbar
+         * Displays component title, engine badge, and real-time operational status tag.
+         */}
         <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center shrink-0 border ${
@@ -162,7 +197,10 @@ const WhatsAppGatewaySettings = () => {
             </div>
           </div>
 
-          {/* Right Status Badge (No redundant refresh button) */}
+          {/**
+           * Real-Time Status Pill Indicator
+           * Visual indicator for Live & Operational, Scan Required, or Offline states.
+           */}
           <div className="flex items-center gap-2">
             {isConnected && (
               <span className="text-[10px] sm:text-xs font-semibold uppercase px-2.5 py-1 rounded border inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border-emerald-200">
@@ -185,7 +223,10 @@ const WhatsAppGatewaySettings = () => {
           </div>
         </div>
 
-        {/* Card Body */}
+        {/**
+         * Gateway Body Content Area
+         * Dynamically toggles between connected dashboard, QR code view, and offline fallback.
+         */}
         <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
           {isLoading && (
             <div className="py-12 flex flex-col items-center justify-center gap-3">
@@ -215,12 +256,16 @@ const WhatsAppGatewaySettings = () => {
 
           {!isLoading && !isError && (
             <>
-              {/* ═══════════════════════════════════════════════════════════════
-                  CASE 1: CONNECTED (Active Session)
-              ═══════════════════════════════════════════════════════════════ */}
+              {/**
+               * Connected Gateway State
+               * Shows paired device metadata, queue status, rate limit health, and persistence details.
+               */}
               {isConnected && (
                 <div className="space-y-4 sm:space-y-5">
-                  {/* Active Device Container Matching App Theme */}
+                  {/**
+                   * Active Device Overview Container
+                   * Displays authenticated phone number, device name, and management actions.
+                   */}
                   <div className="bg-gray-50/70 border border-gray-200 rounded-lg p-3.5 sm:p-4.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 sm:gap-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 border border-emerald-700/20 shadow-none">
@@ -258,7 +303,10 @@ const WhatsAppGatewaySettings = () => {
                       </div>
                     </div>
 
-                    {/* Action Buttons */}
+                    {/**
+                     * Gateway Lifecycle Action Buttons
+                     * Allows warm restart of web socket or complete device logout and credential purge.
+                     */}
                     <div className="flex items-center gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-200">
                       <button
                         type="button"
@@ -282,9 +330,15 @@ const WhatsAppGatewaySettings = () => {
                     </div>
                   </div>
 
-                  {/* 4-Column Stat Cards Matching Admin Theme (All icons with consistent borders) */}
+                  {/**
+                   * Gateway Diagnostics & Health Grid
+                   * 4-column overview of outbox length, rate limiter status, Baileys version, and uptime.
+                   */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                    {/* Stat 1: Outbox Queue */}
+                    {/**
+                     * Outbox Message Queue Metric Card
+                     * Monitors pending message backlog and automated pacing.
+                     */}
                     <div className="bg-white rounded-lg border border-gray-200 p-3.5 sm:p-4 flex flex-col justify-between hover:border-gray-300 transition-colors shadow-none">
                       <div className="flex items-center justify-between text-xs text-gray-500 font-medium mb-2">
                         <span className="uppercase text-[10px] tracking-wider font-semibold text-gray-600">{t('Outbox Message Queue')}</span>
@@ -301,7 +355,10 @@ const WhatsAppGatewaySettings = () => {
                       </p>
                     </div>
 
-                    {/* Stat 2: Circuit Breaker */}
+                    {/**
+                     * Circuit Breaker & Rate Limiter Metric Card
+                     * Real-time safety status protecting against WhatsApp anti-spam bans.
+                     */}
                     <div className="bg-white rounded-lg border border-gray-200 p-3.5 sm:p-4 flex flex-col justify-between hover:border-gray-300 transition-colors shadow-none">
                       <div className="flex items-center justify-between text-xs text-gray-500 font-medium mb-2">
                         <span className="uppercase text-[10px] tracking-wider font-semibold text-gray-600">{t('Rate-Limit Protection')}</span>
@@ -323,7 +380,10 @@ const WhatsAppGatewaySettings = () => {
                       </p>
                     </div>
 
-                    {/* Stat 3: Session Engine */}
+                    {/**
+                     * Engine & Authentication Protocol Metric Card
+                     * Shows current underlying Baileys library and session store type.
+                     */}
                     <div className="bg-white rounded-lg border border-gray-200 p-3.5 sm:p-4 flex flex-col justify-between hover:border-gray-300 transition-colors shadow-none">
                       <div className="flex items-center justify-between text-xs text-gray-500 font-medium mb-2">
                         <span className="uppercase text-[10px] tracking-wider font-semibold text-gray-600">{t('Engine & Auth')}</span>
@@ -339,7 +399,10 @@ const WhatsAppGatewaySettings = () => {
                       </p>
                     </div>
 
-                    {/* Stat 4: Last Connected */}
+                    {/**
+                     * Session Persistence & Timestamp Metric Card
+                     * Tracks continuous session creation and connection stability.
+                     */}
                     <div className="bg-white rounded-lg border border-gray-200 p-3.5 sm:p-4 flex flex-col justify-between hover:border-gray-300 transition-colors shadow-none">
                       <div className="flex items-center justify-between text-xs text-gray-500 font-medium mb-2">
                         <span className="uppercase text-[10px] tracking-wider font-semibold text-gray-600">{t('Session Persistence')}</span>
@@ -358,12 +421,16 @@ const WhatsAppGatewaySettings = () => {
                 </div>
               )}
 
-              {/* ═══════════════════════════════════════════════════════════════
-                  CASE 2: SCAN QR REQUIRED (Device Pairing)
-              ═══════════════════════════════════════════════════════════════ */}
+              {/**
+               * QR Pairing Mode State
+               * Guides admin with step-by-step connection instructions alongside live dynamic QR code.
+               */}
               {isScanQR && (
                 <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8">
-                  {/* Left: Step-by-Step Instructions */}
+                  {/**
+                   * Pairing Steps & Instructions
+                   * Detailed walk-through for linking WhatsApp business account on mobile.
+                   */}
                   <div className="flex-1 space-y-4 max-w-xl">
                     <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
                       {t('Link Business WhatsApp to UdharPay')}
@@ -373,7 +440,10 @@ const WhatsAppGatewaySettings = () => {
                       {t('Scan this QR code from the official business phone to authorize UdharPay for sending automated customer invoices, recovery reminders, and payment receipts.')}
                     </p>
 
-                    {/* Numbered Steps */}
+                    {/**
+                     * Numbered Instruction Sequence
+                     * Step-by-step guide for locating Linked Devices in WhatsApp mobile app.
+                     */}
                     <ol className="space-y-3 pt-1">
                       <li className="flex items-start gap-3">
                         <span className="w-6 h-6 rounded-full bg-[#093C5D] text-white text-xs font-semibold flex items-center justify-center shrink-0 shadow-none select-none">
@@ -401,7 +471,10 @@ const WhatsAppGatewaySettings = () => {
                       </li>
                     </ol>
 
-                    {/* Tip Note */}
+                    {/**
+                     * Real-Time Scan Tip Callout
+                     * Informs admin that socket pairs automatically without needing browser reload.
+                     */}
                     <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-2 text-xs text-amber-900 font-medium">
                       <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                       <span>
@@ -422,7 +495,10 @@ const WhatsAppGatewaySettings = () => {
                     </div>
                   </div>
 
-                  {/* Right: Sharp QR Code Frame */}
+                  {/**
+                   * Sharp QR Code Scanner Frame
+                   * High-contrast pairing matrix with live pulse status indicator.
+                   */}
                   <div className="shrink-0 flex flex-col items-center justify-center p-5 bg-gray-50/80 border border-gray-200 rounded-lg">
                     {statusData.qrDataUrl ? (
                       <div className="flex flex-col items-center">
@@ -448,9 +524,10 @@ const WhatsAppGatewaySettings = () => {
                 </div>
               )}
 
-              {/* ═══════════════════════════════════════════════════════════════
-                  CASE 3: DISCONNECTED / INITIALIZING
-              ═══════════════════════════════════════════════════════════════ */}
+              {/**
+               * Disconnected / Idle Fallback State
+               * Empty-state placeholder prompting administrator to start the gateway service.
+               */}
               {!isConnected && !isScanQR && (
                 <div className="p-8 text-center space-y-4">
                   <div className="w-12 h-12 rounded-lg bg-gray-100 text-gray-400 flex items-center justify-center mx-auto border border-gray-200">
@@ -487,7 +564,10 @@ const WhatsAppGatewaySettings = () => {
         </div>
       </section>
 
-      {/* ── Disconnect Device Confirmation Modal ── */}
+      {/**
+       * Disconnect Device Confirmation Modal
+       * Confirms session teardown and cloud credential deletion to avoid accidental disconnects.
+       */}
       {showDisconnectModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div

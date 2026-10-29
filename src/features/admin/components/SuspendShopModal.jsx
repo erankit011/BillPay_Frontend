@@ -1,6 +1,14 @@
+/**
+ * Administrative Store Suspension & Reactivation Modal
+ * Manages store lockdown with reason logging, real-time WebSocket disconnection, and instant reactivation.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { X, ShieldAlert, ShieldCheck, AlertTriangle } from 'lucide-react';
 
+/**
+ * Common Preset Suspension Reasons
+ */
 const COMMON_REASONS = [
   'Payment Default / Unpaid Dues',
   'Policy Violation / Terms Breach',
@@ -12,7 +20,10 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
   const [reason, setReason] = useState('');
   const isSuspended = Boolean(shop?.isSuspended);
 
-  // Sync reason state and prevent background page scrolling
+  /**
+   * Modal State & Scroll Lock Synchronization
+   * Resets reason input on open and locks viewport scrolling and touch gestures.
+   */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -46,7 +57,10 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
 
   return (
     <div className="fixed inset-0 z-[60] overscroll-contain">
-      {/* Backdrop */}
+      {/**
+       * Backdrop Overlay
+       * Darkened semi-transparent overlay blocking interaction with background.
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
@@ -54,16 +68,25 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
         onTouchMove={(e) => e.preventDefault()}
       />
 
-      {/* Modal Container: Bottom Sheet on Mobile, Centered on sm+ */}
+      {/**
+       * Modal Container Shell
+       * Renders as responsive bottom drawer on mobile and centered dialog on sm+ screens.
+       */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-[60] pointer-events-none">
         <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
           
-          {/* Mobile Drag Handle */}
+          {/**
+           * Mobile Drag Affordance Handle
+           * Visual indicator for touch gestures on mobile devices.
+           */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-white">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
           </div>
 
-          {/* Modal Header */}
+          {/**
+           * Modal Header Toolbar
+           * Shows status badge icon, dialog title, merchant name, and dismiss button.
+           */}
           <div className="px-5 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white flex-shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div
@@ -99,13 +122,19 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
             </button>
           </div>
 
-          {/* Form Body */}
+          {/**
+           * Modal Form Body
+           * Houses suspension warning notice, preset reasons, and detailed text input.
+           */}
           <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
             <div className="p-4 sm:p-5 space-y-3.5 overflow-y-auto flex-1">
               
               {!isSuspended ? (
                 <>
-                  {/* Warning Callout Banner */}
+                  {/**
+                   * Warning Callout Banner
+                   * Explains session revocation and instant merchant lockout implications.
+                   */}
                   <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-lg flex items-start gap-2.5 text-xs text-amber-900 font-medium leading-relaxed">
                     <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                     <span>
@@ -113,7 +142,10 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                     </span>
                   </div>
 
-                  {/* Common Reason Quick-Select Chips */}
+                  {/**
+                   * Common Reason Quick-Select Chips
+                   * Fast-selection badges for common violation categories.
+                   */}
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                       Select Common Reason
@@ -140,7 +172,10 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                     </div>
                   </div>
 
-                  {/* Reason Textarea */}
+                  {/**
+                   * Custom Reason Textarea
+                   * Detailed notes entered by admin and displayed in audit logs.
+                   */}
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">
                       Reason Details (Visible in logs & support)
@@ -175,7 +210,10 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
               )}
             </div>
 
-            {/* Modal Footer */}
+            {/**
+             * Modal Action Footer Controls
+             * Confirms or cancels suspension status toggle with loading feedback.
+             */}
             <div className="px-4 sm:px-5 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-end gap-2.5 flex-shrink-0">
               <button
                 type="button"

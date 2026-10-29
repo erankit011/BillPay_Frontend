@@ -1,3 +1,8 @@
+/**
+ * Platform Broadcast Announcements Management
+ * Publishes top-bar banners and notifications targeted to all stores or specific subscription tiers.
+ */
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -29,6 +34,9 @@ import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 import { formatDate } from '../../utils/dateUtils';
 
+/**
+ * AdminBroadcasts Component
+ */
 const AdminBroadcasts = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
@@ -73,7 +81,10 @@ const AdminBroadcasts = () => {
     }, { replace: true });
   };
 
-  // Fetch all broadcasts with URL-synced params
+  /**
+   * Broadcast Records React Query
+   * Fetches administrative announcements filtered by notification type and active status.
+   */
   const { data, isLoading } = useQuery({
     queryKey: ['adminBroadcasts', urlType, urlStatus],
     queryFn: () =>
@@ -87,7 +98,10 @@ const AdminBroadcasts = () => {
   const broadcasts = data?.broadcasts || [];
   const stats = data?.stats || { total: 0, activeCount: 0 };
 
-  // Mutations
+  /**
+   * Broadcast Mutation Handlers
+   * Manages announcement creation, updates, and deletion with instant cache invalidation.
+   */
   const createMutation = useMutation({
     mutationFn: (payload) => createAdminBroadcast(payload),
     onSuccess: () => {
@@ -159,7 +173,10 @@ const AdminBroadcasts = () => {
     }
   };
 
-  // Client-side search filtering using debounced search
+  /**
+   * Client-Side Search Filtering Memo
+   * Filters cached broadcasts by title, message text, or notification type matching query.
+   */
   const filteredBroadcasts = useMemo(() => {
     if (!debouncedSearch.trim()) return broadcasts;
     const q = debouncedSearch.toLowerCase();
@@ -173,7 +190,10 @@ const AdminBroadcasts = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
-      {/* Header */}
+      {/**
+       * Page Header Toolbar
+       * Displays broadcast management title, descriptive subtext, and creation action button.
+       */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
@@ -194,7 +214,10 @@ const AdminBroadcasts = () => {
         </button>
       </div>
 
-      {/* Top KPI Summary Cards (Matched with Admin Shops UI) */}
+      {/**
+       * Top KPI Summary Metrics Grid
+       * Summary stat cards detailing live broadcasts, historical totals, audience tiers, and paused alerts.
+       */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         <AdminStatCard
           title="LIVE BROADCASTS"
@@ -226,7 +249,10 @@ const AdminBroadcasts = () => {
         />
       </div>
 
-      {/* Filter Chips (Matched with Admin Shops UI) */}
+      {/**
+       * Announcement Category & Status Filter Chips
+       * Fast filter pills categorizing announcements by notification intent and lifecycle status.
+       */}
       <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {[
           { label: 'All Categories', value: 'ALL' },
@@ -284,7 +310,10 @@ const AdminBroadcasts = () => {
         )}
       </div>
 
-      {/* Search Bar (Matched with Admin Shops UI) */}
+      {/**
+       * Search Bar Filter Input
+       * Debounced input query searching across announcement titles, content, and target audiences.
+       */}
       <div className="flex flex-col w-full mb-3 sm:mb-4">
         <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
@@ -317,7 +346,10 @@ const AdminBroadcasts = () => {
         </div>
       </div>
 
-      {/* Announcements Stream */}
+      {/**
+       * Announcements Stream List Area
+       * Renders live announcement banners with embedded administration and status toggles.
+       */}
       {isLoading ? (
         <div className="p-12 text-center bg-white rounded-lg border border-gray-200 shadow-none">
           <SwirlingLoader className="w-10 h-10 text-[#093C5D] mx-auto mb-3" />
@@ -350,14 +382,23 @@ const AdminBroadcasts = () => {
               key={broadcast._id}
               className="bg-white border border-gray-200 rounded-lg overflow-hidden transition-all hover:border-gray-300 shadow-none"
             >
-              {/* Actual Banner View */}
+              {/**
+               * Live Banner Visual Preview
+               * Renders announcement banner exactly as storekeepers perceive it.
+               */}
               <div className="p-4 sm:p-5">
                 <BroadcastBanner broadcast={broadcast} isPreview={false} />
               </div>
 
-              {/* Administrative Meta & Actions Toolbar */}
+              {/**
+               * Administrative Metadata & Management Toolbar
+               * Displays scheduling timeline, audience targeting, and lifecycle actions.
+               */}
               <div className="px-4 py-3 sm:px-5 bg-gray-50/80 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 text-xs">
-                {/* Status & Timing Details */}
+                {/**
+                 * Lifecycle Status & Schedule Details
+                 * Indicates active/paused state and scheduled start/expiry dates.
+                 */}
                 <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-gray-500 font-medium">
                   <span
                     className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide ${
@@ -374,7 +415,10 @@ const AdminBroadcasts = () => {
                     {broadcast.isActive ? 'Active' : 'Paused'}
                   </span>
 
-                  {/* Target Audience Badge */}
+                  {/**
+                   * Target Audience Badge
+                   * Indicates store tier audience (Paid Pro, Free Trial, or All Stores).
+                   */}
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-blue-50 text-[#093C5D] border border-blue-200 font-semibold text-[10px] lg:text-xs uppercase">
                     Audience: {broadcast.targetAudience === 'PAID_SUBSCRIBERS' ? 'Paid Pro' : broadcast.targetAudience === 'FREE_TRIAL' ? 'Free Trial' : 'All Stores'}
                   </span>
@@ -390,7 +434,10 @@ const AdminBroadcasts = () => {
                   )}
                 </div>
 
-                {/* Action Buttons */}
+                {/**
+                 * Action Control Buttons
+                 * Allows pausing, editing, or deleting the broadcast.
+                 */}
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
@@ -430,7 +477,10 @@ const AdminBroadcasts = () => {
         </div>
       )}
 
-      {/* Create / Edit Modal */}
+      {/**
+       * Broadcast Modal Dialog
+       * Modal for composing new broadcasts or editing existing announcements.
+       */}
       <BroadcastModal
         isOpen={modalOpen}
         onClose={() => {

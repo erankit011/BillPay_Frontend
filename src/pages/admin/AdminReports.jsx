@@ -1,3 +1,8 @@
+/**
+ * Master Platform Analytics & Executive Financial Intelligence
+ * Aggregates platform GMV, store revenue collections, active merchant tiers, and monthly growth velocity.
+ */
+
 import React, { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -126,7 +131,10 @@ const AdminReports = () => {
   const paymentModes = data?.paymentModes || [];
   const creditStats = data?.creditStats || { totalUdhar: 0, totalPaid: 0, currentOutstanding: 0 };
 
-  // Real store-only all-time calculations from platform
+  /**
+   * Platform Aggregate Revenue Calculations
+   * Summarizes all-time GMV volume, collections settled, and bill counts.
+   */
   const totalPlatformGMV = data?.totalPlatformGMV ?? monthlyGMV.reduce((acc, curr) => acc + (curr.totalGMV || 0), 0);
   const totalPlatformPaid = data?.totalPlatformPaid ?? monthlyGMV.reduce((acc, curr) => acc + (curr.totalPaid || 0), 0);
   const totalPlatformBills = data?.totalPlatformBills ?? monthlyGMV.reduce((acc, curr) => acc + (curr.billsCount || 0), 0);
@@ -136,7 +144,10 @@ const AdminReports = () => {
       ? Math.min(100, Math.round((creditStats.totalPaid / creditStats.totalUdhar) * 100))
       : 100;
 
-  // Active months GMV for chart
+  /**
+   * Monthly Sales Chart Data Memo
+   * Formats monthly aggregated sales metrics into Recharts-compatible structures.
+   */
   const gmvChartData = useMemo(() => {
     if (!monthlyGMV || monthlyGMV.length === 0) return [];
     return monthlyGMV.map((item) => ({
@@ -149,7 +160,10 @@ const AdminReports = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
-      {/* Header */}
+      {/**
+       * Page Header Toolbar
+       * Title and contextual summary of store sales analytics and performance logs.
+       */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 tracking-tight">
@@ -161,7 +175,10 @@ const AdminReports = () => {
         </div>
       </div>
 
-      {/* KPI Cards (Shopkeeper standard 2x2 on mobile, 4 in row on desktop) */}
+      {/**
+       * Executive KPI Stat Cards Grid
+       * Summarizes total store sales, billed collections, credit recovery rate, and outstanding ledger balance.
+       */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         <AdminStatCard
           title="TOTAL STORE SALES"
@@ -205,9 +222,15 @@ const AdminReports = () => {
         </div>
       ) : (
         <>
-          {/* Charts Row */}
+          {/**
+           * Charts Row
+           * Interactive trend visualizations for GMV, collections, and bill volumes.
+           */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Monthly Store Sales & Collections Trend */}
+            {/**
+             * Monthly Store Sales & Collections Trend
+             * Displays comparative area chart of billed sales versus payments collected.
+             */}
             <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-none">
               <div className="mb-4">
                 <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
@@ -300,7 +323,10 @@ const AdminReports = () => {
               </div>
             </div>
 
-            {/* Monthly Store Bills Issued Trend */}
+            {/**
+             * Monthly Store Bills Issued Trend
+             * Displays bar chart representing count of invoices generated each month.
+             */}
             <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-none">
               <div className="mb-4">
                 <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
@@ -364,9 +390,15 @@ const AdminReports = () => {
             </div>
           </div>
 
-          {/* Payment Modes & Top Merchants (Separated Columns) */}
+          {/**
+           * Payment Modes & Top Merchants
+           * Grid layout separating payment mode breakdown and top merchant rankings.
+           */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Payment Modes Distribution */}
+            {/**
+             * Payment Modes Distribution
+             * Visualizes volume and transaction count distribution by payment method.
+             */}
             <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-5 lg:col-span-1 shadow-none flex flex-col justify-between">
               <div>
                 <div className="mb-3.5">
@@ -411,7 +443,10 @@ const AdminReports = () => {
               </div>
             </div>
 
-            {/* Top 5 High-Volume Merchants Table */}
+            {/**
+             * Top Performing Stores Ranking
+             * High-volume merchants driving sales volume across the platform.
+             */}
             <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-5 lg:col-span-2 shadow-none">
               <div className="mb-3.5">
                 <h3 className="text-sm sm:text-base font-semibold text-gray-900 flex items-center gap-2">
@@ -429,7 +464,10 @@ const AdminReports = () => {
                 </div>
               ) : (
                 <div>
-                  {/* Desktop Table View */}
+                  {/**
+                   * Desktop Table View
+                   * Tabular display of top performing stores with metrics and badges.
+                   */}
                   <div className="hidden sm:block overflow-x-auto">
                     <table className="w-full text-left text-xs border-collapse whitespace-nowrap">
                       <thead>
@@ -444,7 +482,10 @@ const AdminReports = () => {
                       <tbody className="divide-y divide-gray-100 font-medium">
                         {topShops.map((shop) => (
                           <tr key={shop.shopId} className="hover:bg-gray-50/60 transition-colors">
-                            {/* Store & Business */}
+                            {/**
+                             * Store Identity Column
+                             * Renders merchant brand avatar and business name.
+                             */}
                             <td className="py-3 px-3.5 align-middle">
                               <div className="flex items-center gap-2.5">
                                 <div className="w-8 h-8 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#093C5D] shrink-0">
@@ -456,7 +497,10 @@ const AdminReports = () => {
                               </div>
                             </td>
 
-                            {/* Merchant Owner */}
+                            {/**
+                             * Merchant Owner Column
+                             * Shows owner display name and contact email.
+                             */}
                             <td className="py-3 px-3.5 align-middle">
                               <div className="font-semibold text-xs sm:text-sm text-gray-900 truncate max-w-[170px]" title={shop.merchantName}>
                                 {shop.merchantName}
@@ -466,7 +510,10 @@ const AdminReports = () => {
                               </span>
                             </td>
 
-                            {/* Plan */}
+                            {/**
+                             * Subscription Plan Column
+                             * Displays active tier badge for the merchant account.
+                             */}
                             <td className="py-3 px-3.5 align-middle text-center">
                               <span
                                 className={`inline-block px-2.5 py-1 rounded text-[10px] font-semibold uppercase tracking-wide border ${getPlanBadge(
@@ -477,12 +524,18 @@ const AdminReports = () => {
                               </span>
                             </td>
 
-                            {/* Invoices */}
+                            {/**
+                             * Invoices Count Column
+                             * Shows total number of bills generated by merchant.
+                             */}
                             <td className="py-3 px-3.5 align-middle text-center text-gray-800 font-semibold text-xs sm:text-sm">
                               {shop.billsCount}
                             </td>
 
-                            {/* Total GMV */}
+                            {/**
+                             * Total GMV Column
+                             * Formatted aggregate gross sales turnover for the store.
+                             */}
                             <td className="py-3 px-3.5 align-middle text-right font-semibold text-gray-900 text-sm">
                               {formatCurrency(shop.totalGMV)}
                             </td>
@@ -492,7 +545,10 @@ const AdminReports = () => {
                     </table>
                   </div>
 
-                  {/* Mobile Cards View */}
+                  {/**
+                   * Mobile Cards View
+                   * Responsive compact card list for merchant sales performance.
+                   */}
                   <div className="sm:hidden space-y-2.5 pt-1">
                     {topShops.map((shop) => (
                       <div

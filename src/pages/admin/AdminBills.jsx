@@ -1,3 +1,8 @@
+/**
+ * Platform-Wide Invoices Audit & Inspection Ledger
+ * Global billing oversight across all merchants with customer, status, payment mode, and date filters.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -26,6 +31,9 @@ import { formatCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/dateUtils';
 import { getInitials } from '../../utils/stringUtils';
 
+/**
+ * AdminBills Component
+ */
 const AdminBills = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -78,7 +86,10 @@ const AdminBills = () => {
     });
   };
 
-  // Prevent background scrolling when modal is open
+  /**
+   * Modal Scroll Lock Effect
+   * Prevents background viewport scrolling and mobile gesture bubbling when modal is open.
+   */
   useEffect(() => {
     if (!selectedBill) return;
 
@@ -146,7 +157,10 @@ const AdminBills = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
-      {/* Header */}
+      {/**
+       * Page Header Toolbar
+       * Displays main heading and introductory explanation of system-wide billing audits.
+       */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 tracking-tight">
@@ -158,7 +172,10 @@ const AdminBills = () => {
         </div>
       </div>
 
-      {/* KPI Stat Cards (Shopkeeper standard 2x2 on mobile, 4 in row on desktop) */}
+      {/**
+       * KPI Stat Cards Grid
+       * 4-card overview summarizing total GMV, collected revenue, outstanding credit, and invoice volume.
+       */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         <AdminStatCard
           title="TOTAL PLATFORM GMV"
@@ -190,7 +207,10 @@ const AdminBills = () => {
         />
       </div>
 
-      {/* Filter Chips (Matched with Customer/Shopkeeper Pages UI) */}
+      {/**
+       * Payment Status & Mode Filter Chips Bar
+       * Scrollable selector allowing simultaneous status filtering and payment method segregation.
+       */}
       <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {[
           { label: 'All Invoices', value: 'ALL' },
@@ -251,7 +271,10 @@ const AdminBills = () => {
         )}
       </div>
 
-      {/* Search Bar (Matched with Customer/Shopkeeper Pages UI) */}
+      {/**
+       * Search Bar Input
+       * Debounced search querying bill numbers, store trade names, and customer profiles.
+       */}
       <div className="flex flex-col w-full mb-3 sm:mb-4">
         <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
@@ -285,7 +308,10 @@ const AdminBills = () => {
         </div>
       </div>
 
-      {/* Bills Ledger Table (Separate Shop Name & Merchant Owner Columns) */}
+      {/**
+       * Bills Ledger Table Container
+       * Multi-device container rendering desktop data tables and mobile bill cards.
+       */}
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-none">
         {isLoading ? (
           <div className="py-20 flex flex-col items-center justify-center text-gray-500 gap-3">
@@ -307,7 +333,10 @@ const AdminBills = () => {
           </div>
         ) : (
           <div>
-            {/* Desktop Table View (md+) */}
+            {/**
+             * Desktop Table View
+             * Tabular view for md+ viewports showing invoice numbers, merchants, customers, and totals.
+             */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse whitespace-nowrap">
                 <thead>
@@ -327,12 +356,18 @@ const AdminBills = () => {
                 <tbody className="divide-y divide-gray-100 text-sm font-medium text-gray-700">
                   {bills.map((bill) => (
                     <tr key={bill._id} className="hover:bg-gray-50/60 transition-colors">
-                      {/* Invoice # */}
+                      {/**
+                       * Invoice Number Cell
+                       * Displays invoice serial identifier with custom platform styling.
+                       */}
                       <td className="py-3.5 px-4 font-semibold text-[#093C5D]">
                         #{bill.invoiceNumber}
                       </td>
 
-                      {/* Shop Name */}
+                      {/**
+                       * Store Name Cell
+                       * Commercial trade name and avatar initials badge.
+                       */}
                       <td className="py-3.5 px-4">
                         <div className="font-semibold text-gray-900 flex items-center gap-2">
                           <div className="w-7 h-7 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-[11px] font-semibold text-[#093C5D] shrink-0">
@@ -344,7 +379,10 @@ const AdminBills = () => {
                         </div>
                       </td>
 
-                      {/* Merchant Owner */}
+                      {/**
+                       * Merchant Owner Cell
+                       * Shopkeeper personal name and verified contact telephone or email.
+                       */}
                       <td className="py-3.5 px-4">
                         <div className="font-semibold text-gray-900 truncate max-w-[140px]" title={bill.shopId?.name}>
                           {bill.shopId?.name || 'Merchant'}
@@ -352,7 +390,10 @@ const AdminBills = () => {
                         <div className="text-[11px] text-gray-500 font-normal truncate max-w-[140px]">{bill.shopId?.phone || bill.shopId?.email || '—'}</div>
                       </td>
 
-                      {/* Customer */}
+                      {/**
+                       * Customer Profile Cell
+                       * Recipient customer name and phone contact details.
+                       */}
                       <td className="py-3.5 px-4">
                         <div className="font-semibold text-gray-900 truncate max-w-[140px]" title={bill.customerId?.name}>
                           {bill.customerId?.name || 'Walk-in Customer'}
@@ -360,34 +401,52 @@ const AdminBills = () => {
                         <div className="text-[11px] text-gray-500 font-normal truncate max-w-[140px]">{bill.customerId?.phone || '—'}</div>
                       </td>
 
-                      {/* Grand Total */}
+                      {/**
+                       * Grand Total Financial Figure
+                       * Total gross invoice value including taxes and line items.
+                       */}
                       <td className="py-3.5 px-4 text-right font-semibold text-gray-900">
                         {formatCurrency(bill.grandTotal)}
                       </td>
 
-                      {/* Amount Paid */}
+                      {/**
+                       * Amount Paid Financial Figure
+                       * Cumulative amount settled by the customer for this invoice.
+                       */}
                       <td className="py-3.5 px-4 text-right text-emerald-700 font-semibold">
                         {formatCurrency(bill.amountPaid || 0)}
                       </td>
 
-                      {/* Status */}
+                      {/**
+                       * Payment Status Badge Cell
+                       * Color-coded status tag indicating PAID, PARTIAL, or UNPAID.
+                       */}
                       <td className="py-3.5 px-4 text-center">
                         {getStatusBadge(bill.paymentStatus)}
                       </td>
 
-                      {/* Mode */}
+                      {/**
+                       * Payment Mode Indicator Cell
+                       * Channel used to complete payment transaction.
+                       */}
                       <td className="py-3.5 px-4 text-center">
                         <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-100 text-gray-700 border border-gray-200 uppercase">
                           {bill.paymentMode || 'CASH'}
                         </span>
                       </td>
 
-                      {/* Issued On */}
+                      {/**
+                       * Bill Creation Timestamp Cell
+                       * Date and time when invoice was generated by shopkeeper.
+                       */}
                       <td className="py-3.5 px-4 text-left text-xs text-gray-500 font-normal">
                         {formatDate(bill.createdAt)}
                       </td>
 
-                      {/* Action */}
+                      {/**
+                       * Bill Inspection Action Trigger
+                       * Opens itemized modal showing full line items, tax, and notes.
+                       */}
                       <td className="py-3.5 px-4 text-right">
                         <button
                           onClick={() => setSelectedBill(bill)}
@@ -404,7 +463,10 @@ const AdminBills = () => {
               </table>
             </div>
 
-            {/* Mobile Cards View (< md) - Clean layout matching shopkeeper standard */}
+            {/**
+             * Mobile Responsive Card Stream
+             * Mobile layout matching standard merchant billing view on small screens.
+             */}
             <div className="md:hidden space-y-3 p-3 bg-gray-50/50">
               {bills.map((bill) => {
                 const shopName = bill.shopId?.businessName || bill.shopId?.name || 'Shop';
@@ -415,7 +477,10 @@ const AdminBills = () => {
                     key={bill._id}
                     className="bg-white border border-gray-200 rounded-lg p-3.5 space-y-3 shadow-none"
                   >
-                    {/* Header: Shop Avatar, Name, Invoice Number & Status */}
+                    {/**
+                     * Card Header
+                     * Store initials, name, invoice number, and payment status badge.
+                     */}
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2.5 min-w-0">
                         <div className="w-8 h-8 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#093C5D] shrink-0">
@@ -435,7 +500,10 @@ const AdminBills = () => {
                       </div>
                     </div>
 
-                    {/* Customer & Date Info Strip */}
+                    {/**
+                     * Customer & Date Info Strip
+                     * Contact name with calendar creation timestamp.
+                     */}
                     <div className="bg-gray-50/80 border border-gray-200/80 rounded-lg p-2.5 flex items-center justify-between gap-2 text-xs">
                       <div className="flex items-center gap-1.5 text-gray-900 font-semibold truncate min-w-0">
                         <User className="w-3.5 h-3.5 text-[#093C5D] shrink-0" />
@@ -447,7 +515,10 @@ const AdminBills = () => {
                       </div>
                     </div>
 
-                    {/* Financial Figures Grid */}
+                    {/**
+                     * Financial Figures Grid
+                     * 3-column glance of grand total, amount paid, and payment method.
+                     */}
                     <div className="grid grid-cols-3 gap-2 text-center">
                       <div className="bg-gray-50 border border-gray-200 rounded-lg py-2 px-1">
                         <span className="text-[10px] font-semibold text-gray-500 uppercase block">Grand Total</span>
@@ -463,7 +534,10 @@ const AdminBills = () => {
                       </div>
                     </div>
 
-                    {/* Action Button */}
+                    {/**
+                     * Mobile Inspection Action Trigger
+                     * Opens detailed bill modal from handheld device.
+                     */}
                     <div className="pt-2 border-t border-gray-100">
                       <button
                         onClick={() => setSelectedBill(bill)}
@@ -480,7 +554,10 @@ const AdminBills = () => {
           </div>
         )}
 
-        {/* Pagination Bar */}
+        {/**
+         * Pagination Navigation Bar
+         * Displays current page range and next/previous controls.
+         */}
         {!isLoading && totalPages > 1 && (
           <div className="px-4 py-3 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
             <span className="text-xs text-gray-600 font-medium">
@@ -509,10 +586,16 @@ const AdminBills = () => {
         )}
       </div>
 
-      {/* Bill Itemized Details Modal */}
+      {/**
+       * Bill Itemized Inspection Modal
+       * Detailed popup showing buyer/seller details, itemized goods, tax calculations, and payment audit.
+       */}
       {selectedBill && (
         <div className="fixed inset-0 z-[60] overscroll-contain">
-          {/* Backdrop (matching Customer pages) */}
+          {/**
+           * Modal Backdrop Overlay
+           * Semi-transparent overlay intercepting backdrop clicks to close.
+           */}
           <div
             className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
             onClick={() => setSelectedBill(null)}
@@ -520,16 +603,25 @@ const AdminBills = () => {
             onTouchMove={(e) => e.preventDefault()}
           />
 
-          {/* Mobile: bottom sheet | sm+: centered modal */}
+          {/**
+           * Modal Container Shell
+           * Responsive drawer on mobile viewports and centered dialog on sm+ viewports.
+           */}
           <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-[60] pointer-events-none">
             <div className="relative bg-white w-full sm:max-w-lg rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
 
-              {/* Drag handle — mobile only */}
+              {/**
+               * Mobile Touch Gesture Drag Handle
+               * Visual indicator for mobile sheet dragging.
+               */}
               <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-white">
                 <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
               </div>
 
-              {/* Header */}
+              {/**
+               * Modal Header Toolbar
+               * Shows invoice serial number, issuance timestamp, and close button.
+               */}
               <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between bg-white flex-shrink-0">
                 <div>
                   <h3 className="text-base sm:text-lg font-semibold text-gray-900">
@@ -547,9 +639,15 @@ const AdminBills = () => {
                 </button>
               </div>
 
-              {/* Modal Body */}
+              {/**
+               * Modal Body Content Area
+               * Contains merchant info, customer profile, itemized inventory goods, and ledger totals.
+               */}
               <div className="p-5 overflow-y-auto space-y-4 flex-1">
-                {/* Merchant & Customer Info Cards */}
+                {/**
+                 * Merchant & Customer Context Cards
+                 * Dual-column layout identifying parties involved in this transaction.
+                 */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
                     <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block mb-1">
@@ -567,7 +665,10 @@ const AdminBills = () => {
                   </div>
                 </div>
 
-                {/* Products Breakdown Table */}
+                {/**
+                 * Products Breakdown Table
+                 * Itemized lines showing product name, quantity, unit rate, and total line price.
+                 */}
                 <div>
                   <span className="text-xs font-semibold text-gray-700 block mb-2">Itemized Products</span>
                   <div className="border border-gray-200 rounded-lg overflow-hidden">
@@ -594,7 +695,10 @@ const AdminBills = () => {
                   </div>
                 </div>
 
-                {/* Financial Summary */}
+                {/**
+                 * Financial Ledger Summary
+                 * Line-by-line totals showing subtotal, discounts, tax, grand total, and remaining balance.
+                 */}
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 space-y-1.5 text-xs">
                   <div className="flex justify-between text-gray-600 font-medium">
                     <span>Subtotal:</span>
@@ -627,7 +731,10 @@ const AdminBills = () => {
                 </div>
               </div>
 
-              {/* Footer */}
+              {/**
+               * Modal Footer Controls
+               * Dismiss action button closing the itemized audit modal.
+               */}
               <div className="px-5 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-end flex-shrink-0">
                 <button
                   onClick={() => setSelectedBill(null)}

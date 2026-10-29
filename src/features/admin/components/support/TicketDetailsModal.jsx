@@ -1,3 +1,8 @@
+/**
+ * Administrative Support Helpdesk Ticket Inspection Modal
+ * Handles merchant inquiry review, priority escalations, internal staff notes, and resolution logging.
+ */
+
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -22,6 +27,9 @@ import { formatDate } from '../../../../utils/dateUtils';
 import TicketStatusBadge from './TicketStatusBadge';
 import TicketPriorityBadge from './TicketPriorityBadge';
 
+/**
+ * Helpdesk Ticket Categories
+ */
 const CATEGORIES = [
   { value: 'GENERAL', label: 'General Inquiry' },
   { value: 'BILLING', label: 'Billing & Payments' },
@@ -109,7 +117,10 @@ const TicketDetailsModal = ({
   };
 
 
-  // Prevent background scrolling when modal is open
+  /**
+   * Modal Scroll Lock Effect
+   * Disables background viewport scrolling and mobile touch gestures while ticket modal is active.
+   */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -132,7 +143,10 @@ const TicketDetailsModal = ({
 
   return (
     <div className="fixed inset-0 z-50 overscroll-contain">
-      {/* Backdrop */}
+      {/**
+       * Backdrop Overlay
+       * Darkened semi-transparent overlay intercepting outside clicks.
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
@@ -140,18 +154,27 @@ const TicketDetailsModal = ({
         onTouchMove={(e) => e.preventDefault()}
       />
 
-      {/* Modal Container: Bottom Sheet on Mobile, Centered on sm+ */}
+      {/**
+       * Modal Container Shell
+       * Renders as responsive bottom drawer on mobile and centered card on sm+ viewports.
+       */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div
           className="relative w-full sm:max-w-3xl bg-white rounded-t-2xl sm:rounded-xl border border-gray-200 animate-modal-content overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[88vh] pointer-events-auto shadow-2xl sm:shadow-xl"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Mobile Drag Handle */}
+          {/**
+           * Mobile Drag Affordance Handle
+           * Visual indicator for mobile sheet gestures.
+           */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-gray-50/80">
             <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
           </div>
 
-          {/* Header */}
+          {/**
+           * Ticket Modal Header
+           * Shows ticket reference ID, status pill, priority indicator, and close button.
+           */}
           <div className="px-5 sm:px-6 py-4 border-b border-gray-200 bg-gray-50/80 flex items-center justify-between shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <span className="text-base font-semibold text-gray-900 tracking-tight">
@@ -170,9 +193,15 @@ const TicketDetailsModal = ({
             </button>
           </div>
 
-        {/* Scrollable Content Body */}
+        {/**
+         * Scrollable Content Body Area
+         * Houses ticket metadata banner, requester profile, message body, notes, and actions.
+         */}
         <div className="p-6 overflow-y-auto space-y-6">
-          {/* Top Info Banner */}
+          {/**
+           * Top Ticket Submission Banner
+           * Shows original creation date and resolution metadata when resolved.
+           */}
           <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-gray-500 bg-gray-50 p-3 rounded-lg border border-gray-200">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-gray-400" />
@@ -189,7 +218,10 @@ const TicketDetailsModal = ({
             )}
           </div>
 
-          {/* Requester Identity Card */}
+          {/**
+           * Requester Identity Card
+           * Displays contact details, store association, and subscriber plan badge.
+           */}
           <div className="bg-white rounded-lg border border-gray-200 p-4">
             <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
               Requester Profile
@@ -255,7 +287,10 @@ const TicketDetailsModal = ({
             </div>
           </div>
 
-          {/* Message Block */}
+          {/**
+           * Inquiry Message Content Block
+           * Displays ticket subject, classification tag, and full body text submitted by user.
+           */}
           <div className="bg-gray-50/60 rounded-lg border border-gray-200 p-4 space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -273,7 +308,10 @@ const TicketDetailsModal = ({
             </div>
           </div>
 
-          {/* Action Settings: Category, Priority & Status */}
+          {/**
+           * Ticket Triaging Controls Grid
+           * Dropdowns for updating ticket classification, urgency priority, and resolution status.
+           */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">
@@ -325,7 +363,10 @@ const TicketDetailsModal = ({
             </div>
           </div>
 
-          {/* Internal Notes */}
+          {/**
+           * Internal Administrative Notes Area
+           * Private team notes hidden from the end user for coordination and debugging.
+           */}
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1 flex items-center gap-1.5">
               <Shield className="w-3.5 h-3.5 text-gray-500" />
@@ -340,7 +381,10 @@ const TicketDetailsModal = ({
             />
           </div>
 
-          {/* Official Admin Reply */}
+          {/**
+           * Official Admin Reply Log
+           * Records resolution feedback and direct response provided to the merchant.
+           */}
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1 flex items-center gap-1.5">
               <MessageCircle className="w-3.5 h-3.5 text-[#093C5D]" />
@@ -356,7 +400,10 @@ const TicketDetailsModal = ({
           </div>
         </div>
 
-        {/* Footer Toolbar */}
+        {/**
+         * Footer Action Toolbar
+         * Houses ticket deletion, resolution shortcut, and changes persistence button.
+         */}
         <div className="px-6 py-4 border-t border-gray-200 bg-gray-50/80 flex flex-wrap items-center justify-between gap-3 shrink-0">
           <button
             type="button"

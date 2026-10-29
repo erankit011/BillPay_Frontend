@@ -1,3 +1,8 @@
+/**
+ * Cryptographically Verified Public Customer Invoice Page
+ * Token-authenticated view for retail end-customers shared via WhatsApp with PDF download and direct UPI payment QR.
+ */
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import api from '../api/axios';
@@ -5,9 +10,10 @@ import { Loader2, Download, Printer, ShieldCheck, HelpCircle } from 'lucide-reac
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '../utils/dateUtils';
-// We assume there's a component to render the receipt/bill design. Let's see if there is one.
-// The user already has PlatformReceipt.jsx maybe? Or we just render it here.
 
+/**
+ * PublicInvoice Component
+ */
 const PublicInvoice = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
@@ -85,7 +91,10 @@ const PublicInvoice = () => {
     <div className="min-h-screen bg-gray-50 print:bg-white py-4 sm:py-8 px-2 sm:px-6 lg:px-8 print:p-0 font-sans">
       <div className="max-w-3xl mx-auto print:max-w-none">
 
-        {/* Header Actions */}
+        {/**
+         * Top Action Bar
+         * Verified badge and print/download button (hidden during print output).
+         */}
         <div className="print:hidden flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 mb-4 sm:mb-6 bg-white p-4 rounded-lg border border-gray-200 hover:border-gray-300 transition-all cursor-default">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-green-600" />
@@ -102,9 +111,15 @@ const PublicInvoice = () => {
           </div>
         </div>
 
-        {/* Invoice Display */}
+        {/**
+         * Public Invoice Paper Canvas
+         * Customer-facing digital receipt containing store identity, items, and totals.
+         */}
         <div className="bg-white p-5 sm:p-8 rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default relative group print:shadow-none" id="invoice-content">
-          {/* Shop Details */}
+          {/**
+           * Merchant Store Identity
+           * Business branding name, support email, phone contact, and physical address.
+           */}
           <div className="flex flex-col items-start text-left border-b border-dashed border-gray-200 pb-3 mb-3 sm:pb-4 sm:mb-4 group-hover:border-gray-300 transition-colors">
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 tracking-tight mb-2 sm:mb-3">
               {shopSettings?.shopName || bill?.shopId?.name}
@@ -134,9 +149,15 @@ const PublicInvoice = () => {
             </div>
           </div>
 
-          {/* Bill Details */}
+          {/**
+           * Bill & Customer Information Grid
+           * Dual-column layout displaying customer details and invoice metadata.
+           */}
           <div className="grid grid-cols-2 gap-y-3 gap-x-2 sm:gap-4 mb-4 sm:mb-5">
-            {/* Column 1: Customer Details */}
+            {/**
+             * Customer Profile Column
+             * Customer display name, registered phone number, and optional email address.
+             */}
             <div className="flex flex-col space-y-1.5 sm:space-y-2.5">
               <div className="flex flex-col">
                 <span className="text-gray-400 font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Billed To</span>
@@ -158,7 +179,10 @@ const PublicInvoice = () => {
               )}
             </div>
 
-            {/* Column 2: Invoice Info */}
+            {/**
+             * Invoice Metadata Column
+             * Unique invoice reference number and generation date timestamp.
+             */}
             <div className="flex flex-col space-y-1.5 sm:space-y-2.5 items-end text-right">
               <div className="flex flex-col items-end">
                 <span className="text-gray-400 font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Invoice No</span>
@@ -172,7 +196,10 @@ const PublicInvoice = () => {
             </div>
           </div>
 
-          {/* Items */}
+          {/**
+           * Billed Line Items Table
+           * Itemized product breakdown with quantities, unit prices, and line subtotals.
+           */}
           <div className="mb-5 sm:mb-6 overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[300px]">
               <thead>
@@ -196,7 +223,10 @@ const PublicInvoice = () => {
             </table>
           </div>
 
-          {/* Summary */}
+          {/**
+           * Invoice Totals & Balance Summary
+           * Subtotal, taxes, discounts, grand total, amount paid, and remaining balance due.
+           */}
           <div className="border-t border-gray-200 pt-4 sm:pt-6 group-hover:border-gray-300 transition-colors">
             <div className="w-full sm:w-1/2 ml-auto space-y-1.5 sm:space-y-2 text-sm">
               <div className="flex justify-between text-gray-700 font-medium hover:text-gray-900 transition-colors">
@@ -229,7 +259,10 @@ const PublicInvoice = () => {
             </div>
           </div>
 
-          {/* Thank You Note */}
+          {/**
+           * Appreciation Banner & Verification Seal
+           * Courtesy message from merchant and UdharPay digital verification seal.
+           */}
           <div className="mt-6 sm:mt-8 bg-gray-50 rounded-lg p-3 sm:p-4 border border-gray-100 text-center print:break-inside-avoid">
             <p className="text-gray-600 font-medium text-[11px] sm:text-xs">
               Thank you for shopping with {shopSettings?.shopName || bill?.shopId?.name}! We appreciate your business.

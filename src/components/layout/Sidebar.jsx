@@ -36,7 +36,10 @@ const Sidebar = ({
   const location = useLocation();
   const { t } = useTranslation();
 
-  // Accordion states
+  /**
+   * Navigation Accordion State Flags
+   * Tracks open/closed toggle states for submenus
+   */
   const isStoresActive = useMemo(() => {
     return (
       location.pathname === '/admin/shops' ||
@@ -67,7 +70,10 @@ const Sidebar = ({
 
   const [shopkeeperBillingOpen, setShopkeeperBillingOpen] = useState(true);
 
-  // Close drawer helper
+  /**
+   * Mobile Drawer Auto-Close Handler
+   * Collapses mobile navigation flyout upon route selection
+   */
   const handleNavClick = () => {
     if (mobileDrawerOpen) {
       setMobileDrawerOpen(false);
@@ -83,7 +89,10 @@ const Sidebar = ({
     if (isAdmin) {
       return (
         <>
-          {/* 1. Admin Dashboard */}
+          {/**
+           * Admin Dashboard Route
+           * Overview analytics and key store metrics
+           */}
           <NavLink
             to="/admin/dashboard"
             onClick={handleNavClick}
@@ -100,7 +109,10 @@ const Sidebar = ({
             {!isCollapsed && <span>Dashboard</span>}
           </NavLink>
 
-          {/* 2. Stores Accordion */}
+          {/**
+           * Store Management Submenu
+           * Links to merchants, store bills, and business reports
+           */}
           <div className="pt-0.5">
             {isCollapsed ? (
               <NavLink
@@ -189,7 +201,10 @@ const Sidebar = ({
             )}
           </div>
 
-          {/* 3. Subscriptions Accordion */}
+          {/**
+           * Subscriptions & Pricing Submenu
+           * Revenue receipts and dynamic SaaS plan tiers
+           */}
           <div className="pt-0.5">
             {isCollapsed ? (
               <NavLink
@@ -270,7 +285,10 @@ const Sidebar = ({
             )}
           </div>
 
-          {/* 4. System Health (LIVE badge) */}
+          {/**
+           * System Health Monitor
+           * Real-time server telemetry and service heartbeat
+           */}
           <NavLink
             to="/admin/health"
             onClick={handleNavClick}
@@ -294,7 +312,10 @@ const Sidebar = ({
             )}
           </NavLink>
 
-          {/* 5. Broadcasts */}
+          {/**
+           * Global Broadcasts Manager
+           * Platform-wide announcements and notice banners
+           */}
           <NavLink
             to="/admin/broadcasts"
             onClick={handleNavClick}
@@ -311,7 +332,10 @@ const Sidebar = ({
             {!isCollapsed && <span>Broadcasts</span>}
           </NavLink>
 
-          {/* 6. Support Desk */}
+          {/**
+           * Help Desk Support Portal
+           * Merchant assistance tickets and inquiries
+           */}
           <NavLink
             to="/admin/support"
             onClick={handleNavClick}
@@ -328,7 +352,10 @@ const Sidebar = ({
             {!isCollapsed && <span>Support Desk</span>}
           </NavLink>
 
-          {/* 7. Coupons */}
+          {/**
+           * Promotional Coupons Manager
+           * Discount codes and redemption statistics
+           */}
           <NavLink
             to="/admin/coupons"
             onClick={handleNavClick}
@@ -345,7 +372,10 @@ const Sidebar = ({
             {!isCollapsed && <span>Coupons</span>}
           </NavLink>
 
-          {/* 8. Audit Logs */}
+          {/**
+           * Security Audit Logs
+           * Administrative activity trail and access history
+           */}
           <NavLink
             to="/admin/audit-logs"
             onClick={handleNavClick}
@@ -362,7 +392,10 @@ const Sidebar = ({
             {!isCollapsed && <span>Audit Logs</span>}
           </NavLink>
 
-          {/* 9. Admin Settings */}
+          {/**
+           * Platform Security & Settings
+           * Global configurations and operational toggles
+           */}
           <NavLink
             to="/admin/settings"
             onClick={handleNavClick}
@@ -382,10 +415,16 @@ const Sidebar = ({
       );
     }
 
-    // Shopkeeper Navigation
+    /**
+     * Merchant Navigation Section
+     * Core shopkeeper tools for daily business operations
+     */
     return (
       <>
-        {/* 1. Dashboard */}
+        {/**
+         * Merchant Dashboard Route
+         * Daily sales overview and quick action shortcuts
+         */}
         <NavLink
           to="/dashboard"
           onClick={handleNavClick}
@@ -402,7 +441,10 @@ const Sidebar = ({
           {!isCollapsed && <span>{t('Dashboard')}</span>}
         </NavLink>
 
-        {/* 2. Customers */}
+        {/**
+         * Customer Directory Route
+         * Customer balances and khata ledger records
+         */}
         <NavLink
           to="/customers"
           onClick={handleNavClick}
@@ -419,7 +461,10 @@ const Sidebar = ({
           {!isCollapsed && <span>{t('Customers')}</span>}
         </NavLink>
 
-        {/* 3. Products */}
+        {/**
+         * Product Inventory Route
+         * Catalog management, stock tracking, and pricing
+         */}
         <NavLink
           to="/products"
           onClick={handleNavClick}
@@ -436,7 +481,10 @@ const Sidebar = ({
           {!isCollapsed && <span>{t('Products')}</span>}
         </NavLink>
 
-        {/* 4. Billing Accordion */}
+        {/**
+         * Billing Operations Submenu
+         * Invoicing, voice-assisted entry, and payment reminders
+         */}
         <div className="pt-0.5">
           {isCollapsed ? (
             <NavLink
@@ -525,7 +573,10 @@ const Sidebar = ({
           )}
         </div>
 
-        {/* 5. Reports */}
+        {/**
+         * Financial Reports Route
+         * Sales trends, tax summaries, and profit analytics
+         */}
         <NavLink
           to="/reports"
           onClick={handleNavClick}
@@ -542,7 +593,10 @@ const Sidebar = ({
           {!isCollapsed && <span>{t('Reports')}</span>}
         </NavLink>
 
-        {/* 6. Subscription (Pro badge) */}
+        {/**
+         * Subscription Plan Route
+         * Account tier benefits and billing management
+         */}
         <NavLink
           to="/subscription"
           onClick={handleNavClick}
@@ -566,7 +620,10 @@ const Sidebar = ({
           )}
         </NavLink>
 
-        {/* 7. Settings */}
+        {/**
+         * Store Settings Route
+         * Shop profile, invoice customization, and security
+         */}
         <NavLink
           to="/settings"
           onClick={handleNavClick}
@@ -588,16 +645,20 @@ const Sidebar = ({
 
   return (
     <>
-      {/* =========================================================================
-          DESKTOP SIDEBAR RAIL
-      ========================================================================= */}
+      {/**
+       * Desktop Sidebar Rail (<1024px: hidden, >=1024px: flex)
+       * Fixed vertical navigation pane supporting expanded and icon-only rail modes
+       */}
       <aside
         className={`hidden lg:flex flex-col fixed left-0 z-40 bg-white border-r border-gray-100 transition-all duration-200 ease-in-out ${
           sidebarCollapsed ? 'w-[72px]' : 'w-64'
         }`}
         style={{ top: 'var(--top-announcement-height, 0px)', bottom: 0 }}
       >
-        {/* Brand Header */}
+        {/**
+         * Sidebar Brand Identity Header
+         * Brand monogram and title badge
+         */}
         <div className="h-14 flex items-center px-4 border-b border-gray-100 shrink-0">
           <Link
             to={isAdmin ? '/admin/dashboard' : '/dashboard'}
@@ -627,12 +688,18 @@ const Sidebar = ({
           </Link>
         </div>
 
-        {/* Navigation Links */}
+        {/**
+         * Primary Navigation Scroll Container
+         * Renders categorized links with scroll virtualization
+         */}
         <nav className="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto overflow-x-hidden">
           {renderNavLinks(false)}
         </nav>
 
-        {/* Sidebar Footer */}
+        {/**
+         * Sidebar Bottom Actions
+         * Customer help and support trigger
+         */}
         <div className="p-3 border-t border-gray-100 shrink-0">
           {!isAdmin && (
             <Link
@@ -651,18 +718,25 @@ const Sidebar = ({
         </div>
       </aside>
 
-      {/* =========================================================================
-          MOBILE / TABLET OFFCANVAS DRAWER (< 1024px)
-      ========================================================================= */}
+      {/**
+       * Mobile / Tablet Offcanvas Drawer (<1024px)
+       * Responsive sliding navigation panel with modal overlay
+       */}
       {mobileDrawerOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          {/* Backdrop */}
+          {/**
+           * Offcanvas Backdrop Overlay
+           * Semi-transparent dark blur background capturing dismiss clicks
+           */}
           <div
             className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
             onClick={() => setMobileDrawerOpen(false)}
           />
 
-          {/* Drawer Panel */}
+          {/**
+           * Sliding Drawer Container
+           * Slide-in navigation container with close button
+           */}
           <aside className="fixed inset-y-0 left-0 w-72 bg-white shadow-2xl flex flex-col z-50 transition-transform">
             <div className="h-14 flex items-center justify-between px-5 border-b border-gray-100 shrink-0">
               <div className="flex items-center gap-3">

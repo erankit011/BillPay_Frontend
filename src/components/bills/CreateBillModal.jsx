@@ -1,3 +1,9 @@
+/**
+ * Point of Sale (POS) Invoice Creation Modal
+ * Features dynamic item rows, live tax and subtotal calculations, customer quick-addition,
+ * payment mode allocations, and automated WhatsApp invoice dispatch.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { X, Plus, Loader2, AlertCircle } from 'lucide-react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
@@ -11,6 +17,9 @@ import { useSelector } from 'react-redux';
 import { generateInvoicePDF } from '../../utils/generateInvoicePDF';
 import toast from 'react-hot-toast';
 
+/**
+ * Invoice Validation Schema
+ */
 const createBillSchema = yup.object({
   customerId: yup.string().required('Customer is required'),
   products: yup.array().of(
@@ -27,6 +36,9 @@ const createBillSchema = yup.object({
   })
 });
 
+/**
+ * CreateBillModal Component
+ */
 const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, shopSettings = {} }) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -49,7 +61,10 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
     }
   });
 
-  // Re-sync default payment mode when shopSettings loads
+  /**
+   * Default Payment Mode Re-synchronization
+   * Synchronizes payment method form binding when store settings become available
+   */
   useEffect(() => {
     if (shopSettings?.defaultPaymentMode) {
       setValue('paymentMode', shopSettings.defaultPaymentMode);
@@ -209,19 +224,30 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
 
   return (
     <div className="fixed inset-0 z-50">
-      {/* Backdrop */}
+      {/**
+       * Modal Backdrop Overlay
+       * Obscures underlying viewport and triggers dismiss on click
+       */}
       <div className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" onClick={() => setIsModalOpen(false)} />
 
-      {/* Mobile: bottom sheet | sm+: centered modal */}
+      {/**
+       * Responsive Dialog Frame
+       * Bottom sheet on mobile devices, centered window on desktop
+       */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8">
         <div className="relative bg-white w-full sm:max-w-lg lg:max-w-2xl rounded-t-2xl sm:rounded-lg flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden">
 
-          {/* Drag handle — mobile only */}
+          {/**
+           * Mobile Sheet Drag Indicator
+           */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
             <div className="w-10 h-1 bg-gray-200 rounded-full" />
           </div>
 
-          {/* Header */}
+          {/**
+           * Dialog Header
+           * Title text and modal dismiss button
+           */}
           <div className="flex items-center justify-between px-4 sm:px-6 pt-3 sm:pt-5 pb-3 sm:pb-4 border-b border-gray-100 flex-shrink-0">
             <h3 className="text-base sm:text-lg font-semibold text-gray-900">{t('Create New Bill')}</h3>
             <button
@@ -232,11 +258,17 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
             </button>
           </div>
 
-          {/* Scrollable body */}
+          {/**
+           * Scrollable Form Body
+           * Customer selector, line items builder, and settlement controls
+           */}
           <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-5">
             <form onSubmit={handleSubmit(d => mutation.mutate(d))} className="flex flex-col gap-5 sm:gap-6">
 
-              {/* Customer */}
+              {/**
+               * Customer Selection Section
+               * Links transaction to existing ledger account or counter sale
+               */}
               <div>
                 <div className="flex items-end justify-between mb-1.5 sm:mb-2">
                   <label className="block text-xs sm:text-[13px] font-medium text-gray-700">
@@ -290,7 +322,10 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                 )}
               </div>
 
-              {/* Products */}
+              {/**
+               * Products & Line Items Builder
+               * Manages quantity counters, item selection, and inline product creation
+               */}
               <div className="space-y-2.5">
                 <div className="flex items-end justify-between mb-1.5 sm:mb-2">
                   <label className="block text-xs sm:text-[13px] font-medium text-gray-700">
@@ -361,14 +396,20 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                 </button>
               </div>
 
-              {/* Total Amount Display */}
+              {/**
+               * Invoice Summary & Totals
+               * Displays calculated subtotal, discounts, and applied sales taxes
+               */}
               <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 sm:p-4 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-blue-900">{t('Subtotal')}</span>
                   <span className="text-sm font-semibold text-blue-900">₹{subtotal.toLocaleString('en-IN')}</span>
                 </div>
 
-                {/* Discount Input Row */}
+                {/**
+                 * Concession & Discount Configuration
+                 * Configures flat currency discount or percentage discount
+                 */}
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-blue-900">{t('Discount')} {isPercentage ? '(%)' : '(₹)'}</span>
                   <div className="flex items-center gap-1">
@@ -396,7 +437,10 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                 </div>
               </div>
 
-              {/* Amount & Payment Mode */}
+              {/**
+               * Payment Method & Collection Inputs
+               * Captures tender method and upfront collection amount
+               */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
@@ -451,7 +495,10 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                 </div>
               )}
 
-              {/* Submit */}
+              {/**
+               * Invoice Submission Action
+               * Triggers creation mutation and prints receipt
+               */}
               <button type="submit" disabled={mutation.isPending || isCreditLimitExceeded}
                 className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-lg py-3 font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all">
                 {mutation.isPending ? (

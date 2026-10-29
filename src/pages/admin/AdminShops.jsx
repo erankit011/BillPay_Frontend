@@ -68,7 +68,10 @@ const AdminShops = () => {
   const [searchTerm, setSearchTerm] = useState(urlSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(urlSearch);
 
-  // Active Modals
+  /**
+   * Active Modal State Management
+   * Holds current store object targeting inspect, suspend, logout, notice, or plan edit dialogs.
+   */
   const [inspectShop, setInspectShop] = useState(null);
   const [suspendModalShop, setSuspendModalShop] = useState(null);
   const [logoutModalShop, setLogoutModalShop] = useState(null);
@@ -95,7 +98,7 @@ const AdminShops = () => {
       setSearchTerm(urlSearch);
       setDebouncedSearch(urlSearch);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [urlSearch]);
 
   const setFilter = (key, value) => {
@@ -139,7 +142,10 @@ const AdminShops = () => {
   const proCount = data?.proCount ?? shops.filter((s) => s.subscriptionPlan && s.subscriptionPlan !== 'FREE').length;
   const totalUdharSum = data?.totalUdharSum ?? shops.reduce((sum, s) => sum + (s.totalUdhar || 0), 0);
 
-  // Mutations
+  /**
+   * Store Management Mutations
+   * Handles plan override, account suspension, direct broadcast notice, and forced session termination.
+   */
   const planMutation = useMutation({
     mutationFn: ({ shopId, planData }) => overrideShopPlan(shopId, planData),
     onSuccess: (res) => {
@@ -203,7 +209,10 @@ const AdminShops = () => {
 
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
-      {/* Header */}
+      {/**
+       * Page Header Section
+       * Administrative title, merchant directory context, and store operation controls.
+       */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
@@ -215,7 +224,10 @@ const AdminShops = () => {
         </div>
       </div>
 
-      {/* Top KPI Summary Cards */}
+      {/**
+       * Key Performance Indicator Cards
+       * High-level metrics for registered shops, active accounts, pro subscriptions, and aggregate udhar.
+       */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
         <AdminStatCard
           title="REGISTERED SHOPS"
@@ -247,7 +259,10 @@ const AdminShops = () => {
         />
       </div>
 
-      {/* Filter Chips (Matched with Customer/Shopkeeper Pages UI) */}
+      {/**
+       * Filter Chips Bar
+       * Status and subscription plan selectors with active indicator styling and reset option.
+       */}
       <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {PLAN_FILTERS.map((f) => (
           <button
@@ -294,7 +309,10 @@ const AdminShops = () => {
         )}
       </div>
 
-      {/* Search Bar (Matched with Customer/Shopkeeper Pages UI) */}
+      {/**
+       * Search Bar Filter
+       * Full-text search input covering store name, merchant owner, email, and contact number.
+       */}
       <div className="flex flex-col w-full mb-3 sm:mb-4">
         <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
@@ -319,7 +337,10 @@ const AdminShops = () => {
         </div>
       </div>
 
-      {/* Shops Table (Desktop) & Responsive Cards (Mobile) */}
+      {/**
+       * Stores Directory Listing
+       * Renders responsive desktop table layout or adaptive mobile cards with management actions.
+       */}
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-none">
         {isLoading ? (
           <div className="flex justify-center items-center py-16">
@@ -335,7 +356,10 @@ const AdminShops = () => {
           </div>
         ) : (
           <div>
-            {/* Desktop Table View (lg+) */}
+            {/**
+             * Desktop Table View
+             * Tabular display of merchant profiles, subscription plans, operational metrics, and actions.
+             */}
             <div className="hidden lg:block overflow-x-auto">
               <table className="w-full text-left whitespace-nowrap">
                 <thead className="bg-gray-50/80 border-b border-gray-200">
@@ -376,7 +400,10 @@ const AdminShops = () => {
 
                     return (
                       <tr key={shop._id} className="hover:bg-gray-50/60 transition-colors">
-                        {/* 1. Shop Name Column (Limited: Avatar + Name) */}
+                        {/**
+                         * Shop Name & Avatar Column
+                         * Displays shop branding initials badge and merchant business title.
+                         */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle">
                           <div className="flex items-center gap-3">
                             <div className="w-8 h-8 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#093C5D] shrink-0">
@@ -388,7 +415,10 @@ const AdminShops = () => {
                           </div>
                         </td>
 
-                        {/* 2. Merchant Owner Column (Limited: Owner Name) */}
+                        {/**
+                         * Merchant Owner Column
+                         * Displays owner identity icon and registered merchant full name.
+                         */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle">
                           <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-900">
                             <User className="w-3.5 h-3.5 text-gray-400 shrink-0" />
@@ -396,7 +426,10 @@ const AdminShops = () => {
                           </div>
                         </td>
 
-                        {/* 3. Contact Column (Limited: Phone with email fallback & tooltip) */}
+                        {/**
+                         * Contact Information Column
+                         * Shows verified phone number with fallback email address.
+                         */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle">
                           <div
                             className="flex items-center gap-1.5 text-xs font-medium text-gray-800"
@@ -416,7 +449,10 @@ const AdminShops = () => {
                           </div>
                         </td>
 
-                        {/* 4. Plan Column (Limited: Badge only) */}
+                        {/**
+                         * Subscription Plan Tier Badge
+                         * Visual badge indicator showing store's active subscription tier.
+                         */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-center">
                           <span
                             className={`inline-block px-2.5 py-1 rounded text-[10px] font-semibold uppercase tracking-wide border ${getPlanBadge(
@@ -427,28 +463,40 @@ const AdminShops = () => {
                           </span>
                         </td>
 
-                        {/* 5. Customers Column */}
+                        {/**
+                         * Registered Customers Count
+                         * Aggregate number of customer ledger profiles under this store.
+                         */}
                         <td className="px-3 lg:px-4 py-3.5 align-middle text-center">
                           <span className="text-sm font-semibold text-gray-900">
                             {shop.customerCount ?? 0}
                           </span>
                         </td>
 
-                        {/* 6. Bills Column */}
+                        {/**
+                         * Invoices Generated Count
+                         * Total bills and invoices recorded by the merchant.
+                         */}
                         <td className="px-3 lg:px-4 py-3.5 align-middle text-center">
                           <span className="text-sm font-semibold text-gray-900">
                             {shop.billCount ?? shop.billsCount ?? 0}
                           </span>
                         </td>
 
-                        {/* 7. Pending Udhar Column */}
+                        {/**
+                         * Outstanding Udhar Balance
+                         * Aggregate pending customer credit amount owed to the merchant.
+                         */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-right">
                           <span className="text-sm font-semibold text-red-700">
                             {formatCurrency(shop.totalUdhar ?? 0)}
                           </span>
                         </td>
 
-                        {/* 8. Status Column */}
+                        {/**
+                         * Account Status Badge
+                         * Indicates whether the shop account is active or suspended.
+                         */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-center">
                           <span
                             className={`inline-block px-2.5 py-1 rounded text-[10px] font-semibold uppercase tracking-wide border ${
@@ -461,10 +509,16 @@ const AdminShops = () => {
                           </span>
                         </td>
 
-                        {/* 9. Action Buttons */}
+                        {/**
+                         * Store Management Action Toolbar
+                         * Interactive buttons for inspecting, overriding plans, sending notices, and suspension.
+                         */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-right">
                           <div className="inline-flex items-center justify-end gap-2">
-                            {/* Inspect */}
+                            {/**
+                             * Inspect Store Details
+                             * Opens deep inspection drawer with store analytics and customer data.
+                             */}
                             <button
                               type="button"
                               onClick={() => setInspectShop(shop)}
@@ -475,7 +529,10 @@ const AdminShops = () => {
                               <span className="leading-none">Inspect</span>
                             </button>
 
-                            {/* Change Plan */}
+                            {/**
+                             * Override Subscription Plan
+                             * Opens dialog to upgrade, downgrade, or manually extend store plan.
+                             */}
                             <button
                               type="button"
                               onClick={() => setPlanModalShop(shop)}
@@ -486,7 +543,10 @@ const AdminShops = () => {
                               <span className="leading-none">Plan</span>
                             </button>
 
-                            {/* Send Direct Notice */}
+                            {/**
+                             * Send Direct Notice
+                             * Opens modal to deliver official targeted broadcast notice to store dashboard.
+                             */}
                             <button
                               type="button"
                               onClick={() => setNoticeModalShop(shop)}
@@ -497,7 +557,10 @@ const AdminShops = () => {
                               <span className="leading-none">Notice</span>
                             </button>
 
-                            {/* Suspend / Restore */}
+                            {/**
+                             * Suspend or Reactivate Account
+                             * Toggles store account suspension state and billing access.
+                             */}
                             <button
                               onClick={() => setSuspendModalShop(shop)}
                               className={`cursor-pointer h-8 px-2.5 sm:px-3 font-semibold rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none ${
@@ -520,7 +583,10 @@ const AdminShops = () => {
                               )}
                             </button>
 
-                            {/* Force Logout */}
+                            {/**
+                             * Terminate Active Sessions
+                             * Forcibly invalidates all active JWT login sessions for this merchant.
+                             */}
                             <button
                               type="button"
                               onClick={() => handleOpenLogoutModal(shop)}
@@ -540,7 +606,10 @@ const AdminShops = () => {
               </table>
             </div>
 
-            {/* Mobile & Tablet Responsive Cards (<lg) */}
+            {/**
+             * Mobile & Tablet Responsive Cards
+             * Compact card layout for touch devices displaying store details and quick actions.
+             */}
             <div className="lg:hidden p-3 sm:p-4 space-y-3.5 divide-y divide-gray-100">
               {shops.map((shop) => {
                 const isSuspended = !!shop.isSuspended;
@@ -551,7 +620,10 @@ const AdminShops = () => {
                     key={shop._id}
                     className="bg-white border border-gray-200 rounded-lg p-3.5 sm:p-4 space-y-3 shadow-none pt-3 first:pt-0"
                   >
-                    {/* Header: Shop Avatar, Name & Status Badges (Limited Info) */}
+                    {/**
+                     * Shop Header & Status Strip
+                     * Merchant initials avatar, business name, and active plan/status badges.
+                     */}
                     <div className="flex items-center justify-between gap-2.5">
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="w-9 h-9 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#093C5D] shrink-0">
@@ -582,7 +654,10 @@ const AdminShops = () => {
                       </div>
                     </div>
 
-                    {/* Merchant Details Info Strip (Limited: Owner & Phone) */}
+                    {/**
+                     * Merchant Contact Summary Strip
+                     * Quick overview of business owner name and phone contact.
+                     */}
                     <div className="bg-gray-50/80 border border-gray-200/80 rounded-lg p-2.5 flex items-center justify-between gap-2 text-xs">
                       <div className="flex items-center gap-1.5 text-gray-900 font-semibold truncate min-w-0">
                         <User className="w-3.5 h-3.5 text-[#093C5D] shrink-0" />
@@ -594,7 +669,10 @@ const AdminShops = () => {
                       </div>
                     </div>
 
-                    {/* 3 Metric Pills */}
+                    {/**
+                     * Store Metrics Grid
+                     * Compact grid displaying customer count, bill count, and outstanding udhar.
+                     */}
                     <div className="grid grid-cols-3 gap-2 text-center">
                       <div className="bg-gray-50 border border-gray-200 rounded-lg py-2 px-1">
                         <span className="text-[10px] font-semibold text-gray-500 uppercase flex items-center justify-center gap-1">
@@ -619,7 +697,10 @@ const AdminShops = () => {
                       </div>
                     </div>
 
-                    {/* Bottom Actions Grid */}
+                    {/**
+                     * Responsive Card Action Grid
+                     * Full-width action button grid for inspecting, overriding plan, and managing account.
+                     */}
                     <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-2 border-t border-gray-100">
                       <button
                         type="button"
@@ -685,7 +766,10 @@ const AdminShops = () => {
               })}
             </div>
 
-            {/* Pagination Controls */}
+            {/**
+             * Pagination Controls Bar
+             * Page index summary and previous/next page navigation buttons.
+             */}
             {totalPages > 1 && (
               <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border-t border-gray-200 bg-gray-50/60">
                 <span className="text-xs text-gray-500 font-medium">
@@ -718,7 +802,10 @@ const AdminShops = () => {
         )}
       </div>
 
-      {/* Modals */}
+      {/**
+       * Administrative Store Modals
+       * Inspection, suspension, plan override, direct notice, and logout confirmation dialogs.
+       */}
       <ShopDetailsModal
         isOpen={!!inspectShop}
         onClose={() => setInspectShop(null)}

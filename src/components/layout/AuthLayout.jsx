@@ -1,7 +1,16 @@
+/**
+ * Authentication Layout Shell
+ * Provides split-screen branding presentation on desktop and focused form wrapper on mobile
+ * for login, registration, OTP verification, and password recovery.
+ */
+
 import { useTranslation } from 'react-i18next';
 import { Outlet, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
+/**
+ * AuthLayout Component
+ */
 const AuthLayout = () => {
   const { t } = useTranslation();
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -14,9 +23,15 @@ const AuthLayout = () => {
 
   return (
     <div className="min-h-screen bg-white flex">
-      {/* Left Panel - Branding (Hidden on mobile & tablet) */}
+      {/**
+       * Desktop Branding Panel
+       * Marketing testimonial, visual backdrop, and platform overview
+       */}
       <div className="hidden lg:flex w-5/12 xl:w-1/2 bg-[#093C5D] text-white p-12 flex-col justify-between relative overflow-hidden sticky top-0 h-screen">
-        {/* Background Graphic/Pattern */}
+        {/**
+         * Ambient Gradient Orbs
+         * Dynamic blurred light spheres forming subtle visual texture
+         */}
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-blue-400 blur-3xl mix-blend-screen opacity-50"></div>
           <div className="absolute top-1/2 -right-24 w-80 h-80 rounded-full bg-[#093C5D] blur-3xl mix-blend-screen opacity-40"></div>
@@ -35,7 +50,10 @@ const AuthLayout = () => {
             {t("Join thousands of Indian shopkeepers growing their business with UdharPay's smart ledger system.")}
           </p>
 
-          {/* Testimonial / Features */}
+          {/**
+           * Key Value Highlights
+           * Highlights ledger accuracy and automated reporting capabilities
+           */}
           <div className="mt-12 space-y-5">
             <div className="flex items-center gap-4 text-blue-50">
               <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md border border-white/10">
@@ -67,14 +85,17 @@ const AuthLayout = () => {
         </div>
       </div>
 
-      {/* Right Panel - Form Container */}
+      {/**
+       * Credential Form Content Area
+       * Centralized outlet container for authentication screens
+       */}
       <div className="w-full lg:w-7/12 xl:w-1/2 flex flex-col relative bg-white min-h-[100dvh]">
-
-        {/* Desktop Top Right Action removed */}
-
         <div className="flex-1 flex flex-col justify-center items-center px-5 sm:px-10 lg:px-16 xl:px-24 py-8 sm:py-12 md:py-20">
 
-          {/* Mobile App Branding */}
+          {/**
+           * Mobile Viewport Header
+           * Responsive brand identity for smaller viewport resolutions
+           */}
           <div className="lg:hidden w-full max-w-[420px] text-center mb-8 animate-fade-in">
             <div className="cursor-pointer inline-block" onClick={() => navigate('/')}>
               <span className="text-3xl font-bold tracking-tight text-[#093C5D] select-none">

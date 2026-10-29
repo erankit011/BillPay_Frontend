@@ -1,6 +1,14 @@
+/**
+ * Invisible Infinite Scroll Viewport Observer
+ * Emits page fetch requests via IntersectionObserver API when bottom sentinel enters viewport.
+ */
+
 import React, { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 
+/**
+ * InfiniteScrollObserver Component
+ */
 const InfiniteScrollObserver = ({ hasNextPage, fetchNextPage, isFetchingNextPage }) => {
   const { ref, inView } = useInView({
     threshold: 0.1,
@@ -14,7 +22,10 @@ const InfiniteScrollObserver = ({ hasNextPage, fetchNextPage, isFetchingNextPage
 
   if (!hasNextPage) return null;
 
-  // Only an invisible trigger div - no spinner rendered here
+  /**
+   * Viewport Sentinel Element
+   * Invisible target element triggering subsequent pagination queries
+   */
   return <div ref={ref} className="h-4 w-full" />;
 };
 

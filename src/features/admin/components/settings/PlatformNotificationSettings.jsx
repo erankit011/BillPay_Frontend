@@ -1,8 +1,16 @@
+/**
+ * Platform Notification & Dispatch Channel Settings
+ * Configures automated system alerts for new store registrations, payment successes, and multi-channel delivery.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import ToggleSwitch from './ToggleSwitch';
 import SettingSaveButton from './SettingSaveButton';
 
+/**
+ * PlatformNotificationSettings Component
+ */
 const PlatformNotificationSettings = ({ settings, onUpdate, isUpdating }) => {
   const { t } = useTranslation();
 
@@ -47,7 +55,10 @@ const PlatformNotificationSettings = ({ settings, onUpdate, isUpdating }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
-      {/* ── Admin Alert Preferences Card ── */}
+      {/**
+       * Admin Alert Preferences Card Section
+       * Toggle switches for merchant registration, subscription, email, and WhatsApp notifications.
+       */}
       <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
         <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
           <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Notifications & Alerts')}</h2>
@@ -86,7 +97,10 @@ const PlatformNotificationSettings = ({ settings, onUpdate, isUpdating }) => {
         </div>
       </section>
 
-      {/* Floating Sticky Save Button Bar */}
+      {/**
+       * Floating Sticky Save Button Bar
+       * Commits admin notification preference toggles.
+       */}
       <SettingSaveButton
         isUpdating={isUpdating}
         hasChanges={hasChanges}

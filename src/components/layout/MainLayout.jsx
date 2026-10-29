@@ -50,22 +50,34 @@ const MainLayout = () => {
 
   const isAdmin = user?.role === ROLES.ADMIN;
 
-  // Desktop rail collapsible state (persisted in localStorage)
+  /**
+   * Desktop Rail Collapsible State
+   * Persisted in local storage across browser page navigations
+   */
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     return localStorage.getItem('app_sidebar_collapsed') === 'true';
   });
 
-  // Mobile / Tablet offcanvas drawer state
+  /**
+   * Mobile Offcanvas Drawer State
+   * Controls drawer presentation on responsive hand-held screens
+   */
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
-  // Floating menus & modals
+  /**
+   * Floating Overlays & Modal States
+   * Coordinates profile flyouts, search palettes, and account modal alerts
+   */
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const [suspensionData, setSuspensionData] = useState({ isOpen: false, reason: '' });
 
-  // Notifications state
+  /**
+   * Real-Time Notification Badge State
+   * Stores unread notification count and live inbox activity feed
+   */
   const [notificationCount, setNotificationCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
 
@@ -94,7 +106,10 @@ const MainLayout = () => {
     [BASE_URL]
   );
 
-  // Toggle sidebar collapse
+  /**
+   * Sidebar Rail Mode Toggler
+   * Persists toggled state to browser storage
+   */
   const toggleSidebarCollapse = useCallback(() => {
     setSidebarCollapsed((prev) => {
       const next = !prev;
@@ -103,7 +118,10 @@ const MainLayout = () => {
     });
   }, []);
 
-  // Keyboard shortcut listener (Ctrl+B / Cmd+B for sidebar, Ctrl+K for search)
+  /**
+   * Global Keyboard Shortcuts Listener
+   * Handles Ctrl+B for sidebar toggling and Ctrl+K for search command palette
+   */
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
@@ -126,7 +144,10 @@ const MainLayout = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [toggleSidebarCollapse]);
 
-  // Close floating menus on click outside
+  /**
+   * Click-Outside Dropdown Dismissal
+   * Closes active floating menus when clicking outside container boundary
+   */
   useEffect(() => {
     if (!profileDropdownOpen && !notificationOpen) return;
 
@@ -143,7 +164,10 @@ const MainLayout = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [profileDropdownOpen, notificationOpen]);
 
-  // Lock body and html scroll only when modal or drawer is open
+  /**
+   * Body Scroll Lock Controller
+   * Prevents window scroll bleeding when modal dialogs or drawers are active
+   */
   useEffect(() => {
     if (mobileDrawerOpen || logoutModalOpen || searchModalOpen) {
       document.body.style.overflow = 'hidden';
@@ -158,14 +182,20 @@ const MainLayout = () => {
     };
   }, [mobileDrawerOpen, logoutModalOpen, searchModalOpen]);
 
-  // Close drawer on route change
+  /**
+   * Route Transition State Cleanup
+   * Resets active drawers and popovers upon route changes
+   */
   useEffect(() => {
     setMobileDrawerOpen(false);
     setProfileDropdownOpen(false);
     setNotificationOpen(false);
   }, [location.pathname]);
 
-  // Real-time notifications count & WebSockets
+  /**
+   * Real-Time WebSocket Synchronization
+   * Binds storekeeper socket channel to receive live administrative events
+   */
   useEffect(() => {
     let isMounted = true;
 
@@ -199,7 +229,10 @@ const MainLayout = () => {
           }
         });
 
-        // 1. Force logout triggered by admin
+        /**
+         * 1. Force Logout Event
+         * Immediately invalidates session on administrative remote termination
+         */
         socket.on('force_logout', (data) => {
           toast.error(
             data?.message ||
@@ -215,7 +248,10 @@ const MainLayout = () => {
           window.location.href = '/login?session_expired=true';
         });
 
-        // 2. Account suspended by admin in real-time
+        /**
+         * 2. Store Suspension Event
+         * Triggers suspension modal displaying administrative violation notice
+         */
         socket.on('account_suspended', (data) => {
           setSuspensionData({
             isOpen: true,
@@ -223,7 +259,10 @@ const MainLayout = () => {
           });
         });
 
-        // 3. Account reactivated by admin
+        /**
+         * 3. Store Reactivation Event
+         * Closes suspension modal and restores operational status
+         */
         socket.on('account_reactivated', (data) => {
           setSuspensionData({ isOpen: false, reason: '' });
           toast.success(
@@ -234,7 +273,10 @@ const MainLayout = () => {
           );
         });
 
-        // 4. Subscription plan overridden by admin
+        /**
+         * 4. Subscription Plan Override Event
+         * Re-hydrates merchant profile and invalidates transactional caches
+         */
         socket.on('plan_updated', async (data) => {
           try {
             const res = await api.get('/auth/me');
@@ -264,7 +306,10 @@ const MainLayout = () => {
           });
         });
 
-        // 5. Normal new notification
+        /**
+         * 5. Real-Time Notification Reception
+         * Increments unread counter and queues incoming notification item
+         */
         socket.on('new_notification', (newNotif) => {
           if (!isMounted) return;
           setNotificationCount((prev) => prev + 1);
@@ -275,18 +320,27 @@ const MainLayout = () => {
           });
         });
 
-        // 5.1 Direct official notice sent to store
+        /**
+         * 5.1 Store Official Notice Reception
+         * Invalidates targeted direct notice queries
+         */
         socket.on('admin_direct_notice', () => {
           queryClient.invalidateQueries({ queryKey: ['directOfficialNotices'] });
           queryClient.invalidateQueries({ queryKey: ['notifications'] });
         });
 
-        // 6. Broadcasts created/updated/deleted by admin in real time
+        /**
+         * 6. Global Broadcast Synchronization
+         * Re-queries platform broadcast banners
+         */
         socket.on('broadcasts_updated', () => {
           queryClient.invalidateQueries({ queryKey: ['activeBroadcasts'] });
         });
 
-        // 7. Platform settings or maintenance mode changed in real time
+        /**
+         * 7. Platform Settings Synchronization
+         * Updates global maintenance mode and system attributes
+         */
         socket.on('platform_settings_updated', (data) => {
           queryClient.invalidateQueries({ queryKey: ['activeBroadcasts'] });
           queryClient.invalidateQueries({ queryKey: ['platformSettings'] });
@@ -303,19 +357,28 @@ const MainLayout = () => {
           }
         });
 
-        // 8. Dynamic SaaS Plans & Pricing updated by admin
+        /**
+         * 8. Plan Tier & Pricing Synchronization
+         * Updates tier definitions across merchant and administrative portals
+         */
         socket.on('plans_updated', () => {
           queryClient.invalidateQueries({ queryKey: ['publicPlans'] });
           queryClient.invalidateQueries({ queryKey: ['adminPlans'] });
         });
 
-        // 8.1 SaaS Coupons updated or redeemed
+        /**
+         * 8.1 Coupon Promotion Synchronization
+         * Updates promotion codes and redemption metrics
+         */
         socket.on('coupons_updated', () => {
           queryClient.invalidateQueries({ queryKey: ['adminCoupons'] });
           queryClient.invalidateQueries({ queryKey: ['adminCouponStats'] });
         });
 
-        // 9. When a merchant upgrades their subscription (Admin view live sync)
+        /**
+         * 9. Merchant Upgrade Synchronization
+         * Updates administrator real-time revenue and subscription logs
+         */
         socket.on('shop_subscription_upgraded', (data) => {
           if (user?.role === 'admin' || user?.role === ROLES.ADMIN) {
             queryClient.invalidateQueries({ queryKey: ['adminOverview'] });
@@ -327,7 +390,10 @@ const MainLayout = () => {
           }
         });
 
-        // 10. When a new support ticket is submitted (Admin view live sync)
+        /**
+         * 10. Support Ticket Notification
+         * Alerts administrators to newly logged merchant assistance tickets
+         */
         socket.on('new_support_ticket', (ticket) => {
           if (user?.role === 'admin' || user?.role === ROLES.ADMIN) {
             queryClient.invalidateQueries({ queryKey: ['adminTickets'] });
@@ -338,7 +404,10 @@ const MainLayout = () => {
           }
         });
 
-        // 11. Real-time WhatsApp Gateway status update (Admin view live sync)
+        /**
+         * 11. WhatsApp Gateway Status Synchronization
+         * Reflects live bridge connectivity states
+         */
         socket.on('whatsapp_status', (data) => {
           if (user?.role === 'admin' || user?.role === ROLES.ADMIN) {
             queryClient.setQueryData(['whatsappStatus'], data);
@@ -352,7 +421,9 @@ const MainLayout = () => {
           }
         });
       } catch (err) {
-        // Fallback
+        /**
+         * Socket Connection Fallback Handler
+         */
       }
     }
 
@@ -443,7 +514,10 @@ const MainLayout = () => {
     window.location.href = `/login?suspended=true${reasonParam}`;
   }, [dispatch, suspensionData.reason]);
 
-  // Dynamic breadcrumb label
+  /**
+   * Dynamic Breadcrumb Label Resolver
+   * Resolves friendly title based on active routing URL path
+   */
   const breadcrumbTitle = useMemo(() => {
     const p = location.pathname;
     if (p.includes('/admin/dashboard') || p === '/admin') return 'Dashboard';
@@ -472,7 +546,10 @@ const MainLayout = () => {
     return 'Dashboard';
   }, [location.pathname]);
 
-  // Dynamic breadcrumb icon matching the current active page
+  /**
+   * Dynamic Breadcrumb Icon Resolver
+   * Selects matching Lucide icon based on active routing URL path
+   */
   const BreadcrumbIcon = useMemo(() => {
     const p = location.pathname;
     if (p.includes('/admin/dashboard') || p === '/admin') return Home;
@@ -502,11 +579,17 @@ const MainLayout = () => {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] text-gray-900 flex flex-col">
-      {/* Top Announcement Bar (Broadcasts & Maintenance Alert) */}
+      {/**
+       * Top Announcement Bar
+       * Displays system maintenance banners and urgent broadcasts
+       */}
       <TopAnnouncementBar />
 
       <div className="flex-1 flex min-w-0 relative">
-        {/* Desktop Sidebar & Mobile Offcanvas Drawer */}
+        {/**
+         * Desktop Sidebar & Mobile Offcanvas Drawer
+         * Responsive navigation drawer with role-based feature groupings
+         */}
         <Sidebar
           sidebarCollapsed={sidebarCollapsed}
           mobileDrawerOpen={mobileDrawerOpen}
@@ -514,13 +597,19 @@ const MainLayout = () => {
           isAdmin={isAdmin}
         />
 
-        {/* Main Column (Sticky Navbar + Page Content) */}
+        {/**
+         * Main Viewport Content Column
+         * Houses sticky navigation header and primary routed workspace views
+         */}
         <div
           className={`flex-1 flex flex-col min-w-0 transition-all duration-200 ease-in-out ${
             sidebarCollapsed ? 'lg:pl-[72px]' : 'lg:pl-64'
           }`}
         >
-          {/* Header Bar */}
+          {/**
+           * Sticky Top Navigation Header
+           * Command search trigger, language switcher, notifications, and merchant menu
+           */}
           <Header
             toggleSidebarCollapse={toggleSidebarCollapse}
             setMobileDrawerOpen={setMobileDrawerOpen}
@@ -547,7 +636,10 @@ const MainLayout = () => {
             notificationMenuRef={notificationMenuRef}
           />
 
-          {/* Primary Page Content */}
+          {/**
+           * Primary Page Viewport
+           * Renders contextual warning banners and nested page routes
+           */}
           <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1440px] w-full mx-auto">
             {user?.subscriptionStatus === 'past_due' && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -573,7 +665,10 @@ const MainLayout = () => {
               </div>
             )}
 
-            {/* Shopkeeper Business Setup Incomplete Alert Banner */}
+            {/**
+             * Business Setup Reminder Banner
+             * Informs merchant when business profile setup is still required
+             */}
             {user?.role === ROLES.SHOPKEEPER && !user?.isBusinessSetupCompleted && (
               <div className="w-full bg-blue-50/70 border border-blue-200 rounded-lg p-3.5 sm:p-4 mb-6 shadow-none flex flex-col md:flex-row md:items-center justify-between gap-3.5 sm:gap-4 transition-all">
                 <div className="flex items-center gap-3.5 min-w-0 flex-1">
@@ -606,21 +701,30 @@ const MainLayout = () => {
         </div>
       </div>
 
-      {/* Quick Search Command Palette (Ctrl+K) */}
+      {/**
+       * Global Quick Search Command Palette (Ctrl+K)
+       * Interactive keyboard-driven spotlight search for quick navigation
+       */}
       <QuickSearchModal
         isOpen={searchModalOpen}
         onClose={() => setSearchModalOpen(false)}
         isAdmin={isAdmin}
       />
 
-      {/* Logout Confirmation Modal */}
+      {/**
+       * Session Invalidation Confirmation Dialog
+       * Confirms merchant intent prior to terminating session
+       */}
       <LogoutConfirmModal
         isOpen={logoutModalOpen}
         onClose={() => setLogoutModalOpen(false)}
         onConfirm={executeLogout}
       />
 
-      {/* Suspended Account Real-Time Modal */}
+      {/**
+       * Account Suspension Dialog
+       * Informs storekeeper of administrative account lock
+       */}
       <SuspendedAccountModal
         isOpen={suspensionData.isOpen}
         reason={suspensionData.reason}

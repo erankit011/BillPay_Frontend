@@ -1,8 +1,16 @@
+/**
+ * Administrative System Broadcast Creation & Editing Modal
+ * Configures platform-wide announcements, start and expiry windows, target audiences, and live banner preview.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { X, Megaphone, Calendar, Link as LinkIcon, Save, RefreshCw, Eye } from 'lucide-react';
 import BroadcastBanner from './BroadcastBanner';
 import toast from 'react-hot-toast';
 
+/**
+ * BroadcastModal Component
+ */
 const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) => {
   const [formData, setFormData] = useState({
     title: '',
@@ -47,7 +55,10 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
     }
   }, [broadcastToEdit, isOpen]);
 
-  // Prevent background scrolling when modal is open
+  /**
+   * Scroll & Touch Prevention Hook
+   * Locks background document scrolling and mobile touch moves when modal is visible.
+   */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -100,7 +111,10 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
 
   return (
     <div className="fixed inset-0 z-50 overscroll-contain">
-      {/* Backdrop */}
+      {/**
+       * Backdrop Overlay
+       * Darkened modal background dismissing view upon backdrop click.
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
@@ -108,18 +122,27 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
         onTouchMove={(e) => e.preventDefault()}
       />
 
-      {/* Modal Container: Bottom Sheet on Mobile, Centered on sm+ */}
+      {/**
+       * Responsive Dialog Viewport
+       * Renders as mobile bottom sheet or desktop centered dialogue.
+       */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div
           className="relative bg-white w-full sm:max-w-2xl rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Mobile Drag Handle */}
+          {/**
+           * Mobile Drag Pill
+           * Visual drag pill indicator for mobile bottom sheet.
+           */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-white">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
           </div>
 
-          {/* Modal Header */}
+          {/**
+           * Modal Header
+           * Banner title with megaphone icon and round close button.
+           */}
           <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-gray-100 flex-shrink-0 gap-3">
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
               <div className="w-8 h-8 rounded bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center shrink-0">
@@ -143,9 +166,15 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
             </button>
           </div>
 
-          {/* Modal Body */}
+          {/**
+           * Broadcast Configuration Form
+           * Form fields for live preview, title, message body, target audience, and dates.
+           */}
           <form onSubmit={handleSubmit} className="overflow-y-auto p-5 space-y-4 flex-1">
-            {/* Live Preview Strip */}
+            {/**
+             * Live Banner Preview
+             * Interactive preview reflecting real-time configuration changes.
+             */}
             <div>
               <div className="flex items-center gap-1.5 mb-2 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 <Eye className="w-3.5 h-3.5" />
@@ -154,7 +183,10 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
               <BroadcastBanner broadcast={formData} isPreview={true} />
             </div>
 
-            {/* Title */}
+            {/**
+             * Broadcast Title Field
+             * Headline text for the announcement banner.
+             */}
             <div>
               <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
                 Announcement Title <span className="text-red-500">*</span>
@@ -171,7 +203,10 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
               />
             </div>
 
-            {/* Message Content */}
+            {/**
+             * Announcement Message Field
+             * Full explanatory message text rendered for storekeepers.
+             */}
             <div>
               <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
                 Message Content <span className="text-red-500">*</span>
@@ -188,9 +223,15 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
               />
             </div>
 
-            {/* Type & Audience Grid */}
+            {/**
+             * Category & Audience Parameters
+             * Selectors for announcement severity level and target merchant tier.
+             */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Announcement Type */}
+              {/**
+               * Severity Category Selector
+               * Selects between info, warning, critical alert, and success styles.
+               */}
               <div>
                 <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
                   Severity / Category
@@ -208,7 +249,10 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                 </select>
               </div>
 
-              {/* Target Audience */}
+              {/**
+               * Merchant Audience Filter
+               * Scopes delivery to all stores, free trial merchants, or paid subscribers.
+               */}
               <div>
                 <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
                   Target Merchant Audience
@@ -226,7 +270,10 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
               </div>
             </div>
 
-            {/* Optional CTA Link Grid */}
+            {/**
+             * Call-to-Action Link Configuration
+             * Optional label and destination route for interactive banner button.
+             */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
@@ -261,7 +308,10 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
               </div>
             </div>
 
-            {/* Scheduling Dates */}
+            {/**
+             * Temporal Display Schedule
+             * Start and expiration dates defining banner visibility lifecycle.
+             */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
@@ -290,7 +340,10 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
               </div>
             </div>
 
-            {/* Toggles */}
+            {/**
+             * Publishing & Dismissal Toggles
+             * Controls immediate activation status and user dismissibility.
+             */}
             <div className="flex flex-wrap items-center gap-6 pt-2">
               <label className="inline-flex items-center gap-2.5 cursor-pointer select-none">
                 <input
@@ -315,7 +368,10 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
               </label>
             </div>
 
-            {/* Modal Footer */}
+            {/**
+             * Modal Action Footer
+             * Buttons to cancel changes or save and broadcast the announcement.
+             */}
             <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
               <button
                 type="button"

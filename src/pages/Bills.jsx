@@ -1,3 +1,8 @@
+/**
+ * Merchant Invoice & Billing Management Dashboard
+ * Handles paginated bill records, WhatsApp delivery, thermal PDF printing, and status filtering.
+ */
+
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient, useQuery, keepPreviousData } from '@tanstack/react-query';
@@ -18,7 +23,9 @@ import { formatCurrency } from '../utils/currency';
 import { formatDate, isSubscriptionExpired, isTrialExpired } from '../utils/dateUtils';
 import { getInitials } from '../utils/stringUtils';
 
-
+/**
+ * Bills Component
+ */
 const Bills = () => {
     const { t } = useTranslation();
     const { user: shopDetails } = useSelector(state => state.auth);
@@ -38,7 +45,10 @@ const Bills = () => {
         }, { replace: true });
     };
 
-    // Upgrade Modal State
+    /**
+     * Modal Visibility State
+     * Tracks subscription upgrade prompt and store business setup popups
+     */
     const [upgradeModal, setUpgradeModal] = useState({ isOpen: false, title: '', message: '' });
     const [businessSetupModalOpen, setBusinessSetupModalOpen] = useState(false);
 
@@ -46,7 +56,10 @@ const Bills = () => {
     const [openDropdown, setOpenDropdown] = useState(null);
     const queryClient = useQueryClient();
 
-    // Debounce search term and sync URL
+    /**
+     * Debounced Search Synchronization
+     * Mirrors query text input into URL query parameter with 500ms debounce
+     */
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebouncedSearch(searchTerm);
@@ -60,14 +73,17 @@ const Bills = () => {
         return () => clearTimeout(handler);
     }, [searchTerm, setSearchParams]);
 
-    // Sync URL back to local state (for back/forward navigation)
+    /**
+     * Browser Navigation History Synchronization
+     * Synchronizes URL search state during browser back and forward navigation
+     */
     useEffect(() => {
         const urlSearch = searchParams.get('search') || '';
         if (urlSearch !== debouncedSearch) {
             setSearchTerm(urlSearch);
             setDebouncedSearch(urlSearch);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [searchParams]);
 
     const handleSetViewBill = (val) => {
@@ -97,7 +113,10 @@ const Bills = () => {
     const [sendingBillId, setSendingBillId] = useState(null);
     const [, setTimerTick] = useState(0);
 
-    // Cooldown state per bill: { [billId]: { count: number, cooldownUntil: number } }
+    /**
+     * WhatsApp Cooldown Tracking
+     * Enforces client-side rate limiting per bill to avoid spamming recipients
+     */
     const [cooldowns, setCooldowns] = useState(() => {
         try {
             const saved = localStorage.getItem('bill_whatsapp_cooldowns');
@@ -116,7 +135,10 @@ const Bills = () => {
         return {};
     });
 
-    // Live countdown timer ticker (ticks every 1s when any cooldown is active)
+    /**
+     * Active Cooldown Countdown Interval
+     * Emits tick update every second when active WhatsApp dispatch timers exist
+     */
     useEffect(() => {
         const hasActiveCooldown = Object.values(cooldowns).some(c => (c.cooldownUntil && c.cooldownUntil > Date.now()) || (c.firstSendAt && (Date.now() - c.firstSendAt < 10 * 60 * 1000)));
         if (!hasActiveCooldown) return;
@@ -255,17 +277,18 @@ const Bills = () => {
         queryKey: ['bills', debouncedSearch, filterStatus],
         queryFn: async ({ pageParam = 1 }) => {
             const res = await api.get(`/bills?page=${pageParam}&limit=15&search=${encodeURIComponent(debouncedSearch)}&status=${encodeURIComponent(filterStatus)}`);
-            return res.data.data; // Return the entire paginated object
+            return res.data.data;
         },
         getNextPageParam: (lastPage) => lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined,
-        staleTime: 1 * 60 * 1000, // Data is fresh for 1 min
-        gcTime: 5 * 60 * 1000,   // Garbage collect (delete from memory) if unused for 5 mins
+        staleTime: 1 * 60 * 1000,
+        gcTime: 5 * 60 * 1000,
         placeholderData: keepPreviousData,
     });
 
-
-
-    // Fetch minimal customer/product fields for dropdown selection (sub-10ms response)
+    /**
+     * Minimal Options Preload Query
+     * Loads essential customer and product tuples when modal is invoked
+     */
     const { data: customers = [] } = useQuery({
         queryKey: ['customers', 'dropdown'],
         queryFn: async () => {
@@ -299,7 +322,10 @@ const Bills = () => {
     const viewBillId = searchParams.get('viewBill');
     const cachedBill = viewBillId ? bills.find(b => b._id === viewBillId) : null;
 
-    // Fallback query if bill was opened via direct link or search and not in current page
+    /**
+     * Fallback Direct Bill Resolution
+     * Fetches bill individually if linked from external route or deep link
+     */
     const { data: fetchedBill } = useQuery({
         queryKey: ['bill', viewBillId],
         queryFn: async () => {
@@ -383,10 +409,16 @@ const Bills = () => {
                 </button>
             </div>
 
-            {/* Dashboard Stats Section (Matched with Products Page UI) */}
+            {/**
+             * Dashboard Metrics & Transaction Counters
+             * Summarizes active customer base and time-based bill volume
+             */}
             <div className="w-full bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default mb-4 sm:mb-6 mt-2">
                 
-                {/* Top Part: Active Customers */}
+                {/**
+                 * Active Customer Ledger Metrics
+                 * Tracks total distinct customers and new weekly additions
+                 */}
                 <div className="p-4 md:p-5 xl:p-6 flex items-center gap-3 md:gap-4">
                     <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg p-[2px] border border-gray-200 bg-white">
                         <div className="w-full h-full rounded-md flex items-center justify-center bg-gray-50 text-[#093C5D]">
@@ -409,7 +441,10 @@ const Bills = () => {
                     </div>
                 </div>
 
-                {/* Bottom Part: Bills Generated Overview */}
+                {/**
+                 * Timeframe Invoice Volume Breakdown
+                 * Counts invoices generated today, yesterday, weekly, monthly, and lifetime
+                 */}
                 <div className="bg-gray-50/80 px-4 py-3 md:px-5 md:py-3.5 border-t border-gray-100 flex flex-wrap items-center gap-x-4 gap-y-2.5 sm:gap-x-6">
                     <div className="flex items-center gap-1.5 sm:gap-2 mr-2">
                         <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#093C5D] mb-[1px]" />
@@ -439,7 +474,10 @@ const Bills = () => {
                 </div>
             </div>
 
-            {/* Filter Chips */}
+            {/**
+             * Payment Status Filter Chips
+             * Filters list by all, paid, unpaid, partial, or advance settlement
+             */}
             <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                 {[
                     { label: 'All Bills', value: 'All' },
@@ -461,7 +499,10 @@ const Bills = () => {
                 ))}
             </div>
 
-            {/* Search Bar */}
+            {/**
+             * Invoice Search Input
+             * Free-text lookup across invoice number, customer name, and contact phone
+             */}
             <div className="flex flex-col w-full mb-3 sm:mb-4">
                 <div className="relative flex-1 w-full">
                     <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
@@ -477,7 +518,10 @@ const Bills = () => {
                 </div>
             </div>
 
-            {/* Bills Table */}
+            {/**
+             * Invoice Ledger Container
+             * Paginated records container rendering table on desktop and cards on mobile
+             */}
             <div className="bg-white border border-gray-100 rounded-lg overflow-hidden">
                 {isLoading ? (
                     <div className="p-8 md:p-12 text-center text-gray-500 flex justify-center">
@@ -494,7 +538,10 @@ const Bills = () => {
                     </div>
                 ) : (
                     <div>
-                        {/* Desktop Table */}
+                        {/**
+                         * Desktop Ledger Table View
+                         * High-density full width table for large desktop monitors
+                         */}
                         <div className="hidden lg:block overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                             <table className="w-full min-w-[900px] whitespace-nowrap">
                                 <thead className="bg-gray-50/80 border-b border-gray-200">
@@ -585,7 +632,10 @@ const Bills = () => {
                                                             <MoreVertical className="w-3.5 h-3.5 ml-0.5 shrink-0" />
                                                         </button>
 
-                                                        {/* Dropdown Menu */}
+                                                        {/**
+                                                         * Quick Action Delivery Dropdown
+                                                         * Provides triggers for WhatsApp invoice, PDF download, and printing
+                                                         */}
                                                         {openDropdown === bill._id && (
                                                             <div className="absolute right-0 mt-2 w-60 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
                                                                 {(() => {
@@ -672,7 +722,10 @@ const Bills = () => {
                             </table>
                         </div>
 
-                        {/* Mobile & Tablet Cards */}
+                        {/**
+                         * Mobile & Tablet Cards View
+                         * Touch-friendly card listing for mobile and small viewport screens
+                         */}
                         <div className="lg:hidden flex flex-col gap-2.5">
                             {bills.map((bill, index) => (
                                 <div
@@ -715,7 +768,10 @@ const Bills = () => {
                                         </div>
                                     </div>
 
-                                    {/* Divider inside card */}
+                                    {/**
+                                     * Card Interior Visual Separator
+                                     * Separates header customer info from bottom actions
+                                     */}
                                     <div className="border-t border-gray-100 my-2.5 sm:my-3"></div>
 
                                     <div className="flex flex-wrap justify-between items-center gap-2">
@@ -751,7 +807,10 @@ const Bills = () => {
                                                     <MoreVertical className="w-3.5 h-3.5 ml-0.5 shrink-0" />
                                                 </button>
 
-                                                {/* Dropdown Menu */}
+                                                {/**
+                                                 * Mobile Action Delivery Dropdown
+                                                 * Provides triggers for WhatsApp invoice, PDF download, and printing
+                                                 */}
                                                 {openDropdown === bill._id && (
                                                     <div className="absolute right-0 mt-2 w-60 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
                                                                 {(() => {
@@ -836,7 +895,10 @@ const Bills = () => {
                             ))}
                         </div>
 
-                        {/* Load More Button */}
+                        {/**
+                         * Pagination Load More Trigger
+                         * Infinite query loader button fetching subsequent invoice records
+                         */}
                         <LoadMoreButton
                             hasNextPage={hasNextPage}
                             isFetchingNextPage={isFetchingNextPage}
@@ -860,7 +922,10 @@ const Bills = () => {
                 shopSettings={shopSettings}
             />
 
-            {/* Mobile & Tablet Extended FAB (No Shadow) - hidden when any modal is open */}
+            {/**
+             * Mobile & Tablet Floating Action Button
+             * Prominent FAB trigger for rapid invoice generation on handheld devices
+             */}
             {!activeBill && !isModalOpen && !businessSetupModalOpen && (
                 <button
                     onClick={handleNewBillClick}

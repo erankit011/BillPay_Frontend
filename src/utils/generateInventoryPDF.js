@@ -1,3 +1,12 @@
+/**
+ * Inventory Valuation & Stock Audit PDF Generator
+ * Renders categorized product catalog statements with unit pricing, stock levels, and total inventory value.
+ */
+
+/**
+ * Generate Inventory PDF Handler
+ * Compiles catalog dataset into formatted tabular report and initiates download
+ */
 export const generateInventoryPDF = async (products, shopSettings, t, formatDate) => {
   if (!products || products.length === 0) return;
 
@@ -9,7 +18,10 @@ export const generateInventoryPDF = async (products, shopSettings, t, formatDate
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.width;
 
-  // Left side: Title and Date
+  /**
+   * Header Left Section
+   * Renders report title and localized timestamp of document generation
+   */
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(18);
   doc.setTextColor(9, 60, 93);
@@ -20,7 +32,10 @@ export const generateInventoryPDF = async (products, shopSettings, t, formatDate
   doc.setTextColor(100);
   doc.text(`${t('Generated on')}: ${formatDate(new Date())}`, 14, 30);
 
-  // Right side: Shop Details
+  /**
+   * Header Right Section
+   * Renders business brand name, telephone contact, and merchant email
+   */
   if (shopSettings) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12);

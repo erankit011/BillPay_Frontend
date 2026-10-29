@@ -1,6 +1,14 @@
+/**
+ * Administrative Force Remote Logout Confirmation Modal
+ * Terminates all active JWT credentials and WebSocket sessions for a merchant across devices.
+ */
+
 import React, { useEffect } from 'react';
 import { LogOut, AlertTriangle, Loader2, X } from 'lucide-react';
 
+/**
+ * ForceLogoutModal Component
+ */
 const ForceLogoutModal = ({
   isOpen,
   onClose,
@@ -20,7 +28,10 @@ const ForceLogoutModal = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, isLoading, onClose]);
 
-  // Prevent background scrolling when modal is open
+  /**
+   * Scroll & Touch Lock Hook
+   * Disables document scrolling and touch moves while modal confirmation is open.
+   */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -46,7 +57,10 @@ const ForceLogoutModal = ({
 
   return (
     <div className="fixed inset-0 z-[100] overscroll-contain">
-      {/* Backdrop */}
+      {/**
+       * Backdrop Overlay
+       * Darkened modal background dismissing confirmation view on backdrop tap.
+       */}
       <div
         className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain z-[100]"
         onClick={() => {
@@ -56,13 +70,19 @@ const ForceLogoutModal = ({
         onTouchMove={(e) => e.preventDefault()}
       />
 
-      {/* Modal Content */}
+      {/**
+       * Centered Modal Dialog Card
+       * Compact alert card confirming session revocation.
+       */}
       <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
         <div
           className="relative bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Top Right Close Button */}
+          {/**
+           * Close Action Button
+           * Circular button to cancel force logout action.
+           */}
           <div className="absolute top-3.5 right-3.5 z-10">
             <button
               type="button"
@@ -75,17 +95,26 @@ const ForceLogoutModal = ({
             </button>
           </div>
           <div className="p-5 sm:p-6 text-center">
-            {/* Red Circle Icon */}
+            {/**
+             * Security Alert Badge
+             * Crimson round pill with logout icon indicating destructive session termination.
+             */}
             <div className="w-12 h-12 rounded-full bg-red-50 mx-auto flex items-center justify-center mb-4 border border-red-100">
               <LogOut className="w-6 h-6 text-red-600 ml-0.5" />
             </div>
 
-            {/* Title */}
+            {/**
+             * Dialog Headline
+             * Plain confirmation title banner.
+             */}
             <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
               Force Logout Shopkeeper
             </h3>
 
-            {/* Description */}
+            {/**
+             * Action Impact Description
+             * Explains that all active sessions will be terminated immediately across devices.
+             */}
             <p className="text-gray-500 text-sm mb-4 font-medium leading-relaxed">
               Are you sure you want to forcibly log out{' '}
               <span className="font-semibold text-gray-800">{shopName}</span>
@@ -93,7 +122,10 @@ const ForceLogoutModal = ({
               All active sessions across all devices will be terminated immediately.
             </p>
 
-            {/* Notice pill */}
+            {/**
+             * Security Impact Notice
+             * Crimson callout noting that merchant re-authentication will be enforced.
+             */}
             <div className="bg-red-50/70 border border-red-100 rounded-lg p-2.5 text-xs text-red-700 text-left mb-6 space-y-0.5">
               <div className="flex items-center gap-1.5 font-medium text-red-800">
                 <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
@@ -104,7 +136,10 @@ const ForceLogoutModal = ({
               </p>
             </div>
 
-            {/* Action Buttons */}
+            {/**
+             * Modal Action Footer
+             * Cancel button and destructive force-logout trigger with loading feedback.
+             */}
             <div className="flex gap-2 sm:gap-3 justify-center">
               <button
                 type="button"

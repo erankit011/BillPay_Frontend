@@ -1,3 +1,8 @@
+/**
+ * Forgot Password Email Recovery Page
+ * Dispatches cryptographically signed password reset links to registered email addresses.
+ */
+
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Mail, Loader2, CheckCircle2, Key } from 'lucide-react';
@@ -5,6 +10,9 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
 
+/**
+ * ForgotPassword Component
+ */
 const ForgotPassword = () => {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');

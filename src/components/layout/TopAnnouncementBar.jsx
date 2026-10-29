@@ -1,3 +1,9 @@
+/**
+ * Top Announcement & Maintenance Alert Bar
+ * Displays high-priority administrative broadcasts, scheduled maintenance notices,
+ * and critical store alerts with dismissal caching and dynamic height adjustment.
+ */
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -26,17 +32,24 @@ const BANNER_HEIGHT_PX = 42;
  * Intelligent Theme Resolver
  * Determines background color, badge tag, icon, and mobile theme-color
  * based on message content, urgency level, category, and priority.
+ * 
+ * @param {'maintenance' | 'notice' | 'broadcast'} category Broadcast category
+ * @param {'INFO' | 'WARNING' | 'ALERT' | 'SUCCESS'} type Urgency type
+ * @param {'LOW' | 'NORMAL' | 'HIGH' | 'URGENT'} priority Dispatch priority
  */
 const resolveBannerTheme = ({
-  category = 'broadcast', // 'maintenance' | 'notice' | 'broadcast'
-  type = 'INFO',          // 'INFO' | 'WARNING' | 'ALERT' | 'SUCCESS'
-  priority = 'NORMAL',    // 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT'
+  category = 'broadcast',
+  type = 'INFO',
+  priority = 'NORMAL',
   title = '',
   message = '',
 }) => {
   const combined = `${title} ${message}`.toLowerCase();
 
-  // 1. System Maintenance Category
+  /**
+   * System Maintenance Category
+   * Visual palette for scheduled or urgent infrastructure maintenance
+   */
   if (category === 'maintenance') {
     const isCritical =
       type === 'ALERT' ||
@@ -53,7 +66,10 @@ const resolveBannerTheme = ({
     };
   }
 
-  // 2. Urgent / Critical Alert (from any source or detected from message keywords)
+  /**
+   * Urgent & Critical Alert Category
+   * High-contrast crimson styling for immediate security or service notices
+   */
   if (
     type === 'ALERT' ||
     priority === 'URGENT' ||
@@ -73,7 +89,10 @@ const resolveBannerTheme = ({
     };
   }
 
-  // 3. Warning / High Priority / Expiry / Action Required
+  /**
+   * High-Priority Warning Category
+   * Amber palette for expiring plans, quota limits, or required merchant actions
+   */
   if (
     type === 'WARNING' ||
     priority === 'HIGH' ||
@@ -97,7 +116,10 @@ const resolveBannerTheme = ({
     };
   }
 
-  // 4. Success / New Feature / Promotional / Special Offer
+  /**
+   * Promotional & Feature Announcement Category
+   * Emerald branding for new product releases and platform offers
+   */
   if (
     type === 'SUCCESS' ||
     combined.includes('new feature') ||
@@ -116,7 +138,10 @@ const resolveBannerTheme = ({
     };
   }
 
-  // 5. Default Informational / Standard Official Notice
+  /**
+   * Standard Informational Category
+   * Default platform indigo theme for administrative announcements
+   */
   return {
     bg: 'bg-[#093C5D]',
     tag: category === 'notice' ? 'OFFICIAL NOTICE' : (category === 'broadcast' ? 'ANNOUNCEMENT' : 'INFO'),
@@ -129,13 +154,19 @@ const TopAnnouncementBar = () => {
   const { user } = useSelector((state) => state.auth);
   const location = useLocation();
 
-  // Strict check: Announcement bar is ONLY for shopkeepers. Admins should NEVER see it.
+  /**
+   * Administrative Route Exclusion Guard
+   * Restricts announcement bar exclusively to merchant viewports
+   */
   const isAdmin =
     user?.role === ROLES.ADMIN ||
     user?.role === 'admin' ||
     location.pathname.startsWith('/admin');
 
-  // Load dismissed items from storage
+  /**
+   * Dismissed Cache Hydration
+   * Restores locally silenced broadcast and notice IDs from client storage
+   */
   const [dismissedBroadcasts, setDismissedBroadcasts] = useState(() => {
     try {
       const stored = localStorage.getItem(DISMISSED_BROADCASTS_KEY);
@@ -162,7 +193,10 @@ const TopAnnouncementBar = () => {
     }
   });
 
-  // 1. Fetch Active Global Broadcasts (disabled for admin)
+  /**
+   * Global Broadcasts Fetch Query
+   * Loads active platform announcements for merchant accounts
+   */
   const { data: broadcasts = [] } = useQuery({
     queryKey: ['activeBroadcasts'],
     queryFn: getActiveBroadcasts,
@@ -171,7 +205,10 @@ const TopAnnouncementBar = () => {
     refetchOnWindowFocus: true,
   });
 
-  // 2. Fetch Platform Settings for maintenance mode (disabled for admin)
+  /**
+   * Maintenance Status Fetch Query
+   * Inspects platform health indicators and maintenance scheduling
+   */
   const { data: platformSettings } = useQuery({
     queryKey: ['supportContactInfo'],
     queryFn: async () => {
@@ -183,7 +220,10 @@ const TopAnnouncementBar = () => {
     refetchOnWindowFocus: true,
   });
 
-  // 3. Fetch Direct Store Notices (strictly for shopkeepers, not admin)
+  /**
+   * Direct Store Notices Fetch Query
+   * Retrieves targeted official administrative notices for storekeeper
+   */
   const isShopkeeper = Boolean(user && user.role === ROLES.SHOPKEEPER && !isAdmin);
   const { data: directNotices = [] } = useQuery({
     queryKey: ['directOfficialNotices'],
@@ -197,11 +237,16 @@ const TopAnnouncementBar = () => {
     refetchOnWindowFocus: true,
   });
 
-  // Determine the single highest-priority banner to show
+  /**
+   * Highest-Priority Announcement Resolver
+   * Resolves active banner by hierarchy: Maintenance > Direct Notice > Global Broadcast
+   */
   const activeBanner = useMemo(() => {
     if (isAdmin) return null;
 
-    // Priority 1: Platform Maintenance Mode (Highest Priority)
+    /**
+     * Priority Level 1: Platform Maintenance Alert
+     */
     if (platformSettings?.isMaintenanceMode && !maintenanceDismissed) {
       const title = 'Platform Maintenance';
       const message =
@@ -229,13 +274,17 @@ const TopAnnouncementBar = () => {
           try {
             sessionStorage.setItem(DISMISSED_MAINTENANCE_KEY, 'true');
           } catch {
-            // fallback
+            /**
+             * Storage Access Fallback
+             */
           }
         },
       };
     }
 
-    // Priority 2: Direct Official Store Notice (Sent to this shop specifically)
+    /**
+     * Priority Level 2: Targeted Storekeeper Direct Notice
+     */
     const validNotice = directNotices.find(
       (n) => n && n._id && !dismissedNoticeIds.includes(n._id)
     );
@@ -263,15 +312,18 @@ const TopAnnouncementBar = () => {
           try {
             localStorage.setItem(DISMISSED_NOTICES_KEY, JSON.stringify(next));
           } catch {
-            // fallback
+            /**
+             * Storage Access Fallback
+             */
           }
-          // Also mark as read on server if possible
           api.patch(`/notifications/${validNotice._id}/read`).catch(() => {});
         },
       };
     }
 
-    // Priority 3: Active Global Broadcast (Filter out synthetic maintenance duplicate)
+    /**
+     * Priority Level 3: Platform-Wide Global Broadcast
+     */
     const validBroadcast = broadcasts.find(
       (b) =>
         b &&
@@ -288,7 +340,6 @@ const TopAnnouncementBar = () => {
         message: validBroadcast.message,
       });
 
-      // Customized audience badge if targeted
       let finalTag = theme.tag;
       if (validBroadcast.targetAudience && validBroadcast.targetAudience !== 'ALL') {
         finalTag = validBroadcast.targetAudience.replace('_', ' ');
@@ -313,7 +364,9 @@ const TopAnnouncementBar = () => {
               try {
                 localStorage.setItem(DISMISSED_BROADCASTS_KEY, JSON.stringify(next));
               } catch {
-                // fallback
+                /**
+                 * Storage Access Fallback
+                 */
               }
             }
           : null,
@@ -331,7 +384,10 @@ const TopAnnouncementBar = () => {
     dismissedBroadcasts,
   ]);
 
-  // Sync announcement bar height and meta theme-color dynamically
+  /**
+   * Status Bar & Viewport CSS Sync
+   * Updates CSS variables and mobile theme meta tags dynamically
+   */
   useEffect(() => {
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
 
@@ -364,7 +420,6 @@ const TopAnnouncementBar = () => {
     };
   }, [activeBanner, isAdmin]);
 
-  // Do not render anything on Admin portal or if no active banner
   if (isAdmin || !activeBanner) return null;
 
   const BannerIcon = activeBanner.icon;
@@ -380,22 +435,34 @@ const TopAnnouncementBar = () => {
         maxHeight: `${BANNER_HEIGHT_PX}px`,
       }}
     >
-      {/* Centered Content Group: Tag Pill + 1-Line Message + Action Link + Close Button */}
+      {/**
+       * Banner Content Wrapper
+       * Displays categorized tag pill, message string, and call-to-action
+       */}
       <div className="flex items-center justify-center gap-2 sm:gap-2.5 max-w-full min-w-0">
-        {/* Tag Button (All Capital text, font-medium, rounded) */}
+        {/**
+         * Category Indicator Tag
+         * Visual uppercase pill emphasizing announcement severity
+         */}
         <span className="shrink-0 hidden sm:inline-flex items-center justify-center gap-1.5 h-7 px-2.5 rounded bg-white/15 text-white border border-white/20 text-[11px] sm:text-xs font-medium select-none whitespace-nowrap shadow-none leading-none">
           <BannerIcon className="w-3.5 h-3.5 shrink-0 text-white" strokeWidth={1.8} />
           <span className="leading-none uppercase tracking-wider">{activeBanner.tag}</span>
         </span>
 
-        {/* 1-Line Message (leading-normal py-0.5 so letters like 'g', 'y', 'j' never get clipped) */}
+        {/**
+         * Announcement Message Body
+         * Single-line headline with safety padding to prevent typography clipping
+         */}
         <p className="text-xs sm:text-[13px] font-medium truncate whitespace-nowrap leading-normal py-0.5 min-w-0 text-white/95">
           <span className="font-semibold text-white">{activeBanner.title}</span>
           <span className="opacity-40 mx-2 select-none">—</span>
           <span className="opacity-90 font-medium">{activeBanner.message}</span>
         </p>
 
-        {/* Optional Action Link (CTA Button: All Capital text, font-medium, rounded) */}
+        {/**
+         * Contextual Action Button
+         * Optional CTA directing merchant to external URL or internal route
+         */}
         {activeBanner.actionUrl && (
           <span className="shrink-0 inline-flex items-center">
             {isExternal ? (
@@ -420,7 +487,10 @@ const TopAnnouncementBar = () => {
           </span>
         )}
 
-        {/* Close Button: Always rendered on both Desktop & Mobile */}
+        {/**
+         * Dismissal Action Button
+         * Silences active announcement for remainder of user session
+         */}
         {activeBanner.onDismiss && (
           <button
             type="button"
