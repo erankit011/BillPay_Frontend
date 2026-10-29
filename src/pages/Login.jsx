@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
-import { Loader2, Mail, Lock, Eye, EyeOff, LogIn, AlertCircle, ShieldAlert } from 'lucide-react';
+import { Eye, EyeOff, AlertCircle, ShieldAlert } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -25,7 +25,6 @@ const loginSchema = yup.object({
  * Login Component
  */
 const Login = () => {
-
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [maintenanceMessage, setMaintenanceMessage] = useState(null);
@@ -99,10 +98,10 @@ const Login = () => {
     <div className="w-full animate-fade-in text-center lg:text-left">
       {/**
        * Authentication Header
-       * Screen title and brief instructional prompt for merchant sign-in.
+       * Screen title and brief instructional prompt for merchant sign-in
        */}
-      <div className="mb-5 sm:mb-6">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 mb-1 tracking-tight">
+      <div className="mb-6">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 mb-1.5 tracking-tight">
           {t('Sign In')}
         </h2>
         <p className="text-gray-500 font-medium text-xs sm:text-sm leading-relaxed">
@@ -112,12 +111,12 @@ const Login = () => {
 
       {/**
        * Platform Maintenance Notice
-       * Alert banner displayed when system administrator enables maintenance mode.
+       * Flat alert banner displayed when system administrator enables maintenance mode
        */}
       {maintenanceMessage && (
-        <div className="mb-5 p-3.5 rounded-lg bg-amber-50/90 border border-amber-300 text-amber-950 text-xs sm:text-sm font-medium flex items-start gap-2.5 text-left">
+        <div className="mb-5 p-3.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-950 text-xs sm:text-sm font-medium flex items-start gap-2.5 text-left">
           <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 shrink-0 mt-0.5" />
-          <div>
+          <div className="flex-1">
             <p className="font-semibold text-xs sm:text-sm text-amber-900">{t('Platform Maintenance Active')}</p>
             <p className="mt-0.5 text-xs text-amber-800 leading-relaxed font-normal">{maintenanceMessage}</p>
           </div>
@@ -126,24 +125,24 @@ const Login = () => {
 
       {/**
        * Account Suspension Notification
-       * Critical warning card shown when storekeeper account has been suspended by admin.
+       * Flat warning card shown when storekeeper account has been suspended by admin
        */}
       {suspensionMessage && (
-        <div className="mb-5 p-4 rounded-xl bg-rose-50 border border-rose-300 text-rose-950 text-xs sm:text-sm font-medium flex items-start gap-3 text-left animate-fade-in shadow-sm">
+        <div className="mb-5 p-3.5 sm:p-4 rounded-lg bg-rose-50 border border-rose-200 text-rose-950 text-xs sm:text-sm font-medium flex items-start gap-3 text-left">
           <ShieldAlert className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-2">
-              <p className="font-bold text-xs sm:text-sm text-rose-900 tracking-tight">
+              <p className="font-semibold text-xs sm:text-sm text-rose-900 tracking-tight">
                 {t('Store Account Suspended')}
               </p>
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-200/80 text-rose-900">
+              <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-rose-200/80 text-rose-900">
                 {t('Restricted')}
               </span>
             </div>
             <p className="mt-1 text-xs text-rose-800 leading-relaxed font-normal break-words">
               {suspensionMessage}
             </p>
-            <div className="mt-2.5 pt-2 border-t border-rose-200/80 flex items-center gap-3">
+            <div className="mt-2.5 pt-2 border-t border-rose-200 flex items-center gap-3">
               <Link
                 to="/contact-support"
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-700 hover:text-rose-900 underline underline-offset-2"
@@ -157,118 +156,123 @@ const Login = () => {
 
       {/**
        * User Credentials Form
-       * Validated form inputs for email address, password, and remember state.
+       * Flat validated form inputs with responsive typography and zero shadows
        */}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/**
          * Email Input Field
-         * Validated email address input with Mail icon and error text feedback.
+         * Clean validated email address input without icon matching BusinessSetup styling
          */}
         <div>
-          <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 text-left">
-            {t('Email')}
+          <label htmlFor="email" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5 text-left">
+            {t('Email Address')} <span className="text-red-500">*</span>
           </label>
-          <div className="relative">
-            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-[18px] sm:h-[18px] text-gray-400 pointer-events-none" />
-            <input
-              type="email"
-              {...register('email')}
-              className={`w-full rounded-full border bg-white pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' : 'border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]'}`}
-              placeholder="Enter Your Email"
-              autoFocus
-            />
-          </div>
+          <input
+            id="email"
+            type="email"
+            {...register('email')}
+            className={`block w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none ${
+              errors.email
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:border-[#093C5D] focus:ring-[#093C5D]'
+            }`}
+            placeholder={t('Enter your registered email')}
+            autoFocus
+          />
           {errors.email && (
-            <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
-              <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-              <span className="leading-snug">{errors.email.message}</span>
+            <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{errors.email.message}</span>
             </p>
           )}
         </div>
 
         {/**
          * Password Input Field
-         * Password entry field with toggleable show/hide visibility and forgot password link.
+         * Password input with vertically centered show/hide eye toggle
          */}
         <div>
-          <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 text-left">
-            {t('Password')}
-          </label>
-          <div className="relative">
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-[18px] sm:h-[18px] text-gray-400 pointer-events-none" />
-            <input
-              type={showPassword ? "text" : "password"}
-              {...register('password')}
-              className={`w-full rounded-full border bg-white pl-10 sm:pl-11 pr-10 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none ${errors.password ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' : 'border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]'}`}
-              placeholder="••••••••"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="cursor-pointer absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none p-1.5 sm:p-1 rounded-md active:scale-95"
-            >
-              {showPassword ? (
-                <EyeOff className="w-4 h-4 sm:w-4 sm:h-4" />
-              ) : (
-                <Eye className="w-4 h-4 sm:w-4 sm:h-4" />
-              )}
-            </button>
-          </div>
-          <div className="flex items-start justify-between mt-1.5">
-            {errors.password ? (
-              <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-start gap-1">
-                <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                <span className="leading-snug">{errors.password.message}</span>
-              </p>
-            ) : (
-              <div></div>
-            )}
+          <div className="flex items-center justify-between mb-1.5">
+            <label htmlFor="password" className="block text-xs sm:text-[13px] font-medium text-gray-700 text-left">
+              {t('Password')} <span className="text-red-500">*</span>
+            </label>
             <Link
               to="/forgot-password"
-              className="text-[11px] sm:text-xs underline font-semibold text-[#093C5D] hover:text-[#072C44] transition-colors cursor-pointer ml-auto"
+              className="text-xs sm:text-[13px] font-medium text-[#093C5D] hover:underline transition-colors"
             >
               {t('Forgot password?')}
             </Link>
           </div>
+          <div className="relative">
+            <input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              {...register('password')}
+              className={`block w-full rounded-lg border bg-white pl-3.5 pr-11 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none ${
+                errors.password
+                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                  : 'border-gray-300 focus:border-[#093C5D] focus:ring-[#093C5D]'
+              }`}
+              placeholder={t('Enter your password')}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+              className="cursor-pointer absolute right-2 sm:right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1.5 rounded-md flex items-center justify-center focus:outline-none"
+            >
+              {showPassword ? (
+                <EyeOff className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+              ) : (
+                <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+              )}
+            </button>
+          </div>
+          {errors.password && (
+            <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{errors.password.message}</span>
+            </p>
+          )}
         </div>
 
         {/**
          * Authentication Submit Action
-         * Submits credentials for API verification and displays swirling loading state.
+         * Zero-shadow flat primary button matching app brand color
          */}
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white rounded-full py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 active:scale-[0.98] mt-2"
+          className="w-full cursor-pointer bg-[#093C5D] hover:bg-[#072c44] text-white rounded-lg py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors active:scale-[0.99] mt-2"
         >
           {isLoading ? (
             <>
-              <div className="w-4 h-4 border-2 border-white border-t-white/30 rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               <span>{t('Signing in...')}</span>
             </>
           ) : (
-            <span>{t('Sign in')}</span>
+            <span>{t('Sign In')}</span>
           )}
         </button>
       </form>
 
       {/**
        * Third-Party Social Authentication
-       * One-click Google OAuth single sign-on redirect button.
+       * Flat Google OAuth single sign-on redirect button
        */}
       <div className="mt-6 sm:mt-8">
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-200"></div>
           </div>
-          <div className="relative flex justify-center text-[11px] sm:text-xs">
-            <span className="px-2 bg-white text-gray-500 font-medium">{t('Or continue with')}</span>
+          <div className="relative flex justify-center text-xs">
+            <span className="px-2.5 bg-white text-gray-500 font-medium">{t('Or continue with')}</span>
           </div>
         </div>
 
         <a
           href={`${import.meta.env.VITE_API_URL}/auth/google`}
-          className="mt-4 sm:mt-6 w-full cursor-pointer py-2.5 sm:py-3 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full font-semibold text-sm sm:text-base flex items-center justify-center gap-2 sm:gap-3 transition-all active:scale-[0.98]"
+          className="mt-4 sm:mt-5 w-full cursor-pointer py-2.5 sm:py-3 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg font-semibold text-sm sm:text-base flex items-center justify-center gap-2.5 transition-colors active:scale-[0.99]"
         >
           <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -281,10 +285,15 @@ const Login = () => {
 
         {/**
          * Registration Link Footer
-         * Navigation redirect for new merchants wishing to register a business account.
+         * Navigation redirect for new merchants wishing to register a business account
          */}
-        <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm">
-          <span className="text-gray-500 font-medium">{t('Don’t have an account?')} <Link to="/register" className="text-[#093C5D] font-semibold cursor-pointer ml-1 hover:underline">{t('Sign Up')}</Link></span>
+        <div className="mt-6 sm:mt-7 text-center text-xs sm:text-sm">
+          <span className="text-gray-500 font-medium">
+            {t('Don’t have an account?')}
+            <Link to="/register" className="text-[#093C5D] font-semibold cursor-pointer ml-1.5 hover:underline">
+              {t('Sign Up')}
+            </Link>
+          </span>
         </div>
       </div>
     </div>

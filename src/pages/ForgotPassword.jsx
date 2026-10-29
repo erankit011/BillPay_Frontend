@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { Mail, Loader2, CheckCircle2, Key } from 'lucide-react';
+import { CheckCircle2, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
@@ -17,27 +17,29 @@ const ForgotPassword = () => {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
+  const [errorMessage, setErrorMessage] = useState('');
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email.trim())) {
-      toast.error('Please enter a valid email address');
+      setErrorMessage(t('Please provide a valid email address'));
+      toast.error(t('Please enter a valid email address'));
       return;
     }
 
+    setErrorMessage('');
     setIsLoading(true);
 
     try {
       const res = await api.post('/auth/forgot-password', { email: email.trim() });
-      
+
       if (res.data.success) {
         setSuccess(true);
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to send reset link. Please try again.');
+      toast.error(err.response?.data?.message || t('Failed to send reset link. Please try again.'));
     } finally {
       setIsLoading(false);
     }
@@ -46,72 +48,118 @@ const ForgotPassword = () => {
   if (success) {
     return (
       <div className="w-full animate-fade-in text-center lg:text-left">
+        {/**
+         * Recovery Link Dispatch Success View
+         * Confirms dispatch of time-limited password reset credentials
+         */}
         <div className="mb-6">
-          <div className="w-12 h-12 bg-[#2ECC71]/10 rounded-xl flex items-center justify-center mb-4 mx-auto lg:mx-0">
+          <div className="w-12 h-12 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center justify-center mb-4 mx-auto lg:mx-0">
             <CheckCircle2 className="w-6 h-6 text-[#2ECC71]" />
           </div>
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-1 tracking-tight">{t('Check Your Email')}</h2>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 mb-1.5 tracking-tight">
+            {t('Check Your Email')}
+          </h2>
           <p className="text-gray-500 font-medium text-xs sm:text-sm leading-relaxed">
-            {t('If an account exists, a password reset link has been sent to')} <strong className="text-gray-900">{email}</strong>
+            {t('If an account exists, a password reset link has been sent to')} <strong className="text-gray-900 font-semibold">{email}</strong>
           </p>
         </div>
 
-        <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 sm:p-4 mb-6 text-left">
-          <p className="text-blue-800 text-xs sm:text-sm leading-relaxed font-medium">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3.5 sm:p-4 mb-6 text-left">
+          <p className="text-blue-900 text-xs sm:text-sm leading-relaxed font-medium">
             📧 {t('Please check your inbox and click the reset link. The link will expire in 10 minutes.')}
           </p>
         </div>
 
-        <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm">
-          <span className="text-gray-500 font-medium">{t('Remember your password?')} <Link to="/login" className="text-[#093C5D] font-semibold cursor-pointer ml-1 hover:underline">{t('Login Here')}</Link></span>
-        </div>
+        <Link
+          to="/login"
+          className="w-full cursor-pointer bg-[#093C5D] hover:bg-[#072c44] text-white rounded-lg py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center transition-colors"
+        >
+          {t('Back to Sign In')}
+        </Link>
       </div>
     );
   }
 
   return (
     <div className="w-full animate-fade-in text-center lg:text-left">
-      <div className="mb-5 sm:mb-6">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 mb-1 tracking-tight">{t('Forgot Password?')}</h2>
+      {/**
+       * Recovery Request Header
+       * Explains self-service credential recovery workflow
+       */}
+      <div className="mb-6">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 mb-1.5 tracking-tight">
+          {t('Forgot Password?')}
+        </h2>
         <p className="text-gray-500 font-medium text-xs sm:text-sm leading-relaxed">
           {t('Enter your email address and we will send you a link to reset your password.')}
         </p>
       </div>
 
-
-      <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/**
+         * Recovery Email Input
+         * Collects registered user email address matching BusinessSetup styling
+         */}
         <div>
-          <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 text-left">
-            {t('Email Address')}
+          <label htmlFor="recoveryEmail" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5 text-left">
+            {t('Email Address')} <span className="text-red-500">*</span>
           </label>
-          <div className="relative">
-            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-[18px] sm:h-[18px] text-gray-400 pointer-events-none" />
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-full border bg-white pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-400 transition-all outline-none border-gray-300 focus:border-[#093C5D] focus:ring-1 focus:ring-[#093C5D]"
-              placeholder="Enter Your Email"
-              required
-            />
-          </div>
+          <input
+            id="recoveryEmail"
+            type="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (errorMessage) setErrorMessage('');
+            }}
+            className={`block w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none ${
+              errorMessage
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:border-[#093C5D] focus:ring-[#093C5D]'
+            }`}
+            placeholder={t('Enter your registered email')}
+            required
+            autoFocus
+          />
+          {errorMessage && (
+            <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{errorMessage}</span>
+            </p>
+          )}
         </div>
 
+        {/**
+         * Dispatch Recovery Link Action
+         * Flat primary submit button triggering password reset email delivery
+         */}
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white rounded-full py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 active:scale-[0.98] mt-2"
+          className="w-full cursor-pointer bg-[#093C5D] hover:bg-[#072c44] text-white rounded-lg py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors active:scale-[0.99] mt-2"
         >
           {isLoading ? (
-            <div className="w-4 h-4 border-2 border-white border-t-white/30 rounded-full animate-spin" />
+            <>
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <span>{t('Sending Reset Link...')}</span>
+            </>
           ) : (
-            t('Send Reset Link')
+            <span>{t('Send Reset Link')}</span>
           )}
         </button>
       </form>
 
-      <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm">
-        <span className="text-gray-500 font-medium">{t('Remember your password?')} <Link to="/login" className="text-[#093C5D] font-semibold cursor-pointer ml-1 hover:underline">{t('Login Here')}</Link></span>
+      {/**
+       * Return to Login Link
+       * Direct navigation shortcut for users remembering their credentials
+       */}
+      <div className="mt-6 sm:mt-7 text-center text-xs sm:text-sm">
+        <span className="text-gray-500 font-medium">
+          {t('Remember your password?')}
+          <Link to="/login" className="text-[#093C5D] font-semibold cursor-pointer ml-1.5 hover:underline">
+            {t('Login Here')}
+          </Link>
+        </span>
       </div>
     </div>
   );
