@@ -143,10 +143,10 @@ const resolveBannerTheme = ({
    * Default platform indigo theme for administrative announcements
    */
   return {
-    bg: 'bg-[#093C5D]',
+    bg: 'bg-[#332F2A]',
     tag: category === 'notice' ? 'OFFICIAL NOTICE' : (category === 'broadcast' ? 'ANNOUNCEMENT' : 'INFO'),
     icon: category === 'notice' ? BellRing : Megaphone,
-    themeColor: '#093C5D',
+    themeColor: '#332F2A',
   };
 };
 
@@ -405,7 +405,7 @@ const TopAnnouncementBar = () => {
         '0px'
       );
       if (metaThemeColor) {
-        metaThemeColor.setAttribute('content', '#093C5D');
+        metaThemeColor.setAttribute('content', '#332F2A');
       }
     }
 
@@ -415,7 +415,7 @@ const TopAnnouncementBar = () => {
         '0px'
       );
       if (metaThemeColor) {
-        metaThemeColor.setAttribute('content', '#093C5D');
+        metaThemeColor.setAttribute('content', '#332F2A');
       }
     };
   }, [activeBanner, isAdmin]);

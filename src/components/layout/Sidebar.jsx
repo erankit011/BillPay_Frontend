@@ -100,8 +100,8 @@ const Sidebar = ({
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
                 isActive
-                  ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                  : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
               } ${isCollapsed ? 'justify-center px-2' : ''}`
             }
           >
@@ -121,8 +121,8 @@ const Sidebar = ({
                 className={({ isActive }) =>
                   `flex items-center justify-center px-2 py-2.5 rounded-lg border text-sm transition-all ${
                     isStoresActive
-                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                      : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
                   }`
                 }
               >
@@ -135,8 +135,8 @@ const Sidebar = ({
                   onClick={() => setStoresOpen((prev) => !prev)}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border text-sm transition-all cursor-pointer ${
                     isStoresActive
-                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                      : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -146,13 +146,13 @@ const Sidebar = ({
                   <ChevronDown
                     className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
                       storesOpen ? 'rotate-180' : ''
-                    } ${isStoresActive ? 'text-[#093C5D]' : 'text-gray-400'}`}
+                    } ${isStoresActive ? 'text-[#332F2A]' : 'text-[#B2ABA0]'}`}
                   />
                 </button>
 
                 {storesOpen && (
                   <div className="mt-1 space-y-1 relative pl-7 pr-1">
-                    <div className="absolute left-[22px] top-1.5 bottom-2 w-px bg-gray-200/80" />
+                    <div className="absolute left-[22px] top-1.5 bottom-2 w-px bg-[#CFCAC2]" />
 
                     <NavLink
                       to="/admin/shops"
@@ -160,8 +160,8 @@ const Sidebar = ({
                       className={({ isActive }) =>
                         `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
                           isActive
-                            ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                            : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
                         }`
                       }
                     >
@@ -174,8 +174,8 @@ const Sidebar = ({
                       className={({ isActive }) =>
                         `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
                           isActive
-                            ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                            : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
                         }`
                       }
                     >
@@ -188,8 +188,8 @@ const Sidebar = ({
                       className={({ isActive }) =>
                         `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
                           isActive
-                            ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                            : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
                         }`
                       }
                     >
@@ -213,8 +213,8 @@ const Sidebar = ({
                 className={({ isActive }) =>
                   `flex items-center justify-center px-2 py-2.5 rounded-lg border text-sm transition-all ${
                     isSubscriptionsActive
-                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                      : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
                   }`
                 }
               >
@@ -227,8 +227,8 @@ const Sidebar = ({
                   onClick={() => setSubscriptionsOpen((prev) => !prev)}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border text-sm transition-all cursor-pointer ${
                     isSubscriptionsActive
-                      ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                      ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                      : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -242,14 +242,14 @@ const Sidebar = ({
                     <ChevronDown
                       className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
                         subscriptionsOpen ? 'rotate-180' : ''
-                      } ${isSubscriptionsActive ? 'text-[#093C5D]' : 'text-gray-400'}`}
+                      } ${isSubscriptionsActive ? 'text-[#332F2A]' : 'text-[#B2ABA0]'}`}
                     />
                   </div>
                 </button>
 
                 {subscriptionsOpen && (
                   <div className="mt-1 space-y-1 relative pl-7 pr-1">
-                    <div className="absolute left-[22px] top-1.5 bottom-2 w-px bg-gray-200/80" />
+                    <div className="absolute left-[22px] top-1.5 bottom-2 w-px bg-[#CFCAC2]" />
 
                     <NavLink
                       to="/admin/subscriptions"
@@ -258,8 +258,8 @@ const Sidebar = ({
                       className={({ isActive }) =>
                         `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
                           isActive
-                            ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                            : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
                         }`
                       }
                     >
@@ -272,8 +272,8 @@ const Sidebar = ({
                       className={({ isActive }) =>
                         `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
                           isActive
-                            ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                            ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                            : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
                         }`
                       }
                     >
@@ -296,8 +296,8 @@ const Sidebar = ({
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
                 isActive
-                  ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                  : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
               } ${isCollapsed ? 'justify-center px-2' : ''}`
             }
           >
@@ -323,8 +323,8 @@ const Sidebar = ({
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
                 isActive
-                  ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                  : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
               } ${isCollapsed ? 'justify-center px-2' : ''}`
             }
           >
@@ -343,8 +343,8 @@ const Sidebar = ({
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
                 isActive
-                  ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                  : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
               } ${isCollapsed ? 'justify-center px-2' : ''}`
             }
           >
@@ -363,8 +363,8 @@ const Sidebar = ({
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
                 isActive
-                  ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                  : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
               } ${isCollapsed ? 'justify-center px-2' : ''}`
             }
           >
@@ -383,8 +383,8 @@ const Sidebar = ({
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
                 isActive
-                  ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                  : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
               } ${isCollapsed ? 'justify-center px-2' : ''}`
             }
           >
@@ -403,8 +403,8 @@ const Sidebar = ({
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
                 isActive
-                  ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                  : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
               } ${isCollapsed ? 'justify-center px-2' : ''}`
             }
           >
@@ -432,8 +432,8 @@ const Sidebar = ({
           className={({ isActive }) =>
             `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
               isActive
-                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
             } ${isCollapsed ? 'justify-center px-2' : ''}`
           }
         >
@@ -452,8 +452,8 @@ const Sidebar = ({
           className={({ isActive }) =>
             `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
               isActive
-                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
             } ${isCollapsed ? 'justify-center px-2' : ''}`
           }
         >
@@ -472,8 +472,8 @@ const Sidebar = ({
           className={({ isActive }) =>
             `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
               isActive
-                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
             } ${isCollapsed ? 'justify-center px-2' : ''}`
           }
         >
@@ -493,8 +493,8 @@ const Sidebar = ({
               className={({ isActive }) =>
                 `flex items-center justify-center px-2 py-2.5 rounded-lg border text-sm transition-all ${
                   isShopkeeperBillingActive
-                    ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                    ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                    : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
                 }`
               }
             >
@@ -507,8 +507,8 @@ const Sidebar = ({
                 onClick={() => setShopkeeperBillingOpen((prev) => !prev)}
                 className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border text-sm transition-all cursor-pointer ${
                   isShopkeeperBillingActive
-                    ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                    ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                    : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -518,13 +518,13 @@ const Sidebar = ({
                 <ChevronDown
                   className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
                     shopkeeperBillingOpen ? 'rotate-180' : ''
-                  } ${isShopkeeperBillingActive ? 'text-[#093C5D]' : 'text-gray-400'}`}
+                  } ${isShopkeeperBillingActive ? 'text-[#332F2A]' : 'text-[#B2ABA0]'}`}
                 />
               </button>
 
               {shopkeeperBillingOpen && (
                 <div className="mt-1 space-y-1 relative pl-7 pr-1">
-                  <div className="absolute left-[22px] top-1.5 bottom-2 w-px bg-gray-200/80" />
+                  <div className="absolute left-[22px] top-1.5 bottom-2 w-px bg-[#CFCAC2]" />
 
                   <NavLink
                     to="/bills"
@@ -532,8 +532,8 @@ const Sidebar = ({
                     className={({ isActive }) =>
                       `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
                         isActive
-                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                          ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                          : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
                       }`
                     }
                   >
@@ -546,8 +546,8 @@ const Sidebar = ({
                     className={({ isActive }) =>
                       `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
                         isActive
-                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                          ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                          : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
                       }`
                     }
                   >
@@ -560,8 +560,8 @@ const Sidebar = ({
                     className={({ isActive }) =>
                       `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
                         isActive
-                          ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                          ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                          : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
                       }`
                     }
                   >
@@ -584,8 +584,8 @@ const Sidebar = ({
           className={({ isActive }) =>
             `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
               isActive
-                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
             } ${isCollapsed ? 'justify-center px-2' : ''}`
           }
         >
@@ -604,8 +604,8 @@ const Sidebar = ({
           className={({ isActive }) =>
             `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
               isActive
-                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
             } ${isCollapsed ? 'justify-center px-2' : ''}`
           }
         >
@@ -631,8 +631,8 @@ const Sidebar = ({
           className={({ isActive }) =>
             `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
               isActive
-                ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
             } ${isCollapsed ? 'justify-center px-2' : ''}`
           }
         >
@@ -650,7 +650,7 @@ const Sidebar = ({
        * Fixed vertical navigation pane supporting expanded and icon-only rail modes
        */}
       <aside
-        className={`hidden lg:flex flex-col fixed left-0 z-40 bg-white border-r border-gray-100 transition-all duration-200 ease-in-out ${
+        className={`hidden lg:flex flex-col fixed left-0 z-40 bg-white border-r border-[#CFCAC2]/70 transition-all duration-200 ease-in-out ${
           sidebarCollapsed ? 'w-[72px]' : 'w-64'
         }`}
         style={{ top: 'var(--top-announcement-height, 0px)', bottom: 0 }}
@@ -659,7 +659,7 @@ const Sidebar = ({
          * Sidebar Brand Identity Header
          * Brand monogram and title badge
          */}
-        <div className="h-14 flex items-center px-4 border-b border-gray-100 shrink-0">
+        <div className="h-14 flex items-center px-4 border-b border-[#CFCAC2]/70 shrink-0">
           <Link
             to={isAdmin ? '/admin/dashboard' : '/dashboard'}
             className={`flex items-center gap-3 transition-opacity ${
@@ -667,17 +667,17 @@ const Sidebar = ({
             }`}
             title="UdharPay"
           >
-            <div className="w-8 h-8 rounded-lg bg-[#093C5D] text-white flex items-center justify-center font-medium text-base shadow-sm shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-[#332F2A] text-white flex items-center justify-center font-medium text-base shadow-sm shrink-0">
               U
             </div>
 
             {!sidebarCollapsed && (
               <div className="flex items-center gap-2 overflow-hidden">
-                <span className="font-medium text-gray-900 text-[16px] tracking-tight truncate">
+                <span className="font-semibold text-[#332F2A] text-[16px] tracking-tight truncate">
                   UdharPay
                 </span>
                 {isAdmin ? (
-                  <span className="text-[10px] font-medium tracking-wider uppercase px-1.5 py-0.5 rounded-md bg-[#093C5D]/10 text-[#093C5D] shrink-0">
+                  <span className="text-[10px] font-medium tracking-wider uppercase px-1.5 py-0.5 rounded-md bg-[#E6E3DD] text-[#332F2A] shrink-0">
                     ADMIN
                   </span>
                 ) : (
@@ -700,15 +700,15 @@ const Sidebar = ({
          * Sidebar Bottom Actions
          * Customer help and support trigger
          */}
-        <div className="p-3 border-t border-gray-100 shrink-0">
+        <div className="p-3 border-t border-[#CFCAC2]/70 shrink-0">
           {!isAdmin && (
             <Link
               to="/contact-support"
               title={sidebarCollapsed ? 'Help & Support' : undefined}
               className={`flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg border transition-colors ${
                 location.pathname === '/contact-support'
-                  ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                  ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                  : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
               } ${sidebarCollapsed ? 'justify-center px-2' : ''}`}
             >
               <HelpCircle className="w-4 h-4 shrink-0" />
@@ -737,20 +737,20 @@ const Sidebar = ({
            * Sliding Drawer Container
            * Slide-in navigation container with close button
            */}
-          <aside className="fixed inset-y-0 left-0 w-72 bg-white shadow-2xl flex flex-col z-50 transition-transform">
-            <div className="h-14 flex items-center justify-between px-5 border-b border-gray-100 shrink-0">
+          <aside className="fixed inset-y-0 left-0 w-72 bg-white border-r border-[#CFCAC2]/70 flex flex-col z-50 transition-transform">
+            <div className="h-14 flex items-center justify-between px-5 border-b border-[#CFCAC2]/70 shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#093C5D] text-white flex items-center justify-center font-medium text-base shadow-sm">
+                <div className="w-8 h-8 rounded-lg bg-[#332F2A] text-white flex items-center justify-center font-medium text-base shadow-sm">
                   U
                 </div>
-                <span className="font-medium text-gray-900 text-[16px]">
-                  UdharPay {isAdmin && <span className="text-[11px] font-medium text-[#093C5D] bg-[#093C5D]/10 px-1.5 py-0.5 rounded">ADMIN</span>}
+                <span className="font-semibold text-[#332F2A] text-[16px]">
+                  UdharPay {isAdmin && <span className="text-[11px] font-medium text-[#332F2A] bg-[#E6E3DD] px-1.5 py-0.5 rounded">ADMIN</span>}
                 </span>
               </div>
               <button
                 type="button"
                 onClick={() => setMobileDrawerOpen(false)}
-                className="p-1.5 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
+                className="p-1.5 text-[#857E71] hover:text-[#332F2A] hover:bg-[#F8F6F3] rounded-lg transition-colors cursor-pointer"
                 aria-label="Close navigation"
               >
                 <X className="w-5 h-5" />
@@ -761,14 +761,14 @@ const Sidebar = ({
               {renderNavLinks(true)}
 
               {!isAdmin && (
-                <div className="pt-2 border-t border-gray-100 mt-2">
+                <div className="pt-2 border-t border-[#CFCAC2]/70 mt-2">
                   <Link
                     to="/contact-support"
                     onClick={() => setMobileDrawerOpen(false)}
                     className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg border text-sm transition-colors ${
                       location.pathname === '/contact-support'
-                        ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15 font-medium'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border-transparent font-medium'
+                        ? 'bg-[#E6E3DD] text-[#332F2A] border-[#B2ABA0]/40 font-semibold'
+                        : 'text-[#585248] hover:text-[#332F2A] hover:bg-[#F8F6F3] border-transparent font-medium'
                     }`}
                   >
                     <HelpCircle className="w-4 h-4 shrink-0" />
