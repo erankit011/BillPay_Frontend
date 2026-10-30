@@ -48,7 +48,7 @@ const MainLayout = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 
-  const isAdmin = user?.role === ROLES.ADMIN;
+  const isAdmin = (user?.role || '').toLowerCase() === ROLES.ADMIN.toLowerCase();
 
   /**
    * Desktop Rail Collapsible State
@@ -380,7 +380,7 @@ const MainLayout = () => {
          * Updates administrator real-time revenue and subscription logs
          */
         socket.on('shop_subscription_upgraded', (data) => {
-          if (user?.role === 'admin' || user?.role === ROLES.ADMIN) {
+          if (isAdmin) {
             queryClient.invalidateQueries({ queryKey: ['adminOverview'] });
             queryClient.invalidateQueries({ queryKey: ['adminSubscriptions'] });
             queryClient.invalidateQueries({ queryKey: ['adminShops'] });
@@ -395,7 +395,7 @@ const MainLayout = () => {
          * Alerts administrators to newly logged merchant assistance tickets
          */
         socket.on('new_support_ticket', (ticket) => {
-          if (user?.role === 'admin' || user?.role === ROLES.ADMIN) {
+          if (isAdmin) {
             queryClient.invalidateQueries({ queryKey: ['adminTickets'] });
             queryClient.invalidateQueries({ queryKey: ['adminTicketStats'] });
             toast(`New support ticket #${ticket.ticketId}: ${ticket.subject || 'Inquiry'}`, {
@@ -409,7 +409,7 @@ const MainLayout = () => {
          * Reflects live bridge connectivity states
          */
         socket.on('whatsapp_status', (data) => {
-          if (user?.role === 'admin' || user?.role === ROLES.ADMIN) {
+          if (isAdmin) {
             queryClient.setQueryData(['whatsappStatus'], data);
             queryClient.invalidateQueries({ queryKey: ['adminSystemHealth'] });
             if (data?.status === 'CONNECTED') {
@@ -469,7 +469,9 @@ const MainLayout = () => {
         setNotificationCount((prev) => Math.max(0, prev - 1));
         queryClient.invalidateQueries({ queryKey: ['directOfficialNotices'] });
       } catch (error) {
-        console.error(error);
+        if (import.meta.env.DEV) {
+          console.error(error);
+        }
       }
     },
     [queryClient]
@@ -482,7 +484,9 @@ const MainLayout = () => {
       setNotificationCount(0);
       queryClient.invalidateQueries({ queryKey: ['directOfficialNotices'] });
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) {
+        console.error(error);
+      }
     }
   }, [queryClient]);
 
@@ -490,7 +494,9 @@ const MainLayout = () => {
     try {
       await api.post('/auth/logout');
     } catch (error) {
-      console.error('Logout error:', error);
+      if (import.meta.env.DEV) {
+        console.error('Logout error:', error);
+      }
     } finally {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('token');

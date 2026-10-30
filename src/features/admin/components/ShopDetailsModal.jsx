@@ -157,6 +157,10 @@ const ShopDetailsModal = ({
                     <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider bg-red-50 text-red-700 border border-red-200 leading-none shrink-0">
                       Suspended
                     </span>
+                  ) : !shop.isVerified ? (
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200 leading-none shrink-0">
+                      Pending Verification
+                    </span>
                   ) : (
                     <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 leading-none shrink-0">
                       Active
@@ -201,6 +205,22 @@ const ShopDetailsModal = ({
                   <p className="font-semibold text-red-900">This shop account is currently suspended</p>
                   <p className="mt-0.5 text-red-700 text-xs font-medium">
                     Reason: {shop.suspendedReason || 'Administrative suspension'}. Shopkeeper cannot log in or perform billing actions.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/**
+             * Unverified Account Warning Banner
+             * Informs administrator that this account has not completed email OTP verification.
+             */}
+            {!shop.isVerified && (
+              <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3 text-amber-900 text-xs sm:text-sm">
+                <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-amber-950">Registration Incomplete (Pending OTP Verification)</p>
+                  <p className="mt-0.5 text-amber-800 text-xs font-medium">
+                    This merchant started account creation but has not verified their email OTP code yet. Store features remain locked until verified.
                   </p>
                 </div>
               </div>
@@ -271,6 +291,30 @@ const ShopDetailsModal = ({
                   <span className="text-gray-500 font-medium block text-xs">Joined Platform</span>
                   <span className="font-medium text-gray-800 mt-0.5 block">
                     {shop.createdAt ? formatDate(shop.createdAt) : 'N/A'}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-gray-500 font-medium block text-xs">Email Verification</span>
+                  <span className="mt-0.5 inline-flex items-center gap-1.5 font-medium text-xs">
+                    {shop.isVerified ? (
+                      <span className="text-emerald-700 font-semibold inline-flex items-center gap-1">
+                        <ShieldCheck className="w-3.5 h-3.5" /> Verified
+                      </span>
+                    ) : (
+                      <span className="text-amber-700 font-semibold inline-flex items-center gap-1">
+                        <ShieldAlert className="w-3.5 h-3.5" /> Pending OTP
+                      </span>
+                    )}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-gray-500 font-medium block text-xs">Business Setup</span>
+                  <span className="mt-0.5 inline-flex items-center gap-1.5 font-medium text-xs">
+                    {shop.isBusinessSetupCompleted ? (
+                      <span className="text-emerald-700 font-semibold">Completed</span>
+                    ) : (
+                      <span className="text-gray-500 font-medium">Incomplete</span>
+                    )}
                   </span>
                 </div>
               </div>

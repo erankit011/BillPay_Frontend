@@ -51,8 +51,9 @@ const PLAN_FILTERS = [
 ];
 
 const STATUS_FILTERS = [
-  { label: 'All Status', value: 'ALL' },
+  { label: 'All Verified Stores', value: 'ALL' },
   { label: 'Active Stores', value: 'ACTIVE' },
+  { label: 'Pending Verification', value: 'PENDING_VERIFICATION' },
   { label: 'Suspended Stores', value: 'SUSPENDED' },
 ];
 
@@ -495,18 +496,22 @@ const AdminShops = () => {
 
                         {/**
                          * Account Status Badge
-                         * Indicates whether the shop account is active or suspended.
+                         * Indicates whether the shop account is active, pending verification, or suspended.
                          */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-center">
-                          <span
-                            className={`inline-block px-2.5 py-1 rounded text-[10px] font-semibold uppercase tracking-wide border ${
-                              isSuspended
-                                ? 'bg-red-50 text-red-700 border-red-200'
-                                : 'bg-green-50 text-green-700 border-green-200'
-                            }`}
-                          >
-                            {isSuspended ? 'Suspended' : 'Active'}
-                          </span>
+                          {isSuspended ? (
+                            <span className="inline-block px-2.5 py-1 rounded text-[10px] font-semibold uppercase tracking-wide border bg-red-50 text-red-700 border-red-200">
+                              Suspended
+                            </span>
+                          ) : !shop.isVerified ? (
+                            <span className="inline-block px-2.5 py-1 rounded text-[10px] font-semibold uppercase tracking-wide border bg-amber-50 text-amber-700 border-amber-200">
+                              Pending Verification
+                            </span>
+                          ) : (
+                            <span className="inline-block px-2.5 py-1 rounded text-[10px] font-semibold uppercase tracking-wide border bg-green-50 text-green-700 border-green-200">
+                              Active
+                            </span>
+                          )}
                         </td>
 
                         {/**
