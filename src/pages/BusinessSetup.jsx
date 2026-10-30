@@ -29,18 +29,20 @@ const BusinessSetup = () => {
     gstNumber: '',
     upiId: '',
     shopEmail: '',
-    invoiceLogo: ''
+    invoiceLogo: '',
+    signatureImage: ''
   });
 
   const [loading, setLoading] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [uploadingSignature, setUploadingSignature] = useState(false);
   const [errors, setErrors] = useState({});
 
   /**
    * Save State Validation
    * Checks whether essential mandatory business fields are populated
    */
-  const hasChanges = formData.shopName.trim() !== '' && formData.shopPhone.trim() !== '' && formData.shopAddress.trim() !== '';
+  const hasChanges = formData.shopName.trim() !== '' && formData.shopPhone.trim() !== '' && formData.shopAddress.trim() !== '' && formData.signatureImage.trim() !== '';
 
   useEffect(() => {
     if (user?.phone || user?.email) {
@@ -89,6 +91,37 @@ const BusinessSetup = () => {
     }
   };
 
+  const handleSignatureUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      setErrors(prev => ({ ...prev, signatureImage: t('Image size should be less than 5MB') }));
+      return;
+    }
+
+    setUploadingSignature(true);
+    try {
+      const uploadData = new FormData();
+      uploadData.append('file', file);
+
+      const res = await api.post('/upload', uploadData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      if (res.data.success) {
+        setFormData(prev => ({ ...prev, signatureImage: res.data.data.url }));
+        setErrors(prev => ({ ...prev, signatureImage: '', global: '' }));
+      }
+    } catch (err) {
+      const msg = err.response?.data?.message || t('Failed to upload signature');
+      setErrors(prev => ({ ...prev, signatureImage: msg }));
+      toast.error(msg);
+    } finally {
+      setUploadingSignature(false);
+    }
+  };
+
   const validate = () => {
     const newErrors = {};
     if (!formData.shopName.trim()) {
@@ -110,6 +143,10 @@ const BusinessSetup = () => {
       newErrors.shopAddress = t('Business Address is required');
     } else if (formData.shopAddress.trim().length < 5) {
       newErrors.shopAddress = t('Business Address must be at least 5 characters');
+    }
+
+    if (!formData.signatureImage || !formData.signatureImage.trim()) {
+      newErrors.signatureImage = t('Authorized signature image is required');
     }
 
     if (formData.shopEmail && formData.shopEmail.trim()) {
@@ -357,6 +394,63 @@ const BusinessSetup = () => {
                           </div>
                         </div>
                         <p className="text-gray-500 text-[11px] sm:text-xs font-medium">{t('Upload from your device or paste an image URL. Recommended size: 400x150px. Max 5MB.')}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/**
+                 * Authorized Signature
+                 * Image uploader and URL input for customized invoice signatory branding
+                 */}
+                <div className="md:col-span-2">
+                  <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                    {t('Authorized Signature')} <span className="text-red-500">*</span>
+                  </label>
+
+                  <div className="flex flex-col items-start gap-4">
+                    {formData.signatureImage ? (
+                      <div className="flex items-center gap-3">
+                        <div className="w-28 h-16 sm:w-32 sm:h-20 shrink-0 bg-white border border-gray-300 rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
+                          <img src={formData.signatureImage} alt="Signature" className="w-full h-full object-contain" />
+                          <button
+                            type="button"
+                            onClick={() => setFormData(prev => ({ ...prev, signatureImage: '' }))}
+                            className="absolute top-1.5 right-1.5 cursor-pointer bg-[#093C5D] text-white hover:bg-[#072d46] w-6 h-6 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[24px] !min-w-[24px] !p-0 shadow-none z-10"
+                            title={t('Remove Signature')}
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                        <div className="flex flex-col items-start justify-center">
+                          <span className="text-[13px] sm:text-sm font-semibold text-gray-800">{t('Signature Uploaded')}</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex-1 w-full space-y-3">
+                        <div className="flex flex-col md:flex-row items-start md:items-center gap-3 w-full">
+                          <label className={`cursor-pointer w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 md:py-2.5 rounded-lg border ${errors.signatureImage ? 'border-red-400' : 'border-gray-300'} text-gray-700 font-medium text-xs md:text-sm transition-colors ${uploadingSignature ? 'opacity-50' : 'hover:bg-gray-50 hover:text-gray-900 active:bg-gray-100'}`}>
+                            {uploadingSignature ? <Loader2 className="w-4 h-4 animate-spin text-[#093C5D]" /> : <Upload className="w-4 h-4 text-gray-500" />}
+                            <span>{uploadingSignature ? t('Uploading...') : t('Upload Signature')}</span>
+                            <input type="file" className="hidden" accept="image/*" onChange={handleSignatureUpload} disabled={uploadingSignature} />
+                          </label>
+
+                          <div className="flex-1 w-full flex items-center gap-2">
+                            <span className="text-gray-400 font-medium text-xs md:text-sm hidden md:inline-block">{t('Or')}</span>
+                            <input
+                              type="url"
+                              name="signatureImage"
+                              value={formData.signatureImage}
+                              onChange={handleChange}
+                              placeholder={t('Enter signature image URL (https://...)')}
+                              className={`block w-full rounded-lg border ${errors.signatureImage ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'} px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-gray-900 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]`}
+                            />
+                          </div>
+                        </div>
+                        {errors.signatureImage && (
+                          <p className="text-red-500 text-xs mt-1 font-medium">{errors.signatureImage}</p>
+                        )}
+                        <p className="text-gray-500 text-[11px] sm:text-xs font-medium">{t('Upload from your device or paste an image URL. Recommended size: 300x100px. Max 5MB.')}</p>
                       </div>
                     )}
                   </div>

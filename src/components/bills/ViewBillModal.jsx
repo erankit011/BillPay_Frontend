@@ -203,6 +203,26 @@ const ViewBillModal = ({ viewBill, setViewBill, shopSettings = {} }) => {
                  )}
                </div>
              )}
+
+             {/**
+              * Authorized Signature
+              */}
+             {shopSettings?.signatureImage && (
+               <div className="pt-3 border-t border-dashed border-gray-200 flex justify-end flex-shrink-0">
+                 <div className="flex flex-col items-center text-center">
+                   <div className="h-12 flex items-end justify-center mb-1">
+                     <img
+                       src={shopSettings.signatureImage}
+                       alt="Authorized Signature"
+                       className="max-h-12 max-w-[120px] object-contain"
+                     />
+                   </div>
+                   <div className="w-32 border-t border-gray-400 pt-0.5 text-center">
+                     <span className="text-[10px] font-semibold text-gray-600">{t('Authorized Signatory')}</span>
+                   </div>
+                 </div>
+               </div>
+             )}
           </div>
         </div>
       </div>

@@ -260,6 +260,37 @@ const PublicInvoice = () => {
           </div>
 
           {/**
+           * Terms & Authorized Signature
+           */}
+          <div className="mt-8 pt-4 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center sm:items-end gap-6 print:break-inside-avoid">
+            {shopSettings?.termsAndConditions ? (
+              <div className="text-left w-full sm:max-w-xs md:max-w-sm">
+                <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">Terms & Conditions</h4>
+                <p className="text-[11px] text-gray-500 whitespace-pre-line leading-relaxed">{shopSettings.termsAndConditions}</p>
+              </div>
+            ) : (
+              <div className="hidden sm:block" />
+            )}
+
+            <div className="flex flex-col items-center text-center self-center sm:self-end">
+              {shopSettings?.signatureImage ? (
+                <div className="h-16 flex items-end justify-center mb-1.5">
+                  <img
+                    src={shopSettings.signatureImage}
+                    alt="Authorized Signature"
+                    className="max-h-16 max-w-[160px] object-contain"
+                  />
+                </div>
+              ) : (
+                <div className="h-12 w-40" />
+              )}
+              <div className="w-44 border-t border-gray-400 pt-1 text-center">
+                <span className="text-xs font-semibold text-gray-700">Authorized Signatory</span>
+              </div>
+            </div>
+          </div>
+
+          {/**
            * Appreciation Banner & Verification Seal
            * Courtesy message from merchant and UdharPay digital verification seal.
            */}

@@ -33,7 +33,7 @@ const fetchImageAsBase64 = async (url) => {
         canvas.height = img.height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0);
-        resolve(canvas.toDataURL('image/jpeg'));
+        resolve(canvas.toDataURL('image/png'));
       } catch (e) {
         resolve(null);
       }
@@ -299,6 +299,13 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
    * Merchant Authorized Signature
    * Designated line for legal authorization and seal placement
    */
+  if (settings.signatureImage) {
+    const base64Sig = await fetchImageAsBase64(settings.signatureImage);
+    if (base64Sig) {
+      doc.addImage(base64Sig, 'PNG', 158, pageHeight - 56, 36, 15, undefined, 'FAST');
+    }
+  }
+
   doc.setFontSize(10);
   doc.setTextColor(0);
   doc.setFont('helvetica', 'normal');
