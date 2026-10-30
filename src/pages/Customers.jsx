@@ -467,9 +467,17 @@ const Customers = () => {
   }, []);
 
   const handleDelete = useCallback((customer) => {
+    if (customer?.balance && customer.balance !== 0) {
+      toast.error(
+        customer.balance > 0
+          ? t(`Cannot delete customer with pending Udhar (₹${customer.balance}). Please settle balance first.`)
+          : t(`Cannot delete customer with advance balance (₹${Math.abs(customer.balance)}). Please settle balance first.`)
+      );
+      return;
+    }
     setCustomerToDelete(customer);
     setDeleteModalOpen(true);
-  }, []);
+  }, [t]);
 
   const confirmDelete = () => {
     if (customerToDelete) {
