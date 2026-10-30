@@ -23,7 +23,7 @@ const PlatformReceipt = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const isAdmin = user?.role === 'admin' || user?.role === 'ADMIN';
+  const isAdmin = (user?.role || '').toLowerCase() === 'admin';
   const backLink = isAdmin ? '/admin/subscriptions' : '/settings';
   const backLabel = isAdmin ? t('Back to Subscriptions') : t('Back to Settings');
 

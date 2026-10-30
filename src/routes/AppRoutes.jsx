@@ -69,7 +69,7 @@ import { ROLES } from '../constants/roles';
 
 /**
  * Role-Based Protected Route Guard (RBAC)
- * Enforces session authentication and validates user role permissions
+ * Enforces session authentication and validates user role permissions with case-insensitive normalization
  */
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { isAuthenticated, isLoading, user } = useSelector((state) => state.auth);
@@ -82,14 +82,16 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     );
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !user) {
     return <Navigate to="/login" replace />;
   }
 
   if (allowedRoles && allowedRoles.length > 0) {
-    const currentRole = user?.role || ROLES.SHOPKEEPER;
-    if (!allowedRoles.includes(currentRole)) {
-      return <Navigate to={currentRole === ROLES.ADMIN ? '/admin/dashboard' : '/dashboard'} replace />;
+    const currentRole = (user.role || '').toLowerCase();
+    const normalizedAllowed = allowedRoles.map((r) => String(r).toLowerCase());
+
+    if (!normalizedAllowed.includes(currentRole)) {
+      return <Navigate to={currentRole === 'admin' ? '/admin/dashboard' : '/dashboard'} replace />;
     }
   }
 
@@ -119,8 +121,9 @@ const PublicRoute = ({ children }) => {
     );
   }
 
-  if (isAuthenticated) {
-    return <Navigate to={user?.role === ROLES.ADMIN ? '/admin/dashboard' : '/dashboard'} replace />;
+  if (isAuthenticated && user) {
+    const currentRole = (user.role || '').toLowerCase();
+    return <Navigate to={currentRole === 'admin' ? '/admin/dashboard' : '/dashboard'} replace />;
   }
 
   return children;
@@ -132,7 +135,8 @@ const PublicRoute = ({ children }) => {
  */
 const SettingsRoute = () => {
   const { user } = useSelector((state) => state.auth);
-  if (user?.role === ROLES.ADMIN) {
+  const currentRole = (user?.role || '').toLowerCase();
+  if (currentRole === 'admin') {
     return <Navigate to="/admin/settings" replace />;
   }
   return <Settings />;
@@ -278,7 +282,7 @@ const AppRoutes = () => {
          * Printing views and full-page customer receipts bypassing sidebar chrome
          */}
         <Route path="/platform-receipt/:id" element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={[ROLES.SHOPKEEPER, ROLES.ADMIN]}>
             <PlatformReceipt />
           </ProtectedRoute>
         } />
@@ -288,7 +292,7 @@ const AppRoutes = () => {
          * First-time business registration and profile setup screen
          */}
         <Route path="/setup-business" element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={[ROLES.SHOPKEEPER]}>
             <BusinessSetup />
           </ProtectedRoute>
         } />
