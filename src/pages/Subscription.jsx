@@ -302,8 +302,10 @@ const Subscription = () => {
               }));
             }
           } catch (error) {
-            console.error('Verification failed', error);
-            toast.error(t('Payment verification failed. Please contact support.'));
+            if (import.meta.env.DEV) {
+              console.error('Verification failed', error);
+            }
+            toast.error(error.response?.data?.message || t('Payment verification failed. Please contact support.'));
           }
         },
         prefill: {
@@ -325,7 +327,9 @@ const Subscription = () => {
       rzp1.open();
 
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) {
+        console.error(error);
+      }
       toast.error(error.response?.data?.message || t('Failed to initiate payment. Check API Keys.'));
     } finally {
       setLoadingPlan(null);
