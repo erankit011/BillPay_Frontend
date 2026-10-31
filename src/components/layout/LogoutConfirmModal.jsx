@@ -25,12 +25,12 @@ const LogoutConfirmModal = ({ isOpen, onClose, onConfirm }) => {
        * Dialog Window Container
        * Prompts user confirmation to invalidate session and log out
        */}
-      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center z-10 border border-[#CFCAC2] animate-in fade-in zoom-in-95 duration-150">
+      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center z-10 border border-[#DCD3E0] animate-in fade-in zoom-in-95 duration-150">
         <div className="w-12 h-12 rounded-full bg-red-50 text-red-600 mx-auto flex items-center justify-center mb-4 border border-red-100">
           <LogOut className="w-6 h-6 ml-0.5" />
         </div>
-        <h3 className="text-lg font-semibold text-[#332F2A] mb-1">{t('Logout')}</h3>
-        <p className="text-sm font-medium text-[#857E71] mb-6">
+        <h3 className="text-lg font-semibold text-[#3A3550] mb-1">{t('Logout')}</h3>
+        <p className="text-sm font-medium text-[#8A82A6] mb-6">
           {t('Are you sure you want to log out?')}
         </p>
 
@@ -38,7 +38,7 @@ const LogoutConfirmModal = ({ isOpen, onClose, onConfirm }) => {
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 px-4 py-2.5 bg-[#E6E3DD] hover:bg-[#CFCAC2] text-[#332F2A] rounded-lg font-semibold text-sm transition-colors cursor-pointer"
+            className="flex-1 px-4 py-2.5 bg-[#DCD3E0] hover:bg-[#B7AFC9] text-[#3A3550] rounded-lg font-semibold text-sm transition-colors cursor-pointer"
           >
             {t('Cancel')}
           </button>

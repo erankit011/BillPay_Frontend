@@ -263,7 +263,7 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
                     ? t('Search by page, stores, bills, subscriptions, settings...')
                     : t('Search by page, customers, bills, products, settings...')
                 }
-                className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-11 bg-white border border-[#CFCAC2] rounded-lg text-[13px] sm:text-sm font-normal text-[#332F2A] placeholder-[#857E71] placeholder:font-normal focus:outline-none focus:ring-1 focus:ring-[#332F2A] focus:border-[#332F2A] transition-colors duration-200 shadow-none"
+                className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-11 bg-white border border-[#DCD3E0] rounded-lg text-[13px] sm:text-sm font-normal text-[#3A3550] placeholder-[#8A82A6] placeholder:font-normal focus:outline-none focus:ring-1 focus:ring-[#3A3550] focus:border-[#3A3550] transition-colors duration-200 shadow-none"
               />
 
               {/**
@@ -274,7 +274,7 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="absolute inset-y-0 right-0 pr-3 sm:pr-3.5 flex items-center text-[#857E71] hover:text-[#332F2A] cursor-pointer"
+                  className="absolute inset-y-0 right-0 pr-3 sm:pr-3.5 flex items-center text-[#8A82A6] hover:text-[#3A3550] cursor-pointer"
                   aria-label={t('Clear search')}
                 >
                   <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -289,7 +289,7 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-[#857E71] bg-[#E6E3DD] hover:bg-[#CFCAC2] hover:text-[#332F2A] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#CFCAC2]"
+              className="cursor-pointer text-[#8A82A6] bg-[#DCD3E0] hover:bg-[#B7AFC9] hover:text-[#3A3550] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCD3E0]"
               title={t('Close')}
               aria-label={t('Close search modal')}
             >
@@ -303,17 +303,17 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
            */}
           <div
             ref={listRef}
-            className="overflow-y-auto overscroll-contain p-2 pr-2.5 pb-3 sm:pb-2.5 space-y-1 flex-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-[#CFCAC2] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#B2ABA0]"
+            className="overflow-y-auto overscroll-contain p-2 pr-2.5 pb-3 sm:pb-2.5 space-y-1 flex-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-[#DCD3E0] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#B7AFC9]"
           >
             {filteredPages.length === 0 ? (
               <div className="py-10 px-4 text-center">
-                <div className="w-10 h-10 rounded-lg bg-[#F8F6F3] border border-[#CFCAC2] text-[#857E71] mx-auto flex items-center justify-center mb-2.5">
+                <div className="w-10 h-10 rounded-lg bg-[#F4EFF3] border border-[#DCD3E0] text-[#8A82A6] mx-auto flex items-center justify-center mb-2.5">
                   <Search className="w-4 h-4" strokeWidth={1.75} />
                 </div>
-                <p className="text-[13px] sm:text-sm font-semibold text-[#332F2A] mb-1">
+                <p className="text-[13px] sm:text-sm font-semibold text-[#3A3550] mb-1">
                   {t('No matching pages found')}
                 </p>
-                <p className="text-[11px] sm:text-xs text-[#857E71] font-medium">
+                <p className="text-[11px] sm:text-xs text-[#8A82A6] font-medium">
                   {t('Try searching for another keyword or check spelling')}
                 </p>
               </div>
@@ -333,16 +333,16 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
                     onMouseEnter={() => setSelectedIndex(index)}
                     className={`w-full flex items-center justify-between gap-2.5 sm:gap-3 px-3 py-2 sm:py-2.5 rounded-lg border transition-colors duration-150 cursor-pointer text-left ${
                       isSelected
-                        ? 'bg-[#E6E3DD] border-[#B2ABA0]/40'
-                        : 'bg-transparent border-transparent hover:bg-[#F8F6F3]'
+                        ? 'bg-[#DCD3E0] border-[#B7AFC9]/60'
+                        : 'bg-transparent border-transparent hover:bg-[#F4EFF3]'
                     }`}
                   >
                     <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                       <div
                         className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-150 shadow-none ${
                           isSelected
-                            ? 'bg-[#332F2A] text-white'
-                            : 'bg-[#E6E3DD] text-[#585248]'
+                            ? 'bg-[#3A3550] text-white'
+                            : 'bg-[#DCD3E0] text-[#585272]'
                         }`}
                       >
                         <IconComponent className="w-4 h-4" strokeWidth={1.75} />
@@ -350,12 +350,12 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
                       <div className="min-w-0 flex-1">
                         <p
                           className={`text-[13px] sm:text-sm font-semibold transition-colors truncate ${
-                            isSelected ? 'text-[#332F2A]' : 'text-[#332F2A]'
+                            isSelected ? 'text-[#3A3550]' : 'text-[#3A3550]'
                           }`}
                         >
                           {item.title}
                         </p>
-                        <p className="text-[11px] sm:text-xs text-[#857E71] font-medium truncate mt-0.5">
+                        <p className="text-[11px] sm:text-xs text-[#8A82A6] font-medium truncate mt-0.5">
                           {item.desc}
                         </p>
                       </div>
@@ -369,8 +369,8 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
                       <span
                         className={`inline-flex items-center justify-center text-center whitespace-nowrap text-[10px] font-semibold leading-none h-5 px-2.5 rounded border transition-colors shrink-0 shadow-none uppercase tracking-wide select-none ml-2 ${
                           isSelected
-                            ? 'bg-white text-[#332F2A] border-[#B2ABA0]/40'
-                            : 'bg-[#F8F6F3] text-[#585248] border-[#CFCAC2]'
+                            ? 'bg-white text-[#3A3550] border-[#B7AFC9]/60'
+                            : 'bg-[#F4EFF3] text-[#585272] border-[#DCD3E0]'
                         }`}
                       >
                         {item.category}
