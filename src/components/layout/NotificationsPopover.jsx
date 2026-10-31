@@ -46,12 +46,12 @@ const NotificationsPopover = ({
        * Interactive drawer listing latest tenant announcements and system notices
        */}
       {isOpen && (
-        <div className="fixed sm:absolute right-4 sm:right-0 top-14 sm:top-11 w-[calc(100vw-2rem)] sm:w-96 bg-white border border-[#CFCAC2] shadow-xl shadow-[#332F2A]/5 rounded-2xl p-0 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-          <div className="p-4 border-b border-[#CFCAC2]/70 flex items-center justify-between">
+        <div className="fixed sm:absolute right-4 sm:right-0 top-14 sm:top-11 w-[calc(100vw-2rem)] sm:w-96 bg-white border border-[#DCD3E0] shadow-xl shadow-[#3A3550]/5 rounded-2xl p-0 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+          <div className="p-4 border-b border-[#DCD3E0]/70 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <h4 className="text-sm font-semibold text-[#332F2A]">{t('Notifications')}</h4>
+              <h4 className="text-sm font-semibold text-[#3A3550]">{t('Notifications')}</h4>
               {notificationCount > 0 && (
-                <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-[#E6E3DD] text-[#332F2A]">
+                <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-[#DCD3E0] text-[#3A3550]">
                   {notificationCount} {t('new')}
                 </span>
               )}
@@ -60,16 +60,16 @@ const NotificationsPopover = ({
               <button
                 type="button"
                 onClick={onMarkAllAsRead}
-                className="text-xs font-semibold text-[#332F2A] hover:text-[#585248] hover:underline cursor-pointer"
+                className="text-xs font-semibold text-[#3A3550] hover:text-[#585272] hover:underline cursor-pointer"
               >
                 {t('Mark all read')}
               </button>
             )}
           </div>
 
-          <div className="max-h-80 overflow-y-auto divide-y divide-[#CFCAC2]/40">
+          <div className="max-h-80 overflow-y-auto divide-y divide-[#DCD3E0]/40">
             {notifications.length === 0 ? (
-              <div className="p-8 text-center text-[#857E71] text-sm">
+              <div className="p-8 text-center text-[#8A82A6] text-sm">
                 <Bell className="w-8 h-8 mx-auto mb-2 opacity-30" />
                 <p className="font-medium">{t('No new notifications')}</p>
               </div>
@@ -78,34 +78,34 @@ const NotificationsPopover = ({
                 <div
                   key={notif._id}
                   onClick={() => !notif.read && onMarkAsRead(notif._id)}
-                  className={`p-3.5 hover:bg-[#F8F6F3] transition-colors cursor-pointer ${
-                    !notif.read ? 'bg-[#E6E3DD]/40' : ''
+                  className={`p-3.5 hover:bg-[#F4EFF3] transition-colors cursor-pointer ${
+                    !notif.read ? 'bg-[#DCD3E0]/40' : ''
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-1.5 min-w-0">
                       {notif.type === 'ADMIN_NOTICE' && (
-                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#E6E3DD] text-[#332F2A] shrink-0">
+                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#DCD3E0] text-[#3A3550] shrink-0">
                           Official
                         </span>
                       )}
-                      <p className="text-xs font-semibold text-[#332F2A] truncate">{notif.title}</p>
+                      <p className="text-xs font-semibold text-[#3A3550] truncate">{notif.title}</p>
                     </div>
                     {!notif.read && (
-                      <span className="w-2 h-2 rounded-full bg-[#332F2A] shrink-0 mt-1" />
+                      <span className="w-2 h-2 rounded-full bg-[#3A3550] shrink-0 mt-1" />
                     )}
                   </div>
-                  <p className="text-xs text-[#585248] mt-0.5 line-clamp-2">{notif.message}</p>
+                  <p className="text-xs text-[#585272] mt-0.5 line-clamp-2">{notif.message}</p>
                 </div>
               ))
             )}
           </div>
 
-          <div className="p-2.5 border-t border-[#CFCAC2]/70 bg-[#F8F6F3]/50 text-center">
+          <div className="p-2.5 border-t border-[#DCD3E0]/70 bg-[#F4EFF3]/50 text-center">
             <Link
               to="/notifications"
               onClick={onClose}
-              className="text-xs font-semibold text-[#332F2A] hover:text-[#585248] hover:underline"
+              className="text-xs font-semibold text-[#3A3550] hover:text-[#585272] hover:underline"
             >
               {t('View all notifications →')}
             </Link>

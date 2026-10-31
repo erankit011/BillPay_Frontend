@@ -43,37 +43,37 @@ input:disabled {
    DARK MODE THEME SYSTEM (CSS Variables)
    ======================================== */
 :root {
-  --bg-app: #F8F6F3;
+  --bg-app: #F4EFF3;
   --bg-card: #ffffff;
-  --bg-card-hover: #F8F6F3;
+  --bg-card-hover: #F4EFF3;
   --bg-sidebar: #ffffff;
   --bg-header: #ffffff;
   --bg-input: #ffffff;
-  --bg-muted: #E6E3DD;
-  --bg-accent: #332F2A;
-  --bg-accent-hover: #585248;
+  --bg-muted: #DCD3E0;
+  --bg-accent: #3A3550;
+  --bg-accent-hover: #585272;
   --bg-danger: #fef2f2;
   --bg-success: #f0fdf4;
-  --text-primary: #332F2A;
-  --text-secondary: #585248;
-  --text-tertiary: #857E71;
-  --text-muted: #B2ABA0;
+  --text-primary: #3A3550;
+  --text-secondary: #585272;
+  --text-tertiary: #8A82A6;
+  --text-muted: #B7AFC9;
   --text-inverse: #ffffff;
-  --text-accent: #332F2A;
+  --text-accent: #3A3550;
   --text-danger: #dc2626;
   --text-success: #15803d;
-  --border-default: #CFCAC2;
-  --border-light: #E6E3DD;
-  --border-hover: #B2ABA0;
-  --border-accent: rgba(51, 47, 42, 0.15);
-  --shadow-sm: 0 1px 2px 0 rgba(51, 47, 42, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(51, 47, 42, 0.07), 0 2px 4px -2px rgba(51, 47, 42, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(51, 47, 42, 0.08), 0 4px 6px -4px rgba(51, 47, 42, 0.05);
-  --overlay-bg: rgba(51, 47, 42, 0.4);
-  --scrollbar-thumb: #CFCAC2;
-  --scrollbar-thumb-hover: #B2ABA0;
-  --chart-grid: #E6E3DD;
-  --chart-text: #857E71;
+  --border-default: #DCD3E0;
+  --border-light: #F4EFF3;
+  --border-hover: #B7AFC9;
+  --border-accent: rgba(58, 53, 80, 0.15);
+  --shadow-sm: 0 1px 2px 0 rgba(58, 53, 80, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(58, 53, 80, 0.07), 0 2px 4px -2px rgba(58, 53, 80, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(58, 53, 80, 0.08), 0 4px 6px -4px rgba(58, 53, 80, 0.05);
+  --overlay-bg: rgba(58, 53, 80, 0.4);
+  --scrollbar-thumb: #DCD3E0;
+  --scrollbar-thumb-hover: #B7AFC9;
+  --chart-grid: #DCD3E0;
+  --chart-text: #8A82A6;
 }
 
 .dark {

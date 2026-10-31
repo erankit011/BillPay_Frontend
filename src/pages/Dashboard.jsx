@@ -66,10 +66,10 @@ const Dashboard = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
       >
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#332F2A] mb-1 md:mb-1.5">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#3A3550] mb-1 md:mb-1.5">
           {t('Dashboard Overview')}
         </h2>
-        <p className="text-xs sm:text-sm font-medium text-[#585248]">
+        <p className="text-xs sm:text-sm font-medium text-[#585272]">
           {t("Here's a summary of your business performance.")}
         </p>
       </motion.div>
@@ -87,16 +87,16 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-[#CFCAC2] hover:border-[#B2ABA0] transition-all duration-200 overflow-hidden cursor-default"
+          className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-[#DCD3E0] hover:border-[#B7AFC9] transition-all duration-200 overflow-hidden cursor-default"
         >
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#E6E3DD] flex items-center justify-center text-[#332F2A] border border-[#CFCAC2]">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#DCD3E0] flex items-center justify-center text-[#3A3550] border border-[#DCD3E0]">
               <ChartNoAxesCombined className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-[#585248] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t("Today's Sales")}</p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#332F2A] truncate">{formatCurrency(data?.todaySales ?? 0)}</p>
+            <p className="text-[10px] md:text-xs xl:text-sm text-[#585272] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t("Today's Sales")}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#3A3550] truncate">{formatCurrency(data?.todaySales ?? 0)}</p>
             <p className="text-[10px] md:text-xs text-green-700 font-medium truncate mt-0.5">
               {t('Today\'s Earnings')}
             </p>
@@ -111,16 +111,16 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-[#CFCAC2] hover:border-[#B2ABA0] transition-all duration-200 overflow-hidden cursor-default"
+          className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-[#DCD3E0] hover:border-[#B7AFC9] transition-all duration-200 overflow-hidden cursor-default"
         >
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#E6E3DD] flex items-center justify-center text-[#332F2A] border border-[#CFCAC2]">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#DCD3E0] flex items-center justify-center text-[#3A3550] border border-[#DCD3E0]">
               <Wallet className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-[#585248] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t("Today's Collections")}</p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#332F2A] truncate">{formatCurrency(data?.todayCollection ?? 0)}</p>
+            <p className="text-[10px] md:text-xs xl:text-sm text-[#585272] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t("Today's Collections")}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#3A3550] truncate">{formatCurrency(data?.todayCollection ?? 0)}</p>
             <p className="text-[10px] md:text-xs text-green-700 font-medium truncate mt-0.5">
               {t('Collected Today')}
             </p>
@@ -135,7 +135,7 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-700 border-t border-t-[#CFCAC2] border-r border-r-[#CFCAC2] border-b border-b-[#CFCAC2] hover:border-r-[#B2ABA0] hover:border-t-[#B2ABA0] hover:border-b-[#B2ABA0] transition-all duration-200 overflow-hidden cursor-default"
+          className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-700 border-t border-t-[#DCD3E0] border-r border-r-[#DCD3E0] border-b border-b-[#DCD3E0] hover:border-r-[#B7AFC9] hover:border-t-[#B7AFC9] hover:border-b-[#B7AFC9] transition-all duration-200 overflow-hidden cursor-default"
         >
           <div className="flex justify-between items-start gap-1">
             <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-red-50 flex items-center justify-center text-red-700 border border-red-100">
@@ -143,8 +143,8 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-[#585248] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Pending Udhar')}</p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#332F2A] truncate">
+            <p className="text-[10px] md:text-xs xl:text-sm text-[#585272] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Pending Udhar')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#3A3550] truncate">
               {formatCurrency(data?.pendingAmount ?? 0)}
             </p>
             <p className="text-[10px] md:text-xs text-red-700 font-medium truncate mt-0.5">
@@ -161,17 +161,17 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
-          className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-[#CFCAC2] hover:border-[#B2ABA0] transition-all duration-200 overflow-hidden cursor-default"
+          className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-[#DCD3E0] hover:border-[#B7AFC9] transition-all duration-200 overflow-hidden cursor-default"
         >
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#E6E3DD] flex items-center justify-center text-[#332F2A] border border-[#CFCAC2]">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#DCD3E0] flex items-center justify-center text-[#3A3550] border border-[#DCD3E0]">
               <Users className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-[#585248] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Customers')}</p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#332F2A] truncate">{data?.totalCustomers ?? 0}</p>
-            <p className="text-[10px] md:text-xs text-[#857E71] font-medium truncate mt-0.5">
+            <p className="text-[10px] md:text-xs xl:text-sm text-[#585272] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Total Customers')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#3A3550] truncate">{data?.totalCustomers ?? 0}</p>
+            <p className="text-[10px] md:text-xs text-[#8A82A6] font-medium truncate mt-0.5">
               {t('Active Accounts')}
             </p>
           </div>
@@ -188,25 +188,25 @@ const Dashboard = () => {
         transition={{ delay: 0.3 }}
         className="space-y-3 md:space-y-4"
       >
-        <h3 className="text-xs md:text-sm font-semibold text-[#585248] uppercase tracking-wide">
+        <h3 className="text-xs md:text-sm font-semibold text-[#585272] uppercase tracking-wide">
           {t('HISTORICAL SALES')}
         </h3>
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 md:gap-4">
-          <div className="bg-white rounded-lg p-3 md:p-4 border border-[#CFCAC2] hover:border-[#B2ABA0] transition-all duration-200 overflow-hidden min-w-0 cursor-default">
-            <p className="text-[10px] md:text-xs text-[#585248] mb-1 font-semibold uppercase tracking-wide truncate">{t('Yesterday')}</p>
-            <p className="font-semibold text-base md:text-lg xl:text-xl text-[#332F2A] truncate">{formatCurrency(data?.yesterdaySales ?? 0)}</p>
+          <div className="bg-white rounded-lg p-3 md:p-4 border border-[#DCD3E0] hover:border-[#B7AFC9] transition-all duration-200 overflow-hidden min-w-0 cursor-default">
+            <p className="text-[10px] md:text-xs text-[#585272] mb-1 font-semibold uppercase tracking-wide truncate">{t('Yesterday')}</p>
+            <p className="font-semibold text-base md:text-lg xl:text-xl text-[#3A3550] truncate">{formatCurrency(data?.yesterdaySales ?? 0)}</p>
           </div>
-          <div className="bg-white rounded-lg p-3 md:p-4 border border-[#CFCAC2] hover:border-[#B2ABA0] transition-all duration-200 overflow-hidden min-w-0 cursor-default">
-            <p className="text-[10px] md:text-xs text-[#585248] mb-1 font-semibold uppercase tracking-wide truncate">{t('This Week')}</p>
-            <p className="font-semibold text-base md:text-lg xl:text-xl text-[#332F2A] truncate">{formatCurrency(data?.weeklySales ?? 0)}</p>
+          <div className="bg-white rounded-lg p-3 md:p-4 border border-[#DCD3E0] hover:border-[#B7AFC9] transition-all duration-200 overflow-hidden min-w-0 cursor-default">
+            <p className="text-[10px] md:text-xs text-[#585272] mb-1 font-semibold uppercase tracking-wide truncate">{t('This Week')}</p>
+            <p className="font-semibold text-base md:text-lg xl:text-xl text-[#3A3550] truncate">{formatCurrency(data?.weeklySales ?? 0)}</p>
           </div>
-          <div className="bg-white rounded-lg p-3 md:p-4 border border-[#CFCAC2] hover:border-[#B2ABA0] transition-all duration-200 overflow-hidden min-w-0 cursor-default">
-            <p className="text-[10px] md:text-xs text-[#585248] mb-1 font-semibold uppercase tracking-wide truncate">{t('This Month')}</p>
-            <p className="font-semibold text-base md:text-lg xl:text-xl text-[#332F2A] truncate">{formatCurrency(data?.monthlySales ?? 0)}</p>
+          <div className="bg-white rounded-lg p-3 md:p-4 border border-[#DCD3E0] hover:border-[#B7AFC9] transition-all duration-200 overflow-hidden min-w-0 cursor-default">
+            <p className="text-[10px] md:text-xs text-[#585272] mb-1 font-semibold uppercase tracking-wide truncate">{t('This Month')}</p>
+            <p className="font-semibold text-base md:text-lg xl:text-xl text-[#3A3550] truncate">{formatCurrency(data?.monthlySales ?? 0)}</p>
           </div>
-          <div className="bg-[#E6E3DD]/70 rounded-lg p-3 md:p-4 border border-[#B2ABA0]/50 hover:border-[#857E71] transition-all duration-200 overflow-hidden min-w-0 cursor-default">
-            <p className="text-[10px] md:text-xs text-[#332F2A] mb-1 font-semibold uppercase tracking-wide truncate">{t('Lifetime')}</p>
-            <p className="font-semibold text-base md:text-lg xl:text-xl text-[#332F2A] truncate">{formatCurrency(data?.lifetimeSales ?? 0)}</p>
+          <div className="bg-[#DCD3E0]/70 rounded-lg p-3 md:p-4 border border-[#B7AFC9]/60 hover:border-[#8A82A6] transition-all duration-200 overflow-hidden min-w-0 cursor-default">
+            <p className="text-[10px] md:text-xs text-[#3A3550] mb-1 font-semibold uppercase tracking-wide truncate">{t('Lifetime')}</p>
+            <p className="font-semibold text-base md:text-lg xl:text-xl text-[#3A3550] truncate">{formatCurrency(data?.lifetimeSales ?? 0)}</p>
           </div>
         </div>
       </motion.div>
@@ -219,42 +219,42 @@ const Dashboard = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="bg-white rounded-lg p-4 md:p-5 lg:p-6 border border-[#CFCAC2]"
+        className="bg-white rounded-lg p-4 md:p-5 lg:p-6 border border-[#DCD3E0]"
       >
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-4 mb-6 md:mb-8">
           <div>
-            <h3 className="text-lg md:text-xl lg:text-2xl font-semibold text-[#332F2A]">
+            <h3 className="text-lg md:text-xl lg:text-2xl font-semibold text-[#3A3550]">
               {t('Revenue vs Collections')}
             </h3>
-            <p className="text-sm md:text-base font-medium text-[#585248] mt-1">
+            <p className="text-sm md:text-base font-medium text-[#585272] mt-1">
               {t('Weekly performance chart')}
             </p>
           </div>
-          <select className="cursor-pointer bg-white rounded-lg text-sm md:text-base border border-[#CFCAC2] hover:border-[#B2ABA0] px-4 md:px-5 py-2.5 md:py-3 text-[#332F2A] font-medium outline-none focus:outline-none focus:ring-1 focus:ring-[#332F2A] focus:border-[#332F2A] transition-colors duration-200 w-full md:w-auto">
+          <select className="cursor-pointer bg-white rounded-lg text-sm md:text-base border border-[#DCD3E0] hover:border-[#B7AFC9] px-4 md:px-5 py-2.5 md:py-3 text-[#3A3550] font-medium outline-none focus:outline-none focus:ring-1 focus:ring-[#3A3550] focus:border-[#3A3550] transition-colors duration-200 w-full md:w-auto">
             <option>{t('This Week')}</option>
             <option>{t('This Month')}</option>
             <option>{t('This Year')}</option>
           </select>
         </div>
 
-        <div className="w-full h-[240px] md:h-[280px] lg:h-[320px] xl:h-[360px] bg-[#F8F6F3]/60 rounded-lg p-2 md:p-3 border border-[#CFCAC2]/60">
+        <div className="w-full h-[240px] md:h-[280px] lg:h-[320px] xl:h-[360px] bg-[#F4EFF3]/60 rounded-lg p-2 md:p-3 border border-[#DCD3E0]/60">
           {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <BarChart
                 data={chartData}
                 margin={{ top: 20, right: 20, left: 0, bottom: 10 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#E6E3DD" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#DCD3E0" vertical={false} />
                 <XAxis
                   dataKey="date"
-                  stroke="#857E71"
+                  stroke="#8A82A6"
                   style={{ fontSize: '11px', fontWeight: '600' }}
                   axisLine={false}
                   tickLine={false}
                   padding={{ left: 20, right: 20 }}
                 />
                 <YAxis
-                  stroke="#857E71"
+                  stroke="#8A82A6"
                   width={45}
                   style={{ fontSize: '11px', fontWeight: '600' }}
                   tickFormatter={(value) => `₹${value >= 1000 ? (value / 1000).toFixed(1) + 'k' : value}`}
@@ -264,7 +264,7 @@ const Dashboard = () => {
                 <Tooltip
                   contentStyle={{
                     backgroundColor: '#ffffff',
-                    border: '1px solid #CFCAC2',
+                    border: '1px solid #DCD3E0',
                     borderRadius: '8px',
                     boxShadow: 'none',
                     padding: '8px 12px',
@@ -272,7 +272,7 @@ const Dashboard = () => {
                     fontWeight: '500'
                   }}
                   labelStyle={{
-                    color: '#332F2A',
+                    color: '#3A3550',
                     fontWeight: '600',
                     marginBottom: '2px',
                     fontSize: '13px'
@@ -285,7 +285,7 @@ const Dashboard = () => {
                     const label = name === 'Collections' ? t('Collections') : t('Sales');
                     return [`₹${value.toLocaleString('en-IN')}`, label];
                   }}
-                  cursor={{ fill: '#E6E3DD' }}
+                  cursor={{ fill: '#DCD3E0' }}
                 />
                 <Legend
                   wrapperStyle={{ paddingTop: '15px', fontSize: '12px', fontWeight: '600' }}
@@ -294,14 +294,14 @@ const Dashboard = () => {
                 />
                 <Bar
                   dataKey="collections"
-                  fill="#332F2A"
+                  fill="#3A3550"
                   radius={[6, 6, 0, 0]}
                   name={t('Collections')}
                   maxBarSize={35}
                 />
                 <Bar
                   dataKey="sales"
-                  fill="#857E71"
+                  fill="#8A82A6"
                   radius={[6, 6, 0, 0]}
                   name={t('Sales')}
                   maxBarSize={35}
@@ -310,7 +310,7 @@ const Dashboard = () => {
             </ResponsiveContainer>
           ) : (
             <div className="flex items-center justify-center h-full">
-              <p className="text-[#857E71] text-sm md:text-base font-medium">{t('No data available')}</p>
+              <p className="text-[#8A82A6] text-sm md:text-base font-medium">{t('No data available')}</p>
             </div>
           )}
         </div>
@@ -329,15 +329,15 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-white rounded-lg p-4 md:p-5 border border-[#CFCAC2]"
+          className="bg-white rounded-lg p-4 md:p-5 border border-[#DCD3E0]"
         >
           <div className="mb-4 md:mb-5">
-            <h3 className="text-base md:text-lg lg:text-xl font-semibold text-[#332F2A] mb-1">
+            <h3 className="text-base md:text-lg lg:text-xl font-semibold text-[#3A3550] mb-1">
               {t('Sales Trend (Last 7 Days)')}
             </h3>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#585248]"></div>
-              <span className="text-xs md:text-sm text-[#585248] font-medium">{t('Sales')}</span>
+              <div className="w-2 h-2 rounded-full bg-[#585272]"></div>
+              <span className="text-xs md:text-sm text-[#585272] font-medium">{t('Sales')}</span>
             </div>
           </div>
 
@@ -346,29 +346,29 @@ const Dashboard = () => {
               <AreaChart data={salesData} margin={{ top: 20, right: 20, left: -15, bottom: 10 }}>
                 <defs>
                   <linearGradient id="salesGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#585248" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#585248" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#585272" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#585272" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E6E3DD" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#DCD3E0" />
                 <XAxis
                   dataKey="name"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#857E71', fontSize: 10, fontWeight: 600 }}
+                  tick={{ fill: '#8A82A6', fontSize: 10, fontWeight: 600 }}
                   padding={{ left: 20, right: 20 }}
                 />
                 <YAxis
                   axisLine={false}
                   width={45}
                   tickLine={false}
-                  tick={{ fill: '#857E71', fontSize: 10, fontWeight: 600 }}
+                  tick={{ fill: '#8A82A6', fontSize: 10, fontWeight: 600 }}
                   tickFormatter={(val) => `₹${val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val}`}
                 />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: '#ffffff',
-                    border: '1px solid #CFCAC2',
+                    border: '1px solid #DCD3E0',
                     borderRadius: '8px',
                     boxShadow: 'none',
                     padding: '6px 10px',
@@ -376,7 +376,7 @@ const Dashboard = () => {
                     fontWeight: '500'
                   }}
                   labelStyle={{
-                    color: '#332F2A',
+                    color: '#3A3550',
                     fontWeight: '600',
                     marginBottom: '2px',
                     fontSize: '13px'
@@ -390,7 +390,7 @@ const Dashboard = () => {
                 <Area
                   type="monotone"
                   dataKey="sales"
-                  stroke="#585248"
+                  stroke="#585272"
                   strokeWidth={2}
                   fill="url(#salesGradient)"
                 />
@@ -407,15 +407,15 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-white rounded-lg p-4 md:p-5 border border-[#CFCAC2]"
+          className="bg-white rounded-lg p-4 md:p-5 border border-[#DCD3E0]"
         >
           <div className="mb-4 md:mb-5">
-            <h3 className="text-base md:text-lg lg:text-xl font-semibold text-[#332F2A] mb-1">
+            <h3 className="text-base md:text-lg lg:text-xl font-semibold text-[#3A3550] mb-1">
               {t('Revenue Growth')}
             </h3>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-green-500"></div>
-              <span className="text-xs md:text-sm text-[#585248] font-medium">{t('Collections')}</span>
+              <span className="text-xs md:text-sm text-[#585272] font-medium">{t('Collections')}</span>
             </div>
           </div>
 
@@ -428,25 +428,25 @@ const Dashboard = () => {
                     <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E6E3DD" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#DCD3E0" />
                 <XAxis
                   dataKey="name"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#857E71', fontSize: 10, fontWeight: 600 }}
+                  tick={{ fill: '#8A82A6', fontSize: 10, fontWeight: 600 }}
                   padding={{ left: 20, right: 20 }}
                 />
                 <YAxis
                   axisLine={false}
                   width={45}
                   tickLine={false}
-                  tick={{ fill: '#857E71', fontSize: 10, fontWeight: 600 }}
+                  tick={{ fill: '#8A82A6', fontSize: 10, fontWeight: 600 }}
                   tickFormatter={(val) => `₹${val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val}`}
                 />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: '#ffffff',
-                    border: '1px solid #CFCAC2',
+                    border: '1px solid #DCD3E0',
                     borderRadius: '8px',
                     boxShadow: 'none',
                     padding: '6px 10px',
@@ -454,7 +454,7 @@ const Dashboard = () => {
                     fontWeight: '500'
                   }}
                   labelStyle={{
-                    color: '#332F2A',
+                    color: '#3A3550',
                     fontWeight: '600',
                     marginBottom: '2px',
                     fontSize: '13px'
