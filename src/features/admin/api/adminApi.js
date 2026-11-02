@@ -23,6 +23,11 @@ export const getAdminShops = async (params = {}) => {
   return res.data?.data;
 };
 
+export const createShopkeeper = async (shopData) => {
+  const res = await api.post('/admin/shops', shopData);
+  return res.data;
+};
+
 export const getShopDetails = async (shopId) => {
   const res = await api.get(`/admin/shops/${shopId}`);
   return res.data?.data;
