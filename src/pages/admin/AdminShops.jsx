@@ -21,16 +21,19 @@ import {
   RotateCcw,
   SlidersHorizontal,
   Mail,
-  Phone
+  Phone,
+  Plus
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 import {
   getAdminShops,
+  createShopkeeper,
   toggleShopSuspension,
   forceLogoutShop,
   overrideShopPlan
 } from '../../features/admin/api/adminApi';
+import CreateShopkeeperModal from '../../features/admin/components/CreateShopkeeperModal';
 import ShopDetailsModal from '../../features/admin/components/ShopDetailsModal';
 import SuspendShopModal from '../../features/admin/components/SuspendShopModal';
 import ForceLogoutModal from '../../features/admin/components/ForceLogoutModal';
@@ -78,6 +81,7 @@ const AdminShops = () => {
   const [logoutModalShop, setLogoutModalShop] = useState(null);
   const [noticeModalShop, setNoticeModalShop] = useState(null);
   const [planModalShop, setPlanModalShop] = useState(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -147,6 +151,19 @@ const AdminShops = () => {
    * Store Management Mutations
    * Handles plan override, account suspension, direct broadcast notice, and forced session termination.
    */
+  const createMutation = useMutation({
+    mutationFn: (newShopData) => createShopkeeper(newShopData),
+    onSuccess: (res) => {
+      toast.success(res?.message || 'Shopkeeper account created successfully');
+      queryClient.invalidateQueries({ queryKey: ['adminShops'] });
+      queryClient.invalidateQueries({ queryKey: ['adminOverview'] });
+      setIsCreateModalOpen(false);
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.message || 'Failed to create shopkeeper account');
+    },
+  });
+
   const planMutation = useMutation({
     mutationFn: ({ shopId, planData }) => overrideShopPlan(shopId, planData),
     onSuccess: (res) => {
@@ -223,6 +240,15 @@ const AdminShops = () => {
             View, search, and manage registered merchant shops. Audit shop data, change subscription plans, or manage account suspension.
           </p>
         </div>
+
+        <button
+          type="button"
+          onClick={() => setIsCreateModalOpen(true)}
+          className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 sm:py-2.5 rounded-xl bg-[#3A3550] hover:bg-[#585272] text-white text-xs sm:text-sm font-semibold transition-all duration-150 active:scale-95 border border-[#3A3550] shadow-none shrink-0"
+        >
+          <Plus className="w-4 h-4 text-[#F4EFF3]" strokeWidth={2.5} />
+          <span>Create Shopkeeper</span>
+        </button>
       </div>
 
       {/**
@@ -865,6 +891,13 @@ const AdminShops = () => {
           queryClient.invalidateQueries({ queryKey: ['adminShops'] });
           queryClient.invalidateQueries({ queryKey: ['adminOverview'] });
         }}
+      />
+
+      <CreateShopkeeperModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSubmit={(data) => createMutation.mutate(data)}
+        isLoading={createMutation.isPending}
       />
     </div>
   );
