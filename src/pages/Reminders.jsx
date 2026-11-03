@@ -286,8 +286,8 @@ const Reminders = () => {
        */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Reminders')}</h1>
-          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B]">{t('Reminders')}</h1>
+          <p className="text-[#4E5668] text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed">
             {t('Send payment reminders directly to your customers via WhatsApp')}
           </p>
         </div>
@@ -303,7 +303,7 @@ const Reminders = () => {
             }
             setIsModalOpen(true);
           }}
-          className="hidden lg:flex cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all"
+          className="hidden lg:flex cursor-pointer bg-[#4338CA] hover:bg-[#3730A3] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg items-center whitespace-nowrap shrink-0 font-semibold text-xs md:text-sm w-full sm:w-auto justify-center active:scale-95 transition-all shadow-none"
         >
           <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
           {t('Set Reminder')}
@@ -319,16 +319,16 @@ const Reminders = () => {
          * Pending Reminders Metric Tile
          * Number of scheduled reminders awaiting dispatch
          */}
-        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
+        <div className="bg-[#FBFBFC] rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden cursor-default shadow-none">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#EEF0FB] flex items-center justify-center text-[#4338CA] border border-[#D8DCF5]">
               <Clock className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Pending Reminders')}</p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{stats.pendingCount}</p>
-            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">{t('Scheduled')}</p>
+            <p className="text-[10px] md:text-xs xl:text-sm text-[#4E5668] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Pending Reminders')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#191E2B] truncate">{stats.pendingCount}</p>
+            <p className="text-[10px] md:text-xs text-[#757F94] font-medium truncate mt-0.5">{t('Scheduled')}</p>
           </div>
         </div>
 
@@ -336,16 +336,16 @@ const Reminders = () => {
          * Sent Reminders Metric Tile
          * Count of reminders successfully delivered to customers
          */}
-        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-gray-200 hover:border-gray-300 transition-all duration-200 overflow-hidden cursor-default">
+        <div className="bg-[#FBFBFC] rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden cursor-default shadow-none">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F5F5] flex items-center justify-center text-[#093C5D] border border-gray-200">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#EEF0FB] flex items-center justify-center text-[#4338CA] border border-[#D8DCF5]">
               <Send className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Reminders Sent')}</p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-gray-900 truncate">{stats.sentCount}</p>
-            <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate mt-0.5">{t('Delivered Successfully')}</p>
+            <p className="text-[10px] md:text-xs xl:text-sm text-[#4E5668] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Reminders Sent')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#191E2B] truncate">{stats.sentCount}</p>
+            <p className="text-[10px] md:text-xs text-[#757F94] font-medium truncate mt-0.5">{t('Delivered Successfully')}</p>
           </div>
         </div>
 
@@ -353,18 +353,18 @@ const Reminders = () => {
          * Outstanding Credit Metric Tile
          * Cumulative overdue balance across all debtor customers
          */}
-        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-red-700 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
+        <div className="bg-[#FBFBFC] rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-[#B91C1C] border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA] hover:border-r-[#C2C9D6] hover:border-t-[#C2C9D6] hover:border-b-[#C2C9D6] transition-all duration-200 overflow-hidden cursor-default shadow-none">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-red-50 flex items-center justify-center text-red-700 border border-red-100">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#FFF1F2] flex items-center justify-center text-[#B91C1C] border border-[#FECDD3]">
               <AlertCircle className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Pending Udhar')}</p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-red-700 truncate">
+            <p className="text-[10px] md:text-xs xl:text-sm text-[#4E5668] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Pending Udhar')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#B91C1C] truncate">
               ₹{stats.totalPending.toLocaleString()}
             </p>
-            <p className="text-[10px] md:text-xs text-red-700 font-medium truncate mt-0.5">
+            <p className="text-[10px] md:text-xs text-[#B91C1C] font-medium truncate mt-0.5">
               {stats.customersWithDuesCount} {t('Customers')}
             </p>
           </div>
@@ -374,18 +374,18 @@ const Reminders = () => {
          * Recovered Credit Metric Tile
          * Total monetary recovery achieved through reminder collections
          */}
-        <div className="bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-green-700 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300 transition-all duration-200 overflow-hidden cursor-default">
+        <div className="bg-[#FBFBFC] rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-[#0D7A57] border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA] hover:border-r-[#C2C9D6] hover:border-t-[#C2C9D6] hover:border-b-[#C2C9D6] transition-all duration-200 overflow-hidden cursor-default shadow-none">
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-green-50 flex items-center justify-center text-green-700 border border-green-100">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#ECFDF5] flex items-center justify-center text-[#0D7A57] border border-[#A7F3D0]">
               <TrendingUp className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">
-            <p className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Amount Recovered')}</p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-green-700 truncate">
+            <p className="text-[10px] md:text-xs xl:text-sm text-[#4E5668] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Amount Recovered')}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#0D7A57] truncate">
               ₹{stats.recovered.toLocaleString()}
             </p>
-            <p className="text-[10px] md:text-xs text-green-700 font-medium truncate mt-0.5">
+            <p className="text-[10px] md:text-xs text-[#0D7A57] font-medium truncate mt-0.5">
               {recoveryRate}% {t('Recovery Rate')}
             </p>
           </div>
@@ -406,8 +406,8 @@ const Reminders = () => {
             key={filter.value}
             onClick={() => setFilterStatus(filter.value)}
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${filterStatus === filter.value
-              ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
-              : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
+              ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
+              : 'bg-[#FBFBFC] text-[#4E5668] border-[#DCE1EA] hover:border-[#C2C9D6] hover:bg-[#F0F2F6] shadow-none'
               }`}
           >
             {t(filter.label)}
@@ -422,14 +422,14 @@ const Reminders = () => {
       <div className="flex flex-col w-full mb-3 sm:mb-4">
         <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-[#757F94]" />
           </div>
           <input
             type="text"
             placeholder={t("Search By Name Or Number")}
             value={searchName}
             onChange={(e) => setSearchName(e.target.value)}
-            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-white border border-gray-300 rounded-lg text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
+            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg text-[13px] sm:text-sm text-[#191E2B] placeholder-[#757F94] focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] transition-colors duration-200 shadow-none"
           />
         </div>
       </div>
@@ -438,30 +438,30 @@ const Reminders = () => {
        * Reminders Data Directory
        * Main container rendering loading states, empty placeholders, tables, or mobile cards
        */}
-      <div className="bg-white md:border md:border-gray-100 md:rounded-lg overflow-hidden">
+      <div className="bg-[#FBFBFC] md:border md:border-[#DCE1EA] md:rounded-lg overflow-hidden shadow-none">
         {isLoading ? (
           <div className="flex justify-center items-center py-12 border border-gray-100 rounded-lg md:border-none">
-            <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#093C5D]" />
+            <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#4338CA]" />
           </div>
         ) : isError ? (
           <div className="flex flex-col items-center justify-center min-h-[300px] py-12 border border-gray-100 rounded-lg md:border-none">
-            <AlertCircle className="w-12 h-12 text-red-400 mb-4" />
-            <p className="text-sm font-medium text-gray-900 mb-1">{t('Failed to load data')}</p>
-            <p className="text-xs text-gray-500">{t('Please try refreshing the page')}</p>
+            <AlertCircle className="w-12 h-12 text-[#B91C1C] mb-4" />
+            <p className="text-sm font-medium text-[#191E2B] mb-1">{t('Failed to load data')}</p>
+            <p className="text-xs text-[#757F94]">{t('Please try refreshing the page')}</p>
           </div>
         ) : reminders.length === 0 ? (
           <div className="flex flex-col items-center justify-center min-h-[400px] py-12 border border-gray-100 rounded-lg md:border-none px-4 text-center">
-            <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-              <Bell className="w-8 h-8 text-gray-400" />
+            <div className="w-16 h-16 bg-[#F0F2F6] rounded-full flex items-center justify-center mb-4 border border-[#DCE1EA]">
+              <Bell className="w-8 h-8 text-[#757F94]" />
             </div>
-            <h3 className="text-base font-semibold text-gray-900 mb-1">{t('No Reminders Found')}</h3>
-            <p className="text-sm text-gray-500 max-w-sm mb-6">
+            <h3 className="text-base font-semibold text-[#191E2B] mb-1">{t('No Reminders Found')}</h3>
+            <p className="text-sm text-[#757F94] max-w-sm mb-6">
               {searchName ? t('No reminders match your search criteria.') : t('You haven\'t set up any reminders yet.')}
             </p>
             {!searchName && (
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="cursor-pointer bg-[#093C5D] hover:bg-[#082a42] text-white px-5 py-2.5 rounded-lg flex items-center font-medium text-sm active:scale-95 transition-all"
+                className="cursor-pointer bg-[#4338CA] hover:bg-[#3730A3] text-white px-5 py-2.5 rounded-lg flex items-center font-medium text-sm active:scale-95 transition-all shadow-none"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 {t('Set First Reminder')}
@@ -476,18 +476,18 @@ const Reminders = () => {
              */}
             <div className="hidden md:block overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-[400px]">
               <table className="w-full min-w-[950px] whitespace-nowrap text-left">
-                <thead className="bg-gray-50/80 border-b border-gray-200">
+                <thead className="bg-[#F0F2F6] border-b border-[#DCE1EA]">
                   <tr>
-                    <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Customer')}</th>
-                    <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Schedule')}</th>
-                    <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Due')}</th>
-                    <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Status')}</th>
-                    <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Actions')}</th>
+                    <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-[#757F94] uppercase tracking-wider">{t('Customer')}</th>
+                    <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-left text-[10px] lg:text-xs font-semibold text-[#757F94] uppercase tracking-wider">{t('Schedule')}</th>
+                    <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-[#757F94] uppercase tracking-wider">{t('Due')}</th>
+                    <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-[#757F94] uppercase tracking-wider">{t('Status')}</th>
+                    <th className="px-4 lg:px-6 py-3.5 lg:py-4 text-right text-[10px] lg:text-xs font-semibold text-[#757F94] uppercase tracking-wider">{t('Actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {reminders.map((reminder) => (
-                    <tr key={reminder._id} className="bg-white border-b border-gray-100 last:border-b-0 hover:bg-[#F5F5F5]/60 transition-colors duration-150 relative">
+                    <tr key={reminder._id} className="bg-[#FBFBFC] border-b border-[#E8ECF2] last:border-b-0 hover:bg-[#F0F2F6]/60 transition-colors duration-150 relative">
 
                       {/**
                        * Customer Profile Column
@@ -495,14 +495,14 @@ const Reminders = () => {
                        */}
                       <td className="w-[30%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
                         <div className="flex items-center gap-3 lg:gap-4">
-                          <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center text-[10px] lg:text-xs font-semibold flex-shrink-0 border border-gray-200 bg-gray-50 text-[#093C5D]">
+                          <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center text-[10px] lg:text-xs font-semibold flex-shrink-0 border border-[#D8DCF5] bg-[#EEF0FB] text-[#4338CA]">
                             {reminder.customerId?.name ? reminder.customerId.name.substring(0, 2).toUpperCase() : 'UN'}
                           </div>
                           <div>
-                            <span className="text-xs lg:text-sm font-semibold text-gray-900 truncate block">
+                            <span className="text-xs lg:text-sm font-semibold text-[#191E2B] truncate block">
                               {reminder.customerId?.name || t('Deleted Customer')}
                             </span>
-                            <div className="text-[10px] lg:text-xs text-gray-500 font-medium mt-0.5 flex items-center">
+                            <div className="text-[10px] lg:text-xs text-[#757F94] font-medium mt-0.5 flex items-center">
                               {reminder.customerId?.phone}
                             </div>
                           </div>
@@ -514,14 +514,14 @@ const Reminders = () => {
                        * Target delivery date and communication medium badge (WhatsApp/SMS)
                        */}
                       <td className="w-[20%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle">
-                        <span className="text-xs lg:text-sm text-gray-900 font-medium block whitespace-nowrap">
+                        <span className="text-xs lg:text-sm text-[#191E2B] font-medium block whitespace-nowrap">
                           {formatDate(reminder.scheduledDate)}
                         </span>
-                        <span className="flex items-center gap-1.5 text-[10px] lg:text-xs text-gray-500 font-medium mt-0.5 whitespace-nowrap uppercase tracking-wider">
+                        <span className="flex items-center gap-1.5 text-[10px] lg:text-xs text-[#757F94] font-medium mt-0.5 whitespace-nowrap uppercase tracking-wider">
                           {reminder.type === 'WHATSAPP' ? (
-                            <MessageCircle className="w-3 h-3 text-green-600 shrink-0" />
+                            <MessageCircle className="w-3 h-3 text-[#0D7A57] shrink-0" />
                           ) : (
-                            <Mail className="w-3 h-3 text-[#093C5D] shrink-0" />
+                            <Mail className="w-3 h-3 text-[#4338CA] shrink-0" />
                           )}
                           {reminder.type}
                         </span>
@@ -532,7 +532,7 @@ const Reminders = () => {
                        * Current overdue amount recorded on the customer ledger
                        */}
                       <td className="w-[15%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
-                        <span className={`text-xs lg:text-sm font-semibold block ${reminder.customerId?.balance > 0 ? 'text-red-700' : 'text-gray-900'}`}>
+                        <span className={`text-xs lg:text-sm font-semibold block ${reminder.customerId?.balance > 0 ? 'text-[#B91C1C]' : 'text-[#191E2B]'}`}>
                           {reminder.customerId?.balance > 0 ? `₹${reminder.customerId.balance.toLocaleString('en-IN')}` : '-'}
                         </span>
                       </td>
@@ -543,9 +543,9 @@ const Reminders = () => {
                        */}
                       <td className="w-[10%] px-4 lg:px-6 py-3.5 lg:py-4 align-middle text-right">
                         <div className="flex items-center justify-end w-full h-full">
-                          <span className={`inline-block px-2.5 py-1 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide text-center ${reminder.status === 'PENDING' ? 'bg-red-50 text-red-700 border border-red-200' :
-                              reminder.status === 'SENT' ? 'bg-green-50 text-green-700 border border-green-200' :
-                                'bg-red-50 text-red-700 border border-red-200'
+                          <span className={`inline-block px-2.5 py-1 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide text-center ${reminder.status === 'PENDING' ? 'bg-[#FFF1F2] text-[#B91C1C] border border-[#FECDD3]' :
+                              reminder.status === 'SENT' ? 'bg-[#ECFDF5] text-[#0D7A57] border border-[#A7F3D0]' :
+                                'bg-[#FFF1F2] text-[#B91C1C] border border-[#FECDD3]'
                             }`}>
                             {t(reminder.status)}
                           </span>
@@ -560,7 +560,7 @@ const Reminders = () => {
                         <div className="flex items-center justify-end gap-2 lg:gap-2.5" onClick={(e) => e.stopPropagation()}>
                           <button
                             onClick={() => setReminderToView(reminder)}
-                            className="cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
+                            className="cursor-pointer text-[#4338CA] font-medium bg-[#EEF0FB] border border-[#D8DCF5] hover:bg-[#E0E4F9] px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
                             title={t('View Message')}
                           >
                             <Eye className="w-3.5 h-3.5 lg:mr-1.5 shrink-0" />
@@ -572,13 +572,13 @@ const Reminders = () => {
                               onClick={() => handleSendNow(reminder)}
                               className={`cursor-pointer font-medium px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap ${
                                 sendingReminderId === reminder._id
-                                  ? 'bg-gray-100 text-gray-400 border border-gray-200 cursor-wait'
-                                  : 'text-emerald-700 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100'
+                                  ? 'bg-[#F0F2F6] text-[#757F94] border border-[#DCE1EA] cursor-wait'
+                                  : 'text-[#0D7A57] bg-[#ECFDF5] border border-[#A7F3D0] hover:bg-[#D1FAE5] shadow-none'
                               }`}
                               title={t('Send Now')}
                             >
                               {sendingReminderId === reminder._id ? (
-                                <Loader2 className="w-3.5 h-3.5 lg:mr-1.5 shrink-0 animate-spin text-emerald-600" />
+                                <Loader2 className="w-3.5 h-3.5 lg:mr-1.5 shrink-0 animate-spin text-[#0D7A57]" />
                               ) : (
                                 <Send className="w-3.5 h-3.5 lg:mr-1.5 shrink-0" />
                               )}
@@ -587,7 +587,7 @@ const Reminders = () => {
                           )}
                           <button
                             onClick={() => handleEdit(reminder)}
-                            className="cursor-pointer text-gray-700 font-medium bg-gray-50 border border-gray-200 hover:bg-gray-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap"
+                            className="cursor-pointer text-[#4E5668] font-medium bg-[#F0F2F6] border border-[#DCE1EA] hover:bg-[#EBEEF4] px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
                             title={t('Edit')}
                           >
                             <Edit className="w-3.5 h-3.5 lg:mr-1.5 shrink-0" />
@@ -596,7 +596,7 @@ const Reminders = () => {
                           <button
                             onClick={() => handleDelete(reminder)}
                             disabled={deleteMutation.isPending}
-                            className="cursor-pointer text-red-700 font-medium bg-red-50 border border-red-200 hover:bg-red-100 px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 disabled:opacity-50 whitespace-nowrap"
+                            className="cursor-pointer text-[#B91C1C] font-medium bg-[#FFF1F2] border border-[#FECDD3] hover:bg-[#FFE4E6] px-3 py-1.5 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95 disabled:opacity-50 whitespace-nowrap shadow-none"
                             title={t('Delete')}
                           >
                             <Trash2 className="w-3.5 h-3.5 lg:mr-1.5 shrink-0" />
@@ -618,20 +618,20 @@ const Reminders = () => {
               {reminders.map((reminder) => (
                 <div
                   key={reminder._id}
-                  className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 active:bg-gray-50 transition-colors duration-200"
+                  className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg p-3 sm:p-4 active:bg-[#F0F2F6] transition-colors duration-200 shadow-none"
                 >
                   <div className="flex justify-between items-start gap-2">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-sm font-semibold flex-shrink-0 bg-gray-50 text-[#093C5D] border border-gray-200">
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-sm font-semibold flex-shrink-0 bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5]">
                         {reminder.customerId?.name ? reminder.customerId.name.substring(0, 2).toUpperCase() : 'UN'}
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <h3 className="text-[13px] sm:text-sm font-semibold text-gray-900 truncate leading-tight">
+                          <h3 className="text-[13px] sm:text-sm font-semibold text-[#191E2B] truncate leading-tight">
                             {reminder.customerId?.name || t('Deleted Customer')}
                           </h3>
                         </div>
-                        <div className="flex items-center text-gray-500 text-[11px] sm:text-xs font-medium mt-1">
+                        <div className="flex items-center text-[#757F94] text-[11px] sm:text-xs font-medium mt-1">
                           <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1 flex-shrink-0" />
                           <span className="leading-none pt-[1.5px]">{formatDate(reminder.scheduledDate)}</span>
                         </div>
@@ -639,14 +639,14 @@ const Reminders = () => {
                     </div>
 
                     <div className="text-right flex-shrink-0 flex flex-col items-end gap-0.5">
-                      <p className={`text-[13px] sm:text-[14px] font-semibold leading-tight ${reminder.customerId?.balance > 0 ? 'text-red-700' : 'text-gray-900'}`}>
+                      <p className={`text-[13px] sm:text-[14px] font-semibold leading-tight ${reminder.customerId?.balance > 0 ? 'text-[#B91C1C]' : 'text-[#191E2B]'}`}>
                         {reminder.customerId?.balance > 0 ? `₹${reminder.customerId.balance.toLocaleString('en-IN')}` : ''}
                       </p>
                       <span className={`px-2 py-0.5 rounded text-[9px] uppercase sm:text-[10px] font-semibold ${reminder.status === 'PENDING'
-                        ? 'bg-red-50 text-red-700 border border-red-200'
+                        ? 'bg-[#FFF1F2] text-[#B91C1C] border border-[#FECDD3]'
                         : reminder.status === 'SENT'
-                          ? 'bg-green-50 text-green-700 border border-green-200'
-                          : 'bg-red-50 text-red-700 border border-red-200'
+                          ? 'bg-[#ECFDF5] text-[#0D7A57] border border-[#A7F3D0]'
+                          : 'bg-[#FFF1F2] text-[#B91C1C] border border-[#FECDD3]'
                         }`}>
                         {t(reminder.status)}
                       </span>
@@ -657,10 +657,10 @@ const Reminders = () => {
                    * Card Action Bar
                    * Action buttons for quick preview, immediate dispatch, edit, and deletion
                    */}
-                  <div className="flex justify-end gap-2 w-full mt-3 pt-3 border-t border-gray-100">
+                  <div className="flex justify-end gap-2 w-full mt-3 pt-3 border-t border-[#E8ECF2]">
                     <button
                       onClick={(e) => { e.stopPropagation(); setReminderToView(reminder); }}
-                      className="cursor-pointer text-blue-700 font-medium bg-blue-50 border border-blue-200 hover:bg-blue-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                      className="cursor-pointer text-[#4338CA] font-medium bg-[#EEF0FB] border border-[#D8DCF5] hover:bg-[#E0E4F9] px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit shadow-none"
                     >
                       <Eye className="w-3.5 h-3.5 mr-1.5 shrink-0" /> {t('Message')}
                     </button>
@@ -670,12 +670,12 @@ const Reminders = () => {
                         onClick={(e) => { e.stopPropagation(); handleSendNow(reminder); }}
                         className={`cursor-pointer font-medium px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
                           sendingReminderId === reminder._id
-                            ? 'bg-gray-100 text-gray-400 border border-gray-200 cursor-wait'
-                            : 'text-emerald-700 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100'
+                            ? 'bg-[#F0F2F6] text-[#757F94] border border-[#DCE1EA] cursor-wait'
+                            : 'text-[#0D7A57] bg-[#ECFDF5] border border-[#A7F3D0] hover:bg-[#D1FAE5] shadow-none'
                         }`}
                       >
                         {sendingReminderId === reminder._id ? (
-                          <Loader2 className="w-3.5 h-3.5 mr-1.5 shrink-0 animate-spin text-emerald-600" />
+                          <Loader2 className="w-3.5 h-3.5 mr-1.5 shrink-0 animate-spin text-[#0D7A57]" />
                         ) : (
                           <Send className="w-3.5 h-3.5 mr-1.5 shrink-0" />
                         )}
@@ -684,13 +684,13 @@ const Reminders = () => {
                     )}
                     <button
                       onClick={(e) => { e.stopPropagation(); handleEdit(reminder); }}
-                      className="cursor-pointer text-gray-700 font-medium bg-gray-50 border border-gray-200 hover:bg-gray-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                      className="cursor-pointer text-[#4E5668] font-medium bg-[#F0F2F6] border border-[#DCE1EA] hover:bg-[#EBEEF4] px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit shadow-none"
                     >
                       <Edit className="w-3.5 h-3.5 mr-1.5 shrink-0" /> {t('Edit')}
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); handleDelete(reminder); }}
-                      className="cursor-pointer text-red-700 font-medium bg-red-50 border border-red-200 hover:bg-red-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit"
+                      className="cursor-pointer text-[#B91C1C] font-medium bg-[#FFF1F2] border border-[#FECDD3] hover:bg-[#FFE4E6] px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95 whitespace-nowrap !min-h-0 !min-w-0 !h-fit shadow-none"
                     >
                       <Trash2 className="w-3.5 h-3.5 mr-1.5 shrink-0" /> {t('Delete')}
                     </button>
@@ -728,7 +728,7 @@ const Reminders = () => {
             }
             setIsModalOpen(true);
           }}
-          className="lg:hidden fixed bottom-6 right-6 bg-[#093C5D] hover:bg-[#082a42] text-white px-5 py-3.5 rounded-lg flex items-center transition-all z-[40] active:scale-95 group font-semibold text-sm"
+          className="lg:hidden fixed bottom-6 right-6 bg-[#4338CA] hover:bg-[#3730A3] text-white px-5 py-3.5 rounded-lg flex items-center transition-all z-[40] active:scale-95 group font-semibold text-sm shadow-none"
         >
           <Plus className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
           {t('Set Reminder')}
@@ -745,28 +745,28 @@ const Reminders = () => {
            * Modal Backdrop Overlay
            * Dimmed background dismissing modal when clicked
            */}
-          <div className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" onClick={handleCloseModal} />
+          <div className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay" onClick={handleCloseModal} />
 
           {/**
            * Modal Content Container
            * Bottom sheet on mobile devices transitioning to centered modal on larger viewports
            */}
           <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
-            <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
+            <div className="relative bg-[#FBFBFC] w-full sm:max-w-md rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-none">
 
               {/**
                * Mobile Bottom Sheet Handle
                * Decorative touch affordance for mobile viewports
                */}
               <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
-                <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
+                <div className="w-10 h-1.5 bg-[#DCE1EA] rounded-full" />
               </div>
 
-              <div className="flex items-center justify-between px-5 md:px-6 py-4 md:py-5 border-b border-gray-100 flex-shrink-0">
-                <h3 className="text-lg md:text-xl font-semibold text-gray-900">
+              <div className="flex items-center justify-between px-5 md:px-6 py-4 md:py-5 border-b border-[#E8ECF2] flex-shrink-0">
+                <h3 className="text-lg md:text-xl font-semibold text-[#191E2B]">
                   {isEditMode ? t('Edit Reminder') : t('Set Custom Reminder')}
                 </h3>
-                <button onClick={handleCloseModal} className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200">
+                <button onClick={handleCloseModal} className="cursor-pointer text-[#757F94] bg-[#F0F2F6] hover:bg-[#EBEEF4] hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA]">
                   <X className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
               </div>
@@ -778,8 +778,8 @@ const Reminders = () => {
                    * Searchable dropdown selecting customer recipient
                    */}
                   <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
-                      {t('Customer')} <span className="text-red-500">*</span>
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-0.5">
+                      {t('Customer')} <span className="text-[#B91C1C]">*</span>
                     </label>
                     <Controller
                       name="customerId"
@@ -797,14 +797,14 @@ const Reminders = () => {
                       )}
                     />
                     {errors.customerId && (
-                      <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
+                      <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
                         <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                         <span className="leading-none pt-[1px]">{t(errors.customerId.message)}</span>
                       </p>
                     )}
                     {customerExistingReminder && (
-                      <div className="mt-2 p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 text-xs flex items-start gap-2">
-                        <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-amber-600" />
+                      <div className="mt-2 p-2.5 bg-[#FFFBEB] border border-[#FDE68A] rounded-lg text-[#92400E] text-xs flex items-start gap-2 shadow-none">
+                        <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-[#B45309]" />
                         <span>
                           {customerExistingReminder.status === 'PENDING'
                             ? t('An active reminder is already pending for this customer.')
@@ -819,17 +819,17 @@ const Reminders = () => {
                    * Customizable reminder text template with customer balance details
                    */}
                   <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
-                      {t('Message')} <span className="text-red-500">*</span>
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-0.5">
+                      {t('Message')} <span className="text-[#B91C1C]">*</span>
                     </label>
                     <textarea
                       {...register('message', { required: 'Message is required' })}
-                      className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none resize-none ${errors.message ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'}`}
+                      className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none resize-none bg-white text-[#191E2B] placeholder-[#9AA4B8] shadow-none ${errors.message ? 'border-[#B91C1C] focus:ring-[#B91C1C] focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'}`}
                       rows="4"
                       placeholder={t("Dear customer, your payment of ₹...")}
                     ></textarea>
                     {errors.message && (
-                      <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
+                      <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
                         <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                         <span className="leading-none pt-[1px]">{t(errors.message.message)}</span>
                       </p>
@@ -841,16 +841,16 @@ const Reminders = () => {
                    * Calendar date picker defining when the reminder is dispatched
                    */}
                   <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
-                      {t('Scheduled Date')} <span className="text-red-500">*</span>
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-0.5">
+                      {t('Scheduled Date')} <span className="text-[#B91C1C]">*</span>
                     </label>
                     <input
                       type="date"
                       {...register('scheduledDate', { required: 'Scheduled date is required' })}
-                      className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.scheduledDate ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'}`}
+                      className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none bg-white text-[#191E2B] shadow-none ${errors.scheduledDate ? 'border-[#B91C1C] focus:ring-[#B91C1C] focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'}`}
                     />
                     {errors.scheduledDate && (
-                      <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
+                      <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
                         <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                         <span className="leading-none pt-[1px]">{t(errors.scheduledDate.message)}</span>
                       </p>
@@ -862,12 +862,12 @@ const Reminders = () => {
                    * Communication pathway (WhatsApp)
                    */}
                   <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
-                      {t('Channel')} <span className="text-red-500">*</span>
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-0.5">
+                      {t('Channel')} <span className="text-[#B91C1C]">*</span>
                     </label>
                     <select
                       {...register('type')}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA] bg-white text-[#191E2B] shadow-none"
                     >
                       <option value="WHATSAPP">WhatsApp</option>
                     </select>
@@ -881,7 +881,7 @@ const Reminders = () => {
                     <button
                       type="submit"
                       disabled={mutation.isPending || !!customerExistingReminder}
-                      className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-lg px-5 py-2.5 font-semibold text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all shadow-none"
+                      className="cursor-pointer w-full bg-[#4338CA] hover:bg-[#3730A3] text-white rounded-lg px-5 py-2.5 font-semibold text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all shadow-none"
                     >
                       {mutation.isPending ? t('Saving...') : isEditMode ? t('Update Reminder') : t('Save Reminder')}
                     </button>
@@ -914,29 +914,29 @@ const Reminders = () => {
            */}
           <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
             <div
-              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
+              className="bg-[#FBFBFC] rounded-lg shadow-none w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#DCE1EA]"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-5 sm:p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-red-50 mx-auto flex items-center justify-center mb-4 border border-red-100">
-                  <Trash2 className="w-6 h-6 text-red-600" />
+                <div className="w-12 h-12 rounded-full bg-[#FFF1F2] mx-auto flex items-center justify-center mb-4 border border-[#FECDD3]">
+                  <Trash2 className="w-6 h-6 text-[#B91C1C]" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{t('Delete Reminder')}</h3>
-                <p className="text-gray-500 text-sm mb-6 font-medium">
-                  {t('Are you sure you want to delete this reminder for')} <span className="font-semibold text-gray-800">{reminderToDelete.customerId?.name || t('Unknown Customer')}</span>? {t('This action cannot be undone.')}
+                <h3 className="text-lg sm:text-xl font-semibold text-[#191E2B] mb-2">{t('Delete Reminder')}</h3>
+                <p className="text-[#757F94] text-sm mb-6 font-medium">
+                  {t('Are you sure you want to delete this reminder for')} <span className="font-semibold text-[#191E2B]">{reminderToDelete.customerId?.name || t('Unknown Customer')}</span>? {t('This action cannot be undone.')}
                 </p>
 
                 <div className="flex gap-2 sm:gap-3 justify-center">
                   <button
                     onClick={() => setReminderToDelete(null)}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-sm transition-colors active:scale-95"
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#F0F2F6] hover:bg-[#EBEEF4] text-[#4E5668] border border-[#DCE1EA] rounded-lg font-semibold text-sm transition-colors active:scale-95 shadow-none"
                   >
                     {t('Cancel')}
                   </button>
                   <button
                     onClick={confirmDelete}
                     disabled={deleteMutation.isPending}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 sm:gap-2"
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#B91C1C] hover:bg-[#991B1B] text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 sm:gap-2 shadow-none"
                   >
                     {deleteMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
                     {t('Yes, Delete')}
@@ -969,28 +969,28 @@ const Reminders = () => {
            */}
           <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
             <div
-              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
+              className="bg-[#FBFBFC] rounded-lg shadow-none w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#DCE1EA]"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-5 sm:p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-emerald-50 mx-auto flex items-center justify-center mb-4 border border-emerald-100">
-                  <Send className="w-6 h-6 text-emerald-600 -ml-0.5 mt-0.5" />
+                <div className="w-12 h-12 rounded-full bg-[#ECFDF5] mx-auto flex items-center justify-center mb-4 border border-[#A7F3D0]">
+                  <Send className="w-6 h-6 text-[#0D7A57] -ml-0.5 mt-0.5" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{t('Send Reminder')}</h3>
-                <p className="text-gray-500 text-sm mb-6 font-medium">
-                  {t('Are you sure you want to send this reminder to')} <span className="font-semibold text-gray-800">{reminderToSend.customerId?.name || t('Unknown Customer')}</span> {t('now?')}
+                <h3 className="text-lg sm:text-xl font-semibold text-[#191E2B] mb-2">{t('Send Reminder')}</h3>
+                <p className="text-[#757F94] text-sm mb-6 font-medium">
+                  {t('Are you sure you want to send this reminder to')} <span className="font-semibold text-[#191E2B]">{reminderToSend.customerId?.name || t('Unknown Customer')}</span> {t('now?')}
                 </p>
 
                 <div className="flex gap-2 sm:gap-3 justify-center">
                   <button
                     onClick={() => setReminderToSend(null)}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-sm transition-colors active:scale-95"
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#F0F2F6] hover:bg-[#EBEEF4] text-[#4E5668] border border-[#DCE1EA] rounded-lg font-semibold text-sm transition-colors active:scale-95 shadow-none"
                   >
                     {t('Cancel')}
                   </button>
                   <button
                     onClick={confirmSend}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 flex items-center justify-center gap-1.5 sm:gap-2"
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#0D7A57] hover:bg-[#065F46] text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 flex items-center justify-center gap-1.5 sm:gap-2 shadow-none"
                   >
                     {t('Yes, Send')}
                   </button>
@@ -1008,17 +1008,17 @@ const Reminders = () => {
       {reminderToView && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
           <div className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" onClick={() => setReminderToView(null)} />
-          <div className="relative bg-white w-full max-w-sm rounded-lg shadow-xl flex flex-col max-h-[80vh] overflow-hidden animate-scale-in z-[101]">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50/50">
-              <h3 className="font-semibold text-gray-900 flex items-center gap-2 text-base">
-                <MessageCircle className="w-4 h-4 text-[#093C5D]" />
+          <div className="relative bg-[#FBFBFC] w-full max-w-sm rounded-lg shadow-none border border-[#DCE1EA] flex flex-col max-h-[80vh] overflow-hidden animate-scale-in z-[101]">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-[#E8ECF2] bg-[#F0F2F6]">
+              <h3 className="font-semibold text-[#191E2B] flex items-center gap-2 text-base">
+                <MessageCircle className="w-4 h-4 text-[#4338CA]" />
                 {t('Message Details')}
               </h3>
-              <button onClick={() => setReminderToView(null)} className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200">
+              <button onClick={() => setReminderToView(null)} className="cursor-pointer text-[#757F94] bg-[#F0F2F6] hover:bg-[#EBEEF4] hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA]">
                 <X className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
-            <div className="p-4 sm:p-5 overflow-y-auto text-sm text-gray-700 leading-relaxed custom-scrollbar whitespace-pre-wrap text-left">
+            <div className="p-4 sm:p-5 overflow-y-auto text-sm text-[#191E2B] leading-relaxed custom-scrollbar whitespace-pre-wrap text-left">
               {reminderToView.message}
             </div>
           </div>
