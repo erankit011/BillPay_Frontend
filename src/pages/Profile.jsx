@@ -111,21 +111,21 @@ const Profile = () => {
     <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Profile')}</h1>
-          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#232739]">{t('Profile')}</h1>
+          <p className="text-[#383E5C] text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
             {t('Manage your account information')}
           </p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
-        <section className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-          <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex flex-col md:flex-row items-center md:items-start gap-4 sm:gap-5">
-            <div className="relative shrink-0 flex items-center justify-center w-24 h-24 md:w-28 md:h-28 rounded-full border border-gray-200 p-[3px]">
+        <section className="bg-white rounded-lg border border-[#AFB4CE]/60 overflow-hidden">
+          <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#AFB4CE]/60 flex flex-col md:flex-row items-center md:items-start gap-4 sm:gap-5">
+            <div className="relative shrink-0 flex items-center justify-center w-24 h-24 md:w-28 md:h-28 rounded-full border border-[#AFB4CE]/60 p-[3px]">
               {user?.profileImage && user.profileImage !== 'no-photo.jpg' ? (
                 <img src={getImageUrl(user.profileImage)} alt="Profile" className="w-full h-full rounded-full object-cover" referrerPolicy="no-referrer" />
               ) : (
-                <div className="w-full h-full rounded-full bg-[#F5F5F5] text-[#093C5D] flex items-center justify-center text-3xl md:text-4xl font-semibold overflow-hidden">
+                <div className="w-full h-full rounded-full bg-[#E4E6F0] text-[#232739] flex items-center justify-center text-3xl md:text-4xl font-semibold overflow-hidden">
                   {user?.name?.charAt(0).toUpperCase() || 'U'}
                 </div>
               )}
@@ -134,7 +134,7 @@ const Profile = () => {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadingImage}
-                className="cursor-pointer absolute bottom-0 right-0 md:bottom-0.5 md:right-0.5 bg-[#093C5D] hover:bg-[#082a42] p-1.5 md:p-2 rounded-full text-white border-[2px] border-white transition-all disabled:opacity-50 active:scale-95 shadow-sm flex items-center justify-center"
+                className="cursor-pointer absolute bottom-0 right-0 md:bottom-0.5 md:right-0.5 bg-[#232739] hover:bg-[#383E5C] p-1.5 md:p-2 rounded-full text-white border-[2px] border-white transition-all disabled:opacity-50 active:scale-95 shadow-sm flex items-center justify-center"
                 title={t('Upload Profile Photo')}
               >
                 {uploadingImage ? (
@@ -152,16 +152,16 @@ const Profile = () => {
               className="hidden"
             />
             <div className="text-center md:text-left mt-1 md:mt-2">
-              <h2 className="text-base md:text-lg lg:text-xl font-semibold text-gray-900">{user?.name}</h2>
-              <p className="text-xs md:text-sm text-gray-500 break-all mt-0.5 font-medium">{user?.email}</p>
-              <p className="text-[11px] md:text-xs text-gray-400 mt-1.5 md:mt-2 font-medium">{t('Click camera icon to change photo')}</p>
+              <h2 className="text-base md:text-lg lg:text-xl font-semibold text-[#232739]">{user?.name}</h2>
+              <p className="text-xs md:text-sm text-[#7B81A8] break-all mt-0.5 font-medium">{user?.email}</p>
+              <p className="text-[11px] md:text-xs text-[#7B81A8] mt-1.5 md:mt-2 font-medium">{t('Click camera icon to change photo')}</p>
             </div>
           </div>
 
           <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
               <div>
-                <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                <label className="block text-xs sm:text-[13px] font-medium text-[#383E5C] mb-1.5">
                   {t('Full Name')} <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -171,12 +171,12 @@ const Profile = () => {
                   onChange={handleChange}
                   placeholder={t('Enter your full name')}
                   required
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                  className="block w-full rounded-lg border border-[#AFB4CE]/60 px-3 py-2.5 text-sm md:text-base font-medium text-[#232739] placeholder-[#7B81A8] transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#232739] focus:border-[#232739]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                <label className="block text-xs sm:text-[13px] font-medium text-[#383E5C] mb-1.5">
                   {t('Email Address')} <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -186,13 +186,13 @@ const Profile = () => {
                   placeholder={t('Email cannot be changed')}
                   readOnly
                   disabled
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] disabled:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="block w-full rounded-lg border border-[#AFB4CE]/60 px-3 py-2.5 text-sm md:text-base font-medium text-[#232739] placeholder-[#7B81A8] transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#232739] focus:border-[#232739] disabled:bg-[#E4E6F0]/40 disabled:cursor-not-allowed disabled:text-[#7B81A8]"
                 />
                 <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('* Cannot be changed')}</p>
               </div>
 
               <div>
-                <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                <label className="block text-xs sm:text-[13px] font-medium text-[#383E5C] mb-1.5">
                   {t('Phone Number')} <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -202,7 +202,7 @@ const Profile = () => {
                   placeholder={t('Phone number cannot be changed')}
                   readOnly
                   disabled
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] disabled:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="block w-full rounded-lg border border-[#AFB4CE]/60 px-3 py-2.5 text-sm md:text-base font-medium text-[#232739] placeholder-[#7B81A8] transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#232739] focus:border-[#232739] disabled:bg-[#E4E6F0]/40 disabled:cursor-not-allowed disabled:text-[#7B81A8]"
                 />
                 <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('* Cannot be changed')}</p>
               </div>
@@ -213,17 +213,17 @@ const Profile = () => {
         </section>
 
         <div className="sticky bottom-16 lg:bottom-4 z-20 mt-8 pt-4 pb-4 lg:pb-0">
-          <div className="bg-white border border-gray-200 p-2 sm:px-4 sm:py-2.5 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 w-full">
+          <div className="bg-white border border-[#AFB4CE]/60 p-2 sm:px-4 sm:py-2.5 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 w-full">
             <div className="hidden sm:flex items-center gap-2 text-sm ml-1">
               <div className={`w-2 h-2 rounded-full ${hasChanges ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'}`}></div>
-              <span className={hasChanges ? 'text-amber-700 font-medium' : 'text-gray-500 font-medium'}>
+              <span className={hasChanges ? 'text-amber-700 font-medium' : 'text-[#7B81A8] font-medium'}>
                 {hasChanges ? t('You have unsaved changes') : t('All changes saved')}
               </span>
             </div>
             <button
               type="submit"
               disabled={loading || !hasChanges}
-              className={`cursor-pointer bg-[#093C5D] text-white px-8 py-2 sm:py-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold text-sm w-full sm:w-auto active:scale-[0.98] transition-colors duration-300 ${(!hasChanges || loading) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#072d46]'}`}
+              className={`cursor-pointer bg-[#232739] text-white px-8 py-2 sm:py-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold text-sm w-full sm:w-auto active:scale-[0.98] transition-colors duration-300 ${(!hasChanges || loading) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#383E5C]'}`}
             >
               <Save className="w-4 h-4 shrink-0" />
               <span className="tracking-wide">{loading ? t('Saving...') : t('Save Profile')}</span>

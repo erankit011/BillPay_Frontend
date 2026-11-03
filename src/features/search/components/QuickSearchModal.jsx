@@ -207,7 +207,7 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
        * Darkened semi-transparent backdrop closing search palette upon click.
        */}
       <div
-        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
+        className="fixed inset-0 bg-[#12141F]/60 transition-opacity animate-modal-overlay overscroll-contain backdrop-blur-xs"
         onClick={onClose}
         aria-hidden="true"
         onWheel={(e) => e.preventDefault()}
@@ -227,7 +227,7 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
         }}
       >
         <div
-          className="relative bg-white w-full sm:max-w-xl rounded-t-lg sm:rounded-lg border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-none flex flex-col max-h-[85vh] sm:max-h-[75vh] overscroll-contain"
+          className="relative bg-white w-full sm:max-w-xl rounded-t-xl sm:rounded-xl border border-[#AFB4CE]/60 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl shadow-[#12141F]/15 flex flex-col max-h-[85vh] sm:max-h-[75vh] overscroll-contain"
           role="dialog"
           aria-modal="true"
           aria-label={t('Quick Search')}
@@ -236,22 +236,22 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
            * Mobile Drag Pill
            * Visual drag handle indicator shown exclusively on mobile viewports.
            */}
-          <div className="sm:hidden flex justify-center pt-2.5 pb-1 flex-shrink-0 bg-gray-50/50">
-            <div className="w-10 h-1 bg-gray-300 rounded-full" />
+          <div className="sm:hidden flex justify-center pt-2.5 pb-1 flex-shrink-0 bg-[#E4E6F0]/40">
+            <div className="w-10 h-1 bg-[#AFB4CE] rounded-full" />
           </div>
 
           {/**
            * Search Header
            * Contains live search input bar, search icon, clear button, and dismiss trigger.
            */}
-          <div className="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-3 sm:py-3.5 border-b border-gray-100 bg-white flex-shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-3 sm:py-3.5 border-b border-[#AFB4CE]/60 bg-white flex-shrink-0">
             {/**
              * Search Input Container
              * Standardized search input field styled consistently with app layout.
              */}
             <div className="relative flex-1">
               <div className="absolute inset-y-0 left-0 pl-3 sm:pl-3.5 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                <Search className="h-4 w-4 sm:h-5 sm:w-5 text-[#7B81A8]" strokeWidth={1.75} />
               </div>
               <input
                 ref={inputRef}
@@ -263,7 +263,7 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
                     ? t('Search by page, stores, bills, subscriptions, settings...')
                     : t('Search by page, customers, bills, products, settings...')
                 }
-                className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-11 bg-white border border-[#DCD3E0] rounded-lg text-[13px] sm:text-sm font-normal text-[#3A3550] placeholder-[#8A82A6] placeholder:font-normal focus:outline-none focus:ring-1 focus:ring-[#3A3550] focus:border-[#3A3550] transition-colors duration-200 shadow-none"
+                className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-11 bg-white border border-[#AFB4CE]/60 rounded-lg text-[13px] sm:text-sm font-medium text-[#232739] placeholder-[#7B81A8] placeholder:font-normal focus:outline-none focus:ring-1 focus:ring-[#232739] focus:border-[#232739] transition-colors duration-200 shadow-none"
               />
 
               {/**
@@ -274,7 +274,7 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="absolute inset-y-0 right-0 pr-3 sm:pr-3.5 flex items-center text-[#8A82A6] hover:text-[#3A3550] cursor-pointer"
+                  className="absolute inset-y-0 right-0 pr-3 sm:pr-3.5 flex items-center text-[#7B81A8] hover:text-[#232739] cursor-pointer"
                   aria-label={t('Clear search')}
                 >
                   <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -289,7 +289,7 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-[#8A82A6] bg-[#DCD3E0] hover:bg-[#B7AFC9] hover:text-[#3A3550] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCD3E0]"
+              className="cursor-pointer text-[#383E5C] bg-[#E4E6F0] hover:bg-[#AFB4CE]/60 hover:text-[#232739] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#AFB4CE]/60"
               title={t('Close')}
               aria-label={t('Close search modal')}
             >
@@ -303,17 +303,17 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
            */}
           <div
             ref={listRef}
-            className="overflow-y-auto overscroll-contain p-2 pr-2.5 pb-3 sm:pb-2.5 space-y-1 flex-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-[#DCD3E0] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#B7AFC9]"
+            className="overflow-y-auto overscroll-contain p-2 pr-2.5 pb-3 sm:pb-2.5 space-y-1 flex-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-[#AFB4CE] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#7B81A8]"
           >
             {filteredPages.length === 0 ? (
               <div className="py-10 px-4 text-center">
-                <div className="w-10 h-10 rounded-lg bg-[#F4EFF3] border border-[#DCD3E0] text-[#8A82A6] mx-auto flex items-center justify-center mb-2.5">
+                <div className="w-10 h-10 rounded-lg bg-[#E4E6F0] border border-[#AFB4CE]/60 text-[#7B81A8] mx-auto flex items-center justify-center mb-2.5">
                   <Search className="w-4 h-4" strokeWidth={1.75} />
                 </div>
-                <p className="text-[13px] sm:text-sm font-semibold text-[#3A3550] mb-1">
+                <p className="text-[13px] sm:text-sm font-semibold text-[#232739] mb-1">
                   {t('No matching pages found')}
                 </p>
-                <p className="text-[11px] sm:text-xs text-[#8A82A6] font-medium">
+                <p className="text-[11px] sm:text-xs text-[#7B81A8] font-medium">
                   {t('Try searching for another keyword or check spelling')}
                 </p>
               </div>
@@ -333,16 +333,16 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
                     onMouseEnter={() => setSelectedIndex(index)}
                     className={`w-full flex items-center justify-between gap-2.5 sm:gap-3 px-3 py-2 sm:py-2.5 rounded-lg border transition-colors duration-150 cursor-pointer text-left ${
                       isSelected
-                        ? 'bg-[#DCD3E0] border-[#B7AFC9]/60'
-                        : 'bg-transparent border-transparent hover:bg-[#F4EFF3]'
+                        ? 'bg-[#E4E6F0] border-[#AFB4CE]/80'
+                        : 'bg-transparent border-transparent hover:bg-[#E4E6F0]/60'
                     }`}
                   >
                     <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                       <div
                         className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-150 shadow-none ${
                           isSelected
-                            ? 'bg-[#3A3550] text-white'
-                            : 'bg-[#DCD3E0] text-[#585272]'
+                            ? 'bg-[#232739] text-white'
+                            : 'bg-[#E4E6F0] text-[#383E5C] border border-[#AFB4CE]/60'
                         }`}
                       >
                         <IconComponent className="w-4 h-4" strokeWidth={1.75} />
@@ -350,12 +350,12 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
                       <div className="min-w-0 flex-1">
                         <p
                           className={`text-[13px] sm:text-sm font-semibold transition-colors truncate ${
-                            isSelected ? 'text-[#3A3550]' : 'text-[#3A3550]'
+                            isSelected ? 'text-[#232739]' : 'text-[#232739]'
                           }`}
                         >
                           {item.title}
                         </p>
-                        <p className="text-[11px] sm:text-xs text-[#8A82A6] font-medium truncate mt-0.5">
+                        <p className="text-[11px] sm:text-xs text-[#7B81A8] font-medium truncate mt-0.5">
                           {item.desc}
                         </p>
                       </div>
@@ -369,8 +369,8 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
                       <span
                         className={`inline-flex items-center justify-center text-center whitespace-nowrap text-[10px] font-semibold leading-none h-5 px-2.5 rounded border transition-colors shrink-0 shadow-none uppercase tracking-wide select-none ml-2 ${
                           isSelected
-                            ? 'bg-white text-[#3A3550] border-[#B7AFC9]/60'
-                            : 'bg-[#F4EFF3] text-[#585272] border-[#DCD3E0]'
+                            ? 'bg-white text-[#232739] border-[#AFB4CE]/80 font-semibold'
+                            : 'bg-[#E4E6F0] text-[#383E5C] border-[#AFB4CE]/60 font-medium'
                         }`}
                       >
                         {item.category}
@@ -386,27 +386,27 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
            * Desktop Shortcut Instructions Footer
            * Explains keyboard shortcuts for navigate, select, and modal dismiss actions.
            */}
-          <div className="hidden sm:flex items-center px-4 py-2.5 border-t border-gray-100 bg-gray-50/80 text-[11px] font-medium text-gray-500">
+          <div className="hidden sm:flex items-center px-4 py-2.5 border-t border-[#AFB4CE]/60 bg-[#E4E6F0]/40 text-[11px] font-medium text-[#7B81A8]">
             <div className="flex items-center gap-2">
               {/**
                * Keyboard Arrow Navigation Badge
                * Visual indicator for up and down arrow key navigation.
                */}
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-gray-200 rounded text-gray-600 shadow-none h-7">
-                <span className="inline-flex items-center gap-0.5 text-gray-500">
-                  <ArrowUp className="w-3 h-3 text-gray-500 shrink-0" strokeWidth={2} />
-                  <ArrowDown className="w-3 h-3 text-gray-500 shrink-0" strokeWidth={2} />
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#AFB4CE]/60 rounded text-[#383E5C] shadow-none h-7">
+                <span className="inline-flex items-center gap-0.5 text-[#7B81A8]">
+                  <ArrowUp className="w-3 h-3 text-[#7B81A8] shrink-0" strokeWidth={2} />
+                  <ArrowDown className="w-3 h-3 text-[#7B81A8] shrink-0" strokeWidth={2} />
                 </span>
-                <span className="text-[11px] font-medium text-gray-600 leading-none">{t('Navigate')}</span>
+                <span className="text-[11px] font-medium text-[#383E5C] leading-none">{t('Navigate')}</span>
               </div>
 
               {/**
                * Enter Key Selection Badge
                * Visual indicator for enter key route activation.
                */}
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-gray-200 rounded text-gray-600 shadow-none h-7">
-                <CornerDownLeft className="w-3 h-3 text-gray-500 shrink-0" strokeWidth={2} />
-                <span className="text-[11px] font-medium text-gray-600 leading-none">{t('Select')}</span>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-[#AFB4CE]/60 rounded text-[#383E5C] shadow-none h-7">
+                <CornerDownLeft className="w-3 h-3 text-[#7B81A8] shrink-0" strokeWidth={2} />
+                <span className="text-[11px] font-medium text-[#383E5C] leading-none">{t('Select')}</span>
               </div>
 
               {/**
@@ -416,11 +416,11 @@ const QuickSearchModal = ({ isOpen, onClose, isAdmin = false }) => {
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white hover:bg-gray-100 border border-gray-200 rounded text-gray-600 transition-colors cursor-pointer active:scale-95 shadow-none h-7"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white hover:bg-[#E4E6F0] border border-[#AFB4CE]/60 rounded text-[#383E5C] transition-colors cursor-pointer active:scale-95 shadow-none h-7"
                 title={t('Close (Esc)')}
               >
-                <span className="text-[10px] font-medium text-gray-500 leading-none">ESC</span>
-                <span className="text-[11px] font-medium text-gray-600 leading-none">{t('Close')}</span>
+                <span className="text-[10px] font-medium text-[#7B81A8] leading-none">ESC</span>
+                <span className="text-[11px] font-medium text-[#383E5C] leading-none">{t('Close')}</span>
               </button>
             </div>
           </div>
