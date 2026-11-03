@@ -292,9 +292,9 @@ const VoiceBilling = () => {
          * Displays feature title, instruction subtitle, and syntax example
          */}
         <div className="text-center animate-fade-in">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Voice Assistant')}</h1>
-          <p className="text-xs sm:text-sm font-medium text-gray-600 mt-1 sm:mt-1.5">{t('Record voice or type manually')}</p>
-          <p className="text-xs sm:text-sm font-medium text-[#093C5D] mt-1.5 sm:mt-2 px-4">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B]">{t('Voice Assistant')}</h1>
+          <p className="text-xs sm:text-sm font-medium text-[#4E5668] mt-1 sm:mt-1.5">{t('Record voice or type manually')}</p>
+          <p className="text-xs sm:text-sm font-medium text-[#4338CA] mt-1.5 sm:mt-2 px-4">
             "{t('Example:')} Ankit Singh ko 100 rupya udhar diya"
           </p>
         </div>
@@ -304,13 +304,13 @@ const VoiceBilling = () => {
          * Toggles between speech microphone and typed keyboard input
          */}
         <div className="flex justify-center animate-slide-up" style={{ animationDelay: '100ms' }}>
-          <div className="inline-flex bg-white/80 backdrop-blur-md rounded-lg p-1 border border-gray-200 w-full max-w-md">
+          <div className="inline-flex bg-[#FBFBFC] rounded-lg p-1 border border-[#DCE1EA] w-full max-w-md shadow-none">
             <button
               onClick={() => setInputMode('voice')}
               className={`cursor-pointer flex items-center justify-center gap-2 flex-1 px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg font-semibold text-xs md:text-sm transition-all duration-200 active:scale-[0.98] focus:outline-none ${
                 inputMode === 'voice'
-                  ? 'bg-[#093C5D] text-white'
-                  : 'bg-transparent text-gray-600 hover:bg-gray-50'
+                  ? 'bg-[#4338CA] text-white shadow-none'
+                  : 'bg-transparent text-[#4E5668] hover:bg-[#F0F2F6] hover:text-[#191E2B]'
               }`}
             >
               <Mic className="w-5 h-5 flex-shrink-0" />
@@ -320,8 +320,8 @@ const VoiceBilling = () => {
               onClick={() => setInputMode('manual')}
               className={`cursor-pointer flex items-center justify-center gap-2 flex-1 px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg font-semibold text-xs md:text-sm transition-all duration-200 active:scale-[0.98] focus:outline-none ${
                 inputMode === 'manual'
-                  ? 'bg-[#093C5D] text-white'
-                  : 'bg-transparent text-gray-600 hover:bg-gray-50'
+                  ? 'bg-[#4338CA] text-white shadow-none'
+                  : 'bg-transparent text-[#4E5668] hover:bg-[#F0F2F6] hover:text-[#191E2B]'
               }`}
             >
               <Keyboard className="w-5 h-5 flex-shrink-0" />
@@ -335,7 +335,7 @@ const VoiceBilling = () => {
          * Interactive speech recognition interface with active mic animation
          */}
         {inputMode === 'voice' && (
-          <div className="bg-gradient-to-br from-[#F5F5F5] via-purple-50 to-white rounded-lg p-6 md:p-8 lg:p-10 text-center flex flex-col items-center justify-center min-h-[400px] md:min-h-[450px] relative overflow-hidden animate-slide-up border border-[#E5E7EB]" style={{ animationDelay: '200ms' }}>
+          <div className="bg-[#FBFBFC] rounded-lg p-6 md:p-8 lg:p-10 text-center flex flex-col items-center justify-center min-h-[400px] md:min-h-[450px] relative overflow-hidden animate-slide-up border border-[#DCE1EA] shadow-none" style={{ animationDelay: '200ms' }}>
             
 
 
@@ -352,8 +352,8 @@ const VoiceBilling = () => {
                  */}
                 {isRecording && (
                   <>
-                    <div className="absolute w-[140%] h-[140%] bg-red-400/20 rounded-full animate-ping pointer-events-none" style={{ animationDuration: '2s' }}></div>
-                    <div className="absolute w-[180%] h-[180%] bg-red-300/10 rounded-full animate-ping pointer-events-none" style={{ animationDuration: '3s', animationDelay: '500ms' }}></div>
+                    <div className="absolute w-[140%] h-[140%] bg-[#B91C1C]/20 rounded-full animate-ping pointer-events-none" style={{ animationDuration: '2s' }}></div>
+                    <div className="absolute w-[180%] h-[180%] bg-[#B91C1C]/10 rounded-full animate-ping pointer-events-none" style={{ animationDuration: '3s', animationDelay: '500ms' }}></div>
                   </>
                 )}
 
@@ -364,10 +364,10 @@ const VoiceBilling = () => {
               <button
                 onClick={isRecording ? stopVoiceRecognition : startVoiceRecognition}
                 disabled={isProcessing}
-                className={`cursor-pointer w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-40 lg:h-40 rounded-full flex items-center justify-center transition-all duration-300 active:scale-90 focus:outline-none focus:ring-2 focus:ring-[#093C5D]/40 focus:ring-offset-4 ${
+                className={`cursor-pointer w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-40 lg:h-40 rounded-full flex items-center justify-center transition-all duration-300 active:scale-90 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/40 focus:ring-offset-4 ${
                   isRecording 
-                    ? 'bg-red-500 text-white shadow-red-500/30 border-4 border-red-300' 
-                    : 'bg-[#093C5D] hover:bg-[#082a42] text-white shadow-[#093C5D]/30 border-4 border-[#093C5D]/20'
+                    ? 'bg-[#B91C1C] text-white shadow-none border-4 border-[#FECDD3]' 
+                    : 'bg-[#4338CA] hover:bg-[#3730A3] text-white shadow-none border-4 border-[#D8DCF5]'
                 } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 {isProcessing ? (
@@ -383,10 +383,10 @@ const VoiceBilling = () => {
                * Displays real-time spoken sentence transcription
                */}
               <div className="h-14 flex flex-col items-center justify-center">
-                <p className="text-base md:text-lg lg:text-xl font-semibold text-gray-900 px-4">
+                <p className="text-base md:text-lg lg:text-xl font-semibold text-[#191E2B] px-4">
                   {transcript || (isRecording ? t('Listening...') : t('Tap to speak'))}
                 </p>
-                <p className={`text-sm font-medium text-gray-600 animate-pulse transition-opacity duration-300 mt-1 ${isRecording ? 'opacity-100' : 'opacity-0'}`}>
+                <p className={`text-sm font-medium text-[#4E5668] animate-pulse transition-opacity duration-300 mt-1 ${isRecording ? 'opacity-100' : 'opacity-0'}`}>
                   {t('Speak now...')}
                 </p>
               </div>
@@ -395,21 +395,21 @@ const VoiceBilling = () => {
                * System Compatibility & Guidance Banner
                * Details browser microphone permissions and offline fallback advice
                */}
-              <div className={`mt-4 w-full max-w-sm text-left space-y-3 bg-gradient-to-br from-orange-50 to-yellow-50 p-4 md:p-5 rounded-lg border border-orange-200 transition-opacity duration-300 ${(!isRecording && !isProcessing) ? 'opacity-100' : 'opacity-0 pointer-events-none select-none'}`}>
+              <div className={`mt-4 w-full max-w-sm text-left space-y-3 bg-[#FFFBEB] p-4 md:p-5 rounded-lg border border-[#FDE68A] transition-opacity duration-300 shadow-none ${(!isRecording && !isProcessing) ? 'opacity-100' : 'opacity-0 pointer-events-none select-none'}`}>
                 <div className="flex items-start gap-2">
                   <div className="mt-0.5 text-orange-500 text-lg flex-shrink-0">⚠️</div>
                   <div className="space-y-2 text-sm">
-                    <p className="font-semibold text-orange-800">{t('Voice Recognition Requirements:')}</p>
-                    <ul className="space-y-1 text-gray-700 font-medium">
+                    <p className="font-semibold text-[#92400E]">{t('Voice Recognition Requirements:')}</p>
+                    <ul className="space-y-1 text-[#78350F] font-medium">
                       <li>• {t('Internet connection required')}</li>
                       <li>• {t('Works best in Chrome/Edge browser')}</li>
                       <li>• {t('Microphone permission needed')}</li>
                     </ul>
                   </div>
                 </div>
-                <div className="flex items-start gap-2 pt-2 border-t border-orange-200">
+                <div className="flex items-start gap-2 pt-2 border-t border-[#FDE68A]">
                   <div className="text-lg flex-shrink-0">💡</div>
-                  <p className="text-[#093C5D] font-semibold text-sm">{t('Tip: Use Manual Input for offline operation')}</p>
+                  <p className="text-[#4338CA] font-semibold text-sm">{t('Tip: Use Manual Input for offline operation')}</p>
                 </div>
               </div>
             </div>
@@ -421,26 +421,26 @@ const VoiceBilling = () => {
          * Fallback command entry for typed natural language prompts
          */}
         {inputMode === 'manual' && (
-          <form onSubmit={handleManualSubmit} className="bg-white border border-gray-200 rounded-lg p-5 md:p-6 lg:p-8 animate-slide-up" style={{ animationDelay: '200ms' }}>
+          <form onSubmit={handleManualSubmit} className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg p-5 md:p-6 lg:p-8 animate-slide-up shadow-none" style={{ animationDelay: '200ms' }}>
             <div className="space-y-4 md:space-y-5">
               <div>
-                <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">
+                <label className="block text-xs md:text-sm font-semibold text-[#191E2B] mb-2">
                   ⌨️ {t('Type your command')}
                 </label>
                 <input
                   type="text"
                   value={manualText}
                   onChange={(e) => setManualText(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
+                  className="w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] bg-white text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 shadow-none"
                   placeholder="Ankit Singh ko 100 rupya udhar diya"
                   disabled={isProcessing}
                   autoFocus
                 />
-                <div className="mt-3 text-sm font-medium text-gray-600 space-y-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                  <p className="font-semibold text-gray-800">📝 {t('Format:')}</p>
+                <div className="mt-3 text-sm font-medium text-[#4E5668] space-y-2 bg-[#F0F2F6] p-4 rounded-lg border border-[#DCE1EA] shadow-none">
+                  <p className="font-semibold text-[#191E2B]">📝 {t('Format:')}</p>
                   <p>{t("• [Customer Name] ko [Amount] rupya udhar diya")}</p>
                   <p>{t("• [Customer Name] se [Amount] rupya liya")}</p>
-                  <p className="font-semibold text-gray-800 mt-2">✅ {t('Examples:')}</p>
+                  <p className="font-semibold text-[#191E2B] mt-2">✅ {t('Examples:')}</p>
                   <p>{t("• Rahul ko 500 rupya udhar diya")}</p>
                   <p>{t("• Priya se 200 rupya liya")}</p>
                   <p>{t("• Ankit Singh ko 1000 rupya udhar diya")}</p>
@@ -450,7 +450,7 @@ const VoiceBilling = () => {
               <button
                 type="submit"
                 disabled={isProcessing || !manualText.trim()}
-                className="cursor-pointer w-full flex justify-center items-center px-5 md:px-6 lg:px-7 py-2.5 md:py-3 lg:py-3.5 rounded-lg text-xs md:text-sm font-semibold text-white bg-[#093C5D] hover:bg-[#082a42] disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:ring-offset-2"
+                className="cursor-pointer w-full flex justify-center items-center px-5 md:px-6 lg:px-7 py-2.5 md:py-3 lg:py-3.5 rounded-lg text-xs md:text-sm font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:ring-offset-2 shadow-none"
               >
                 {isProcessing ? (
                   <>
@@ -467,8 +467,8 @@ const VoiceBilling = () => {
             </div>
             
             {transcript && !isProcessing && (
-              <div className="mt-4 p-4 bg-[#F5F5F5] rounded-lg border border-[#D1D5DB]">
-                <p className="text-sm font-medium text-gray-700">{transcript}</p>
+              <div className="mt-4 p-4 bg-[#F0F2F6] rounded-lg border border-[#DCE1EA] shadow-none">
+                <p className="text-sm font-medium text-[#4E5668]">{transcript}</p>
               </div>
             )}
           </form>
@@ -479,30 +479,30 @@ const VoiceBilling = () => {
          * Quick preview of parsed merchant intent before manual confirmation
          */}
         {result && result.parsedIntent && !showForm && (
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-5 md:p-6 lg:p-8 border border-green-200 animate-scale-in">
-            <div className="flex items-center text-green-700 mb-4 md:mb-5">
+          <div className="bg-[#ECFDF5] rounded-lg p-5 md:p-6 lg:p-8 border border-[#A7F3D0] animate-scale-in shadow-none">
+            <div className="flex items-center text-[#0D7A57] mb-4 md:mb-5">
               <CheckCircle2 className="w-6 h-6 md:w-7 md:h-7 mr-2 flex-shrink-0" />
               <h3 className="text-base md:text-lg lg:text-xl font-semibold">{t('Command Recognized')}</h3>
             </div>
             
-            <div className="bg-white border border-gray-200 rounded-lg p-4 md:p-5 lg:p-6">
+            <div className="bg-[#FBFBFC] border border-[#A7F3D0] rounded-lg p-4 md:p-5 lg:p-6 shadow-none">
               <div className="grid grid-cols-2 gap-4 md:gap-5">
                 <div>
-                  <p className="text-sm font-semibold text-gray-600 mb-1 uppercase tracking-wide">{t('Action')}</p>
-                  <p className="font-semibold text-gray-900 text-xs md:text-sm">{result.parsedIntent.intent}</p>
+                  <p className="text-sm font-semibold text-[#757F94] mb-1 uppercase tracking-wide">{t('Action')}</p>
+                  <p className="font-semibold text-[#191E2B] text-xs md:text-sm">{result.parsedIntent.intent}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-gray-600 mb-1 uppercase tracking-wide">{t('Amount')}</p>
-                  <p className="font-semibold text-[#093C5D] text-lg md:text-xl">₹{result.parsedIntent.amount}</p>
+                  <p className="text-sm font-semibold text-[#757F94] mb-1 uppercase tracking-wide">{t('Amount')}</p>
+                  <p className="font-semibold text-[#0D7A57] text-lg md:text-xl">₹{result.parsedIntent.amount}</p>
                 </div>
                 <div className="col-span-2">
-                  <p className="text-sm font-semibold text-gray-600 mb-1 uppercase tracking-wide">{t('Customer')}</p>
-                  <p className="font-semibold text-gray-900 text-xs md:text-sm truncate">{result.parsedIntent.customerName || t('Unknown')}</p>
+                  <p className="text-sm font-semibold text-[#757F94] mb-1 uppercase tracking-wide">{t('Customer')}</p>
+                  <p className="font-semibold text-[#191E2B] text-xs md:text-sm truncate">{result.parsedIntent.customerName || t('Unknown')}</p>
                 </div>
               </div>
             </div>
             
-            <p className="text-sm font-medium text-gray-700 mt-4 md:mt-5 text-center px-2">
+            <p className="text-sm font-medium text-[#4E5668] mt-4 md:mt-5 text-center px-2">
               {t('Data has been processed. You can review and edit below.')}
             </p>
           </div>
@@ -513,12 +513,12 @@ const VoiceBilling = () => {
          * Allows merchant to inspect and correct extracted bill details
          */}
         {showForm && (
-          <div className="bg-white border border-gray-200 rounded-lg p-5 md:p-6 lg:p-8 animate-slide-up">
+          <div className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg p-5 md:p-6 lg:p-8 animate-slide-up shadow-none">
             <div className="flex items-center justify-between mb-5 md:mb-6">
-              <h3 className="text-base md:text-lg lg:text-xl font-semibold text-gray-900">{t('Review & Edit Transaction')}</h3>
+              <h3 className="text-base md:text-lg lg:text-xl font-semibold text-[#191E2B]">{t('Review & Edit Transaction')}</h3>
               <button
                 onClick={handleCancelForm}
-                className="cursor-pointer text-gray-400 hover:text-gray-600 w-9 h-9 md:w-10 md:h-10 flex items-center justify-center rounded-lg transition-colors active:scale-95 focus:outline-none focus:ring-1 focus:ring-gray-400 flex-shrink-0"
+                className="cursor-pointer text-[#757F94] hover:text-[#191E2B] hover:bg-[#F0F2F6] w-9 h-9 md:w-10 md:h-10 flex items-center justify-center rounded-lg transition-colors active:scale-95 focus:outline-none focus:ring-1 focus:ring-[#DCE1EA] flex-shrink-0"
               >
                 <span className="text-xl">✕</span>
               </button>
@@ -530,7 +530,7 @@ const VoiceBilling = () => {
                * Recipient or debtor customer associated with the transaction
                */}
               <div>
-                <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">
+                <label className="block text-xs md:text-sm font-semibold text-[#191E2B] mb-2">
                   👤 {t('Customer Name')}
                 </label>
                 <input
@@ -538,7 +538,7 @@ const VoiceBilling = () => {
                   name="customerName"
                   value={formData.customerName}
                   onChange={handleFormChange}
-                  className="w-full rounded-lg border border-gray-300 px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
+                  className="w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] bg-white text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 shadow-none"
                   placeholder={t('Enter customer name')}
                   required
                 />
@@ -549,7 +549,7 @@ const VoiceBilling = () => {
                * Numeric monetary sum in INR
                */}
               <div>
-                <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">
+                <label className="block text-xs md:text-sm font-semibold text-[#191E2B] mb-2">
                   💰 {t('Amount')} (₹)
                 </label>
                 <input
@@ -557,7 +557,7 @@ const VoiceBilling = () => {
                   name="amount"
                   value={formData.amount}
                   onChange={handleFormChange}
-                  className="w-full rounded-lg border border-gray-300 px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
+                  className="w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] bg-white text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 shadow-none"
                   placeholder={t('Enter amount')}
                   min="0"
                   step="0.01"
@@ -570,14 +570,14 @@ const VoiceBilling = () => {
                * Identifies transaction as credit given (Udhar) or payment received
                */}
               <div>
-                <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">
+                <label className="block text-xs md:text-sm font-semibold text-[#191E2B] mb-2">
                   🎯 {t('Transaction Type')}
                 </label>
                 <select
                   name="intent"
                   value={formData.intent}
                   onChange={handleFormChange}
-                  className="cursor-pointer w-full rounded-lg border border-gray-300 px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
+                  className="cursor-pointer w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] bg-white text-[#191E2B] transition-colors duration-200 shadow-none"
                 >
                   <option value="UDHAR">{t('Udhar (Given)')}</option>
                   <option value="PAYMENT">{t('Payment (Received)')}</option>
@@ -589,14 +589,14 @@ const VoiceBilling = () => {
                * Specifies payment channel (Cash, UPI, Card, Bank Transfer)
                */}
               <div>
-                <label className="block text-xs md:text-sm font-semibold text-gray-800 mb-2">
+                <label className="block text-xs md:text-sm font-semibold text-[#191E2B] mb-2">
                   💳 {t('Payment Mode')}
                 </label>
                 <select
                   name="paymentMode"
                   value={formData.paymentMode}
                   onChange={handleFormChange}
-                  className="cursor-pointer w-full rounded-lg border border-gray-300 px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200"
+                  className="cursor-pointer w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] bg-white text-[#191E2B] transition-colors duration-200 shadow-none"
                 >
                   <option value="CASH">{t('Cash')}</option>
                   <option value="UPI">{t('UPI')}</option>
@@ -610,9 +610,9 @@ const VoiceBilling = () => {
                * Retains original raw voice transcript for verification
                */}
               {transcript && (
-                <div className="bg-[#F5F5F5] rounded-lg p-4 border border-[#D1D5DB]">
-                  <p className="text-xs font-semibold text-[#093C5D] mb-1">{t('Original Command:')}</p>
-                  <p className="text-sm font-medium text-gray-800 break-words">{transcript}</p>
+                <div className="bg-[#F0F2F6] rounded-lg p-4 border border-[#DCE1EA] shadow-none">
+                  <p className="text-xs font-semibold text-[#4338CA] mb-1">{t('Original Command:')}</p>
+                  <p className="text-sm font-medium text-[#191E2B] break-words">{transcript}</p>
                 </div>
               )}
 
@@ -624,14 +624,14 @@ const VoiceBilling = () => {
                 <button
                   type="button"
                   onClick={handleCancelForm}
-                  className="cursor-pointer flex-1 px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg text-xs md:text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-2"
+                  className="cursor-pointer flex-1 px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg text-xs md:text-sm font-semibold text-[#4E5668] bg-[#F0F2F6] hover:bg-[#EBEEF4] border border-[#DCE1EA] active:scale-95 transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-[#DCE1EA] shadow-none"
                 >
                   {t('Cancel')}
                 </button>
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="cursor-pointer flex-1 px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg text-xs md:text-sm font-semibold text-white bg-[#093C5D] hover:bg-[#082a42] disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:ring-offset-2"
+                  className="cursor-pointer flex-1 px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg text-xs md:text-sm font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:ring-offset-2 shadow-none"
                 >
                   {isSaving ? (
                     <>
