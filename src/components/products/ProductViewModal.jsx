@@ -50,9 +50,9 @@ const ProductViewModal = ({ isOpen, onClose, product }) => {
   if (!isOpen || !product) return null;
 
   const getStockStatus = (stock) => {
-    if (stock === 0) return { label: t('Out of Stock'), color: 'bg-red-50 text-red-700 border-red-200' };
-    if (stock < 20) return { label: t('Low Stock'), color: 'bg-yellow-50 text-yellow-700 border-yellow-200' };
-    return { label: t('In Stock'), color: 'bg-green-50 text-green-700 border-green-200' };
+    if (stock === 0) return { label: t('Out of Stock'), color: 'bg-[#FFF1F2] text-[#B91C1C] border-[#FECDD3]' };
+    if (stock < 20) return { label: t('Low Stock'), color: 'bg-[#FFFBEB] text-[#B45309] border-[#FDE68A]' };
+    return { label: t('In Stock'), color: 'bg-[#ECFDF5] text-[#0D7A57] border-[#A7F3D0]' };
   };
 
   const stockStatus = getStockStatus(product.stock);
@@ -65,7 +65,7 @@ const ProductViewModal = ({ isOpen, onClose, product }) => {
        * Darkened semi-transparent overlay closing modal on backdrop click.
        */}
       <div
-        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+        className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
         onClick={onClose}
       />
 
@@ -74,27 +74,27 @@ const ProductViewModal = ({ isOpen, onClose, product }) => {
        * Positions bottom sheet on mobile viewports and centered modal on desktop.
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
-        <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
+        <div className="relative bg-[#FBFBFC] w-full sm:max-w-md rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-none">
           
           {/**
            * Drag Handle Indicator
            * Visual drag pill handle rendered exclusively on mobile devices.
            */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
-            <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
+            <div className="w-10 h-1.5 bg-[#DCE1EA] rounded-full" />
           </div>
 
           {/**
            * Modal Header
            * Title banner with product details and modal dismiss action button.
            */}
-          <div className="flex items-center justify-between px-5 md:px-6 py-4 md:py-5 border-b border-gray-100 flex-shrink-0 bg-white">
-            <h3 className="text-lg md:text-xl font-semibold text-gray-900">
+          <div className="flex items-center justify-between px-5 md:px-6 py-4 md:py-5 border-b border-[#E8ECF2] flex-shrink-0 bg-[#FBFBFC]">
+            <h3 className="text-lg md:text-xl font-semibold text-[#191E2B]">
               {t('Product Details')}
             </h3>
             <button
               onClick={onClose}
-              className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200"
+              className="cursor-pointer text-[#757F94] bg-gray-100 hover:bg-[#DCE1EA] hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA]"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
@@ -104,15 +104,15 @@ const ProductViewModal = ({ isOpen, onClose, product }) => {
            * Modal Content Body
            * Scrollable area detailing product icon, title, timestamp, and metrics.
            */}
-          <div className="p-4 md:p-5 overflow-y-auto flex-1 bg-white">
+          <div className="p-4 md:p-5 overflow-y-auto flex-1 bg-[#FBFBFC]">
             <div className="flex flex-col items-center mb-4 sm:mb-5">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full p-[3px] border border-gray-200 bg-white mb-3 flex-shrink-0">
-                <div className="w-full h-full rounded-full flex items-center justify-center text-3xl sm:text-4xl bg-gray-50 text-[#093C5D]">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full p-[3px] border border-[#DCE1EA] bg-[#FBFBFC] mb-3 flex-shrink-0">
+                <div className="w-full h-full rounded-full flex items-center justify-center text-3xl sm:text-4xl bg-[#EEF0FB] text-[#4338CA]">
                   {getProductIcon(product.name)}
                 </div>
               </div>
-              <h2 className="text-lg sm:text-xl font-semibold text-[#093C5D] text-center leading-tight mb-1">{product.name}</h2>
-              <div className="flex items-center text-xs text-gray-500 font-medium">
+              <h2 className="text-lg sm:text-xl font-semibold text-[#191E2B] text-center leading-tight mb-1">{product.name}</h2>
+              <div className="flex items-center text-xs text-[#757F94] font-medium">
                 <Clock className="w-3.5 h-3.5 mr-1.5" />
                 {updatedDate}
               </div>
@@ -123,35 +123,35 @@ const ProductViewModal = ({ isOpen, onClose, product }) => {
                * Product Information Breakdown
                * Structured listing of price, stock quantity units, and total inventory value.
                */}
-              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <div className="divide-y divide-gray-100">
+              <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] overflow-hidden">
+                <div className="divide-y divide-[#E8ECF2]">
                   <div className="flex items-center px-3.5 py-3 sm:px-4 sm:py-3.5">
-                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center mr-3 shrink-0">
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center mr-3 shrink-0">
                       <IndianRupee className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-[10px] sm:text-[11px] font-medium text-gray-500 mb-0.5">{t('Price')}</p>
-                      <p className="text-sm sm:text-base font-semibold text-[#093C5D] truncate">{formatCurrency(product.price)}</p>
+                      <p className="text-[10px] sm:text-[11px] font-medium text-[#757F94] mb-0.5">{t('Price')}</p>
+                      <p className="text-sm sm:text-base font-semibold text-[#191E2B] truncate">{formatCurrency(product.price)}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center px-3.5 py-3 sm:px-4 sm:py-3.5">
-                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center mr-3 shrink-0">
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center mr-3 shrink-0">
                       <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-[10px] sm:text-[11px] font-medium text-gray-500 mb-0.5">{t('Stock Quantity')}</p>
-                      <p className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{product.stock} Units</p>
+                      <p className="text-[10px] sm:text-[11px] font-medium text-[#757F94] mb-0.5">{t('Stock Quantity')}</p>
+                      <p className="text-xs sm:text-sm font-semibold text-[#191E2B] truncate">{product.stock} Units</p>
                     </div>
                   </div>
 
                   <div className="flex items-center px-3.5 py-3 sm:px-4 sm:py-3.5">
-                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-green-50 text-green-600 border border-green-100 flex items-center justify-center mr-3 shrink-0">
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#ECFDF5] text-[#0D7A57] border border-[#A7F3D0] flex items-center justify-center mr-3 shrink-0">
                       <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-[10px] sm:text-[11px] font-medium text-gray-500 mb-0.5">{t('Total Value (Price × Stock)')}</p>
-                      <p className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{formatCurrency(product.price * product.stock)}</p>
+                      <p className="text-[10px] sm:text-[11px] font-medium text-[#757F94] mb-0.5">{t('Total Value (Price × Stock)')}</p>
+                      <p className="text-xs sm:text-sm font-semibold text-[#191E2B] truncate">{formatCurrency(product.price * product.stock)}</p>
                     </div>
                   </div>
                 </div>
