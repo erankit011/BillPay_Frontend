@@ -8,7 +8,7 @@ import React from 'react';
 /**
  * SwirlingLoader Component
  */
-export default function SwirlingLoader({ className = "w-12 h-12 text-[#093C5D]", strokeWidth = 50, ...props }) {
+export default function SwirlingLoader({ className = "w-12 h-12 text-[#232739]", strokeWidth = 50, ...props }) {
   return (
     <>
       <style>{`
