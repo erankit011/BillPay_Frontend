@@ -73,7 +73,7 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
    * Formats top banner title and typography
    */
   doc.setFontSize(22);
-  doc.setTextColor(9, 60, 93);
+  doc.setTextColor(67, 56, 202);
   
   let headerX = 14;
   
@@ -116,7 +116,7 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
    * Displays invoice code, billing date, and payment status
    */
   doc.setFontSize(22);
-  doc.setTextColor(9, 60, 93);
+  doc.setTextColor(67, 56, 202);
   doc.text(t('INVOICE'), 196, 22, { align: 'right' });
   
   doc.setFontSize(10);
@@ -130,7 +130,7 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
    * Shows recipient contact, customer phone, and email records
    */
   doc.setFontSize(16);
-  doc.setTextColor(9, 60, 93);
+  doc.setTextColor(67, 56, 202);
   doc.setFont('helvetica', 'normal');
   doc.text(t('CUSTOMER DETAILS'), 14, 46);
   
@@ -176,7 +176,7 @@ export const generateInvoicePDF = async (bill, shopDetails, action = 'download',
     head: [tableColumn],
     body: tableRows,
     theme: 'grid',
-    headStyles: { fillColor: [9, 60, 93], textColor: 255, lineWidth: 0.1, lineColor: [9, 60, 93] },
+    headStyles: { fillColor: [67, 56, 202], textColor: 255, lineWidth: 0.1, lineColor: [67, 56, 202] },
     styles: { fontSize: 9, cellPadding: 3 },
     columnStyles: {
       0: { cellWidth: 80, halign: 'left' },
