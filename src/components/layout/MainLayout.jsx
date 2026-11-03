@@ -584,7 +584,7 @@ const MainLayout = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-[#E4E6F0] text-[#12141F] flex flex-col">
+    <div className="min-h-screen bg-[#F4EEFF] text-[#424874] flex flex-col">
       {/**
        * Top Announcement Bar
        * Displays system maintenance banners and urgent broadcasts
@@ -676,16 +676,16 @@ const MainLayout = () => {
              * Informs merchant when business profile setup is still required
              */}
             {user?.role === ROLES.SHOPKEEPER && !user?.isBusinessSetupCompleted && (
-              <div className="w-full bg-white/80 border border-[#AFB4CE]/60 rounded-lg p-3.5 sm:p-4 mb-6 shadow-none flex flex-col md:flex-row md:items-center justify-between gap-3.5 sm:gap-4 transition-all">
+              <div className="w-full bg-white border border-[#DCD6F7] rounded-xl p-3.5 sm:p-4 mb-6 shadow-none flex flex-col md:flex-row md:items-center justify-between gap-3.5 sm:gap-4 transition-all">
                 <div className="flex items-center gap-3.5 min-w-0 flex-1">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-white border border-[#AFB4CE]/60 text-[#232739] flex items-center justify-center shrink-0 shadow-none">
-                    <Store className="w-4 h-4 sm:w-5 sm:h-5 text-[#232739]" />
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#F4EEFF] border border-[#DCD6F7] text-[#424874] flex items-center justify-center shrink-0 shadow-none">
+                    <Store className="w-4 h-4 sm:w-5 sm:h-5 text-[#424874]" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h4 className="text-xs sm:text-sm font-semibold text-[#232739] tracking-tight leading-snug">
+                    <h4 className="text-xs sm:text-sm font-semibold text-[#424874] tracking-tight leading-snug">
                       {t('Set Up Your Business Profile')}
                     </h4>
-                    <p className="text-xs sm:text-[13px] font-medium text-[#7B81A8] leading-normal mt-0.5">
+                    <p className="text-xs sm:text-[13px] font-medium text-[#5B618A] leading-normal mt-0.5">
                       {t('Add your shop name, address & phone to create bills and send invoices.')}
                     </p>
                   </div>
@@ -693,7 +693,7 @@ const MainLayout = () => {
                 <div className="flex items-center shrink-0 w-full md:w-auto">
                   <Link
                     to="/setup-business"
-                    className="cursor-pointer w-full md:w-auto inline-flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-white bg-[#232739] hover:bg-[#383E5C] active:scale-95 px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-all shadow-none"
+                    className="cursor-pointer w-full md:w-auto inline-flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-white bg-[#424874] hover:bg-[#323759] active:scale-95 px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-all shadow-none"
                   >
                     <span>{t('Complete Setup')}</span>
                     <ArrowRight className="w-4 h-4 stroke-[2.5]" />
