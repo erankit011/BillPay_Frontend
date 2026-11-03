@@ -67,7 +67,7 @@ const Header = ({
       className="sticky z-30 shrink-0 transition-all duration-150"
       style={{ top: 'var(--top-announcement-height, 0px)' }}
     >
-      <header className="h-14 bg-white/95 backdrop-blur-md border-b border-[#AFB4CE]/60 flex items-center justify-between px-3 sm:px-6 shrink-0">
+      <header className="h-14 bg-white/95 backdrop-blur-md border-b border-[#DCD6F7] flex items-center justify-between px-3 sm:px-6 shrink-0">
         {/**
          * Navigation Trigger & Breadcrumb Trail
          * Handles desktop rail toggle, mobile drawer trigger, and active page breadcrumbs
@@ -80,11 +80,11 @@ const Header = ({
           <button
             type="button"
             onClick={toggleSidebarCollapse}
-            className="hidden lg:inline-flex items-center justify-center w-8 h-8 rounded-lg text-[#383E5C] hover:text-[#232739] hover:bg-[#E4E6F0] transition-colors cursor-pointer shrink-0"
+            className="hidden lg:inline-flex items-center justify-center w-8 h-8 rounded-lg text-[#5B618A] hover:text-[#424874] hover:bg-[#F4EEFF] transition-colors cursor-pointer shrink-0"
             title="Toggle sidebar (Ctrl+B)"
             aria-label="Toggle sidebar collapse"
           >
-            <SidebarRailIcon className="w-[18px] h-[18px] text-[#383E5C]" strokeWidth={1.75} />
+            <SidebarRailIcon className="w-[18px] h-[18px] text-[#5B618A]" strokeWidth={1.75} />
           </button>
 
           {/**
@@ -94,26 +94,26 @@ const Header = ({
           <button
             type="button"
             onClick={() => setMobileDrawerOpen(true)}
-            className="lg:hidden inline-flex items-center justify-center w-8 h-8 rounded-lg text-[#383E5C] hover:text-[#232739] hover:bg-[#E4E6F0] transition-colors cursor-pointer shrink-0"
+            className="lg:hidden inline-flex items-center justify-center w-8 h-8 rounded-lg text-[#5B618A] hover:text-[#424874] hover:bg-[#F4EEFF] transition-colors cursor-pointer shrink-0"
             aria-label="Open menu"
           >
-            <Menu className="w-5 h-5 text-[#383E5C]" strokeWidth={1.75} />
+            <Menu className="w-5 h-5 text-[#5B618A]" strokeWidth={1.75} />
           </button>
 
-          <div className="hidden lg:block w-px h-4 bg-[#AFB4CE]/60 shrink-0 mx-0.5" aria-hidden="true" />
+          <div className="hidden lg:block w-px h-4 bg-[#DCD6F7] shrink-0 mx-0.5" aria-hidden="true" />
 
           {/**
             * Contextual Breadcrumb Indicator
             * Displays active route icon and human-readable page name
             */}
           <div aria-label="Breadcrumb" className="flex items-center gap-2 min-w-0 select-none">
-            <span className="inline-flex items-center justify-center text-[#383E5C] shrink-0">
-              <BreadcrumbIcon className="w-4 h-4 text-[#383E5C]" strokeWidth={1.75} />
+            <span className="inline-flex items-center justify-center text-[#5B618A] shrink-0">
+              <BreadcrumbIcon className="w-4 h-4 text-[#5B618A]" strokeWidth={1.75} />
             </span>
-            <span className="text-[#7B81A8] text-xs font-normal select-none shrink-0" aria-hidden="true">
+            <span className="text-[#A6B1E1] text-xs font-normal select-none shrink-0" aria-hidden="true">
               /
             </span>
-            <span className="text-[#232739] font-semibold text-sm truncate leading-none">
+            <span className="text-[#424874] font-semibold text-sm truncate leading-none">
               {breadcrumbTitle}
             </span>
           </div>
@@ -133,11 +133,11 @@ const Header = ({
           <button
             type="button"
             onClick={onOpenSearch}
-            className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center border border-transparent hover:border-[#AFB4CE]/60 rounded-full text-[#383E5C] hover:text-[#232739] bg-transparent active:bg-[#E4E6F0] hover:bg-[#E4E6F0] transition-colors duration-150 cursor-pointer shrink-0"
+            className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center border border-transparent hover:border-[#DCD6F7] rounded-full text-[#5B618A] hover:text-[#424874] bg-transparent active:bg-[#F4EEFF] hover:bg-[#F4EEFF] transition-colors duration-150 cursor-pointer shrink-0"
             title="Quick Search (Ctrl+K)"
             aria-label="Quick search"
           >
-            <Search className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-[#383E5C]" strokeWidth={1.75} />
+            <Search className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-[#5B618A]" strokeWidth={1.75} />
           </button>
 
           {/**
@@ -155,7 +155,7 @@ const Header = ({
             menuRef={notificationMenuRef}
           />
 
-          <div className="h-4 sm:h-5 w-px bg-[#AFB4CE]/60 mx-1 sm:mx-1.5 self-center shrink-0" />
+          <div className="h-4 sm:h-5 w-px bg-[#DCD6F7] mx-1 sm:mx-1.5 self-center shrink-0" />
 
           {/**
             * Merchant Profile Menu Trigger
@@ -167,8 +167,8 @@ const Header = ({
               onClick={() => setProfileDropdownOpen((prev) => !prev)}
               className={`w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full cursor-pointer transition-colors duration-150 shrink-0 ${
                 hasProfileImage && !profileImageError
-                  ? 'border border-[#AFB4CE]/60 hover:border-[#4F5580] hover:ring-2 hover:ring-[#AFB4CE]/50 overflow-hidden'
-                  : 'border border-transparent hover:border-[#AFB4CE]/60 text-[#383E5C] hover:text-[#232739] bg-transparent active:bg-[#E4E6F0] hover:bg-[#E4E6F0]'
+                  ? 'border border-[#DCD6F7] hover:border-[#424874] hover:ring-2 hover:ring-[#A6B1E1]/50 overflow-hidden'
+                  : 'border border-transparent hover:border-[#DCD6F7] text-[#5B618A] hover:text-[#424874] bg-transparent active:bg-[#F4EEFF] hover:bg-[#F4EEFF]'
               }`}
               aria-label="User account menu"
               aria-expanded={profileDropdownOpen}
@@ -183,9 +183,9 @@ const Header = ({
                   referrerPolicy="no-referrer"
                 />
               ) : user?.name ? (
-                <span className="font-semibold text-xs sm:text-sm text-[#232739]">{user.name.charAt(0).toUpperCase()}</span>
+                <span className="font-semibold text-xs sm:text-sm text-[#424874]">{user.name.charAt(0).toUpperCase()}</span>
               ) : (
-                <User className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-[#383E5C]" strokeWidth={1.75} />
+                <User className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-[#5B618A]" strokeWidth={1.75} />
               )}
             </button>
 
@@ -194,25 +194,25 @@ const Header = ({
               * Links to profile settings, subscription tier, and sign-out action
               */}
             {profileDropdownOpen && (
-              <div className="absolute right-0 top-11 w-48 sm:w-52 bg-white border border-[#AFB4CE]/60 shadow-xl shadow-[#12141F]/8 rounded-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
-                <div className="px-3 py-2 border-b border-[#AFB4CE]/60 mb-1 flex items-center gap-2.5">
+              <div className="absolute right-0 top-11 w-48 sm:w-52 bg-white border border-[#DCD6F7] shadow-none rounded-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div className="px-3 py-2 border-b border-[#DCD6F7] mb-1 flex items-center gap-2.5">
                   {hasProfileImage && !profileImageError ? (
                     <img
                       src={getImageUrl(user.profileImage)}
                       alt={user?.name || 'Profile'}
-                      className="w-8 h-8 rounded-full object-cover border border-[#AFB4CE]/60 shrink-0"
+                      className="w-8 h-8 rounded-full object-cover border border-[#DCD6F7] shrink-0"
                       referrerPolicy="no-referrer"
                     />
                   ) : (
-                    <div className="w-8 h-8 rounded-full bg-[#E4E6F0] text-[#232739] font-semibold text-xs flex items-center justify-center shrink-0 border border-[#AFB4CE]/60">
-                      {user?.name ? user.name.charAt(0).toUpperCase() : <User className="w-4 h-4 text-[#232739]" strokeWidth={1.75} />}
+                    <div className="w-8 h-8 rounded-full bg-[#F4EEFF] text-[#424874] font-semibold text-xs flex items-center justify-center shrink-0 border border-[#DCD6F7]">
+                      {user?.name ? user.name.charAt(0).toUpperCase() : <User className="w-4 h-4 text-[#424874]" strokeWidth={1.75} />}
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-semibold text-[#232739] truncate">
+                    <p className="text-xs font-semibold text-[#424874] truncate">
                       {user?.name || (isAdmin ? 'Administrator' : 'Shopkeeper')}
                     </p>
-                    <p className="text-[11px] text-[#7B81A8] truncate font-medium">
+                    <p className="text-[11px] text-[#8F99C5] truncate font-medium">
                       {user?.email || 'user@udharpay.com'}
                     </p>
                   </div>
@@ -223,12 +223,12 @@ const Header = ({
                     <Link
                       to="/subscription"
                       onClick={() => setProfileDropdownOpen(false)}
-                      className="flex items-center gap-2.5 p-2 bg-[#232739] text-white hover:bg-[#383E5C] rounded-xl transition-colors group"
+                      className="flex items-center gap-2.5 p-2 bg-[#424874] text-white hover:bg-[#323759] rounded-xl transition-colors group"
                     >
-                      <Gem className="w-4 h-4 text-[#AFB4CE] group-hover:scale-110 transition-transform shrink-0" />
+                      <Gem className="w-4 h-4 text-[#DCD6F7] group-hover:scale-110 transition-transform shrink-0" />
                       <div>
                         <p className="text-xs font-semibold leading-tight">{t('Upgrade Plan')}</p>
-                        <p className="text-[10px] text-[#AFB4CE] leading-tight mt-0.5 font-medium">{t('Get extra benefits')}</p>
+                        <p className="text-[10px] text-[#DCD6F7] leading-tight mt-0.5 font-medium">{t('Get extra benefits')}</p>
                       </div>
                     </Link>
                   </div>
@@ -240,9 +240,9 @@ const Header = ({
                     setProfileDropdownOpen(false);
                     navigate('/profile');
                   }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-[#383E5C] hover:text-[#232739] hover:bg-[#E4E6F0] rounded-lg transition-colors cursor-pointer text-left"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-[#5B618A] hover:text-[#424874] hover:bg-[#F4EEFF] rounded-lg transition-colors cursor-pointer text-left"
                 >
-                  <User className="w-4 h-4 text-[#7B81A8] shrink-0" />
+                  <User className="w-4 h-4 text-[#8F99C5] shrink-0" />
                   <span>{t('Account')}</span>
                 </button>
 
@@ -252,13 +252,13 @@ const Header = ({
                     setProfileDropdownOpen(false);
                     navigate(isAdmin ? '/admin/settings' : '/settings');
                   }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-[#383E5C] hover:text-[#232739] hover:bg-[#E4E6F0] rounded-lg transition-colors cursor-pointer text-left"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-[#5B618A] hover:text-[#424874] hover:bg-[#F4EEFF] rounded-lg transition-colors cursor-pointer text-left"
                 >
-                  <Settings className="w-4 h-4 text-[#7B81A8] shrink-0" />
+                  <Settings className="w-4 h-4 text-[#8F99C5] shrink-0" />
                   <span>{t('Settings')}</span>
                 </button>
 
-                <div className="my-1 border-t border-[#AFB4CE]/60" />
+                <div className="my-1 border-t border-[#DCD6F7]" />
 
                 <button
                   type="button"

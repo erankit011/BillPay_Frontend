@@ -1,55 +1,62 @@
 /**
- * UdharPay Storm ("Гроза") Color System
- * Centralized theme constants and utility classes for seamless app-wide styling.
+ * UdharPay Modern SaaS UI/UX Design System
+ * Palette:
+ *   #F4EEFF - Ultra-soft Lavender Mist (Canvas / App background)
+ *   #DCD6F7 - Soft Pastel Periwinkle (Card borders, dividers, subtle pills)
+ *   #A6B1E1 - Slate Periwinkle (Chart curves, secondary accents, focus rings, hover highlights)
+ *   #424874 - Deep Indigo Slate (Brand primary, headings, primary buttons, KPI metrics)
  */
 
-export const STORM_PALETTE = {
-  midnight: '#12141F',  // 950 - Deepest black/navy, high-contrast headings & overlays
-  navy: '#232739',      // 900 - Brand primary, dark buttons, logo boxes, active states
-  slate: '#383E5C',     // 800 - Secondary text, inactive nav, icon default
-  indigo: '#4F5580',    // 700 - Primary accents, chart trend curves, active hover borders
-  lavender: '#7B81A8',  // 500 - Muted subtitles, timestamps, placeholder text, axis labels
-  softSlate: '#AFB4CE', // 300 - Clean borders, dividers, guide lines
-  iceMist: '#E4E6F0',   // 100 - App canvas background, light icon boxes, active pill backgrounds
+export const THEME_PALETTE = {
+  canvas: '#F4EEFF',        // App canvas / background
+  border: '#DCD6F7',        // Crisp delicate borders & dividers
+  accent: '#A6B1E1',        // Chart trend curves, focus rings, secondary bar
+  primary: '#424874',       // Primary brand headings, buttons, active highlights
+  primaryHover: '#323759',  // Deep button hover state
+  surface: '#FFFFFF',       // Clean elevated white card surfaces
+  textPrimary: '#424874',   // High-contrast primary text
+  textSecondary: '#5B618A', // Balanced 80% secondary text for subtitles & labels
+  textMuted: '#8F99C5',     // Muted helper text, timestamps, chart ticks
 };
+
+export const THEME_COLORS = THEME_PALETTE;
 
 /**
- * Standard reusable class combinations for pages, modals, and feature components
+ * Standardized reusable class combinations for pages, cards, and modals
  */
 export const THEME_CLASSES = {
-  // Layout & Surfaces
-  canvas: 'bg-[#E4E6F0] text-[#12141F]',
-  card: 'bg-white border border-[#AFB4CE]/60',
-  cardHover: 'hover:border-[#4F5580] transition-colors duration-150',
-  
+  // Surfaces & Layout
+  canvas: 'bg-[#F4EEFF] text-[#424874]',
+  card: 'bg-white border border-[#DCD6F7] shadow-none',
+  cardHover: 'hover:border-[#A6B1E1] transition-all duration-200',
+
   // Typography
-  heading: 'text-[#232739] font-semibold',
-  subheading: 'text-[#383E5C] text-sm',
-  textPrimary: 'text-[#12141F]',
-  textSecondary: 'text-[#383E5C]',
-  textMuted: 'text-[#7B81A8]',
+  heading: 'text-[#424874] font-semibold',
+  subheading: 'text-[#5B618A] text-sm font-medium',
+  textPrimary: 'text-[#424874]',
+  textSecondary: 'text-[#5B618A]',
+  textMuted: 'text-[#8F99C5]',
 
   // Borders & Dividers
-  border: 'border-[#AFB4CE]/60',
-  borderHighlight: 'border-[#4F5580]',
-  divider: 'border-t border-[#AFB4CE]/60',
+  border: 'border-[#DCD6F7]',
+  borderHover: 'border-[#A6B1E1]',
+  divider: 'border-t border-[#DCD6F7]',
 
-  // Buttons
-  btnPrimary: 'bg-[#232739] hover:bg-[#383E5C] text-white font-medium transition-colors duration-150 cursor-pointer',
-  btnSecondary: 'bg-[#E4E6F0] hover:bg-[#AFB4CE]/60 text-[#232739] border border-[#AFB4CE]/60 font-medium transition-colors duration-150 cursor-pointer',
-  btnGhost: 'text-[#383E5C] hover:text-[#232739] hover:bg-[#E4E6F0] transition-colors duration-150 cursor-pointer',
+  // Buttons & Interactive
+  btnPrimary: 'bg-[#424874] hover:bg-[#323759] text-white font-medium transition-colors duration-150 cursor-pointer shadow-none',
+  btnSecondary: 'bg-[#F4EEFF] hover:bg-[#DCD6F7] text-[#424874] border border-[#DCD6F7] font-medium transition-colors duration-150 cursor-pointer',
+  btnGhost: 'text-[#5B618A] hover:text-[#424874] hover:bg-[#F4EEFF] transition-colors duration-150 cursor-pointer',
 
-  // Form Inputs
-  input: 'bg-white border border-[#AFB4CE]/60 text-[#232739] placeholder-[#7B81A8] focus:outline-none focus:ring-1 focus:ring-[#232739] focus:border-[#232739] transition-colors duration-150',
+  // Navigation Links & Tabs
+  navActive: 'bg-[#F4EEFF] text-[#424874] border-[#DCD6F7] font-semibold shadow-none',
+  navInactive: 'text-[#5B618A] hover:text-[#424874] hover:bg-[#F4EEFF] border-transparent font-medium transition-colors duration-150',
 
-  // Navigation & Pills
-  navActive: 'bg-[#E4E6F0] text-[#232739] border-[#AFB4CE]/80 font-semibold',
-  navInactive: 'text-[#383E5C] hover:text-[#232739] hover:bg-[#E4E6F0] border-transparent font-medium',
+  // Form Controls
+  input: 'bg-white border border-[#DCD6F7] text-[#424874] placeholder-[#8F99C5] focus:outline-none focus:ring-2 focus:ring-[#A6B1E1]/40 focus:border-[#424874] transition-all duration-150',
 
   // Modal Dialogs
-  modalOverlay: 'fixed inset-0 bg-[#12141F]/60 backdrop-blur-xs transition-opacity',
-  modalContainer: 'bg-white border border-[#AFB4CE]/60 shadow-2xl shadow-[#12141F]/15 rounded-xl overflow-hidden',
+  modalOverlay: 'fixed inset-0 bg-[#424874]/50 backdrop-blur-xs transition-opacity',
+  modalContainer: 'bg-white border border-[#DCD6F7] shadow-none rounded-2xl overflow-hidden',
 };
 
-export default STORM_PALETTE;
-
+export default THEME_PALETTE;
