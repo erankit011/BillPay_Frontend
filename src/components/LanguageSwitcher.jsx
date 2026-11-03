@@ -60,27 +60,27 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
       <div className="relative flex items-center justify-center" ref={dropdownRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center border border-transparent hover:border-[#DCD6F7] rounded-full text-[#5B618A] hover:text-[#424874] bg-transparent active:bg-[#F4EEFF] hover:bg-[#F4EEFF] transition-colors duration-150 cursor-pointer shrink-0"
+          className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center border border-transparent hover:border-[#DCE1EA] rounded-full text-[#4E5668] hover:text-[#191E2B] bg-transparent active:bg-[#F0F2F6] hover:bg-[#F0F2F6] transition-colors duration-150 cursor-pointer shrink-0"
           aria-label="Change language"
         >
-          <Globe className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-[#5B618A]" strokeWidth={1.75} />
+          <Globe className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-slate-600" strokeWidth={1.75} />
         </button>
 
         {isOpen && (
-          <div className="absolute right-0 sm:-right-2 top-[calc(100%+8px)] w-32 bg-white rounded-lg shadow-none border border-[#DCD6F7] py-1.5 z-50 animate-fade-in origin-top-right">
+          <div className="absolute right-0 sm:-right-2 top-[calc(100%+8px)] w-32 bg-[#FBFBFC] rounded-lg shadow-none border border-[#DCE1EA] py-1.5 z-50 animate-fade-in origin-top-right">
             {languages.map((lang) => (
               <button
                 key={lang.code}
                 onClick={() => changeLanguage(lang.code)}
                 className={`w-full flex items-center justify-between px-3 py-2.5 text-sm transition-colors cursor-pointer ${
                   currentLanguage.code === lang.code
-                    ? 'text-[#424874] bg-[#F4EEFF] font-semibold'
-                    : 'text-[#5B618A] hover:bg-[#F4EEFF] hover:text-[#424874]'
+                    ? 'text-[#4338CA] bg-[#EEF0FB] font-medium'
+                    : 'text-[#4E5668] hover:bg-[#F0F2F6] hover:text-[#191E2B]'
                 }`}
               >
                 <span>{lang.nativeName}</span>
                 {currentLanguage.code === lang.code && (
-                  <Check className="w-4 h-4 text-[#424874]" />
+                  <Check className="w-4 h-4 text-[#4338CA]" />
                 )}
               </button>
             ))}
@@ -98,7 +98,7 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-1.5 px-3 h-9 text-sm font-semibold text-[#5B618A] hover:text-[#424874] bg-white border border-[#DCD6F7] rounded-md transition-colors cursor-pointer"
+        className="flex items-center justify-center gap-1.5 px-3 h-9 text-sm font-semibold text-[#4E5668] hover:text-[#191E2B] bg-[#FBFBFC] border border-[#DCE1EA] rounded-md transition-colors cursor-pointer"
         aria-label="Change language"
       >
         <span className="uppercase">{currentLanguage.code}</span>
@@ -106,20 +106,20 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-1.5 w-28 bg-white rounded-xl shadow-none border border-[#DCD6F7] py-1 z-50 animate-fade-in">
+        <div className="absolute right-0 mt-1.5 w-28 bg-[#FBFBFC] rounded-xl shadow-none border border-[#DCE1EA] py-1 z-50 animate-fade-in">
           {languages.map((lang) => (
             <button
               key={lang.code}
               onClick={() => changeLanguage(lang.code)}
               className={`w-full flex items-center justify-between px-3 py-2 text-sm transition-colors cursor-pointer ${
                 currentLanguage.code === lang.code
-                  ? 'text-[#424874] bg-[#F4EEFF] font-semibold'
-                  : 'text-[#5B618A] hover:bg-[#F4EEFF] hover:text-[#424874]'
+                  ? 'text-[#4338CA] bg-[#EEF0FB] font-medium'
+                  : 'text-[#4E5668] hover:bg-[#F0F2F6] hover:text-[#191E2B]'
               }`}
             >
               <span>{lang.nativeName}</span>
               {currentLanguage.code === lang.code && (
-                <Check className="w-3.5 h-3.5 text-[#424874]" />
+                <Check className="w-3.5 h-3.5 text-[#4338CA]" />
               )}
             </button>
           ))}

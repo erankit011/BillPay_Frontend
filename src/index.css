@@ -2,13 +2,15 @@
 
 @theme {
   --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
-  --color-brand-canvas: #F4EEFF;
-  --color-brand-border: #DCD6F7;
-  --color-brand-accent: #A6B1E1;
-  --color-brand-primary: #424874;
-  --color-brand-primary-hover: #323759;
-  --color-brand-text-secondary: #5B618A;
-  --color-brand-text-muted: #8F99C5;
+  --color-brand-canvas: #F0F2F6;
+  --color-brand-surface: #FBFBFC;
+  --color-brand-border: #DCE1EA;
+  --color-brand-primary: #4338CA;
+  --color-brand-primary-hover: #3730A3;
+  --color-brand-accent: #818CF8;
+  --color-brand-text-primary: #191E2B;
+  --color-brand-text-secondary: #4E5668;
+  --color-brand-text-muted: #757F94;
 }
 
 
@@ -50,37 +52,37 @@ input:disabled {
    DARK MODE THEME SYSTEM (CSS Variables)
    ======================================== */
 :root {
-  --bg-app: #F4EEFF;
-  --bg-card: #ffffff;
-  --bg-card-hover: #F4EEFF;
-  --bg-sidebar: #ffffff;
-  --bg-header: #ffffff;
-  --bg-input: #ffffff;
-  --bg-muted: #DCD6F7;
-  --bg-accent: #424874;
-  --bg-accent-hover: #323759;
-  --bg-danger: #fef2f2;
-  --bg-success: #f0fdf4;
-  --text-primary: #424874;
-  --text-secondary: #5B618A;
-  --text-tertiary: #8F99C5;
-  --text-muted: #A6B1E1;
-  --text-inverse: #ffffff;
-  --text-accent: #424874;
-  --text-danger: #dc2626;
-  --text-success: #15803d;
-  --border-default: #DCD6F7;
-  --border-light: #F4EEFF;
-  --border-hover: #A6B1E1;
-  --border-accent: rgba(66, 72, 116, 0.15);
+  --bg-app: #F0F2F6;
+  --bg-card: #FBFBFC;
+  --bg-card-hover: #F4F6FA;
+  --bg-sidebar: #FBFBFC;
+  --bg-header: #FBFBFC;
+  --bg-input: #FFFFFF;
+  --bg-muted: #EBEEF4;
+  --bg-accent: #4338CA;
+  --bg-accent-hover: #3730A3;
+  --bg-danger: #FFF1F2;
+  --bg-success: #ECFDF5;
+  --text-primary: #191E2B;
+  --text-secondary: #4E5668;
+  --text-tertiary: #757F94;
+  --text-muted: #9AA4B8;
+  --text-inverse: #FFFFFF;
+  --text-accent: #4338CA;
+  --text-danger: #B91C1C;
+  --text-success: #0D7A57;
+  --border-default: #DCE1EA;
+  --border-light: #E8ECF2;
+  --border-hover: #C2C9D6;
+  --border-accent: rgba(67, 56, 202, 0.22);
   --shadow-sm: none;
   --shadow-md: none;
   --shadow-lg: none;
-  --overlay-bg: rgba(66, 72, 116, 0.4);
-  --scrollbar-thumb: #DCD6F7;
-  --scrollbar-thumb-hover: #A6B1E1;
-  --chart-grid: #DCD6F7;
-  --chart-text: #8F99C5;
+  --overlay-bg: rgba(25, 30, 43, 0.45);
+  --scrollbar-thumb: #DCE1EA;
+  --scrollbar-thumb-hover: #C2C9D6;
+  --chart-grid: #DCE1EA;
+  --chart-text: #757F94;
 }
 
 .dark {

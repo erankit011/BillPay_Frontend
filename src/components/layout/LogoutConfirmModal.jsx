@@ -17,7 +17,7 @@ const LogoutConfirmModal = ({ isOpen, onClose, onConfirm }) => {
        * Obscures background contents and captures dismiss click events
        */}
       <div
-        className="fixed inset-0 bg-[#424874]/50 backdrop-blur-xs transition-opacity animate-modal-overlay"
+        className="fixed inset-0 bg-[#191E2B]/50 backdrop-blur-xs transition-opacity animate-modal-overlay"
         onClick={onClose}
       />
 
@@ -25,12 +25,12 @@ const LogoutConfirmModal = ({ isOpen, onClose, onConfirm }) => {
        * Dialog Window Container
        * Prompts user confirmation to invalidate session and log out
        */}
-      <div className="relative bg-white rounded-2xl shadow-none w-full max-w-sm p-6 text-center z-10 border border-[#DCD6F7] animate-in fade-in zoom-in-95 duration-150">
-        <div className="w-12 h-12 rounded-full bg-red-50 text-red-600 mx-auto flex items-center justify-center mb-4 border border-red-100">
+      <div className="relative bg-[#FBFBFC] rounded-2xl shadow-none w-full max-w-sm p-6 text-center z-10 border border-[#DCE1EA] animate-in fade-in zoom-in-95 duration-150">
+        <div className="w-12 h-12 rounded-full bg-[#FFF1F2] text-[#B91C1C] mx-auto flex items-center justify-center mb-4 border border-[#FECDD3]">
           <LogOut className="w-6 h-6 ml-0.5" />
         </div>
-        <h3 className="text-lg font-semibold text-[#424874] mb-1">{t('Logout')}</h3>
-        <p className="text-sm font-medium text-[#5B618A] mb-6">
+        <h3 className="text-lg font-semibold text-[#191E2B] mb-1">{t('Logout')}</h3>
+        <p className="text-sm font-medium text-[#4E5668] mb-6">
           {t('Are you sure you want to log out?')}
         </p>
 
@@ -38,14 +38,14 @@ const LogoutConfirmModal = ({ isOpen, onClose, onConfirm }) => {
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 px-4 py-2.5 bg-[#F4EEFF] hover:bg-[#DCD6F7] text-[#424874] border border-[#DCD6F7] rounded-lg font-semibold text-sm transition-colors cursor-pointer"
+            className="flex-1 px-4 py-2.5 bg-[#F0F2F6] hover:bg-[#E8ECF2] text-[#4E5668] border border-[#DCE1EA] rounded-lg font-semibold text-sm transition-colors cursor-pointer"
           >
             {t('Cancel')}
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-colors cursor-pointer"
+            className="flex-1 px-4 py-2.5 bg-[#B91C1C] hover:bg-[#991B1B] text-white rounded-lg font-semibold text-sm transition-colors cursor-pointer"
           >
             {t('Yes, Logout')}
           </button>
