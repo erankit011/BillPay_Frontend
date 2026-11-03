@@ -220,7 +220,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
 
   if (!isModalOpen) return null;
 
-  const inputCls = "w-full h-[42px] rounded-lg border border-gray-300 px-3 text-sm font-medium text-gray-900 placeholder-gray-400 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors outline-none";
+  const inputCls = "w-full h-[42px] rounded-lg border border-[#DCE1EA] px-3 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] bg-white transition-colors outline-none shadow-none";
 
   return (
     <div className="fixed inset-0 z-50">
@@ -228,31 +228,31 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
        * Modal Backdrop Overlay
        * Obscures underlying viewport and triggers dismiss on click
        */}
-      <div className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" onClick={() => setIsModalOpen(false)} />
+      <div className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay" onClick={() => setIsModalOpen(false)} />
 
       {/**
        * Responsive Dialog Frame
        * Bottom sheet on mobile devices, centered window on desktop
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8">
-        <div className="relative bg-white w-full sm:max-w-lg lg:max-w-2xl rounded-t-2xl sm:rounded-lg flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden">
+        <div className="relative bg-[#FBFBFC] w-full sm:max-w-lg lg:max-w-2xl rounded-t-2xl sm:rounded-lg flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden shadow-none">
 
           {/**
            * Mobile Sheet Drag Indicator
            */}
           <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
-            <div className="w-10 h-1 bg-gray-200 rounded-full" />
+            <div className="w-10 h-1 bg-[#DCE1EA] rounded-full" />
           </div>
 
           {/**
            * Dialog Header
            * Title text and modal dismiss button
            */}
-          <div className="flex items-center justify-between px-4 sm:px-6 pt-3 sm:pt-5 pb-3 sm:pb-4 border-b border-gray-100 flex-shrink-0">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-900">{t('Create New Bill')}</h3>
+          <div className="flex items-center justify-between px-4 sm:px-6 pt-3 sm:pt-5 pb-3 sm:pb-4 border-b border-[#E8ECF2] flex-shrink-0">
+            <h3 className="text-base sm:text-lg font-semibold text-[#191E2B]">{t('Create New Bill')}</h3>
             <button
               onClick={() => setIsModalOpen(false)}
-              className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200"
+              className="cursor-pointer text-[#757F94] bg-[#F0F2F6] hover:bg-[#EBEEF4] hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA]"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
@@ -271,18 +271,18 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                */}
               <div>
                 <div className="flex items-end justify-between mb-1.5 sm:mb-2">
-                  <label className="block text-xs sm:text-[13px] font-medium text-gray-700">
-                    {t('Customer')} <span className="text-red-500">*</span>
+                  <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668]">
+                    {t('Customer')} <span className="text-[#B91C1C]">*</span>
                   </label>
                   <button type="button" onClick={() => setIsAddCustomerOpen(!isAddCustomerOpen)}
-                    className="cursor-pointer bg-[#093C5D]/5 text-[#093C5D] border border-[#093C5D]/20 hover:bg-[#093C5D]/10 h-6 sm:h-7 !min-h-[24px] sm:!min-h-[28px] px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] leading-none font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all">
+                    className="cursor-pointer bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] hover:bg-[#E0E4F9] h-6 sm:h-7 !min-h-[24px] sm:!min-h-[28px] px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] leading-none font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all shadow-none">
                     <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> {t('Create Customer')}
                   </button>
                 </div>
 
                 {isAddCustomerOpen && (
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 sm:p-4 mb-3 animate-fade-in">
-                    <h4 className="text-xs font-semibold text-gray-700 mb-2">{t('Quick Add Customer')}</h4>
+                  <div className="bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg p-3 sm:p-4 mb-3 animate-fade-in shadow-none">
+                    <h4 className="text-xs font-semibold text-[#191E2B] mb-2">{t('Quick Add Customer')}</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                       <input type="text" placeholder={t('Full Name')} value={newCustomer.name} onChange={e => setNewCustomer({ ...newCustomer, name: e.target.value })} className={inputCls} />
                       <input type="text" placeholder={t('Phone Number')} value={newCustomer.phone} onChange={e => setNewCustomer({ ...newCustomer, phone: e.target.value })} className={inputCls} />
@@ -290,14 +290,14 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                       <input type="text" placeholder={t('Address')} value={newCustomer.address} onChange={e => setNewCustomer({ ...newCustomer, address: e.target.value })} className={inputCls} />
                     </div>
                     {customerError && (
-                      <p className="text-red-500 text-[11px] sm:text-xs mt-2 font-medium flex items-center gap-1">
+                      <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-2 font-medium flex items-center gap-1">
                         <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                         <span className="leading-none pt-[1px]">{t(customerError)}</span>
                       </p>
                     )}
                     <div className="flex justify-end gap-2 mt-3">
-                      <button type="button" onClick={() => { setIsAddCustomerOpen(false); setCustomerError(''); }} className="cursor-pointer h-7 sm:h-8 !min-h-[28px] sm:!min-h-[32px] px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-medium text-gray-600 hover:bg-gray-200 rounded-lg transition-colors">{t('Cancel')}</button>
-                      <button type="button" onClick={handleAddCustomer} disabled={addCustomerMutation.isPending} className="cursor-pointer h-7 sm:h-8 !min-h-[28px] sm:!min-h-[32px] px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-semibold text-white bg-[#093C5D] hover:bg-[#082a42] rounded-lg transition-colors disabled:opacity-50">{addCustomerMutation.isPending ? t('Saving...') : t('Save')}</button>
+                      <button type="button" onClick={() => { setIsAddCustomerOpen(false); setCustomerError(''); }} className="cursor-pointer h-7 sm:h-8 !min-h-[28px] sm:!min-h-[32px] px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-medium text-[#4E5668] hover:bg-[#EBEEF4] rounded-lg transition-colors">{t('Cancel')}</button>
+                      <button type="button" onClick={handleAddCustomer} disabled={addCustomerMutation.isPending} className="cursor-pointer h-7 sm:h-8 !min-h-[28px] sm:!min-h-[32px] px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] rounded-lg transition-colors disabled:opacity-50 shadow-none">{addCustomerMutation.isPending ? t('Saving...') : t('Save')}</button>
                     </div>
                   </div>
                 )}
@@ -315,7 +315,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                   />
                 )} />
                 {errors.customerId && (
-                  <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
+                  <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span className="leading-none pt-[1px]">{t(errors.customerId.message)}</span>
                   </p>
@@ -328,32 +328,32 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                */}
               <div className="space-y-2.5">
                 <div className="flex items-end justify-between mb-1.5 sm:mb-2">
-                  <label className="block text-xs sm:text-[13px] font-medium text-gray-700">
-                    {t('Products')} <span className="text-red-500">*</span>
+                  <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668]">
+                    {t('Products')} <span className="text-[#B91C1C]">*</span>
                   </label>
                   <button type="button" onClick={() => setIsAddProductOpen(!isAddProductOpen)}
-                    className="cursor-pointer bg-[#093C5D]/5 text-[#093C5D] border border-[#093C5D]/20 hover:bg-[#093C5D]/10 h-6 sm:h-7 !min-h-[24px] sm:!min-h-[28px] px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] leading-none font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all">
+                    className="cursor-pointer bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] hover:bg-[#E0E4F9] h-6 sm:h-7 !min-h-[24px] sm:!min-h-[28px] px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] leading-none font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all shadow-none">
                     <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> {t('Create Product')}
                   </button>
                 </div>
 
                 {isAddProductOpen && (
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 sm:p-4 mb-3 animate-fade-in">
-                    <h4 className="text-xs font-semibold text-gray-700 mb-2">{t('Quick Add Product')}</h4>
+                  <div className="bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg p-3 sm:p-4 mb-3 animate-fade-in shadow-none">
+                    <h4 className="text-xs font-semibold text-[#191E2B] mb-2">{t('Quick Add Product')}</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                       <input type="text" placeholder={t('Product Name')} value={newProduct.name} onChange={e => setNewProduct({ ...newProduct, name: e.target.value })} className={`${inputCls} sm:col-span-2`} />
                       <input type="number" placeholder={t('Price')} value={newProduct.price} onChange={e => setNewProduct({ ...newProduct, price: e.target.value })} className={inputCls} />
                       <input type="number" placeholder={t('Stock')} value={newProduct.stock} onChange={e => setNewProduct({ ...newProduct, stock: e.target.value })} className={inputCls} />
                     </div>
                     {productError && (
-                      <p className="text-red-500 text-[11px] sm:text-xs mt-2 font-medium flex items-center gap-1">
+                      <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-2 font-medium flex items-center gap-1">
                         <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                         <span className="leading-none pt-[1px]">{t(productError)}</span>
                       </p>
                     )}
                     <div className="flex justify-end gap-2 mt-3">
-                      <button type="button" onClick={() => { setIsAddProductOpen(false); setProductError(''); }} className="cursor-pointer h-7 sm:h-8 !min-h-[28px] sm:!min-h-[32px] px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-medium text-gray-600 hover:bg-gray-200 rounded-lg transition-colors">{t('Cancel')}</button>
-                      <button type="button" onClick={handleAddProduct} disabled={addProductMutation.isPending} className="cursor-pointer h-7 sm:h-8 !min-h-[28px] sm:!min-h-[32px] px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-semibold text-white bg-[#093C5D] hover:bg-[#082a42] rounded-lg transition-colors disabled:opacity-50">{addProductMutation.isPending ? t('Saving...') : t('Save')}</button>
+                      <button type="button" onClick={() => { setIsAddProductOpen(false); setProductError(''); }} className="cursor-pointer h-7 sm:h-8 !min-h-[28px] sm:!min-h-[32px] px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-medium text-[#4E5668] hover:bg-[#EBEEF4] rounded-lg transition-colors">{t('Cancel')}</button>
+                      <button type="button" onClick={handleAddProduct} disabled={addProductMutation.isPending} className="cursor-pointer h-7 sm:h-8 !min-h-[28px] sm:!min-h-[32px] px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] rounded-lg transition-colors disabled:opacity-50 shadow-none">{addProductMutation.isPending ? t('Saving...') : t('Save')}</button>
                     </div>
                   </div>
                 )}
@@ -365,7 +365,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                         <SearchableSelect options={products.map(p => ({ value: p._id, label: `${p.name} - ₹${p.price}` }))} value={field.value} onChange={field.onChange} placeholder={`${t('Select Product')}`} searchPlaceholder={t('Search by product name...')} />
                       )} />
                       {errors.products?.[index]?.productId && (
-                        <p className="text-red-500 text-[11px] sm:text-xs mt-1 font-medium flex items-center gap-1">
+                        <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1 font-medium flex items-center gap-1">
                           <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                           <span className="leading-none pt-[1px]">{t(errors.products[index].productId.message)}</span>
                         </p>
@@ -373,16 +373,16 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                     </div>
                     <div className="flex-shrink-0">
                       <input type="number" {...register(`products.${index}.quantity`)} placeholder="1"
-                        className="w-16 sm:w-20 h-[42px] font-medium rounded-lg border border-gray-300 px-2 text-sm text-center text-gray-900 placeholder-gray-400 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors outline-none" />
+                        className="w-16 sm:w-20 h-[42px] font-medium rounded-lg border border-[#DCE1EA] px-2 text-sm text-center text-[#191E2B] placeholder-[#9AA4B8] focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] bg-white transition-colors outline-none shadow-none" />
                       {errors.products?.[index]?.quantity && (
-                        <p className="text-red-500 text-[11px] sm:text-xs mt-1 font-medium text-center">
+                        <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1 font-medium text-center">
                           {t(errors.products[index].quantity.message)}
                         </p>
                       )}
                     </div>
                     {fields.length > 1 && (
                       <div className="h-[42px] flex items-center">
-                        <button type="button" onClick={() => remove(index)} className="cursor-pointer text-red-500 bg-red-50 hover:bg-red-100 hover:text-red-700 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-red-200">
+                        <button type="button" onClick={() => remove(index)} className="cursor-pointer text-[#B91C1C] bg-[#FFF1F2] hover:bg-[#FFE4E6] hover:text-[#991B1B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#FECDD3]">
                           <X className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
                       </div>
@@ -391,7 +391,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                 ))}
 
                 <button type="button" onClick={() => append({ productId: '', quantity: 1 })}
-                  className="cursor-pointer w-full sm:w-auto mt-1 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 !min-h-[32px] sm:!min-h-[36px] text-xs sm:text-sm font-semibold text-[#093C5D] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 rounded-lg transition-all active:scale-95 border border-dashed border-[#093C5D]/20">
+                  className="cursor-pointer w-full sm:w-auto mt-1 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 !min-h-[32px] sm:!min-h-[36px] text-xs sm:text-sm font-semibold text-[#4338CA] bg-[#EEF0FB] hover:bg-[#E0E4F9] rounded-lg transition-all active:scale-95 border border-dashed border-[#D8DCF5] shadow-none">
                   <Plus className="w-3.5 h-3.5" /> {t('Add Another Product')}
                 </button>
               </div>
@@ -400,10 +400,10 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                * Invoice Summary & Totals
                * Displays calculated subtotal, discounts, and applied sales taxes
                */}
-              <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 sm:p-4 space-y-2">
+              <div className="bg-[#EEF0FB] border border-[#D8DCF5] rounded-lg p-3 sm:p-4 space-y-2 shadow-none">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-blue-900">{t('Subtotal')}</span>
-                  <span className="text-sm font-semibold text-blue-900">₹{subtotal.toLocaleString('en-IN')}</span>
+                  <span className="text-sm font-medium text-[#3730A3]">{t('Subtotal')}</span>
+                  <span className="text-sm font-semibold text-[#3730A3]">₹{subtotal.toLocaleString('en-IN')}</span>
                 </div>
 
                 {/**
@@ -411,29 +411,29 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                  * Configures flat currency discount or percentage discount
                  */}
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-blue-900">{t('Discount')} {isPercentage ? '(%)' : '(₹)'}</span>
+                  <span className="text-sm font-medium text-[#3730A3]">{t('Discount')} {isPercentage ? '(%)' : '(₹)'}</span>
                   <div className="flex items-center gap-1">
-                    <span className="text-sm font-medium text-blue-900">{isPercentage ? '%' : '₹'}</span>
-                    <input type="number" {...register('discountInput')} className="w-20 rounded-md border border-blue-200 px-2 py-1 text-sm font-medium text-right text-blue-900 bg-white focus:outline-none focus:ring-1 focus:ring-blue-400" placeholder="0" min="0" />
+                    <span className="text-sm font-medium text-[#3730A3]">{isPercentage ? '%' : '₹'}</span>
+                    <input type="number" {...register('discountInput')} className="w-20 rounded-md border border-[#D8DCF5] px-2 py-1 text-sm font-medium text-right text-[#191E2B] bg-white focus:outline-none focus:ring-1 focus:ring-[#4338CA]" placeholder="0" min="0" />
                   </div>
                 </div>
 
                 {discountAmount > 0 && (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-blue-900 text-opacity-80">{t('Discount Amount')}</span>
-                    <span className="text-sm font-semibold text-red-600">-₹{discountAmount.toLocaleString('en-IN')}</span>
+                    <span className="text-sm font-medium text-[#3730A3] text-opacity-80">{t('Discount Amount')}</span>
+                    <span className="text-sm font-semibold text-[#B91C1C]">-₹{discountAmount.toLocaleString('en-IN')}</span>
                   </div>
                 )}
 
                 {shopSettings?.taxEnabled && (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-blue-900">{t('Tax')} ({taxRate}%)</span>
-                    <span className="text-sm font-semibold text-blue-900">₹{taxAmount.toLocaleString('en-IN')}</span>
+                    <span className="text-sm font-medium text-[#3730A3]">{t('Tax')} ({taxRate}%)</span>
+                    <span className="text-sm font-semibold text-[#3730A3]">₹{taxAmount.toLocaleString('en-IN')}</span>
                   </div>
                 )}
-                <div className="pt-2 mt-2 border-t border-blue-200/60 flex items-center justify-between">
-                  <span className="text-sm font-bold text-[#093C5D]">{t('Total Bill Amount')}</span>
-                  <span className="text-base sm:text-lg font-bold text-[#093C5D]">₹{totalAmount.toLocaleString('en-IN')}</span>
+                <div className="pt-2 mt-2 border-t border-[#D8DCF5] flex items-center justify-between">
+                  <span className="text-sm font-bold text-[#191E2B]">{t('Total Bill Amount')}</span>
+                  <span className="text-base sm:text-lg font-bold text-[#4338CA]">₹{totalAmount.toLocaleString('en-IN')}</span>
                 </div>
               </div>
 
@@ -443,7 +443,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
+                  <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-0.5">
                     {t('Payment Mode')}
                   </label>
                   <select {...register('paymentMode')} className={inputCls}>
@@ -454,19 +454,19 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                     <option value="CREDIT">{t('Credit')}</option>
                   </select>
                   {errors.paymentMode && (
-                    <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
+                    <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                       <span className="leading-none pt-[1px]">{t(errors.paymentMode.message)}</span>
                     </p>
                   )}
                 </div>
                 <div>
-                  <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-0.5">
-                    {t('Amount Paid')} <span className="text-red-500">*</span>
+                  <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-0.5">
+                    {t('Amount Paid')} <span className="text-[#B91C1C]">*</span>
                   </label>
                   <input type="number" {...register('amountPaid')} className={inputCls} placeholder="0" min="0" />
                   {errors.amountPaid && (
-                    <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
+                    <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                       <span className="leading-none pt-[1px]">{t(errors.amountPaid.message)}</span>
                     </p>
@@ -475,20 +475,20 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
               </div>
 
               {billError && (
-                <div className="bg-red-50 border-l-[3px] border-red-500 p-2 rounded-r-md">
+                <div className="bg-[#FFF1F2] border-l-[3px] border-[#B91C1C] p-2 rounded-r-md">
                   <div className="flex items-center gap-1.5">
-                    <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-500 shrink-0" />
-                    <p className="text-[11px] sm:text-[12px] font-medium text-red-700 leading-none">{t(billError)}</p>
+                    <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#B91C1C] shrink-0" />
+                    <p className="text-[11px] sm:text-[12px] font-medium text-[#B91C1C] leading-none">{t(billError)}</p>
                   </div>
                 </div>
               )}
 
               {isCreditLimitExceeded && (
-                <div className="bg-red-50 border-l-[3px] border-red-500 p-2.5 sm:p-3 rounded-r-md flex items-start gap-2 sm:gap-2.5 animate-fade-in">
-                  <AlertCircle className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-red-500 shrink-0 mt-[1px] sm:mt-[2px]" />
+                <div className="bg-[#FFF1F2] border-l-[3px] border-[#B91C1C] p-2.5 sm:p-3 rounded-r-md flex items-start gap-2 sm:gap-2.5 animate-fade-in shadow-none">
+                  <AlertCircle className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-[#B91C1C] shrink-0 mt-[1px] sm:mt-[2px]" />
                   <div>
-                    <h4 className="text-[13px] sm:text-sm font-semibold text-red-800 leading-none mb-1">{t('Credit Limit Exceeded')}</h4>
-                    <p className="text-[11px] sm:text-xs font-medium text-red-700 leading-snug">
+                    <h4 className="text-[13px] sm:text-sm font-semibold text-[#991B1B] leading-none mb-1">{t('Credit Limit Exceeded')}</h4>
+                    <p className="text-[11px] sm:text-xs font-medium text-[#B91C1C] leading-snug">
                       {t('This bill will increase the customer\'s pending balance to')} ₹{newTotalBalance.toLocaleString('en-IN')}, {t('which exceeds the limit of')} ₹{creditLimit.toLocaleString('en-IN')}.
                     </p>
                   </div>
@@ -500,7 +500,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                * Triggers creation mutation and prints receipt
                */}
               <button type="submit" disabled={mutation.isPending || isCreditLimitExceeded}
-                className="cursor-pointer w-full bg-[#093C5D] hover:bg-[#082a42] text-white rounded-lg py-3 font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all">
+                className="cursor-pointer w-full bg-[#4338CA] hover:bg-[#3730A3] text-white rounded-lg py-3 font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all shadow-none">
                 {mutation.isPending ? (
                   <span className="flex items-center justify-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{t('Processing...')}</span>
                 ) : t('Generate Bill')}

@@ -24,7 +24,7 @@ export const generateInventoryPDF = async (products, shopSettings, t, formatDate
    */
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(18);
-  doc.setTextColor(9, 60, 93);
+  doc.setTextColor(67, 56, 202);
   doc.text(t('Inventory Report'), 14, 22);
 
   doc.setFont('helvetica', 'normal');
@@ -39,7 +39,7 @@ export const generateInventoryPDF = async (products, shopSettings, t, formatDate
   if (shopSettings) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12);
-    doc.setTextColor(9, 60, 93);
+    doc.setTextColor(67, 56, 202);
     const shopName = shopSettings.shopName || 'UdharPay Shop';
     doc.text(shopName, pageWidth - 14, 22, { align: 'right' });
 
@@ -72,7 +72,8 @@ export const generateInventoryPDF = async (products, shopSettings, t, formatDate
     tableRows.push(productData);
   });
 
-  const startY = user && (user.phone || user.email) ? 42 : 38;
+  const hasContact = shopSettings && (shopSettings.shopPhone || shopSettings.phone || shopSettings.shopEmail || shopSettings.email);
+  const startY = hasContact ? 42 : 36;
 
   autoTable(doc, {
     head: [tableColumn],
@@ -80,8 +81,8 @@ export const generateInventoryPDF = async (products, shopSettings, t, formatDate
     startY: startY,
     theme: 'grid',
     styles: { fontSize: 10, cellPadding: 3 },
-    headStyles: { fillColor: [9, 60, 93], textColor: 255 },
-    alternateRowStyles: { fillColor: [245, 245, 245] }
+    headStyles: { fillColor: [67, 56, 202], textColor: 255 },
+    alternateRowStyles: { fillColor: [248, 249, 252] }
   });
 
   doc.save(`Inventory_Report_${new Date().toISOString().split('T')[0]}.pdf`);
