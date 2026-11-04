@@ -265,7 +265,7 @@ const CustomerLedger = ({ customer, onClose }) => {
                         setAmount(e.target.value);
                         if (errors.amount) setErrors({ ...errors, amount: null });
                       }}
-                      className={`block w-full h-10 sm:h-11 pl-9 pr-3 py-2 bg-[#FBFBFC] border ${errors.amount ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B]'} rounded-lg focus:ring-1 font-medium transition-colors duration-200 text-sm`}
+                      className={`block w-full h-10 sm:h-11 pl-9 pr-3 py-2 bg-[#FBFBFC] border ${errors.amount ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B]'} rounded-lg focus:outline-none font-medium transition-colors duration-200 text-sm`}
                       placeholder="0"
                     />
                   </div>
@@ -297,7 +297,7 @@ const CustomerLedger = ({ customer, onClose }) => {
                   type="text"
                   value={remarks}
                   onChange={(e) => setRemarks(e.target.value)}
-                  className="block w-full h-10 sm:h-11 px-3 py-2 bg-[#FBFBFC] border border-[#DCE1EA] focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] rounded-lg focus:ring-1 font-medium transition-colors duration-200 text-sm"
+                  className="block w-full h-10 sm:h-11 px-3 py-2 bg-[#FBFBFC] border border-[#DCE1EA] focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] rounded-lg font-medium transition-colors duration-200 text-sm"
                   placeholder={t("Enter payment reason")}
                 />
                 <p className="text-[#9AA4B8] text-[10px] sm:text-[11px] mt-0.5 font-medium">{t('Optional')}</p>

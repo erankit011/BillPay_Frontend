@@ -739,7 +739,7 @@ const Settings = () => {
                                   value={formData.invoiceLogo}
                                   onChange={handleChange}
                                   placeholder={t('Enter image URL (https://...)')}
-                                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                                 />
                               </div>
                             </div>
@@ -788,7 +788,7 @@ const Settings = () => {
                                     value={formData.signatureImage}
                                     onChange={handleChange}
                                     placeholder={t('Enter signature image URL (https://...)')}
-                                    className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                                    className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                                   />
                                 </div>
                               </div>
@@ -806,7 +806,7 @@ const Settings = () => {
                       onChange={handleChange}
                       placeholder={t('123, MG Road, Near City Mall, Indore, Madhya Pradesh - 110010')}
                       rows={3}
-                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
                     />
                     <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('This address will appear on all invoices')}</p>
                   </div>
@@ -1324,7 +1324,7 @@ const Settings = () => {
                       placeholder={t('Thank you for your business!')}
                       maxLength={500}
                       rows={3}
-                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
                     />
                     <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Max 500 characters')}</p>
                   </div>
@@ -1337,7 +1337,7 @@ const Settings = () => {
                       placeholder={t('Goods once sold will not be returned')}
                       maxLength={1000}
                       rows={3}
-                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
                     />
                     <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Max 1000 characters')}</p>
                   </div>
@@ -1365,7 +1365,7 @@ const Settings = () => {
                         value={passwordData.currentPassword}
                         onChange={handlePasswordChange}
                         placeholder={t('Enter current password')}
-                        className={`block w-full rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none ${
+                        className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none ${
                           passwordData.currentPassword.length > 0 && passwordData.currentPassword.length < 6
                             ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
                             : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
@@ -1380,7 +1380,7 @@ const Settings = () => {
                         value={passwordData.newPassword}
                         onChange={handlePasswordChange}
                         placeholder={t('Enter new password (min 6 characters)')}
-                        className={`block w-full rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none ${
+                        className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none ${
                           passwordData.newPassword.length > 0 && (passwordData.newPassword.length < 6 || passwordData.newPassword === passwordData.currentPassword)
                             ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
                             : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
@@ -1401,7 +1401,7 @@ const Settings = () => {
                         value={passwordData.confirmPassword}
                         onChange={handlePasswordChange}
                         placeholder={t('Confirm new password')}
-                        className={`block w-full rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none ${
+                        className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none ${
                           passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword
                             ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
                             : (passwordData.confirmPassword && passwordData.newPassword === passwordData.confirmPassword && passwordData.newPassword.length >= 6)

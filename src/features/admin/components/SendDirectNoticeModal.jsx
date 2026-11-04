@@ -309,7 +309,7 @@ const SendDirectNoticeModal = ({ isOpen, onClose, shop, onSuccess }) => {
                   maxLength={120}
                   required
                   placeholder="e.g. Action Required: Store Verification Pending"
-                  className="w-full text-xs sm:text-sm border border-[#DCE1EA] rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] shadow-none placeholder:text-[#757F94] font-normal"
+                  className="w-full text-xs sm:text-sm border border-[#DCE1EA] rounded-lg p-2.5 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] shadow-none font-normal"
                 />
               </div>
 
@@ -333,7 +333,7 @@ const SendDirectNoticeModal = ({ isOpen, onClose, shop, onSuccess }) => {
                   maxLength={1000}
                   required
                   placeholder="Enter the official notice message for the shopkeeper here..."
-                  className="w-full text-xs sm:text-sm border border-[#DCE1EA] rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] shadow-none resize-none placeholder:text-[#757F94] font-normal"
+                  className="w-full text-xs sm:text-sm border border-[#DCE1EA] rounded-lg p-2.5 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] shadow-none resize-none font-normal"
                 />
               </div>
 

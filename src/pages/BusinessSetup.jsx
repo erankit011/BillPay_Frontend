@@ -389,7 +389,7 @@ const BusinessSetup = () => {
                               value={formData.invoiceLogo}
                               onChange={handleChange}
                               placeholder={t('Enter image URL (https://...)')}
-                              className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                              className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                             />
                           </div>
                         </div>
@@ -443,7 +443,7 @@ const BusinessSetup = () => {
                               value={formData.signatureImage}
                               onChange={handleChange}
                               placeholder={t('Enter signature image URL (https://...)')}
-                              className={`block w-full rounded-lg border ${errors.signatureImage ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'} px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]`}
+                              className={`block w-full rounded-lg border ${errors.signatureImage ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'} px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none`}
                             />
                           </div>
                         </div>

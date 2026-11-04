@@ -379,8 +379,8 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                       className={`block w-full rounded-lg border ${
                         errors.name
                           ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
-                          : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
-                      } px-3 py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                          : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
+                      } px-3 py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:outline-none bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8]`}
                     />
                     {errors.name && <p className="text-[#B91C1C] text-xs mt-1 font-medium">{errors.name}</p>}
                   </div>
@@ -401,8 +401,8 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                       className={`block w-full rounded-lg border ${
                         errors.email
                           ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
-                          : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
-                      } px-3 py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                          : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
+                      } px-3 py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:outline-none bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8]`}
                     />
                     {errors.email && <p className="text-[#B91C1C] text-xs mt-1 font-medium">{errors.email}</p>}
                   </div>
@@ -423,8 +423,8 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                       className={`block w-full rounded-lg border ${
                         errors.phone
                           ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
-                          : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
-                      } px-3 py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                          : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
+                      } px-3 py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:outline-none bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8]`}
                     />
                     {errors.phone && <p className="text-[#B91C1C] text-xs mt-1 font-medium">{errors.phone}</p>}
                   </div>
@@ -456,8 +456,8 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         className={`block w-full rounded-lg border ${
                           errors.password
                             ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
-                            : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
-                        } px-3 pr-16 py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                            : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
+                        } px-3 pr-16 py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:outline-none bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8]`}
                       />
                       <div className="absolute inset-y-0 right-0 flex items-center pr-2 gap-1">
                         {formData.password && (
@@ -542,8 +542,8 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         className={`block w-full rounded-lg border ${
                           errors.shopName
                             ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
-                            : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
-                        } px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                            : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
+                        } px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8]`}
                         placeholder="Enter Business / Shop Name"
                       />
                       {errors.shopName && <p className="text-[#B91C1C] text-xs mt-1 font-medium">{errors.shopName}</p>}
@@ -566,8 +566,8 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         className={`block w-full rounded-lg border ${
                           errors.gstNumber
                             ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
-                            : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
-                        } px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none uppercase`}
+                            : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
+                        } px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] uppercase`}
                       />
                       {errors.gstNumber && <p className="text-[#B91C1C] text-xs mt-1 font-medium">{errors.gstNumber}</p>}
                     </div>
@@ -583,7 +583,7 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         value={formData.upiId}
                         onChange={(e) => setFormData({ ...formData, upiId: e.target.value })}
                         placeholder="yourshop@upi"
-                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#3A3550] focus:border-[#4338CA]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8]"
                       />
                     </div>
 
@@ -604,8 +604,8 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         className={`block w-full rounded-lg border ${
                           errors.shopPhone
                             ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
-                            : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
-                        } px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                            : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
+                        } px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8]`}
                         placeholder="+91 98005 00012"
                       />
                       {errors.shopPhone ? (
@@ -634,8 +634,8 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         className={`block w-full rounded-lg border ${
                           errors.shopEmail
                             ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
-                            : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
-                        } px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                            : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
+                        } px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8]`}
                         placeholder="yourshop@gmail.com"
                       />
                       {errors.shopEmail ? (
@@ -688,7 +688,7 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                                   value={formData.invoiceLogo}
                                   onChange={(e) => setFormData(prev => ({ ...prev, invoiceLogo: e.target.value }))}
                                   placeholder="Enter image URL (https://...)"
-                                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#3A3550] focus:border-[#4338CA]"
+                                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-[#FBFBFC] placeholder-[#9AA4B8]"
                                 />
                               </div>
                             </div>
@@ -747,8 +747,8 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                                   className={`block w-full rounded-lg border ${
                                     errors.signatureImage
                                       ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
-                                      : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
-                                  } px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                                      : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
+                                  } px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none`}
                                 />
                               </div>
                             </div>
@@ -776,7 +776,7 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         name="currency"
                         value={formData.currency}
                         onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#3A3550] focus:border-[#4338CA] bg-[#FFFFFF] cursor-pointer"
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-[#FBFBFC] text-[#191E2B] cursor-pointer"
                       >
                         <option value="INR">₹ INR</option>
                         <option value="USD">$ USD</option>
@@ -800,8 +800,8 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         className={`block w-full rounded-lg border ${
                           errors.shopAddress
                             ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
-                            : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
-                        } px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none resize-none`}
+                            : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
+                        } px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] resize-none`}
                         placeholder="Enter full business address (Building, Street, City, State, PIN)"
                       />
                       {errors.shopAddress && <p className="text-[#B91C1C] text-xs mt-1 font-medium">{errors.shopAddress}</p>}
@@ -881,7 +881,7 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         onChange={(e) =>
                           setFormData({ ...formData, trialDays: Math.max(0, parseInt(e.target.value, 10) || 0) })
                         }
-                        className="w-16 h-8 text-center text-xs font-semibold text-[#191E2B] bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#3A3550]"
+                        className="w-16 h-8 text-center text-xs font-semibold text-[#191E2B] bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                       />
                       <span className="text-xs font-medium text-[#4E5668]">Days</span>
                     </div>

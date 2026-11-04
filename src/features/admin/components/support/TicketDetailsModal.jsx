@@ -320,7 +320,7 @@ const TicketDetailsModal = ({
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full text-sm font-medium border border-[#DCE1EA] rounded-lg p-2 bg-[#FFFFFF] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                className="w-full text-sm font-medium border border-[#DCE1EA] rounded-lg p-2 bg-[#FBFBFC] text-[#191E2B] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat.value} value={cat.value}>
@@ -337,7 +337,7 @@ const TicketDetailsModal = ({
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
-                className="w-full text-sm font-medium border border-[#DCE1EA] rounded-lg p-2 bg-[#FFFFFF] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                className="w-full text-sm font-medium border border-[#DCE1EA] rounded-lg p-2 bg-[#FBFBFC] text-[#191E2B] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
               >
                 <option value="LOW">Low</option>
                 <option value="MEDIUM">Medium</option>
@@ -353,7 +353,7 @@ const TicketDetailsModal = ({
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="w-full text-sm font-medium border border-[#DCE1EA] rounded-lg p-2 bg-[#FFFFFF] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                className="w-full text-sm font-medium border border-[#DCE1EA] rounded-lg p-2 bg-[#FBFBFC] text-[#191E2B] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
               >
                 <option value="OPEN">Open</option>
                 <option value="IN_PROGRESS">In Progress</option>
@@ -377,7 +377,7 @@ const TicketDetailsModal = ({
               value={adminNotes}
               onChange={(e) => setAdminNotes(e.target.value)}
               placeholder="Add internal notes about this user, debugging status, or next steps..."
-              className="w-full text-sm border border-[#DCE1EA] rounded-lg p-2.5 focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none placeholder:text-[#757F94] resize-none"
+              className="w-full text-sm border border-[#DCE1EA] rounded-lg p-2.5 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none resize-none"
             />
           </div>
 
@@ -395,7 +395,7 @@ const TicketDetailsModal = ({
               value={adminReply}
               onChange={(e) => setAdminReply(e.target.value)}
               placeholder="Record the solution or response provided to the user..."
-              className="w-full text-sm border border-[#DCE1EA] rounded-lg p-2.5 focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none placeholder:text-[#757F94] resize-none"
+              className="w-full text-sm border border-[#DCE1EA] rounded-lg p-2.5 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none resize-none"
             />
           </div>
         </div>

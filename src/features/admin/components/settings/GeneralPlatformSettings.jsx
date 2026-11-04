@@ -155,7 +155,7 @@ const GeneralPlatformSettings = ({ settings, onUpdate, isUpdating }) => {
                 onChange={handleChange}
                 rows={3}
                 placeholder="123, Cyber City, Phase 2, Gurugram, Haryana - 122002"
-                className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
+                className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
               />
               <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">
                 {t('Official legal address printed on public invoices and receipts')}

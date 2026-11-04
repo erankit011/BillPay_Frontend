@@ -272,7 +272,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                   value={code}
                   onChange={(e) => setCode(e.target.value.toUpperCase())}
                   placeholder="e.g. DIWALI50 or SAVE20"
-                  className="w-full text-sm font-mono font-semibold tracking-wider px-3.5 py-2.5 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none uppercase"
+                  className="w-full text-sm font-mono font-semibold tracking-wider px-3.5 py-2.5 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none uppercase"
                 />
               </div>
 
@@ -287,7 +287,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="e.g. 50% discount on Yearly Pro subscriptions"
-                  className="w-full text-sm font-medium px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                  className="w-full text-sm font-medium px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                 />
               </div>
 
@@ -333,7 +333,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                     required
                     value={discountValue}
                     onChange={(e) => setDiscountValue(e.target.value)}
-                    className="w-full text-sm px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                    className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                   />
                 </div>
               </div>
@@ -354,7 +354,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                       value={maxDiscountAmount}
                       onChange={(e) => setMaxDiscountAmount(e.target.value)}
                       placeholder="No cap (e.g. 500)"
-                      className="w-full text-sm px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                      className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                     />
                   </div>
                 )}
@@ -369,7 +369,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                     value={minOrderAmount}
                     onChange={(e) => setMinOrderAmount(e.target.value)}
                     placeholder="0 (no minimum)"
-                    className="w-full text-sm px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                    className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                   />
                 </div>
               </div>
@@ -415,7 +415,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                     value={usageLimit}
                     onChange={(e) => setUsageLimit(e.target.value)}
                     placeholder="Unlimited (e.g. 100)"
-                    className="w-full text-sm px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                    className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                   />
                 </div>
 
@@ -428,7 +428,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                     min="1"
                     value={perUserLimit}
                     onChange={(e) => setPerUserLimit(e.target.value)}
-                    className="w-full text-sm px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                    className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                   />
                 </div>
               </div>
@@ -445,7 +445,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                   type="date"
                   value={expiresAt}
                   onChange={(e) => setExpiresAt(e.target.value)}
-                  className="w-full text-sm px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                  className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                 />
               </div>
 
@@ -465,7 +465,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                   value={offerId}
                   onChange={(e) => setOfferId(e.target.value)}
                   placeholder="e.g. offer_K1abc2xyz (Model 1 1st-cycle discount)"
-                  className="w-full text-sm font-mono px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                  className="w-full text-sm font-mono px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                 />
                 <p className="text-[11px] text-[#757F94] mt-1">
                   Razorpay Dashboard &gt; Offers se banaya gaya Offer ID. AutoPay e-mandate me 1st cycle discount deta hai bina NPCI cap exceed kiye.

@@ -109,7 +109,7 @@ const PlatformMaintenanceSettings = ({ settings, onUpdate, isUpdating }) => {
                   value={formData.maintenanceMessage}
                   onChange={handleChange}
                   placeholder={t('Platform is currently undergoing scheduled system maintenance. Please check back shortly.')}
-                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
+                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
                 />
                 <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">
                   {t('This message will be shown prominently to all storekeepers and visitors')}
