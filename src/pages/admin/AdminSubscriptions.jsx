@@ -3,9 +3,9 @@
  * Tracks store subscription payment receipts, Razorpay transaction IDs, and invoice reconciliations.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, keepPreviousData } from '@tanstack/react-query';
 import {
   CreditCard,
   CheckCircle2,
@@ -13,8 +13,6 @@ import {
   Clock,
   Search,
   ExternalLink,
-  ChevronLeft,
-  ChevronRight,
   Receipt,
   Store,
   User,
@@ -26,6 +24,7 @@ import {
 } from 'lucide-react';
 import { getAdminSubscriptions } from '../../features/admin/api/adminApi';
 import AdminStatCard from '../../features/admin/components/AdminStatCard';
+import LoadMoreButton from '../../components/common/LoadMoreButton';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 import { formatCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/dateUtils';
@@ -46,7 +45,6 @@ const AdminSubscriptions = () => {
 
   const urlSearch = searchParams.get('search') || '';
   const urlStatus = (searchParams.get('status') || 'ALL').toUpperCase();
-  const urlPage = Number(searchParams.get('page')) || 1;
 
   const [searchTerm, setSearchTerm] = useState(urlSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(urlSearch);
@@ -58,7 +56,7 @@ const AdminSubscriptions = () => {
         const next = new URLSearchParams(prev);
         if (searchTerm) next.set('search', searchTerm);
         else next.delete('search');
-        next.set('page', '1');
+        next.delete('page');
         return next;
       }, { replace: true });
     }, 450);
@@ -79,37 +77,40 @@ const AdminSubscriptions = () => {
       const next = new URLSearchParams(prev);
       if (status === 'ALL' || status === 'All') next.delete('status');
       else next.set('status', status.toUpperCase());
-      next.set('page', '1');
+      next.delete('page');
       return next;
     }, { replace: true });
   };
 
-  const handlePageChange = (newPage) => {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.set('page', String(newPage));
-      return next;
-    });
-  };
-
-  const { data, isLoading } = useQuery({
-    queryKey: ['adminSubscriptions', debouncedSearch, urlStatus, urlPage],
-    queryFn: () =>
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery({
+    queryKey: ['adminSubscriptions', debouncedSearch, urlStatus],
+    queryFn: ({ pageParam = 1 }) =>
       getAdminSubscriptions({
         search: debouncedSearch,
         status: urlStatus !== 'ALL' && urlStatus !== 'All' ? urlStatus.toLowerCase() : undefined,
-        page: urlPage,
+        page: pageParam,
         limit: 15,
       }),
+    getNextPageParam: (lastPage) => (lastPage?.hasNextPage ? lastPage.currentPage + 1 : undefined),
     staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
   });
 
-  const invoices = data?.data || [];
-  const totalCount = data?.totalCount ?? invoices.length;
-  const totalRevenue = data?.totalRevenue ?? 0;
-  const paidCount = data?.totalSuccessCount ?? 0;
-  const totalPages = data?.totalPages || 1;
-  const currentPage = data?.currentPage || urlPage;
+  const invoices = useMemo(() => {
+    return data?.pages ? data.pages.flatMap((p) => p?.data || []) : [];
+  }, [data]);
+
+  const firstPage = data?.pages?.[0];
+  const totalCount = firstPage?.totalCount ?? invoices.length;
+  const totalRevenue = firstPage?.totalRevenue ?? 0;
+  const paidCount = firstPage?.totalSuccessCount ?? 0;
   const pendingOrFailed = Math.max(0, totalCount - paidCount);
 
 
@@ -526,37 +527,18 @@ const AdminSubscriptions = () => {
             </div>
 
             {/**
-             * Pagination Controls
-             * Page counter display and previous/next page navigation buttons.
+             * Universal LoadMore Controls (DRY)
+             * Interactive trigger to fetch and append the next page of subscription invoices
              */}
-            {totalPages > 1 && (
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border-t border-[#DCE1EA] bg-[#F0F2F6]/60">
-                <span className="text-xs text-[#757F94] font-medium">
-                  Showing page <span className="font-semibold text-[#191E2B]">{currentPage}</span> of{' '}
-                  <span className="font-semibold text-[#191E2B]">{totalPages}</span> ({totalCount} total records)
-                </span>
-
-                <div className="flex items-center gap-1.5">
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage <= 1}
-                    className="cursor-pointer p-1.5 rounded-lg border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:bg-[#F0F2F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
-                  <span className="text-xs font-semibold px-2.5 text-[#4E5668]">
-                    {currentPage} / {totalPages}
-                  </span>
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage >= totalPages}
-                    className="cursor-pointer p-1.5 rounded-lg border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:bg-[#F0F2F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            )}
+            <LoadMoreButton
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              fetchNextPage={fetchNextPage}
+              currentCount={invoices.length}
+              totalCount={totalCount}
+              pageSize={15}
+              label="records"
+            />
           </div>
         )}
       </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import {
   Store,
   Search,
@@ -14,8 +14,6 @@ import {
   Crown,
   LogOut,
   BellRing,
-  ChevronLeft,
-  ChevronRight,
   ChevronDown,
   X,
   RotateCcw,
@@ -40,6 +38,7 @@ import ForceLogoutModal from '../../features/admin/components/ForceLogoutModal';
 import SendDirectNoticeModal from '../../features/admin/components/SendDirectNoticeModal';
 import PlanOverrideModal from '../../features/admin/components/PlanOverrideModal';
 import AdminStatCard from '../../features/admin/components/AdminStatCard';
+import LoadMoreButton from '../../components/common/LoadMoreButton';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 import { formatCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/dateUtils';
@@ -67,7 +66,6 @@ const AdminShops = () => {
   const urlSearch = searchParams.get('search') || '';
   const urlPlan = (searchParams.get('plan') || 'ALL').toUpperCase();
   const urlStatus = (searchParams.get('status') || 'ALL').toUpperCase();
-  const urlPage = Number(searchParams.get('page')) || 1;
 
   const [searchTerm, setSearchTerm] = useState(urlSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(urlSearch);
@@ -90,7 +88,7 @@ const AdminShops = () => {
         const next = new URLSearchParams(prev);
         if (searchTerm) next.set('search', searchTerm);
         else next.delete('search');
-        next.set('page', '1');
+        next.delete('page');
         return next;
       }, { replace: true });
     }, 450);
@@ -111,41 +109,42 @@ const AdminShops = () => {
       const next = new URLSearchParams(prev);
       if (value === 'All' || value === 'ALL') next.delete(key);
       else next.set(key, value.toUpperCase());
-      next.set('page', '1');
+      next.delete('page');
       return next;
     }, { replace: true });
   };
 
-  const handlePageChange = (newPage) => {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.set('page', String(newPage));
-      return next;
-    });
-  };
-
-  const { data, isLoading } = useQuery({
-    queryKey: ['adminShops', debouncedSearch, urlPlan, urlStatus, urlPage],
-    queryFn: () =>
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery({
+    queryKey: ['adminShops', debouncedSearch, urlPlan, urlStatus],
+    queryFn: ({ pageParam = 1 }) =>
       getAdminShops({
         search: debouncedSearch,
         plan: urlPlan !== 'ALL' && urlPlan !== 'All' ? urlPlan : undefined,
         status: urlStatus !== 'ALL' && urlStatus !== 'All' ? urlStatus : undefined,
-        page: urlPage,
-        limit: 10,
+        page: pageParam,
+        limit: 15,
       }),
+    getNextPageParam: (lastPage) => (lastPage?.hasNextPage ? lastPage.currentPage + 1 : undefined),
     staleTime: 30 * 1000,
     placeholderData: keepPreviousData,
   });
 
-  const shops = useMemo(() => data?.data || [], [data?.data]);
-  const totalCount = data?.totalCount ?? shops.length;
-  const totalPages = data?.totalPages || 1;
-  const currentPage = data?.currentPage || urlPage;
+  const shops = useMemo(() => {
+    return data?.pages ? data.pages.flatMap((p) => p?.data || []) : [];
+  }, [data]);
 
-  const activeCount = data?.activeCount ?? shops.filter((s) => !s.isSuspended).length;
-  const proCount = data?.proCount ?? shops.filter((s) => s.subscriptionPlan && s.subscriptionPlan !== 'FREE').length;
-  const totalUdharSum = data?.totalUdharSum ?? shops.reduce((sum, s) => sum + (s.totalUdhar || 0), 0);
+  const firstPage = data?.pages?.[0];
+  const totalCount = firstPage?.totalCount ?? shops.length;
+  const activeCount = firstPage?.activeCount ?? shops.filter((s) => !s.isSuspended).length;
+  const proCount = firstPage?.proCount ?? shops.filter((s) => s.subscriptionPlan && s.subscriptionPlan !== 'FREE').length;
+  const totalUdharSum = firstPage?.totalUdharSum ?? shops.reduce((sum, s) => sum + (s.totalUdhar || 0), 0);
 
   /**
    * Store Management Mutations
@@ -798,37 +797,18 @@ const AdminShops = () => {
             </div>
 
             {/**
-             * Pagination Controls Bar
-             * Page index summary and previous/next page navigation buttons.
+             * Universal LoadMore Controls Bar (DRY)
+             * Interactive trigger to fetch and append the next page of merchant records
              */}
-            {totalPages > 1 && (
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border-t border-[#DCE1EA] bg-[#F0F2F6]/60">
-                <span className="text-xs text-[#757F94] font-medium">
-                  Showing page <span className="font-semibold text-[#191E2B]">{currentPage}</span> of{' '}
-                  <span className="font-semibold text-[#191E2B]">{totalPages}</span> ({totalCount} total merchants)
-                </span>
-
-                <div className="flex items-center gap-1.5">
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage <= 1}
-                    className="cursor-pointer p-1.5 rounded border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:bg-[#F0F2F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
-                  <span className="text-xs font-semibold px-2.5 text-[#4E5668]">
-                    {currentPage} / {totalPages}
-                  </span>
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage >= totalPages}
-                    className="cursor-pointer p-1.5 rounded border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:bg-[#F0F2F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            )}
+            <LoadMoreButton
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              fetchNextPage={fetchNextPage}
+              currentCount={shops.length}
+              totalCount={totalCount}
+              pageSize={15}
+              label="merchants"
+            />
           </div>
         )}
       </div>
