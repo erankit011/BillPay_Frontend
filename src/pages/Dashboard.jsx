@@ -87,10 +87,10 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-[#FBFBFC] rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden cursor-default"
+          className="bg-[#FBFBFC] rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden cursor-default"
         >
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#EEF0FB] flex items-center justify-center text-[#4338CA] border border-[#D8DCF5]">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#EEF0FB] flex items-center justify-center text-[#4338CA] border border-[#D8DCF5]">
               <ChartNoAxesCombined className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
@@ -111,16 +111,16 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="bg-[#FBFBFC] rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden cursor-default"
+          className="bg-[#FBFBFC] rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-[#0D7A57] border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA] hover:border-r-[#C2C9D6] hover:border-t-[#C2C9D6] hover:border-b-[#DCE1EA] transition-all duration-200 overflow-hidden cursor-default"
         >
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#ECFDF5] flex items-center justify-center text-[#0D7A57] border border-[#A7F3D0]">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#ECFDF5] flex items-center justify-center text-[#0D7A57] border border-[#A7F3D0]">
               <Wallet className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">
             <p className="text-[10px] md:text-xs xl:text-sm text-[#4E5668] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t("Today's Collections")}</p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#191E2B] truncate">{formatCurrency(data?.todayCollection ?? 0)}</p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#0D7A57] truncate">{formatCurrency(data?.todayCollection ?? 0)}</p>
             <p className="text-[10px] md:text-xs text-[#0D7A57] font-medium truncate mt-0.5">
               {t('Collected Today')}
             </p>
@@ -135,16 +135,16 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-[#FBFBFC] rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-[#E11D48] border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA] hover:border-r-[#C2C9D6] hover:border-t-[#C2C9D6] hover:border-b-[#C2C9D6] transition-all duration-200 overflow-hidden cursor-default"
+          className="bg-[#FBFBFC] rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border-l-4 border-l-[#E11D48] border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA] hover:border-r-[#C2C9D6] hover:border-t-[#C2C9D6] hover:border-b-[#C2C9D6] transition-all duration-200 overflow-hidden cursor-default"
         >
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#FFF1F2] flex items-center justify-center text-[#B91C1C] border border-[#FECDD3]">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#FFF1F2] flex items-center justify-center text-[#B91C1C] border border-[#FECDD3]">
               <IndianRupee className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
           <div className="mt-auto pt-2 min-w-0">
             <p className="text-[10px] md:text-xs xl:text-sm text-[#4E5668] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">{t('Pending Udhar')}</p>
-            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#191E2B] truncate">
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#B91C1C] truncate">
               {formatCurrency(data?.pendingAmount ?? 0)}
             </p>
             <p className="text-[10px] md:text-xs text-[#B91C1C] font-medium truncate mt-0.5">
@@ -161,10 +161,10 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
-          className="bg-[#FBFBFC] rounded-xl p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden cursor-default"
+          className="bg-[#FBFBFC] rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden cursor-default"
         >
           <div className="flex justify-between items-start gap-1">
-            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-xl bg-[#EEF0FB] flex items-center justify-center text-[#4338CA] border border-[#D8DCF5]">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#EEF0FB] flex items-center justify-center text-[#4338CA] border border-[#D8DCF5]">
               <Users className="w-4 h-4 md:w-5 md:h-5" />
             </div>
           </div>
@@ -192,19 +192,19 @@ const Dashboard = () => {
           {t('HISTORICAL SALES')}
         </h3>
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 md:gap-4">
-          <div className="bg-[#FBFBFC] rounded-xl p-3 md:p-4 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden min-w-0 cursor-default">
+          <div className="bg-[#FBFBFC] rounded-lg p-3 md:p-4 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden min-w-0 cursor-default">
             <p className="text-[10px] md:text-xs text-[#4E5668] mb-1 font-semibold uppercase tracking-wide truncate">{t('Yesterday')}</p>
             <p className="font-semibold text-base md:text-lg xl:text-xl text-[#191E2B] truncate">{formatCurrency(data?.yesterdaySales ?? 0)}</p>
           </div>
-          <div className="bg-[#FBFBFC] rounded-xl p-3 md:p-4 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden min-w-0 cursor-default">
+          <div className="bg-[#FBFBFC] rounded-lg p-3 md:p-4 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden min-w-0 cursor-default">
             <p className="text-[10px] md:text-xs text-[#4E5668] mb-1 font-semibold uppercase tracking-wide truncate">{t('This Week')}</p>
             <p className="font-semibold text-base md:text-lg xl:text-xl text-[#191E2B] truncate">{formatCurrency(data?.weeklySales ?? 0)}</p>
           </div>
-          <div className="bg-[#FBFBFC] rounded-xl p-3 md:p-4 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden min-w-0 cursor-default">
+          <div className="bg-[#FBFBFC] rounded-lg p-3 md:p-4 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden min-w-0 cursor-default">
             <p className="text-[10px] md:text-xs text-[#4E5668] mb-1 font-semibold uppercase tracking-wide truncate">{t('This Month')}</p>
             <p className="font-semibold text-base md:text-lg xl:text-xl text-[#191E2B] truncate">{formatCurrency(data?.monthlySales ?? 0)}</p>
           </div>
-          <div className="bg-[#F0F2F6] rounded-xl p-3 md:p-4 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden min-w-0 cursor-default">
+          <div className="bg-[#F0F2F6] rounded-lg p-3 md:p-4 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden min-w-0 cursor-default">
             <p className="text-[10px] md:text-xs text-[#191E2B] mb-1 font-semibold uppercase tracking-wide truncate">{t('Lifetime')}</p>
             <p className="font-semibold text-base md:text-lg xl:text-xl text-[#191E2B] truncate">{formatCurrency(data?.lifetimeSales ?? 0)}</p>
           </div>
@@ -219,7 +219,7 @@ const Dashboard = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="bg-[#FBFBFC] rounded-xl p-4 md:p-5 lg:p-6 border border-[#DCE1EA]"
+        className="bg-[#FBFBFC] rounded-lg p-4 md:p-5 lg:p-6 border border-[#DCE1EA]"
       >
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-4 mb-6 md:mb-8">
           <div>
@@ -327,7 +327,7 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-[#FBFBFC] rounded-xl p-4 md:p-5 border border-[#DCE1EA]"
+          className="bg-[#FBFBFC] rounded-lg p-4 md:p-5 border border-[#DCE1EA]"
         >
           <div className="mb-4 md:mb-5">
             <h3 className="text-base md:text-lg lg:text-xl font-semibold text-[#191E2B] mb-1">
@@ -405,7 +405,7 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-[#FBFBFC] rounded-xl p-4 md:p-5 border border-[#DCE1EA]"
+          className="bg-[#FBFBFC] rounded-lg p-4 md:p-5 border border-[#DCE1EA]"
         >
           <div className="mb-4 md:mb-5">
             <h3 className="text-base md:text-lg lg:text-xl font-semibold text-[#191E2B] mb-1">
