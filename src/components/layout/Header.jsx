@@ -78,11 +78,11 @@ const Header = ({
           <button
             type="button"
             onClick={toggleSidebarCollapse}
-            className="hidden lg:inline-flex items-center justify-center w-8 h-8 rounded-lg text-[#4E5668] hover:text-[#191E2B] hover:bg-[#F0F2F6] transition-colors cursor-pointer shrink-0"
+            className="hidden lg:inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 border border-transparent hover:border-[#DCE1EA] rounded-full text-[#4E5668] hover:text-[#191E2B] bg-transparent active:bg-[#F0F2F6] hover:bg-[#F0F2F6] transition-colors duration-150 cursor-pointer shrink-0"
             title="Toggle sidebar (Ctrl+B)"
             aria-label="Toggle sidebar collapse"
           >
-            <SidebarRailIcon className="w-[18px] h-[18px] text-[#4E5668]" strokeWidth={1.75} />
+            <SidebarRailIcon className="w-[18px] h-[18px] sm:w-5 sm:h-5 text-[#4E5668]" strokeWidth={1.75} />
           </button>
 
           {/**
@@ -92,7 +92,7 @@ const Header = ({
           <button
             type="button"
             onClick={() => setMobileDrawerOpen(true)}
-            className="lg:hidden inline-flex items-center justify-center w-8 h-8 rounded-lg text-[#4E5668] hover:text-[#191E2B] hover:bg-[#F0F2F6] transition-colors cursor-pointer shrink-0"
+            className="lg:hidden inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 border border-transparent hover:border-[#DCE1EA] rounded-full text-[#4E5668] hover:text-[#191E2B] bg-transparent active:bg-[#F0F2F6] hover:bg-[#F0F2F6] transition-colors duration-150 cursor-pointer shrink-0"
             aria-label="Open menu"
           >
             <Menu className="w-5 h-5 text-[#4E5668]" strokeWidth={1.75} />
