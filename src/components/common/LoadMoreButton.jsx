@@ -199,43 +199,27 @@ const LoadMoreButton = ({
     >
       {/**
        * Desktop Infinite Load View (sm and up)
-       * Shows records counter, micro-progress visual bar, and primary Load More button
+       * Clean horizontal bar: Record count on left, Load More button on right (Matches Shopkeeper UI 1:1)
        */}
       <div className="hidden sm:flex items-center justify-between gap-4">
-        {/* Left: Metrics counter with progress track */}
-        <div className="flex items-center gap-3 min-w-0">
-          <p className="text-xs sm:text-sm text-[#4E5668] font-medium truncate">
-            {hasNextPage ? (
-              <>
-                {t('Showing')}{' '}
-                <span className="font-semibold text-[#191E2B]">{formatNum(currentCount)}</span>{' '}
-                {t('of')}{' '}
-                <span className="font-semibold text-[#191E2B]">{formatNum(totalCount)}</span>{' '}
-                {label}
-              </>
-            ) : (
-              <>
-                {t('Showing all')}{' '}
-                <span className="font-semibold text-[#191E2B]">{formatNum(totalCount)}</span>{' '}
-                {label}
-              </>
-            )}
-          </p>
-
-          {totalCount > pageSize && (
-            <div className="flex items-center gap-2 pl-3 border-l border-[#DCE1EA]">
-              <div className="w-16 lg:w-20 h-1.5 bg-[#E8ECF2] rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-[#4338CA] rounded-full transition-all duration-300"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
-              <span className="text-[11px] font-semibold text-[#757F94] tabular-nums">
-                {progressPercent}%
-              </span>
-            </div>
+        {/* Left: Metrics counter */}
+        <p className="text-xs sm:text-sm text-[#4E5668] font-medium truncate">
+          {hasNextPage ? (
+            <>
+              {t('Showing')}{' '}
+              <span className="font-semibold text-[#191E2B]">{formatNum(currentCount)}</span>{' '}
+              {t('of')}{' '}
+              <span className="font-semibold text-[#191E2B]">{formatNum(totalCount)}</span>{' '}
+              {label}
+            </>
+          ) : (
+            <>
+              {t('Showing all')}{' '}
+              <span className="font-semibold text-[#191E2B]">{formatNum(totalCount)}</span>{' '}
+              {label}
+            </>
           )}
-        </div>
+        </p>
 
         {/* Right: Load trigger or completion indicator badge */}
         <div className="flex items-center gap-2 shrink-0">
@@ -246,7 +230,7 @@ const LoadMoreButton = ({
               disabled={isFetchingNextPage}
               className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2 text-xs sm:text-sm font-semibold rounded-lg 
                          bg-[#4338CA] hover:bg-[#3730A3] active:scale-[0.98] text-white 
-                         transition-all duration-150 shadow-sm hover:shadow
+                         transition-all duration-150 shadow-none
                          disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isFetchingNextPage ? (
@@ -272,10 +256,10 @@ const LoadMoreButton = ({
 
       {/**
        * Mobile Infinite Load View (phones < sm)
-       * Fully responsive, thumb-friendly tap target and progress overview
+       * Fully responsive, thumb-friendly tap target and clean count
        */}
       <div className="sm:hidden flex flex-col gap-2.5">
-        {/* Mobile Top Row: Metric & Progress pill */}
+        {/* Mobile Top Row: Metric count */}
         <div className="flex items-center justify-between gap-2">
           <p className="text-xs text-[#4E5668] font-medium truncate">
             {hasNextPage ? (
@@ -283,32 +267,18 @@ const LoadMoreButton = ({
                 {t('Showing')}{' '}
                 <span className="font-semibold text-[#191E2B]">{formatNum(currentCount)}</span>{' '}
                 {t('of')}{' '}
-                <span className="font-semibold text-[#191E2B]">{formatNum(totalCount)}</span>
+                <span className="font-semibold text-[#191E2B]">{formatNum(totalCount)}</span>{' '}
+                {label}
               </>
             ) : (
               <>
                 {t('Showing all')}{' '}
-                <span className="font-semibold text-[#191E2B]">{formatNum(totalCount)}</span>
+                <span className="font-semibold text-[#191E2B]">{formatNum(totalCount)}</span>{' '}
+                {label}
               </>
             )}
           </p>
-
-          {totalCount > pageSize && (
-            <span className="text-[10px] font-semibold text-[#4338CA] bg-[#EEF0FB] border border-[#D8DCF5] px-2 py-0.5 rounded-full shrink-0 tabular-nums">
-              {progressPercent}%
-            </span>
-          )}
         </div>
-
-        {/* Mobile Progress Bar Track */}
-        {totalCount > pageSize && hasNextPage && (
-          <div className="w-full h-1 bg-[#E8ECF2] rounded-full overflow-hidden">
-            <div
-              className="h-full bg-[#4338CA] rounded-full transition-all duration-300"
-              style={{ width: `${progressPercent}%` }}
-            />
-          </div>
-        )}
 
         {/* Mobile Action Button */}
         {hasNextPage ? (
@@ -318,7 +288,7 @@ const LoadMoreButton = ({
             disabled={isFetchingNextPage}
             className="cursor-pointer w-full min-h-[42px] inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-semibold rounded-lg 
                        bg-[#4338CA] hover:bg-[#3730A3] active:scale-[0.98] text-white 
-                       transition-all duration-150 shadow-sm
+                       transition-all duration-150 shadow-none
                        disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isFetchingNextPage ? (

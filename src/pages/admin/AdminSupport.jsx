@@ -496,7 +496,7 @@ const AdminSupport = () => {
                               type="button"
                               onClick={(e) => handleQuickResolve(e, ticket)}
                               title="Quick Resolve"
-                              className="shrink-0 cursor-pointer p-1.5 text-[#757F94] hover:text-emerald-700 hover:bg-emerald-50 rounded-md transition-colors active:scale-95 border border-transparent hover:border-emerald-200"
+                              className="shrink-0 cursor-pointer p-1.5 text-[#757F94] hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors active:scale-95 border border-transparent hover:border-emerald-200"
                             >
                               <CheckCircle2 className="w-4 h-4" />
                             </button>
@@ -507,7 +507,7 @@ const AdminSupport = () => {
                               e.stopPropagation();
                               handleOpenTicket(ticket);
                             }}
-                            className="shrink-0 cursor-pointer text-[#4338CA] font-medium bg-[#EEF0FB] border border-[#4338CA]/15 hover:bg-[#EEF0FB] px-2.5 sm:px-3 py-1 rounded-md flex items-center justify-center transition-all text-[11px] sm:text-xs active:scale-95 whitespace-nowrap"
+                            className="shrink-0 cursor-pointer text-[#4338CA] font-medium bg-[#EEF0FB] border border-[#4338CA]/15 hover:bg-[#EEF0FB] px-2.5 sm:px-3 py-1 rounded-lg flex items-center justify-center transition-all text-[11px] sm:text-xs active:scale-95 whitespace-nowrap"
                           >
                             View
                           </button>
@@ -591,7 +591,7 @@ const AdminSupport = () => {
                         <button
                           type="button"
                           onClick={(e) => handleQuickResolve(e, ticket)}
-                          className="shrink-0 cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-2.5 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95"
+                          className="shrink-0 cursor-pointer text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-2.5 py-1 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95"
                         >
                           Resolve
                         </button>
@@ -602,7 +602,7 @@ const AdminSupport = () => {
                           e.stopPropagation();
                           handleOpenTicket(ticket);
                         }}
-                        className="shrink-0 cursor-pointer text-[#4338CA] font-medium bg-[#EEF0FB] border border-[#4338CA]/15 hover:bg-[#EEF0FB] px-3 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95"
+                        className="shrink-0 cursor-pointer text-[#4338CA] font-medium bg-[#EEF0FB] border border-[#4338CA]/15 hover:bg-[#EEF0FB] px-3 py-1 rounded-lg flex items-center justify-center transition-all text-xs active:scale-95"
                       >
                         View
                       </button>

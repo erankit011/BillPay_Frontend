@@ -494,10 +494,10 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
               </div>
 
               {/** Section 2: Business Information (Exact 1:1 Matching BusinessSetup.jsx) */}
-              <section className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] overflow-hidden shadow-none">
+              <section className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] overflow-hidden shadow-none">
                 
                 {/** Card Header with Store Icon and Subtitle */}
-                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#FFFFFF]">
+                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#FBFBFC]">
                   <div>
                     <h2 className="text-base md:text-lg font-semibold text-[#191E2B] flex items-center gap-2">
                       <Store className="w-5 h-5 text-[#4338CA]" />
@@ -656,7 +656,7 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                       <div className="flex flex-col items-start gap-4">
                         {formData.invoiceLogo ? (
                           <div className="flex items-center gap-3">
-                            <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
+                            <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
                               <img src={formData.invoiceLogo} alt="Logo" className="w-full h-full object-contain" />
                               <button
                                 type="button"
@@ -709,7 +709,7 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                       <div className="flex flex-col items-start gap-4">
                         {formData.signatureImage ? (
                           <div className="flex items-center gap-3">
-                            <div className="w-28 h-16 sm:w-32 sm:h-20 shrink-0 bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
+                            <div className="w-28 h-16 sm:w-32 sm:h-20 shrink-0 bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
                               <img src={formData.signatureImage} alt="Signature" className="w-full h-full object-contain" />
                               <button
                                 type="button"
@@ -833,7 +833,7 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         className={`cursor-pointer p-3 rounded-xl border text-left transition-all duration-150 flex flex-col justify-between ${
                           isSelected
                             ? 'bg-[#4338CA] text-white border-[#4338CA]'
-                            : 'bg-[#FFFFFF] text-[#191E2B] border-[#DCE1EA] hover:border-gray-400 hover:bg-[#F0F2F6]'
+                            : 'bg-[#FBFBFC] text-[#191E2B] border-[#DCE1EA] hover:border-gray-400 hover:bg-[#F0F2F6]'
                         }`}
                       >
                         <div className="flex items-center justify-between mb-1">

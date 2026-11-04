@@ -238,7 +238,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
         <button
           type="button"
           onClick={() => onToggleActive(coupon._id)}
-          className={`cursor-pointer font-semibold transition-all active:scale-95 px-2 py-1 rounded-md ${
+          className={`cursor-pointer font-semibold transition-all active:scale-95 px-2.5 py-1 rounded-lg ${
             coupon.isActive
               ? 'text-amber-700 hover:text-amber-900 hover:bg-amber-50'
               : 'text-emerald-700 hover:text-emerald-900 hover:bg-emerald-50'
@@ -251,7 +251,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
           <button
             type="button"
             onClick={() => onEdit(coupon)}
-            className="cursor-pointer p-1.5 text-[#757F94] hover:text-[#4338CA] hover:bg-[#FBFBFC] rounded-md transition-all active:scale-95 border border-transparent hover:border-[#DCE1EA]"
+            className="cursor-pointer p-1.5 text-[#757F94] hover:text-[#4338CA] hover:bg-[#FBFBFC] rounded-lg transition-all active:scale-95 border border-transparent hover:border-[#DCE1EA]"
             title="Edit Coupon"
           >
             <Edit2 className="w-4 h-4" />
@@ -259,7 +259,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
           <button
             type="button"
             onClick={() => onDelete(coupon._id, coupon.code)}
-            className="cursor-pointer p-1.5 text-[#757F94] hover:text-rose-600 hover:bg-[#FBFBFC] rounded-md transition-all active:scale-95 border border-transparent hover:border-[#DCE1EA]"
+            className="cursor-pointer p-1.5 text-[#757F94] hover:text-rose-600 hover:bg-[#FBFBFC] rounded-lg transition-all active:scale-95 border border-transparent hover:border-[#DCE1EA]"
             title="Delete Coupon"
           >
             <Trash2 className="w-4 h-4" />
