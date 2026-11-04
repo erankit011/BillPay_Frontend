@@ -120,10 +120,10 @@ const Login = () => {
        * Screen title and brief instructional prompt for merchant sign-in
        */}
       <div className="mb-6">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 mb-1.5 tracking-tight">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B] mb-1.5 tracking-tight">
           {t('Sign In')}
         </h2>
-        <p className="text-gray-500 font-medium text-xs sm:text-sm leading-relaxed">
+        <p className="text-[#757F94] font-medium text-xs sm:text-sm leading-relaxed">
           {t('Please enter your details to sign in.')}
         </p>
       </div>
@@ -133,11 +133,11 @@ const Login = () => {
        * Flat alert banner displayed when system administrator enables maintenance mode
        */}
       {maintenanceMessage && (
-        <div className="mb-5 p-3.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-950 text-xs sm:text-sm font-medium flex items-start gap-2.5 text-left">
-          <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 shrink-0 mt-0.5" />
+        <div className="mb-5 p-3.5 rounded-lg bg-[#FEF3C7] border border-[#FDE68A] text-[#B45309] text-xs sm:text-sm font-medium flex items-start gap-2.5 text-left shadow-none">
+          <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[#B45309] shrink-0 mt-0.5" />
           <div className="flex-1">
-            <p className="font-semibold text-xs sm:text-sm text-amber-900">{t('Platform Maintenance Active')}</p>
-            <p className="mt-0.5 text-xs text-amber-800 leading-relaxed font-normal">{maintenanceMessage}</p>
+            <p className="font-semibold text-xs sm:text-sm text-[#92400E]">{t('Platform Maintenance Active')}</p>
+            <p className="mt-0.5 text-xs text-[#B45309] leading-relaxed font-normal">{maintenanceMessage}</p>
           </div>
         </div>
       )}
@@ -147,24 +147,24 @@ const Login = () => {
        * Flat warning card shown when storekeeper account has been suspended by admin
        */}
       {suspensionMessage && (
-        <div className="mb-5 p-3.5 sm:p-4 rounded-lg bg-rose-50 border border-rose-200 text-rose-950 text-xs sm:text-sm font-medium flex items-start gap-3 text-left">
-          <ShieldAlert className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+        <div className="mb-5 p-3.5 sm:p-4 rounded-lg bg-[#FDF2F2] border border-[#F9D4D4] text-[#B91C1C] text-xs sm:text-sm font-medium flex items-start gap-3 text-left shadow-none">
+          <ShieldAlert className="w-5 h-5 text-[#B91C1C] shrink-0 mt-0.5" />
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-2">
-              <p className="font-semibold text-xs sm:text-sm text-rose-900 tracking-tight">
+              <p className="font-semibold text-xs sm:text-sm text-[#B91C1C] tracking-tight">
                 {t('Store Account Suspended')}
               </p>
-              <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-rose-200/80 text-rose-900">
+              <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-[#FDF2F2] border border-[#F9D4D4] text-[#B91C1C]">
                 {t('Restricted')}
               </span>
             </div>
-            <p className="mt-1 text-xs text-rose-800 leading-relaxed font-normal break-words">
+            <p className="mt-1 text-xs text-[#B91C1C] leading-relaxed font-normal break-words">
               {suspensionMessage}
             </p>
-            <div className="mt-2.5 pt-2 border-t border-rose-200 flex items-center gap-3">
+            <div className="mt-2.5 pt-2 border-t border-[#F9D4D4] flex items-center gap-3">
               <Link
                 to="/contact-support"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-700 hover:text-rose-900 underline underline-offset-2"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#B91C1C] hover:text-[#7F1D1D] underline underline-offset-2"
               >
                 {t('Contact Platform Support')} →
               </Link>
@@ -183,23 +183,23 @@ const Login = () => {
          * Clean validated email address input without icon matching BusinessSetup styling
          */}
         <div>
-          <label htmlFor="email" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5 text-left">
-            {t('Email Address')} <span className="text-red-500">*</span>
+          <label htmlFor="email" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5 text-left">
+            {t('Email Address')} <span className="text-[#B91C1C]">*</span>
           </label>
           <input
             id="email"
             type="email"
             {...register('email')}
-            className={`block w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none ${
+            className={`block w-full rounded-lg border bg-[#FBFBFC] px-3.5 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] placeholder:font-normal transition-colors duration-200 focus:outline-none shadow-none ${
               errors.email
-                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                : 'border-gray-300 focus:border-[#093C5D] focus:ring-[#093C5D]'
+                ? 'border-[#B91C1C] focus:border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20'
+                : 'border-[#DCE1EA] focus:border-[#4338CA] focus:ring-2 focus:ring-[#4338CA]/20'
             }`}
             placeholder={t('Enter your registered email')}
             autoFocus
           />
           {errors.email && (
-            <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+            <p className="text-[#B91C1C] text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{errors.email.message}</span>
             </p>
@@ -212,12 +212,12 @@ const Login = () => {
          */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label htmlFor="password" className="block text-xs sm:text-[13px] font-medium text-gray-700 text-left">
-              {t('Password')} <span className="text-red-500">*</span>
+            <label htmlFor="password" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] text-left">
+              {t('Password')} <span className="text-[#B91C1C]">*</span>
             </label>
             <Link
               to="/forgot-password"
-              className="text-xs sm:text-[13px] font-medium text-[#093C5D] hover:underline transition-colors"
+              className="text-xs sm:text-[13px] font-medium text-[#4338CA] hover:text-[#3730A3] hover:underline transition-colors"
             >
               {t('Forgot password?')}
             </Link>
@@ -227,10 +227,10 @@ const Login = () => {
               id="password"
               type={showPassword ? 'text' : 'password'}
               {...register('password')}
-              className={`block w-full rounded-lg border bg-white pl-3.5 pr-11 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none ${
+              className={`block w-full rounded-lg border bg-[#FBFBFC] pl-3.5 pr-11 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] placeholder:font-normal transition-colors duration-200 focus:outline-none shadow-none ${
                 errors.password
-                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                  : 'border-gray-300 focus:border-[#093C5D] focus:ring-[#093C5D]'
+                  ? 'border-[#B91C1C] focus:border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20'
+                  : 'border-[#DCE1EA] focus:border-[#4338CA] focus:ring-2 focus:ring-[#4338CA]/20'
               }`}
               placeholder={t('Enter your password')}
             />
@@ -238,17 +238,17 @@ const Login = () => {
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="cursor-pointer absolute right-2 sm:right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1.5 rounded-md flex items-center justify-center focus:outline-none"
+              className="cursor-pointer absolute right-2 sm:right-2.5 top-1/2 -translate-y-1/2 text-[#757F94] hover:text-[#191E2B] transition-colors p-1.5 rounded-md flex items-center justify-center focus:outline-none"
             >
               {showPassword ? (
-                <EyeOff className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+                <EyeOff className="w-4 h-4 sm:w-5 sm:h-5 text-[#757F94]" />
               ) : (
-                <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+                <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-[#757F94]" />
               )}
             </button>
           </div>
           {errors.password && (
-            <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+            <p className="text-[#B91C1C] text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{errors.password.message}</span>
             </p>
@@ -262,7 +262,7 @@ const Login = () => {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full cursor-pointer bg-[#093C5D] hover:bg-[#072c44] text-white rounded-lg py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors active:scale-[0.99] mt-2"
+          className="w-full cursor-pointer bg-[#4338CA] hover:bg-[#3730A3] text-white rounded-lg py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors active:scale-[0.99] mt-2 shadow-none"
         >
           {isLoading ? (
             <>
@@ -282,16 +282,16 @@ const Login = () => {
       <div className="mt-6 sm:mt-8">
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200"></div>
+            <div className="w-full border-t border-[#E8ECF2]"></div>
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="px-2.5 bg-white text-gray-500 font-medium">{t('Or continue with')}</span>
+            <span className="px-2.5 bg-[#FBFBFC] text-[#757F94] font-medium">{t('Or continue with')}</span>
           </div>
         </div>
 
         <a
           href={`${import.meta.env.VITE_API_URL}/auth/google`}
-          className="mt-4 sm:mt-5 w-full cursor-pointer py-2.5 sm:py-3 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg font-semibold text-sm sm:text-base flex items-center justify-center gap-2.5 transition-colors active:scale-[0.99]"
+          className="mt-4 sm:mt-5 w-full cursor-pointer py-2.5 sm:py-3 bg-[#FBFBFC] border border-[#DCE1EA] text-[#4E5668] hover:bg-[#F0F2F6] hover:text-[#191E2B] rounded-lg font-semibold text-sm sm:text-base flex items-center justify-center gap-2.5 transition-colors active:scale-[0.99] shadow-none"
         >
           <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -307,9 +307,9 @@ const Login = () => {
          * Navigation redirect for new merchants wishing to register a business account
          */}
         <div className="mt-6 sm:mt-7 text-center text-xs sm:text-sm">
-          <span className="text-gray-500 font-medium">
+          <span className="text-[#757F94] font-medium">
             {t('Don’t have an account?')}
-            <Link to="/register" className="text-[#093C5D] font-semibold cursor-pointer ml-1.5 hover:underline">
+            <Link to="/register" className="text-[#4338CA] hover:text-[#3730A3] font-semibold cursor-pointer ml-1.5 hover:underline">
               {t('Sign Up')}
             </Link>
           </span>

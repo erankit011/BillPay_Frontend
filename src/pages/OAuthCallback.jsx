@@ -70,10 +70,10 @@ const OAuthCallback = () => {
   }, [searchParams, navigate, dispatch]);
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gray-50">
+    <div className="flex h-screen items-center justify-center bg-[#F0F2F6]">
       <div className="text-center">
-        <SwirlingLoader className="w-12 h-12 text-[#093C5D] mx-auto mb-4" />
-        <p className="text-sm font-medium text-gray-600">Signing you in with Google...</p>
+        <SwirlingLoader className="w-12 h-12 text-[#4338CA] mx-auto mb-4" />
+        <p className="text-sm font-medium text-[#4E5668]">Signing you in with Google...</p>
       </div>
     </div>
   );

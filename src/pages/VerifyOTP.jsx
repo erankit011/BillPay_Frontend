@@ -146,12 +146,12 @@ const VerifyOTP = ({ type = 'registration' }) => {
        * Screen title and masked user recipient email display
        */}
       <div className="mb-6">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 mb-1.5 tracking-tight">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B] mb-1.5 tracking-tight">
           {t('Verify Your Identity')}
         </h2>
-        <p className="text-gray-500 font-medium text-xs sm:text-sm leading-relaxed">
+        <p className="text-[#757F94] font-medium text-xs sm:text-sm leading-relaxed">
           {t("We've sent a 6-digit verification code to")}{' '}
-          <span className="font-medium text-gray-900">{maskEmail(email)}</span>
+          <span className="font-semibold text-[#191E2B]">{maskEmail(email)}</span>
         </p>
       </div>
 
@@ -161,8 +161,8 @@ const VerifyOTP = ({ type = 'registration' }) => {
          * High-legibility 6-digit code input matching BusinessSetup styling
          */}
         <div>
-          <label htmlFor="otp" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5 text-left">
-            {t('Verification Code')} <span className="text-red-500">*</span>
+          <label htmlFor="otp" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5 text-left">
+            {t('Verification Code')} <span className="text-[#B91C1C]">*</span>
           </label>
           <input
             id="otp"
@@ -172,10 +172,10 @@ const VerifyOTP = ({ type = 'registration' }) => {
             maxLength={6}
             value={otpValue}
             onChange={handleOtpChange}
-            className={`block w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none ${
+            className={`block w-full rounded-lg border bg-[#FBFBFC] px-3.5 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] placeholder:font-normal transition-colors duration-200 focus:outline-none shadow-none ${
               errorMessage
-                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                : 'border-gray-300 focus:border-[#093C5D] focus:ring-[#093C5D]'
+                ? 'border-[#B91C1C] focus:border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20'
+                : 'border-[#DCE1EA] focus:border-[#4338CA] focus:ring-2 focus:ring-[#4338CA]/20'
             }`}
             placeholder={t('Enter 6-digit verification code')}
             disabled={isLoading}
@@ -183,7 +183,7 @@ const VerifyOTP = ({ type = 'registration' }) => {
             autoComplete="one-time-code"
           />
           {errorMessage && (
-            <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+            <p className="text-[#B91C1C] text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{errorMessage}</span>
             </p>
@@ -194,45 +194,45 @@ const VerifyOTP = ({ type = 'registration' }) => {
          * Countdown Timer & Resend Trigger
          * Flat status bar with timer progress and trigger action
          */}
-        <div className="flex items-center justify-between py-2.5 px-3.5 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex items-center justify-between py-2.5 px-3.5 bg-[#F0F2F6] rounded-lg border border-[#DCE1EA]">
           {timer > 0 ? (
             <>
               <div className="flex items-center gap-2">
                 <div className="relative w-5 h-5 flex items-center justify-center flex-shrink-0">
                   <svg className="w-5 h-5 -rotate-90" viewBox="0 0 36 36">
-                    <circle cx="18" cy="18" r="15" fill="none" stroke="#e5e7eb" strokeWidth="3" />
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="#DCE1EA" strokeWidth="3" />
                     <circle
                       cx="18"
                       cy="18"
                       r="15"
                       fill="none"
-                      stroke={timer > 30 ? '#093C5D' : '#ef4444'}
+                      stroke={timer > 30 ? '#4338CA' : '#B91C1C'}
                       strokeWidth="3"
                       strokeLinecap="round"
                       strokeDasharray={`${timerProgress * 0.942} 100`}
                       className="transition-all duration-1000"
                     />
                   </svg>
-                  <Clock className="w-2.5 h-2.5 text-gray-400 absolute" />
+                  <Clock className="w-2.5 h-2.5 text-[#757F94] absolute" />
                 </div>
-                <span className="text-xs text-gray-600 font-medium">
+                <span className="text-xs text-[#4E5668] font-medium">
                   {t('Code expires in')}
                 </span>
               </div>
-              <span className={`text-xs sm:text-sm font-semibold tabular-nums ${timer > 30 ? 'text-[#093C5D]' : 'text-red-600'}`}>
+              <span className={`text-xs sm:text-sm font-semibold tabular-nums ${timer > 30 ? 'text-[#4338CA]' : 'text-[#B91C1C]'}`}>
                 {formatTime(timer)}
               </span>
             </>
           ) : (
             <>
-              <span className="text-xs text-gray-500 font-medium">
+              <span className="text-xs text-[#757F94] font-medium">
                 {t("Didn't receive the code?")}
               </span>
               <button
                 type="button"
                 onClick={handleResend}
                 disabled={resendLoading}
-                className="text-xs font-semibold text-[#093C5D] hover:underline cursor-pointer flex items-center gap-1 transition-colors disabled:opacity-50"
+                className="text-xs font-semibold text-[#4338CA] hover:text-[#3730A3] hover:underline cursor-pointer flex items-center gap-1 transition-colors disabled:opacity-50"
               >
                 {resendLoading ? (
                   <>
@@ -257,7 +257,7 @@ const VerifyOTP = ({ type = 'registration' }) => {
         <button
           type="submit"
           disabled={isLoading || otpValue.length !== 6}
-          className="w-full cursor-pointer bg-[#093C5D] hover:bg-[#072c44] text-white rounded-lg py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors active:scale-[0.99] mt-2"
+          className="w-full cursor-pointer bg-[#4338CA] hover:bg-[#3730A3] text-white rounded-lg py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors active:scale-[0.99] mt-2 shadow-none"
         >
           {isLoading ? (
             <>
@@ -277,11 +277,11 @@ const VerifyOTP = ({ type = 'registration' }) => {
        * Helpdesk Support Shortcut
        * Direct button for users requiring technical support
        */}
-      <div className="mt-8 pt-5 border-t border-gray-200 flex flex-col items-center">
+      <div className="mt-8 pt-5 border-t border-[#DCE1EA] flex flex-col items-center">
         <button
           type="button"
           onClick={() => navigate('/contact-support')}
-          className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-gray-50 text-gray-700 cursor-pointer hover:bg-gray-100 font-medium text-xs transition-colors border border-gray-200"
+          className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#F0F2F6] text-[#4E5668] cursor-pointer hover:bg-[#EBEEF4] hover:text-[#191E2B] font-medium text-xs transition-colors border border-[#DCE1EA] shadow-none"
         >
           <Headphones className="w-3.5 h-3.5" />
           <span>{t('Need help? Contact Support')}</span>
