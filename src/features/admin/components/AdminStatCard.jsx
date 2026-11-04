@@ -36,40 +36,41 @@ const AdminStatCard = ({
   /**
    * Card Accent Variant Tokens
    * Defines border, icon, and typography styles for each analytical metric type.
+   * Matches Shopkeeper Dashboard / Customer Ledger KPI card hierarchy 1:1.
    */
   const variantStyles = {
     default: {
-      card: 'border border-[#DCE1EA]',
-      iconBg: 'bg-[#F0F2F6] text-[#4338CA] border border-[#DCE1EA]',
-      titleColor: 'text-[#757F94]',
+      card: 'border border-[#DCE1EA] hover:border-[#C2C9D6]',
+      iconBg: 'bg-[#EEF0FB] text-[#4338CA] border border-[#DCE1EA]',
+      titleColor: 'text-[#4E5668]',
       valueColor: 'text-[#191E2B]',
       subtextColor: 'text-[#757F94]',
     },
     primary: {
-      card: 'border-l-4 border-l-[#4338CA] border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA]',
+      card: 'border border-[#DCE1EA] hover:border-[#C2C9D6]',
       iconBg: 'bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5]',
-      titleColor: 'text-[#757F94]',
+      titleColor: 'text-[#4E5668]',
       valueColor: 'text-[#191E2B]',
       subtextColor: 'text-[#757F94]',
     },
     success: {
-      card: 'border-l-4 border-l-[#0D7A57] border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA]',
-      iconBg: 'bg-[#F0FDF4] text-[#0D7A57] border border-[#DCFCE7]',
-      titleColor: 'text-[#757F94]',
+      card: 'border-l-4 border-l-[#0D7A57] border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA] hover:border-r-[#C2C9D6] hover:border-t-[#C2C9D6] hover:border-b-[#DCE1EA]',
+      iconBg: 'bg-[#ECFDF5] text-[#0D7A57] border border-[#A7F3D0]',
+      titleColor: 'text-[#4E5668]',
       valueColor: 'text-[#0D7A57]',
       subtextColor: 'text-[#0D7A57]',
     },
     danger: {
-      card: 'border-l-4 border-l-[#B91C1C] border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA]',
-      iconBg: 'bg-[#FDF2F2] text-[#B91C1C] border border-[#F9D4D4]',
-      titleColor: 'text-[#757F94]',
+      card: 'border-l-4 border-l-[#E11D48] border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA] hover:border-r-[#C2C9D6] hover:border-t-[#C2C9D6] hover:border-b-[#C2C9D6]',
+      iconBg: 'bg-[#FFF1F2] text-[#B91C1C] border border-[#FECDD3]',
+      titleColor: 'text-[#4E5668]',
       valueColor: 'text-[#B91C1C]',
       subtextColor: 'text-[#B91C1C]',
     },
     warning: {
-      card: 'border-l-4 border-l-[#B45309] border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA]',
+      card: 'border-l-4 border-l-[#B45309] border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA] hover:border-r-[#C2C9D6] hover:border-t-[#C2C9D6] hover:border-b-[#C2C9D6]',
       iconBg: 'bg-[#FEF3C7] text-[#B45309] border border-[#FDE68A]',
-      titleColor: 'text-[#757F94]',
+      titleColor: 'text-[#4E5668]',
       valueColor: 'text-[#191E2B]',
       subtextColor: 'text-[#B45309]',
     },
@@ -82,7 +83,7 @@ const AdminStatCard = ({
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.2 }}
-      className={`bg-[#FFFFFF] rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] transition-all duration-200 overflow-hidden cursor-default shadow-none ${style.card}`}
+      className={`bg-[#FBFBFC] rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] transition-all duration-200 overflow-hidden cursor-default shadow-none ${style.card}`}
     >
       {/**
        * Metric Icon Emblem
@@ -100,7 +101,7 @@ const AdminStatCard = ({
        */}
       <div className="mt-auto pt-2 min-w-0">
         <p
-          className="text-[10px] md:text-xs xl:text-sm text-[#757F94] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate"
+          className={`text-[10px] md:text-xs xl:text-sm mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate ${style.titleColor || 'text-[#4E5668]'}`}
           title={title}
         >
           {title}

@@ -175,12 +175,12 @@ const AdminSettings = () => {
          */}
         <div className="flex-1 min-w-0">
           {isLoading ? (
-            <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-16 text-center shadow-none">
+            <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-16 text-center shadow-none">
               <SwirlingLoader className="w-10 h-10 text-[#4338CA] mx-auto mb-3" />
               <p className="text-sm font-medium text-[#4E5668]">{t('Loading platform configurations...')}</p>
             </div>
           ) : isError ? (
-            <div className="p-8 text-center bg-[#FFFFFF] rounded-lg border border-red-200 text-red-700 shadow-none">
+            <div className="p-8 text-center bg-[#FBFBFC] rounded-lg border border-red-200 text-red-700 shadow-none">
               <p className="font-semibold text-sm sm:text-base">{t('Failed to load platform settings.')}</p>
               <button
                 onClick={() => refetch()}

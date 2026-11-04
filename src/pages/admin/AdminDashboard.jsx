@@ -366,7 +366,7 @@ const AdminDashboard = () => {
       </div>
 
       {isLoading ? (
-        <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-16 md:p-20 text-center shadow-none">
+        <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-16 md:p-20 text-center shadow-none">
           <SwirlingLoader className="w-10 h-10 text-[#4338CA] mx-auto mb-3" />
           <p className="text-sm font-medium text-[#4E5668]">Loading platform overview metrics & store insights...</p>
         </div>
@@ -381,13 +381,13 @@ const AdminDashboard = () => {
            * 3-tile strip showing platform bill counts, customer profiles, and active pro stores.
            */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-3.5 flex items-center justify-between shadow-none">
+            <div className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg p-3.5 flex items-center justify-between shadow-none">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center">
                   <FileText className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-xs font-semibold text-[#757F94] uppercase block">Total Bills Issued</span>
+              <span className="text-xs font-semibold text-[#4E5668] uppercase block">Total Bills Issued</span>
               <span className="text-base font-semibold text-[#191E2B]">{totalBillsCount} Invoices</span>
             </div>
           </div>
@@ -400,13 +400,13 @@ const AdminDashboard = () => {
           </Link>
         </div>
 
-        <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-3.5 flex items-center justify-between shadow-none">
+        <div className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg p-3.5 flex items-center justify-between shadow-none">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
               <Users className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-xs font-semibold text-[#757F94] uppercase block">Customer Profiles</span>
+              <span className="text-xs font-semibold text-[#4E5668] uppercase block">Customer Profiles</span>
               <span className="text-base font-semibold text-[#191E2B]">{totalCustomersCount} Buyers</span>
             </div>
           </div>
@@ -415,13 +415,13 @@ const AdminDashboard = () => {
           </span>
         </div>
 
-        <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-3.5 flex items-center justify-between shadow-none">
+        <div className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg p-3.5 flex items-center justify-between shadow-none">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center">
               <Store className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-xs font-semibold text-[#757F94] uppercase block">Active Stores</span>
+              <span className="text-xs font-semibold text-[#4E5668] uppercase block">Active Stores</span>
               <span className="text-base font-semibold text-[#191E2B]">{totalShops} Stores ({activeSubscribers} Pro)</span>
             </div>
           </div>
@@ -444,7 +444,7 @@ const AdminDashboard = () => {
          * Growth Trends Composed Chart Section
          * Interactive multi-axis graph plotting new merchant registrations and subscription revenue.
          */}
-        <div className="lg:col-span-2 bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-4 sm:p-5 shadow-none flex flex-col justify-between">
+        <div className="lg:col-span-2 bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-4 sm:p-5 shadow-none flex flex-col justify-between">
           <div>
             {/**
              * Chart Header & Segmented View Controller
@@ -679,7 +679,7 @@ const AdminDashboard = () => {
          * Subscription Tier Share Card
          * Displays SaaS plan tier distribution bars and paid conversion insights.
          */}
-        <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-4 sm:p-5 shadow-none flex flex-col justify-between">
+        <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-4 sm:p-5 shadow-none flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-1">
               <h3 className="text-sm sm:text-base font-semibold text-[#191E2B]">
@@ -884,7 +884,7 @@ const AdminDashboard = () => {
          * Recently Registered Merchant Stores Table Card
          * Quick glance at newly onboarded merchants with instant inspection action.
          */}
-        <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg overflow-hidden shadow-none flex flex-col justify-between h-full">
+        <div className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg overflow-hidden shadow-none flex flex-col justify-between h-full">
           <div className="p-4 sm:p-5 border-b border-[#DCE1EA] flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-h-[78px]">
             <div>
               <h3 className="text-sm sm:text-base font-semibold text-[#191E2B]">Recently Registered Merchant Shops</h3>
@@ -1014,7 +1014,7 @@ const AdminDashboard = () => {
          * Recent Subscription Invoices Table Card
          * Financial transactions list logging incoming merchant subscription payments.
          */}
-        <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg overflow-hidden shadow-none flex flex-col justify-between h-full">
+        <div className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg overflow-hidden shadow-none flex flex-col justify-between h-full">
           <div className="p-4 sm:p-5 border-b border-[#DCE1EA] flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-h-[78px]">
             <div>
               <h3 className="text-sm sm:text-base font-semibold text-[#191E2B]">Recent Subscription Invoices</h3>

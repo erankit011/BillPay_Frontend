@@ -161,14 +161,14 @@ const TicketDetailsModal = ({
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div
-          className="relative w-full sm:max-w-3xl bg-[#FFFFFF] rounded-t-2xl sm:rounded-xl border border-[#DCE1EA] animate-modal-content overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[88vh] pointer-events-auto shadow-2xl sm:shadow-xl"
+          className="relative w-full sm:max-w-3xl bg-[#FBFBFC] rounded-t-2xl sm:rounded-xl border border-[#DCE1EA] animate-modal-content overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[88vh] pointer-events-auto shadow-none"
           onClick={(e) => e.stopPropagation()}
         >
           {/**
            * Mobile Drag Affordance Handle
            * Visual indicator for mobile sheet gestures.
            */}
-          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#F0F2F6]/80">
+          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#FBFBFC]">
             <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
           </div>
 
@@ -176,7 +176,7 @@ const TicketDetailsModal = ({
            * Ticket Modal Header
            * Shows ticket reference ID, status pill, priority indicator, and close button.
            */}
-          <div className="px-5 sm:px-6 py-4 border-b border-[#DCE1EA] bg-[#F0F2F6]/80 flex items-center justify-between shrink-0 gap-3">
+          <div className="px-5 sm:px-6 py-4 border-b border-[#DCE1EA] bg-[#FBFBFC] flex items-center justify-between shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <span className="text-base font-semibold text-[#191E2B] tracking-tight">
                 #{ticket.ticketId}
@@ -187,7 +187,7 @@ const TicketDetailsModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-[#757F94] bg-gray-100 hover:bg-gray-200 hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
+              className="cursor-pointer text-[#757F94] bg-[#F0F2F6] hover:bg-[#EBEEF4] hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
               title="Close"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -405,11 +405,11 @@ const TicketDetailsModal = ({
          * Footer Action Toolbar
          * Houses ticket deletion, resolution shortcut, and changes persistence button.
          */}
-        <div className="px-6 py-4 border-t border-[#DCE1EA] bg-[#F0F2F6]/80 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div className="px-5 sm:px-6 py-3.5 border-t border-[#DCE1EA] bg-[#F0F2F6] flex flex-wrap items-center justify-between gap-3 shrink-0">
           <button
             type="button"
             onClick={() => setConfirmDeleteOpen(true)}
-            className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-3 py-2 rounded transition-colors border border-transparent hover:border-rose-200"
+            className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-3 py-2 rounded-lg transition-colors border border-transparent hover:border-rose-200"
           >
             <Trash2 className="w-4 h-4" />
             Delete Ticket
@@ -421,7 +421,7 @@ const TicketDetailsModal = ({
                 type="button"
                 disabled={saving}
                 onClick={() => handleSave('RESOLVED')}
-                className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3.5 py-2 rounded transition-colors disabled:opacity-50"
+                className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3.5 py-2 rounded-lg transition-colors disabled:opacity-50"
               >
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 Resolve Ticket
@@ -432,7 +432,7 @@ const TicketDetailsModal = ({
               type="button"
               disabled={saving}
               onClick={() => handleSave()}
-              className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] px-4 py-2 rounded transition-colors disabled:opacity-50"
+              className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
               {saving ? 'Saving...' : 'Save Changes'}

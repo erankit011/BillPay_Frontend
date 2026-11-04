@@ -26,7 +26,7 @@ const HealthServiceCard = ({
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-4 sm:p-5 flex flex-col justify-between shadow-none transition-all"
+      className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-4 sm:p-5 flex flex-col justify-between shadow-none transition-all"
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-3">

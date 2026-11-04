@@ -211,12 +211,12 @@ const AdminReports = () => {
       </div>
 
       {isLoading ? (
-        <div className="py-24 flex flex-col items-center justify-center text-[#757F94] gap-3 bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg shadow-none">
+        <div className="py-24 flex flex-col items-center justify-center text-[#757F94] gap-3 bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg shadow-none">
           <SwirlingLoader className="w-8 h-8 text-[#4338CA]" />
           <p className="text-xs sm:text-sm font-medium">Generating store financial reports...</p>
         </div>
       ) : isError ? (
-        <div className="py-16 text-center text-rose-600 bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg shadow-none">
+        <div className="py-16 text-center text-rose-600 bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg shadow-none">
           <AlertCircle className="w-8 h-8 mx-auto mb-2" />
           <p className="text-sm font-semibold">Failed to generate store reports</p>
         </div>
@@ -231,7 +231,7 @@ const AdminReports = () => {
              * Monthly Store Sales & Collections Trend
              * Displays comparative area chart of billed sales versus payments collected.
              */}
-            <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-5 shadow-none">
+            <div className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg p-5 shadow-none">
               <div className="mb-4">
                 <h3 className="text-base font-semibold text-[#191E2B] flex items-center gap-2">
                   <TrendingUp className="w-4 h-4 text-[#4338CA]" />
@@ -327,7 +327,7 @@ const AdminReports = () => {
              * Monthly Store Bills Issued Trend
              * Displays bar chart representing count of invoices generated each month.
              */}
-            <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-5 shadow-none">
+            <div className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg p-5 shadow-none">
               <div className="mb-4">
                 <h3 className="text-base font-semibold text-[#191E2B] flex items-center gap-2">
                   <Receipt className="w-4 h-4 text-[#4338CA]" />
@@ -399,7 +399,7 @@ const AdminReports = () => {
              * Payment Modes Distribution
              * Visualizes volume and transaction count distribution by payment method.
              */}
-            <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-4 sm:p-5 lg:col-span-1 shadow-none flex flex-col justify-between">
+            <div className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg p-4 sm:p-5 lg:col-span-1 shadow-none flex flex-col justify-between">
               <div>
                 <div className="mb-3.5">
                   <h3 className="text-sm sm:text-base font-semibold text-[#191E2B] flex items-center gap-2">
@@ -447,7 +447,7 @@ const AdminReports = () => {
              * Top Performing Stores Ranking
              * High-volume merchants driving sales volume across the platform.
              */}
-            <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-4 sm:p-5 lg:col-span-2 shadow-none">
+            <div className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg p-4 sm:p-5 lg:col-span-2 shadow-none">
               <div className="mb-3.5">
                 <h3 className="text-sm sm:text-base font-semibold text-[#191E2B] flex items-center gap-2">
                   <Store className="w-4 h-4 text-[#4338CA]" />

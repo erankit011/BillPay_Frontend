@@ -111,12 +111,12 @@ const AdminSystemHealth = () => {
       </div>
 
       {isLoading ? (
-        <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-16 text-center shadow-none">
+        <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-16 text-center shadow-none">
           <SwirlingLoader className="w-10 h-10 text-[#4338CA] mx-auto mb-3" />
           <p className="text-sm font-medium text-[#4E5668]">Checking system infrastructure health & diagnostics...</p>
         </div>
       ) : isError ? (
-        <div className="p-8 text-center bg-[#FFFFFF] rounded-lg border border-red-200 text-red-700 shadow-none">
+        <div className="p-8 text-center bg-[#FBFBFC] rounded-lg border border-red-200 text-red-700 shadow-none">
           <p className="font-semibold text-sm sm:text-base">Failed to retrieve system health diagnostics.</p>
           <button
             onClick={() => refetch()}
@@ -131,7 +131,7 @@ const AdminSystemHealth = () => {
            * Server Runtime & Memory Load Overview
            * Displays Node.js process environment, engine version, uptime, and V8 heap breakdown.
            */}
-          <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-4 sm:p-5 shadow-none hover:border-gray-300 transition-all duration-200">
+          <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-4 sm:p-5 shadow-none hover:border-gray-300 transition-all duration-200">
             <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#E8ECF2]">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center border border-[#DCE1EA] shrink-0">
@@ -160,24 +160,24 @@ const AdminSystemHealth = () => {
          * Visualizes used heap, total reserved heap, and resident set physical memory.
          */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
-          <div className="bg-[#FFFFFF] rounded-lg p-3.5 sm:p-4 border border-[#DCE1EA] border-l-4 border-l-[#4338CA] hover:border-gray-300 transition-all duration-200 shadow-none">
-            <span className="text-[#757F94] font-semibold block uppercase text-[10px] sm:text-xs tracking-wide">Heap Memory Used</span>
+          <div className="bg-[#FBFBFC] rounded-lg p-3.5 sm:p-4 border border-[#DCE1EA] border-l-4 border-l-[#4338CA] hover:border-gray-300 transition-all duration-200 shadow-none">
+            <span className="text-[#4E5668] font-semibold block uppercase text-[10px] sm:text-xs tracking-wide">Heap Memory Used</span>
             <span className="text-base sm:text-xl font-bold text-[#191E2B] mt-1 block">
               {server.memory?.heapUsed || 'N/A'}
             </span>
             <span className="text-[11px] text-[#757F94] font-medium block mt-0.5">Memory occupied by active data objects</span>
           </div>
 
-          <div className="bg-[#FFFFFF] rounded-lg p-3.5 sm:p-4 border border-[#DCE1EA] border-l-4 border-l-purple-700 hover:border-gray-300 transition-all duration-200 shadow-none">
-            <span className="text-[#757F94] font-semibold block uppercase text-[10px] sm:text-xs tracking-wide">Total Allocated Heap</span>
+          <div className="bg-[#FBFBFC] rounded-lg p-3.5 sm:p-4 border border-[#DCE1EA] border-l-4 border-l-purple-700 hover:border-gray-300 transition-all duration-200 shadow-none">
+            <span className="text-[#4E5668] font-semibold block uppercase text-[10px] sm:text-xs tracking-wide">Total Allocated Heap</span>
             <span className="text-base sm:text-xl font-bold text-[#191E2B] mt-1 block">
               {server.memory?.heapTotal || 'N/A'}
             </span>
             <span className="text-[11px] text-[#757F94] font-medium block mt-0.5">Total memory space reserved by V8 engine</span>
           </div>
 
-          <div className="bg-[#FFFFFF] rounded-lg p-3.5 sm:p-4 border border-[#DCE1EA] border-l-4 border-l-emerald-700 hover:border-gray-300 transition-all duration-200 shadow-none">
-            <span className="text-[#757F94] font-semibold block uppercase text-[10px] sm:text-xs tracking-wide">Resident Set Size (RSS)</span>
+          <div className="bg-[#FBFBFC] rounded-lg p-3.5 sm:p-4 border border-[#DCE1EA] border-l-4 border-l-emerald-700 hover:border-gray-300 transition-all duration-200 shadow-none">
+            <span className="text-[#4E5668] font-semibold block uppercase text-[10px] sm:text-xs tracking-wide">Resident Set Size (RSS)</span>
             <span className="text-base sm:text-xl font-bold text-emerald-700 mt-1 block">
               {server.memory?.rss || 'N/A'}
             </span>

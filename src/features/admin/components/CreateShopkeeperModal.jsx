@@ -317,19 +317,19 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
        * Modal Container Shell
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-6 z-[60] pointer-events-none">
-        <div className="relative bg-[#FFFFFF] w-full sm:max-w-3xl rounded-t-2xl sm:rounded-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-none">
+        <div className="relative bg-[#FBFBFC] w-full sm:max-w-3xl rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-none">
           
           {/**
            * Mobile Drag Handle
            */}
-          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#FFFFFF]">
+          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#FBFBFC]">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
           </div>
 
           {/**
            * Modal Header Toolbar
            */}
-          <div className="px-5 sm:px-6 py-4 border-b border-[#E8ECF2] flex items-center justify-between bg-[#FFFFFF] flex-shrink-0 gap-3">
+          <div className="px-5 sm:px-6 py-4 border-b border-[#E8ECF2] flex items-center justify-between bg-[#FBFBFC] flex-shrink-0 gap-3">
             <div className="min-w-0 flex-1">
               <h3 className="text-base sm:text-lg font-semibold text-[#191E2B] leading-snug truncate">
                 Create New Shopkeeper Account
@@ -343,7 +343,7 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="cursor-pointer text-[#757F94] hover:text-[#191E2B] bg-gray-100 hover:bg-gray-200 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 border border-[#DCE1EA]"
+              className="cursor-pointer text-[#757F94] bg-[#F0F2F6] hover:bg-[#EBEEF4] hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 border border-[#DCE1EA]"
               title="Close"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -934,19 +934,19 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
             {/**
              * Modal Footer Toolbar
              */}
-            <div className="px-5 sm:px-6 py-3.5 bg-[#F0F2F6] border-t border-[#DCE1EA] flex items-center justify-end gap-3 flex-shrink-0">
+            <div className="px-5 sm:px-6 py-3.5 bg-[#F0F2F6] border-t border-[#DCE1EA] flex items-center justify-end gap-2.5 flex-shrink-0">
               <button
                 type="button"
                 onClick={onClose}
                 disabled={isLoading}
-                className="cursor-pointer px-4 py-2 text-xs sm:text-sm font-medium text-[#4E5668] hover:text-[#191E2B] bg-[#FFFFFF] hover:bg-gray-100 border border-[#DCE1EA] rounded-xl transition-all duration-150 active:scale-95"
+                className="cursor-pointer px-4 py-2 text-xs sm:text-sm font-semibold text-[#4E5668] hover:text-[#191E2B] bg-[#FBFBFC] hover:bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg transition-all duration-150 active:scale-95"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isLoading || uploadingLogo || uploadingSignature}
-                className="cursor-pointer px-5 py-2 text-xs sm:text-sm font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] border border-[#4338CA] rounded-xl flex items-center gap-2 transition-all duration-150 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="cursor-pointer px-5 py-2 text-xs sm:text-sm font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] border border-[#4338CA] rounded-lg flex items-center gap-2 transition-all duration-150 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <>

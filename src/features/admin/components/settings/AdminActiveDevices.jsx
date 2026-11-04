@@ -164,7 +164,7 @@ const AdminActiveDevices = () => {
               type="button"
               onClick={fetchDevices}
               disabled={devicesLoading}
-              className="cursor-pointer !min-h-0 !min-w-0 h-[30px] sm:h-[34px] px-3.5 sm:px-4 rounded-lg border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:text-[#191E2B] hover:bg-[#F0F2F6] text-xs font-semibold whitespace-nowrap transition-colors shrink-0 flex items-center justify-center gap-1.5 active:scale-95"
+              className="cursor-pointer !min-h-0 !min-w-0 h-[30px] sm:h-[34px] px-3.5 sm:px-4 rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] text-[#4E5668] hover:text-[#191E2B] hover:bg-[#F0F2F6] text-xs font-semibold whitespace-nowrap transition-colors shrink-0 flex items-center justify-center gap-1.5 active:scale-95"
               title={t('Refresh devices')}
             >
               <RefreshCw
@@ -214,8 +214,8 @@ const AdminActiveDevices = () => {
                     key={device._id}
                     className={`p-3 sm:p-4 rounded-lg border transition-all ${
                       device.isCurrentDevice
-                        ? 'border-[#D8DCF5] bg-[#FFFFFF]'
-                        : 'border-[#DCE1EA] bg-[#FFFFFF] hover:border-[#DCE1EA]'
+                        ? 'border-[#D8DCF5] bg-[#FBFBFC]'
+                        : 'border-[#DCE1EA] bg-[#FBFBFC] hover:border-[#C2C9D6]'
                     }`}
                   >
                     {/**

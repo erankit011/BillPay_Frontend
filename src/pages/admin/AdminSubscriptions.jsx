@@ -35,9 +35,9 @@ import { getInitials } from '../../utils/stringUtils';
  */
 const STATUS_FILTERS = [
   { label: 'All Invoices', value: 'ALL' },
-  { label: 'Paid (Successful)', value: 'SUCCESS' },
-  { label: 'Pending Payment', value: 'PENDING' },
-  { label: 'Failed Transactions', value: 'FAILED' },
+  { label: 'Paid', value: 'SUCCESS' },
+  { label: 'Pending', value: 'PENDING' },
+  { label: 'Failed', value: 'FAILED' },
 ];
 
 const AdminSubscriptions = () => {
@@ -220,7 +220,7 @@ const AdminSubscriptions = () => {
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlStatus === f.value
                 ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
-                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
+                : 'bg-[#FBFBFC] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {f.label}
@@ -234,7 +234,7 @@ const AdminSubscriptions = () => {
               setSearchTerm('');
               setSearchParams({}, { replace: true });
             }}
-            className="shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 flex items-center gap-1.5 transition-colors shadow-none"
+            className="shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium text-[#B91C1C] bg-[#FFF1F2] border border-[#FECDD3] hover:bg-[#FEE2E2] flex items-center gap-1.5 transition-colors shadow-none"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Reset Filters
@@ -253,7 +253,7 @@ const AdminSubscriptions = () => {
           </div>
           <input
             type="text"
-            placeholder="Search By Payment ID & Reference & Shop & Owner"
+            placeholder="Search by payment ID, reference, shop, or owner..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg text-[13px] sm:text-sm text-[#191E2B] placeholder-[#9AA4B8] focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors duration-200 shadow-none"
@@ -274,7 +274,7 @@ const AdminSubscriptions = () => {
        * Subscriptions Records Container
        * Desktop data table and responsive mobile cards for platform invoices.
        */}
-      <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg overflow-hidden shadow-none">
+      <div className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg overflow-hidden shadow-none">
         {isLoading ? (
           <div className="flex justify-center items-center py-16">
             <SwirlingLoader className="w-10 h-10 text-[#4338CA]" />
@@ -443,7 +443,7 @@ const AdminSubscriptions = () => {
                 return (
                   <div
                     key={inv._id}
-                    className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-3.5 sm:p-4 space-y-3 shadow-none pt-3 first:pt-0"
+                    className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg p-3.5 sm:p-4 space-y-3 shadow-none pt-3 first:pt-0"
                   >
                     {/**
                      * Card Header Strip

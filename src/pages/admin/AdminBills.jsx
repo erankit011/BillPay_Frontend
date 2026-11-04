@@ -227,7 +227,7 @@ const AdminBills = () => {
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlStatus === f.value
                 ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
-                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
+                : 'bg-[#FBFBFC] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {f.label}
@@ -239,8 +239,8 @@ const AdminBills = () => {
         {[
           { label: 'All Modes', value: 'ALL' },
           { label: 'Cash', value: 'CASH' },
-          { label: 'UPI Payment', value: 'UPI' },
-          { label: 'Store Credit (Udhar)', value: 'CREDIT' },
+          { label: 'UPI', value: 'UPI' },
+          { label: 'Credit (Udhar)', value: 'CREDIT' },
           { label: 'Bank Transfer', value: 'BANK_TRANSFER' },
         ].map((f) => (
           <button
@@ -250,7 +250,7 @@ const AdminBills = () => {
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlPaymentMode === f.value
                 ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
-                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
+                : 'bg-[#FBFBFC] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {f.label}
@@ -265,7 +265,7 @@ const AdminBills = () => {
               setDebouncedSearch('');
               setSearchParams({}, { replace: true });
             }}
-            className="shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 flex items-center gap-1.5 transition-colors shadow-none"
+            className="shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium text-[#B91C1C] bg-[#FFF1F2] border border-[#FECDD3] hover:bg-[#FEE2E2] flex items-center gap-1.5 transition-colors shadow-none"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Reset Filters
@@ -286,7 +286,7 @@ const AdminBills = () => {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search By Invoice Number & Shop & Customer"
+            placeholder="Search by invoice number, shop, or customer..."
             className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg text-[13px] sm:text-sm text-[#191E2B] placeholder-[#9AA4B8] focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors duration-200 shadow-none"
           />
           {searchTerm && (
@@ -314,7 +314,7 @@ const AdminBills = () => {
        * Bills Ledger Table Container
        * Multi-device container rendering desktop data tables and mobile bill cards.
        */}
-      <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg overflow-hidden shadow-none">
+      <div className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg overflow-hidden shadow-none">
         {isLoading ? (
           <div className="py-20 flex flex-col items-center justify-center text-[#757F94] gap-3">
             <SwirlingLoader className="w-8 h-8 text-[#4338CA]" />
@@ -477,7 +477,7 @@ const AdminBills = () => {
                 return (
                   <div
                     key={bill._id}
-                    className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-3.5 space-y-3 shadow-none"
+                    className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg p-3.5 space-y-3 shadow-none"
                   >
                     {/**
                      * Card Header
@@ -593,13 +593,13 @@ const AdminBills = () => {
            * Responsive drawer on mobile viewports and centered dialog on sm+ viewports.
            */}
           <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-[60] pointer-events-none">
-            <div className="relative bg-[#FFFFFF] w-full sm:max-w-lg rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
+            <div className="relative bg-[#FBFBFC] w-full sm:max-w-lg rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-none">
 
               {/**
                * Mobile Touch Gesture Drag Handle
                * Visual indicator for mobile sheet dragging.
                */}
-              <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#FFFFFF]">
+              <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#FBFBFC]">
                 <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
               </div>
 
@@ -607,7 +607,7 @@ const AdminBills = () => {
                * Modal Header Toolbar
                * Shows invoice serial number, issuance timestamp, and close button.
                */}
-              <div className="px-5 py-4 border-b border-[#E8ECF2] flex items-center justify-between bg-[#FFFFFF] flex-shrink-0">
+              <div className="px-5 py-4 border-b border-[#E8ECF2] flex items-center justify-between bg-[#FBFBFC] flex-shrink-0">
                 <div>
                   <h3 className="text-base sm:text-lg font-semibold text-[#191E2B]">
                     Invoice #{selectedBill.invoiceNumber}
@@ -618,7 +618,7 @@ const AdminBills = () => {
                 </div>
                 <button
                   onClick={() => setSelectedBill(null)}
-                  className="cursor-pointer text-[#757F94] bg-gray-100 hover:bg-gray-200 hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA]"
+                  className="cursor-pointer text-[#757F94] bg-[#F0F2F6] hover:bg-[#EBEEF4] hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA]"
                 >
                   <X className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
@@ -723,7 +723,7 @@ const AdminBills = () => {
               <div className="px-5 py-3.5 bg-[#F0F2F6] border-t border-[#DCE1EA] flex items-center justify-end flex-shrink-0">
                 <button
                   onClick={() => setSelectedBill(null)}
-                  className="cursor-pointer px-4 py-2 text-xs sm:text-sm font-semibold text-[#4E5668] bg-[#FFFFFF] hover:bg-gray-100 border border-[#DCE1EA] rounded-lg transition-colors active:scale-95"
+                  className="cursor-pointer px-4 py-2 text-xs sm:text-sm font-semibold text-[#4E5668] bg-[#FBFBFC] hover:bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg transition-colors active:scale-95"
                 >
                   Close
                 </button>

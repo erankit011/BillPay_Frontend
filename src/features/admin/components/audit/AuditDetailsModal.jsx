@@ -96,14 +96,14 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div
-          className="relative w-full sm:max-w-3xl bg-[#FFFFFF] rounded-t-2xl sm:rounded-xl border border-[#DCE1EA] animate-modal-content overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[88vh] pointer-events-auto shadow-2xl sm:shadow-xl"
+          className="relative w-full sm:max-w-3xl bg-[#FBFBFC] rounded-t-2xl sm:rounded-xl border border-[#DCE1EA] animate-modal-content overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[88vh] pointer-events-auto shadow-none"
           onClick={(e) => e.stopPropagation()}
         >
           {/**
            * Mobile Drag Handle
            * Visual drag pill handle displayed on mobile touch screens.
            */}
-          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#F0F2F6]/70">
+          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#FBFBFC]">
             <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
           </div>
 
@@ -111,7 +111,7 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
            * Audit Log Header
            * Displays security icon, formatted action name, category badge, and log ID.
            */}
-          <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-[#DCE1EA] bg-[#F0F2F6]/70 flex-shrink-0 gap-3">
+          <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-[#DCE1EA] bg-[#FBFBFC] flex-shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="w-10 h-10 rounded bg-[#EEF0FB] border border-[#D8DCF5] text-[#4338CA] flex items-center justify-center shrink-0">
                 <Shield className="w-5 h-5" />
@@ -131,7 +131,7 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-[#757F94] bg-gray-100 hover:bg-gray-200 hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
+              className="cursor-pointer text-[#757F94] bg-[#F0F2F6] hover:bg-[#EBEEF4] hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
               title="Close"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -274,7 +274,7 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
            * Modal Action Footer
            * Controls to copy log ID to clipboard and dismiss the modal dialog.
            */}
-          <div className="px-6 py-4 bg-[#F0F2F6] border-t border-[#E8ECF2] flex items-center justify-between">
+          <div className="px-5 sm:px-6 py-3.5 bg-[#F0F2F6] border-t border-[#DCE1EA] flex items-center justify-between">
             <button
               type="button"
               onClick={() => copyToClipboard(log._id, 'id')}
@@ -290,7 +290,7 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer px-4 py-2 bg-gray-200 hover:bg-gray-300 text-[#191E2B] font-semibold rounded text-xs sm:text-sm transition-colors"
+              className="cursor-pointer px-4 py-2 text-xs sm:text-sm font-semibold text-[#4E5668] bg-[#FBFBFC] hover:bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg transition-colors active:scale-95"
             >
               Close
             </button>

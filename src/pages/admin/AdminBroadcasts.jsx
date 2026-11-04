@@ -257,10 +257,10 @@ const AdminBroadcasts = () => {
       <div className="flex items-center flex-nowrap gap-2 sm:gap-3 overflow-x-auto pb-1 mb-2 sm:mb-3 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {[
           { label: 'All Categories', value: 'ALL' },
-          { label: 'Information', value: 'INFO' },
-          { label: 'Warning / Maintenance', value: 'WARNING' },
-          { label: 'Critical Alert', value: 'ALERT' },
-          { label: 'Feature Release', value: 'SUCCESS' },
+          { label: 'Info', value: 'INFO' },
+          { label: 'Warning', value: 'WARNING' },
+          { label: 'Alert', value: 'ALERT' },
+          { label: 'Success', value: 'SUCCESS' },
         ].map((chip) => (
           <button
             key={chip.value}
@@ -268,7 +268,7 @@ const AdminBroadcasts = () => {
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlType === chip.value
                 ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
-                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
+                : 'bg-[#FBFBFC] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {chip.label}
@@ -279,8 +279,8 @@ const AdminBroadcasts = () => {
 
         {[
           { label: 'All Status', value: 'ALL' },
-          { label: 'Active Stores', value: 'ACTIVE' },
-          { label: 'Paused Stores', value: 'INACTIVE' },
+          { label: 'Active', value: 'ACTIVE' },
+          { label: 'Paused', value: 'INACTIVE' },
         ].map((chip) => (
           <button
             key={chip.value}
@@ -288,7 +288,7 @@ const AdminBroadcasts = () => {
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlStatus === chip.value
                 ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
-                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
+                : 'bg-[#FBFBFC] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {chip.label}
@@ -303,7 +303,7 @@ const AdminBroadcasts = () => {
               setDebouncedSearch('');
               setSearchParams({}, { replace: true });
             }}
-            className="shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 flex items-center gap-1.5 transition-colors shadow-none active:scale-95"
+            className="shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium text-[#B91C1C] bg-[#FFF1F2] border border-[#FECDD3] hover:bg-[#FEE2E2] flex items-center gap-1.5 transition-colors shadow-none active:scale-95"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset Filters</span>
@@ -322,7 +322,7 @@ const AdminBroadcasts = () => {
           </div>
           <input
             type="text"
-            placeholder="Search By Announcement Title & Content & Audience"
+            placeholder="Search by announcement title, message, or audience..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg text-[13px] sm:text-sm text-[#191E2B] placeholder-[#9AA4B8] focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors duration-200 shadow-none"
@@ -352,12 +352,12 @@ const AdminBroadcasts = () => {
        * Renders live announcement banners with embedded administration and status toggles.
        */}
       {isLoading ? (
-        <div className="p-12 text-center bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] shadow-none">
+        <div className="p-12 text-center bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] shadow-none">
           <SwirlingLoader className="w-10 h-10 text-[#4338CA] mx-auto mb-3" />
           <p className="text-sm font-medium text-[#4E5668]">Loading announcements...</p>
         </div>
       ) : filteredBroadcasts.length === 0 ? (
-        <div className="p-8 md:p-12 text-center bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] shadow-none">
+        <div className="p-8 md:p-12 text-center bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] shadow-none">
           <div className="w-12 h-12 rounded-lg bg-gray-100 text-[#757F94] flex items-center justify-center mx-auto mb-3">
             <Megaphone className="w-6 h-6" />
           </div>
@@ -381,7 +381,7 @@ const AdminBroadcasts = () => {
           {filteredBroadcasts.map((broadcast) => (
             <div
               key={broadcast._id}
-              className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg overflow-hidden transition-all hover:border-[#DCE1EA] shadow-none"
+              className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg overflow-hidden transition-all hover:border-[#DCE1EA] shadow-none"
             >
               {/**
                * Live Banner Visual Preview
@@ -457,7 +457,7 @@ const AdminBroadcasts = () => {
                   <button
                     type="button"
                     onClick={() => handleOpenEdit(broadcast)}
-                    className="cursor-pointer px-2.5 py-1 rounded-md text-xs font-semibold bg-[#FFFFFF] hover:bg-[#F0F2F6] text-[#4E5668] border border-[#DCE1EA] transition-all inline-flex items-center gap-1.5 active:scale-95"
+                    className="cursor-pointer px-2.5 py-1 rounded-md text-xs font-semibold bg-[#FBFBFC] hover:bg-[#F0F2F6] text-[#4E5668] border border-[#DCE1EA] transition-all inline-flex items-center gap-1.5 active:scale-95"
                   >
                     <Edit2 className="w-3.5 h-3.5 text-[#757F94]" />
                     <span>Edit</span>

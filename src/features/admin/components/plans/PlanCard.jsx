@@ -26,10 +26,10 @@ const PlanCard = ({ plan, onEdit }) => {
 
   return (
     <div
-      className={`relative bg-[#FFFFFF] rounded-lg border flex flex-col justify-between overflow-hidden transition-all duration-200 shadow-none h-full ${
+      className={`relative bg-[#FBFBFC] rounded-lg border flex flex-col justify-between overflow-hidden transition-all duration-200 shadow-none h-full ${
         plan.isRecommended
           ? 'border-[#4338CA]'
-          : 'border-[#DCE1EA] hover:border-[#DCE1EA]'
+          : 'border-[#DCE1EA] hover:border-[#C2C9D6]'
       }`}
     >
       {/**
@@ -214,7 +214,7 @@ const PlanCard = ({ plan, onEdit }) => {
        * Card Action Footer
        * Active merchant subscriber count and configuration modal trigger.
        */}
-      <div className="px-4 py-3 bg-[#F0F2F6]/80 border-t border-[#DCE1EA] flex items-center justify-between gap-3 shrink-0 shadow-none">
+      <div className="px-4 py-3 bg-[#F0F2F6] border-t border-[#DCE1EA] flex items-center justify-between gap-3 shrink-0 shadow-none">
         <div className="text-xs">
           <span className="text-[#757F94] block text-[10px] font-medium uppercase tracking-wider">
             {t('Subscribed Stores')}
@@ -227,7 +227,7 @@ const PlanCard = ({ plan, onEdit }) => {
         <button
           type="button"
           onClick={() => onEdit(plan)}
-          className="cursor-pointer h-8 px-3 rounded-lg bg-[#FFFFFF] border border-[#DCE1EA] hover:border-[#4338CA] hover:bg-[#4338CA]/5 text-[#4E5668] hover:text-[#4338CA] text-xs font-medium inline-flex items-center gap-1.5 transition-all active:scale-95 shadow-none"
+          className="cursor-pointer h-8 px-3 rounded-lg bg-[#FBFBFC] border border-[#DCE1EA] hover:border-[#4338CA] hover:bg-[#4338CA]/5 text-[#4E5668] hover:text-[#4338CA] text-xs font-medium inline-flex items-center gap-1.5 transition-all active:scale-95 shadow-none"
         >
           <Edit3 className="w-3.5 h-3.5 shrink-0" />
           <span>{t('Configure')}</span>

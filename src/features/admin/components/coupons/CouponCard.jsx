@@ -51,7 +51,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
 
   return (
     <div
-      className={`relative bg-[#FFFFFF] rounded-lg border transition-all duration-200 overflow-hidden hover:border-[#DCE1EA] ${
+      className={`relative bg-[#FBFBFC] rounded-lg border transition-all duration-200 overflow-hidden hover:border-[#C2C9D6] ${
         !coupon.isActive
           ? 'border-[#DCE1EA] opacity-75'
           : isExpired
@@ -234,7 +234,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
        * Action Toolbar
        * Pause/activate toggle switch and edit/delete coupon controls.
        */}
-      <div className="px-4 py-3 bg-[#F0F2F6]/80 border-t border-[#DCE1EA] flex items-center justify-between text-xs">
+      <div className="px-4 py-3 bg-[#F0F2F6] border-t border-[#DCE1EA] flex items-center justify-between text-xs">
         <button
           type="button"
           onClick={() => onToggleActive(coupon._id)}
@@ -251,7 +251,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
           <button
             type="button"
             onClick={() => onEdit(coupon)}
-            className="cursor-pointer p-1.5 text-[#757F94] hover:text-[#4338CA] hover:bg-[#FFFFFF] rounded-md transition-all active:scale-95 border border-transparent hover:border-[#DCE1EA]"
+            className="cursor-pointer p-1.5 text-[#757F94] hover:text-[#4338CA] hover:bg-[#FBFBFC] rounded-md transition-all active:scale-95 border border-transparent hover:border-[#DCE1EA]"
             title="Edit Coupon"
           >
             <Edit2 className="w-4 h-4" />
@@ -259,7 +259,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
           <button
             type="button"
             onClick={() => onDelete(coupon._id, coupon.code)}
-            className="cursor-pointer p-1.5 text-[#757F94] hover:text-rose-600 hover:bg-[#FFFFFF] rounded-md transition-all active:scale-95 border border-transparent hover:border-[#DCE1EA]"
+            className="cursor-pointer p-1.5 text-[#757F94] hover:text-rose-600 hover:bg-[#FBFBFC] rounded-md transition-all active:scale-95 border border-transparent hover:border-[#DCE1EA]"
             title="Delete Coupon"
           >
             <Trash2 className="w-4 h-4" />

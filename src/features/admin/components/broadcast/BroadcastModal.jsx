@@ -128,14 +128,14 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div
-          className="relative bg-[#FFFFFF] w-full sm:max-w-2xl rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl"
+          className="relative bg-[#FBFBFC] w-full sm:max-w-2xl rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-none"
           onClick={(e) => e.stopPropagation()}
         >
           {/**
            * Mobile Drag Pill
            * Visual drag pill indicator for mobile bottom sheet.
            */}
-          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#FFFFFF]">
+          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#FBFBFC]">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
           </div>
 
@@ -143,9 +143,9 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
            * Modal Header
            * Banner title with megaphone icon and round close button.
            */}
-          <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-[#E8ECF2] flex-shrink-0 gap-3">
+          <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-[#E8ECF2] bg-[#FBFBFC] flex-shrink-0 gap-3">
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
-              <div className="w-8 h-8 rounded bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0">
                 <Megaphone className="w-4 h-4" />
               </div>
               <div className="min-w-0 flex-1">
@@ -159,7 +159,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-[#757F94] bg-gray-100 hover:bg-gray-200 hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
+              className="cursor-pointer text-[#757F94] bg-[#F0F2F6] hover:bg-[#EBEEF4] hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
               title="Close"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -376,7 +376,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
               <button
                 type="button"
                 onClick={onClose}
-                className="cursor-pointer h-10 px-4 rounded bg-gray-100 hover:bg-gray-200 text-[#4E5668] text-xs sm:text-sm font-semibold transition-all active:scale-95 shadow-none"
+                className="cursor-pointer h-10 px-4 rounded-lg bg-[#FBFBFC] hover:bg-[#F0F2F6] text-[#4E5668] border border-[#DCE1EA] text-xs sm:text-sm font-semibold transition-all active:scale-95 shadow-none"
               >
                 Cancel
               </button>
@@ -384,7 +384,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
               <button
                 type="submit"
                 disabled={isSaving}
-                className="cursor-pointer h-10 px-5 rounded bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs sm:text-sm font-semibold inline-flex items-center gap-2 transition-all active:scale-95 shadow-none disabled:opacity-50"
+                className="cursor-pointer h-10 px-5 rounded-lg bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs sm:text-sm font-semibold inline-flex items-center gap-2 transition-all active:scale-95 shadow-none disabled:opacity-50"
               >
                 {isSaving ? (
                   <>
