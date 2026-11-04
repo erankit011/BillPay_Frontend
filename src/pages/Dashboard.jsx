@@ -50,7 +50,7 @@ const Dashboard = () => {
 
   if (isLoading) return (
     <div className="flex items-center justify-center min-h-[80vh]">
-      <SwirlingLoader />
+      <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#4338CA]" />
     </div>
   );
 
