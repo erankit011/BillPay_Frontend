@@ -88,10 +88,10 @@ const Register = () => {
        * Displays registration title and subtitle
        */}
       <div className="mb-5 sm:mb-6">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 mb-1.5 tracking-tight">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B] mb-1.5 tracking-tight">
           {t('Create Account')}
         </h2>
-        <p className="text-gray-500 font-medium text-xs sm:text-sm leading-relaxed">
+        <p className="text-[#757F94] font-medium text-xs sm:text-sm leading-relaxed">
           {t('Tell us about yourself to get started.')}
         </p>
       </div>
@@ -101,21 +101,21 @@ const Register = () => {
        * Flat informational banners if signups or operations are suspended
        */}
       {maintenanceMessage && (
-        <div className="mb-5 p-3.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-950 text-xs sm:text-sm font-medium flex items-start gap-2.5 text-left">
-          <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 shrink-0 mt-0.5" />
+        <div className="mb-5 p-3.5 rounded-lg bg-[#FEF3C7] border border-[#FDE68A] text-[#B45309] text-xs sm:text-sm font-medium flex items-start gap-2.5 text-left shadow-none">
+          <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-[#B45309] shrink-0 mt-0.5" />
           <div className="flex-1">
-            <p className="font-semibold text-xs sm:text-sm text-amber-900">{t('Platform Maintenance Active')}</p>
-            <p className="mt-0.5 text-xs text-amber-800 leading-relaxed font-normal">{maintenanceMessage}</p>
+            <p className="font-semibold text-xs sm:text-sm text-[#92400E]">{t('Platform Maintenance Active')}</p>
+            <p className="mt-0.5 text-xs text-[#B45309] leading-relaxed font-normal">{maintenanceMessage}</p>
           </div>
         </div>
       )}
 
       {!allowRegistration && (
-        <div className="mb-5 p-3.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-950 text-xs sm:text-sm font-medium flex items-start gap-2.5 text-left">
-          <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-rose-600 shrink-0 mt-0.5" />
+        <div className="mb-5 p-3.5 rounded-lg bg-[#FDF2F2] border border-[#F9D4D4] text-[#B91C1C] text-xs sm:text-sm font-medium flex items-start gap-2.5 text-left shadow-none">
+          <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[#B91C1C] shrink-0 mt-0.5" />
           <div className="flex-1">
-            <p className="font-semibold text-xs sm:text-sm text-rose-900">{t('Registrations Temporarily Closed')}</p>
-            <p className="mt-0.5 text-xs text-rose-800 leading-relaxed font-normal">
+            <p className="font-semibold text-xs sm:text-sm text-[#B91C1C]">{t('Registrations Temporarily Closed')}</p>
+            <p className="mt-0.5 text-xs text-[#B91C1C] leading-relaxed font-normal">
               {t('New store signups are currently paused by the platform administrator. Please check back later or contact support.')}
             </p>
           </div>
@@ -131,22 +131,22 @@ const Register = () => {
          * Full Name Field
          */}
         <div>
-          <label htmlFor="name" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5 text-left">
-            {t('Full Name')} <span className="text-red-500">*</span>
+          <label htmlFor="name" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5 text-left">
+            {t('Full Name')} <span className="text-[#B91C1C]">*</span>
           </label>
           <input
             id="name"
             {...register('name')}
-            className={`block w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none ${
+            className={`block w-full rounded-lg border bg-[#FBFBFC] px-3.5 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] placeholder:font-normal transition-colors duration-200 focus:outline-none shadow-none ${
               errors.name
-                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                : 'border-gray-300 focus:border-[#093C5D] focus:ring-[#093C5D]'
+                ? 'border-[#B91C1C] focus:border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20'
+                : 'border-[#DCE1EA] focus:border-[#4338CA] focus:ring-2 focus:ring-[#4338CA]/20'
             }`}
             placeholder={t('Enter full name (e.g. Ramesh Kumar)')}
             autoFocus
           />
           {errors.name && (
-            <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+            <p className="text-[#B91C1C] text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{errors.name.message}</span>
             </p>
@@ -157,22 +157,22 @@ const Register = () => {
          * Email Address Field
          */}
         <div>
-          <label htmlFor="email" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5 text-left">
-            {t('Email Address')} <span className="text-red-500">*</span>
+          <label htmlFor="email" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5 text-left">
+            {t('Email Address')} <span className="text-[#B91C1C]">*</span>
           </label>
           <input
             id="email"
             type="email"
             {...register('email')}
-            className={`block w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none ${
+            className={`block w-full rounded-lg border bg-[#FBFBFC] px-3.5 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] placeholder:font-normal transition-colors duration-200 focus:outline-none shadow-none ${
               errors.email
-                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                : 'border-gray-300 focus:border-[#093C5D] focus:ring-[#093C5D]'
+                ? 'border-[#B91C1C] focus:border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20'
+                : 'border-[#DCE1EA] focus:border-[#4338CA] focus:ring-2 focus:ring-[#4338CA]/20'
             }`}
             placeholder={t('Enter business or personal email')}
           />
           {errors.email && (
-            <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+            <p className="text-[#B91C1C] text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{errors.email.message}</span>
             </p>
@@ -183,23 +183,23 @@ const Register = () => {
          * Phone Number Field
          */}
         <div>
-          <label htmlFor="phone" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5 text-left">
-            {t('Phone Number')} <span className="text-red-500">*</span>
+          <label htmlFor="phone" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5 text-left">
+            {t('Phone Number')} <span className="text-[#B91C1C]">*</span>
           </label>
           <input
             id="phone"
             type="tel"
             {...register('phone')}
-            className={`block w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none ${
+            className={`block w-full rounded-lg border bg-[#FBFBFC] px-3.5 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] placeholder:font-normal transition-colors duration-200 focus:outline-none shadow-none ${
               errors.phone
-                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                : 'border-gray-300 focus:border-[#093C5D] focus:ring-[#093C5D]'
+                ? 'border-[#B91C1C] focus:border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20'
+                : 'border-[#DCE1EA] focus:border-[#4338CA] focus:ring-2 focus:ring-[#4338CA]/20'
             }`}
             placeholder={t('Enter 10-digit mobile number')}
             maxLength={10}
           />
           {errors.phone && (
-            <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+            <p className="text-[#B91C1C] text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{errors.phone.message}</span>
             </p>
@@ -210,18 +210,18 @@ const Register = () => {
          * Password Field with Eye Toggle
          */}
         <div>
-          <label htmlFor="password" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5 text-left">
-            {t('Password')} <span className="text-red-500">*</span>
+          <label htmlFor="password" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5 text-left">
+            {t('Password')} <span className="text-[#B91C1C]">*</span>
           </label>
           <div className="relative">
             <input
               id="password"
               type={showPassword ? 'text' : 'password'}
               {...register('password')}
-              className={`block w-full rounded-lg border bg-white pl-3.5 pr-11 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none ${
+              className={`block w-full rounded-lg border bg-[#FBFBFC] pl-3.5 pr-11 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] placeholder:font-normal transition-colors duration-200 focus:outline-none shadow-none ${
                 errors.password
-                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                  : 'border-gray-300 focus:border-[#093C5D] focus:ring-[#093C5D]'
+                  ? 'border-[#B91C1C] focus:border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20'
+                  : 'border-[#DCE1EA] focus:border-[#4338CA] focus:ring-2 focus:ring-[#4338CA]/20'
               }`}
               placeholder={t('Create password (min 6 characters)')}
             />
@@ -229,17 +229,17 @@ const Register = () => {
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="cursor-pointer absolute right-2 sm:right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1.5 rounded-md flex items-center justify-center focus:outline-none"
+              className="cursor-pointer absolute right-2 sm:right-2.5 top-1/2 -translate-y-1/2 text-[#757F94] hover:text-[#191E2B] transition-colors p-1.5 rounded-md flex items-center justify-center focus:outline-none"
             >
               {showPassword ? (
-                <EyeOff className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+                <EyeOff className="w-4 h-4 sm:w-5 sm:h-5 text-[#757F94]" />
               ) : (
-                <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+                <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-[#757F94]" />
               )}
             </button>
           </div>
           {errors.password && (
-            <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+            <p className="text-[#B91C1C] text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{errors.password.message}</span>
             </p>
@@ -252,7 +252,7 @@ const Register = () => {
         <button
           type="submit"
           disabled={isLoading || !allowRegistration}
-          className="w-full cursor-pointer bg-[#093C5D] hover:bg-[#072c44] text-white rounded-lg py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition-colors active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+          className="w-full cursor-pointer bg-[#4338CA] hover:bg-[#3730A3] text-white rounded-lg py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition-colors active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed mt-2 shadow-none"
         >
           {isLoading ? (
             <>
@@ -272,17 +272,17 @@ const Register = () => {
       <div className="mt-6 sm:mt-7">
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200"></div>
+            <div className="w-full border-t border-[#E8ECF2]"></div>
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="px-2.5 bg-white text-gray-500 font-medium">{t('Or continue with')}</span>
+            <span className="px-2.5 bg-[#FBFBFC] text-[#757F94] font-medium">{t('Or continue with')}</span>
           </div>
         </div>
 
         {allowRegistration ? (
           <a
             href={`${import.meta.env.VITE_API_URL}/auth/google`}
-            className="mt-4 sm:mt-5 w-full cursor-pointer py-2.5 sm:py-3 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg font-semibold text-sm sm:text-base flex items-center justify-center gap-2.5 transition-colors active:scale-[0.99]"
+            className="mt-4 sm:mt-5 w-full cursor-pointer py-2.5 sm:py-3 bg-[#FBFBFC] border border-[#DCE1EA] text-[#4E5668] hover:bg-[#F0F2F6] hover:text-[#191E2B] rounded-lg font-semibold text-sm sm:text-base flex items-center justify-center gap-2.5 transition-colors active:scale-[0.99] shadow-none"
           >
             <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -293,7 +293,7 @@ const Register = () => {
             {t('Continue With Google')}
           </a>
         ) : (
-          <div className="mt-4 sm:mt-5 w-full py-2.5 sm:py-3 bg-gray-50 border border-gray-200 text-gray-400 rounded-lg font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-not-allowed">
+          <div className="mt-4 sm:mt-5 w-full py-2.5 sm:py-3 bg-[#F0F2F6] border border-[#DCE1EA] text-[#757F94] rounded-lg font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-not-allowed shadow-none">
             {t('Google registration is temporarily paused')}
           </div>
         )}
@@ -304,9 +304,9 @@ const Register = () => {
        * Direct link redirecting existing users to login view
        */}
       <div className="mt-6 sm:mt-7 text-center text-xs sm:text-sm">
-        <span className="text-gray-500 font-medium">
+        <span className="text-[#757F94] font-medium">
           {t('Already have an account?')}
-          <Link to="/login" className="text-[#093C5D] font-semibold cursor-pointer ml-1.5 hover:underline">
+          <Link to="/login" className="text-[#4338CA] hover:text-[#3730A3] font-semibold cursor-pointer ml-1.5 hover:underline">
             {t('Login Here')}
           </Link>
         </span>

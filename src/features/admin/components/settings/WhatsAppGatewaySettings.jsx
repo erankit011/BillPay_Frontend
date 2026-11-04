@@ -164,34 +164,34 @@ const WhatsAppGatewaySettings = () => {
        * WhatsApp Business Gateway Section Card
        * Central hub for device pairing, real-time Baileys status, and anti-ban metrics.
        */}
-      <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
+      <section className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] overflow-hidden shadow-none">
         {/**
          * Gateway Header Toolbar
          * Displays component title, engine badge, and real-time operational status tag.
          */}
-        <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
+        <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2] flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center shrink-0 border ${
               isConnected
                 ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                 : isScanQR
                 ? 'bg-amber-50 text-amber-700 border-amber-200'
-                : 'bg-[#093C5D]/10 text-[#093C5D] border-[#093C5D]/20'
+                : 'bg-[#EEF0FB] text-[#4338CA] border-[#D8DCF5]'
             }`}>
               <MessageCircle className={`w-5 h-5 ${
                 isConnected
                   ? 'text-emerald-700'
                   : isScanQR
                   ? 'text-amber-700'
-                  : 'text-[#093C5D]'
+                  : 'text-[#4338CA]'
               }`} />
             </div>
             <div>
-              <h2 className="text-base md:text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <h2 className="text-base md:text-lg font-semibold text-[#191E2B] flex items-center gap-2">
                 <span>{t('WhatsApp Business Gateway')}</span>
-                <span className="hidden sm:inline-block text-xs font-normal text-gray-400">• Baileys Engine</span>
+                <span className="hidden sm:inline-block text-xs font-normal text-[#757F94]">• Baileys Engine</span>
               </h2>
-              <p className="text-xs text-gray-500 mt-0.5 font-normal">
+              <p className="text-xs text-[#757F94] mt-0.5 font-normal">
                 {t('Automated bill slips, payment reminders, and customer recovery alerts')}
               </p>
             </div>
@@ -230,8 +230,8 @@ const WhatsAppGatewaySettings = () => {
         <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
           {isLoading && (
             <div className="py-12 flex flex-col items-center justify-center gap-3">
-              <SwirlingLoader className="w-8 h-8 text-[#093C5D]" />
-              <p className="text-xs text-gray-500 font-medium">{t('Checking gateway status...')}</p>
+              <SwirlingLoader className="w-8 h-8 text-[#4338CA]" />
+              <p className="text-xs text-[#757F94] font-medium">{t('Checking gateway status...')}</p>
             </div>
           )}
 
@@ -266,14 +266,14 @@ const WhatsAppGatewaySettings = () => {
                    * Active Device Overview Container
                    * Displays authenticated phone number, device name, and management actions.
                    */}
-                  <div className="bg-gray-50/70 border border-gray-200 rounded-lg p-3.5 sm:p-4.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 sm:gap-4">
+                  <div className="bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg p-3.5 sm:p-4.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 sm:gap-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 border border-emerald-700/20 shadow-none">
                         <MessageCircle className="w-5 h-5 text-white" />
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <h3 className="text-sm sm:text-base font-semibold text-gray-900 truncate">
+                          <h3 className="text-sm sm:text-base font-semibold text-[#191E2B] truncate">
                             {statusData.connectedUser?.name || 'WhatsApp Business'}
                           </h3>
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
@@ -281,14 +281,14 @@ const WhatsAppGatewaySettings = () => {
                             <span>{t('Active')}</span>
                           </span>
                         </div>
-                        <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-600 font-normal">
-                          <span className="font-semibold text-gray-800">
+                        <div className="flex items-center gap-2 mt-0.5 text-xs text-[#4E5668] font-normal">
+                          <span className="font-semibold text-[#191E2B]">
                             {formatPhoneNumber(statusData.connectedUser?.id)}
                           </span>
                           <button
                             type="button"
                             onClick={() => handleCopyPhone(formatPhoneNumber(statusData.connectedUser?.id))}
-                            className="text-gray-400 hover:text-gray-600 transition-colors p-0.5 cursor-pointer"
+                            className="text-[#757F94] hover:text-[#4E5668] transition-colors p-0.5 cursor-pointer"
                             title={t('Copy Phone Number')}
                           >
                             {copiedPhone ? (
@@ -298,7 +298,7 @@ const WhatsAppGatewaySettings = () => {
                             )}
                           </button>
                           <span className="text-gray-300 select-none">•</span>
-                          <span className="text-gray-500 font-normal truncate">{t('Linked Device Session')}</span>
+                          <span className="text-[#757F94] font-normal truncate">{t('Linked Device Session')}</span>
                         </div>
                       </div>
                     </div>
@@ -307,15 +307,15 @@ const WhatsAppGatewaySettings = () => {
                      * Gateway Lifecycle Action Buttons
                      * Allows warm restart of web socket or complete device logout and credential purge.
                      */}
-                    <div className="flex items-center gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-200">
+                    <div className="flex items-center gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#DCE1EA]">
                       <button
                         type="button"
                         onClick={() => restartMutation.mutate()}
                         disabled={restartMutation.isPending}
-                        className="cursor-pointer flex-1 sm:flex-initial h-8 px-3 text-xs font-semibold text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg inline-flex items-center justify-center gap-1.5 transition-colors active:scale-95 shadow-none disabled:opacity-50"
+                        className="cursor-pointer flex-1 sm:flex-initial h-8 px-3 text-xs font-semibold text-[#4E5668] bg-[#FFFFFF] hover:bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg inline-flex items-center justify-center gap-1.5 transition-colors active:scale-95 shadow-none disabled:opacity-50"
                         title={t('Re-initialize socket connection without losing credentials')}
                       >
-                        <RotateCcw className={`w-3.5 h-3.5 text-gray-500 ${restartMutation.isPending ? 'animate-spin' : ''}`} />
+                        <RotateCcw className={`w-3.5 h-3.5 text-[#757F94] ${restartMutation.isPending ? 'animate-spin' : ''}`} />
                         <span>{t('Restart Gateway')}</span>
                       </button>
 
@@ -339,18 +339,18 @@ const WhatsAppGatewaySettings = () => {
                      * Outbox Message Queue Metric Card
                      * Monitors pending message backlog and automated pacing.
                      */}
-                    <div className="bg-white rounded-lg border border-gray-200 p-3.5 sm:p-4 flex flex-col justify-between hover:border-gray-300 transition-colors shadow-none">
-                      <div className="flex items-center justify-between text-xs text-gray-500 font-medium mb-2">
-                        <span className="uppercase text-[10px] tracking-wider font-semibold text-gray-600">{t('Outbox Message Queue')}</span>
-                        <div className="w-7 h-7 rounded-md bg-[#093C5D]/10 text-[#093C5D] border border-[#093C5D]/20 flex items-center justify-center shrink-0">
+                    <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 flex flex-col justify-between hover:border-[#DCE1EA] transition-colors shadow-none">
+                      <div className="flex items-center justify-between text-xs text-[#757F94] font-medium mb-2">
+                        <span className="uppercase text-[10px] tracking-wider font-semibold text-[#4E5668]">{t('Outbox Message Queue')}</span>
+                        <div className="w-7 h-7 rounded-md bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0">
                           <Zap className="w-3.5 h-3.5" />
                         </div>
                       </div>
-                      <div className="text-xl font-semibold text-gray-900">
+                      <div className="text-xl font-semibold text-[#191E2B]">
                         {statusData.queueLength ?? 0}
-                        <span className="text-xs font-medium text-gray-500 ml-1.5">{t('messages')}</span>
+                        <span className="text-xs font-medium text-[#757F94] ml-1.5">{t('messages')}</span>
                       </div>
-                      <p className="text-[11px] text-gray-500 font-normal mt-1">
+                      <p className="text-[11px] text-[#757F94] font-normal mt-1">
                         {t('Pacing 40s-60s for anti-ban')}
                       </p>
                     </div>
@@ -359,14 +359,14 @@ const WhatsAppGatewaySettings = () => {
                      * Circuit Breaker & Rate Limiter Metric Card
                      * Real-time safety status protecting against WhatsApp anti-spam bans.
                      */}
-                    <div className="bg-white rounded-lg border border-gray-200 p-3.5 sm:p-4 flex flex-col justify-between hover:border-gray-300 transition-colors shadow-none">
-                      <div className="flex items-center justify-between text-xs text-gray-500 font-medium mb-2">
-                        <span className="uppercase text-[10px] tracking-wider font-semibold text-gray-600">{t('Rate-Limit Protection')}</span>
+                    <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 flex flex-col justify-between hover:border-[#DCE1EA] transition-colors shadow-none">
+                      <div className="flex items-center justify-between text-xs text-[#757F94] font-medium mb-2">
+                        <span className="uppercase text-[10px] tracking-wider font-semibold text-[#4E5668]">{t('Rate-Limit Protection')}</span>
                         <div className="w-7 h-7 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center shrink-0">
                           <ShieldCheck className="w-3.5 h-3.5" />
                         </div>
                       </div>
-                      <div className="text-base font-semibold text-gray-900 truncate">
+                      <div className="text-base font-semibold text-[#191E2B] truncate">
                         {statusData.isCircuitBroken ? (
                           <span className="text-amber-600">
                             {t('Cooldown')} ({statusData.circuitBreakerRemainingMins || 1}m)
@@ -375,7 +375,7 @@ const WhatsAppGatewaySettings = () => {
                           <span className="text-emerald-700">{t('Healthy & Idle')}</span>
                         )}
                       </div>
-                      <p className="text-[11px] text-gray-500 font-normal mt-1">
+                      <p className="text-[11px] text-[#757F94] font-normal mt-1">
                         {t('Auto circuit breaker defense')}
                       </p>
                     </div>
@@ -384,17 +384,17 @@ const WhatsAppGatewaySettings = () => {
                      * Engine & Authentication Protocol Metric Card
                      * Shows current underlying Baileys library and session store type.
                      */}
-                    <div className="bg-white rounded-lg border border-gray-200 p-3.5 sm:p-4 flex flex-col justify-between hover:border-gray-300 transition-colors shadow-none">
-                      <div className="flex items-center justify-between text-xs text-gray-500 font-medium mb-2">
-                        <span className="uppercase text-[10px] tracking-wider font-semibold text-gray-600">{t('Engine & Auth')}</span>
-                        <div className="w-7 h-7 rounded-md bg-gray-50 text-gray-600 border border-gray-200 flex items-center justify-center shrink-0">
+                    <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 flex flex-col justify-between hover:border-[#DCE1EA] transition-colors shadow-none">
+                      <div className="flex items-center justify-between text-xs text-[#757F94] font-medium mb-2">
+                        <span className="uppercase text-[10px] tracking-wider font-semibold text-[#4E5668]">{t('Engine & Auth')}</span>
+                        <div className="w-7 h-7 rounded-md bg-[#F0F2F6] text-[#4E5668] border border-[#DCE1EA] flex items-center justify-center shrink-0">
                           <Server className="w-3.5 h-3.5" />
                         </div>
                       </div>
-                      <div className="text-base font-semibold text-gray-900 truncate">
+                      <div className="text-base font-semibold text-[#191E2B] truncate">
                         Baileys v7.0
                       </div>
-                      <p className="text-[11px] text-gray-500 font-normal mt-1">
+                      <p className="text-[11px] text-[#757F94] font-normal mt-1">
                         {t('MongoDB Cloud Synced')}
                       </p>
                     </div>
@@ -403,14 +403,14 @@ const WhatsAppGatewaySettings = () => {
                      * Session Persistence & Timestamp Metric Card
                      * Tracks continuous session creation and connection stability.
                      */}
-                    <div className="bg-white rounded-lg border border-gray-200 p-3.5 sm:p-4 flex flex-col justify-between hover:border-gray-300 transition-colors shadow-none">
-                      <div className="flex items-center justify-between text-xs text-gray-500 font-medium mb-2">
-                        <span className="uppercase text-[10px] tracking-wider font-semibold text-gray-600">{t('Session Persistence')}</span>
-                        <div className="w-7 h-7 rounded-md bg-gray-50 text-gray-600 border border-gray-200 flex items-center justify-center shrink-0">
+                    <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 flex flex-col justify-between hover:border-[#DCE1EA] transition-colors shadow-none">
+                      <div className="flex items-center justify-between text-xs text-[#757F94] font-medium mb-2">
+                        <span className="uppercase text-[10px] tracking-wider font-semibold text-[#4E5668]">{t('Session Persistence')}</span>
+                        <div className="w-7 h-7 rounded-md bg-[#F0F2F6] text-[#4E5668] border border-[#DCE1EA] flex items-center justify-center shrink-0">
                           <Clock className="w-3.5 h-3.5" />
                         </div>
                       </div>
-                      <div className="text-sm font-semibold text-gray-900 truncate">
+                      <div className="text-sm font-semibold text-[#191E2B] truncate">
                         {formatSessionDate(statusData.lastConnectedAt)}
                       </div>
                       <p className="text-[11px] text-emerald-700 font-normal mt-1">
@@ -432,11 +432,11 @@ const WhatsAppGatewaySettings = () => {
                    * Detailed walk-through for linking WhatsApp business account on mobile.
                    */}
                   <div className="flex-1 space-y-4 max-w-xl">
-                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
+                    <h3 className="text-lg sm:text-xl font-semibold text-[#191E2B]">
                       {t('Link Business WhatsApp to UdharPay')}
                     </h3>
 
-                    <p className="text-xs sm:text-sm text-gray-600 font-normal leading-relaxed">
+                    <p className="text-xs sm:text-sm text-[#4E5668] font-normal leading-relaxed">
                       {t('Scan this QR code from the official business phone to authorize UdharPay for sending automated customer invoices, recovery reminders, and payment receipts.')}
                     </p>
 
@@ -446,27 +446,27 @@ const WhatsAppGatewaySettings = () => {
                      */}
                     <ol className="space-y-3 pt-1">
                       <li className="flex items-start gap-3">
-                        <span className="w-6 h-6 rounded-full bg-[#093C5D] text-white text-xs font-semibold flex items-center justify-center shrink-0 shadow-none select-none">
+                        <span className="w-6 h-6 rounded-full bg-[#4338CA] text-white text-xs font-semibold flex items-center justify-center shrink-0 shadow-none select-none">
                           1
                         </span>
-                        <p className="text-xs sm:text-sm text-gray-700 font-normal leading-6">
-                          {t('Open')} <span className="font-semibold text-gray-900">{t('WhatsApp')}</span> {t('on your official business phone.')}
+                        <p className="text-xs sm:text-sm text-[#4E5668] font-normal leading-6">
+                          {t('Open')} <span className="font-semibold text-[#191E2B]">{t('WhatsApp')}</span> {t('on your official business phone.')}
                         </p>
                       </li>
                       <li className="flex items-start gap-3">
-                        <span className="w-6 h-6 rounded-full bg-[#093C5D] text-white text-xs font-semibold flex items-center justify-center shrink-0 shadow-none select-none">
+                        <span className="w-6 h-6 rounded-full bg-[#4338CA] text-white text-xs font-semibold flex items-center justify-center shrink-0 shadow-none select-none">
                           2
                         </span>
-                        <p className="text-xs sm:text-sm text-gray-700 font-normal leading-6">
-                          {t('Tap')} <span className="font-semibold text-gray-900">{t('Settings')}</span> {t('(or Menu ⋮ on Android) and select')} <span className="font-semibold text-gray-900">{t('Linked Devices')}</span>.
+                        <p className="text-xs sm:text-sm text-[#4E5668] font-normal leading-6">
+                          {t('Tap')} <span className="font-semibold text-[#191E2B]">{t('Settings')}</span> {t('(or Menu ⋮ on Android) and select')} <span className="font-semibold text-[#191E2B]">{t('Linked Devices')}</span>.
                         </p>
                       </li>
                       <li className="flex items-start gap-3">
-                        <span className="w-6 h-6 rounded-full bg-[#093C5D] text-white text-xs font-semibold flex items-center justify-center shrink-0 shadow-none select-none">
+                        <span className="w-6 h-6 rounded-full bg-[#4338CA] text-white text-xs font-semibold flex items-center justify-center shrink-0 shadow-none select-none">
                           3
                         </span>
-                        <p className="text-xs sm:text-sm text-gray-700 font-normal leading-6">
-                          {t('Tap')} <span className="font-semibold text-gray-900">{t('Link a Device')}</span> {t('and point your camera at this QR code.')}
+                        <p className="text-xs sm:text-sm text-[#4E5668] font-normal leading-6">
+                          {t('Tap')} <span className="font-semibold text-[#191E2B]">{t('Link a Device')}</span> {t('and point your camera at this QR code.')}
                         </p>
                       </li>
                     </ol>
@@ -487,7 +487,7 @@ const WhatsAppGatewaySettings = () => {
                         type="button"
                         onClick={() => restartMutation.mutate()}
                         disabled={restartMutation.isPending}
-                        className="cursor-pointer h-9 px-4 text-xs font-semibold text-white bg-[#093C5D] hover:bg-[#082a42] rounded-lg inline-flex items-center gap-1.5 transition-colors active:scale-95 shadow-none disabled:opacity-50"
+                        className="cursor-pointer h-9 px-4 text-xs font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] rounded-lg inline-flex items-center gap-1.5 transition-colors active:scale-95 shadow-none disabled:opacity-50"
                       >
                         <RotateCcw className={`w-3.5 h-3.5 ${restartMutation.isPending ? 'animate-spin' : ''}`} />
                         <span>{t('Regenerate Fresh QR')}</span>
@@ -499,25 +499,25 @@ const WhatsAppGatewaySettings = () => {
                    * Sharp QR Code Scanner Frame
                    * High-contrast pairing matrix with live pulse status indicator.
                    */}
-                  <div className="shrink-0 flex flex-col items-center justify-center p-5 bg-gray-50/80 border border-gray-200 rounded-lg">
+                  <div className="shrink-0 flex flex-col items-center justify-center p-5 bg-[#F0F2F6]/80 border border-[#DCE1EA] rounded-lg">
                     {statusData.qrDataUrl ? (
                       <div className="flex flex-col items-center">
-                        <div className="p-2.5 bg-white rounded-lg border-2 border-[#093C5D] shadow-sm">
+                        <div className="p-2.5 bg-[#FFFFFF] rounded-lg border-2 border-[#4338CA] shadow-sm">
                           <img
                             src={statusData.qrDataUrl}
                             alt="WhatsApp Scan QR"
                             className="w-52 h-52 sm:w-60 sm:h-60 object-contain rounded"
                           />
                         </div>
-                        <div className="mt-3 flex items-center justify-center gap-1.5 text-xs font-semibold text-[#093C5D]">
+                        <div className="mt-3 flex items-center justify-center gap-1.5 text-xs font-semibold text-[#4338CA]">
                           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                           <span>{t('Live QR • Ready to Scan')}</span>
                         </div>
                       </div>
                     ) : (
-                      <div className="w-52 h-52 sm:w-60 sm:h-60 flex flex-col items-center justify-center gap-3 bg-white rounded-lg border border-dashed border-gray-300">
-                        <SwirlingLoader className="w-7 h-7 text-[#093C5D]" />
-                        <p className="text-xs text-gray-500 font-medium">{t('Generating QR Code...')}</p>
+                      <div className="w-52 h-52 sm:w-60 sm:h-60 flex flex-col items-center justify-center gap-3 bg-[#FFFFFF] rounded-lg border border-dashed border-[#DCE1EA]">
+                        <SwirlingLoader className="w-7 h-7 text-[#4338CA]" />
+                        <p className="text-xs text-[#757F94] font-medium">{t('Generating QR Code...')}</p>
                       </div>
                     )}
                   </div>
@@ -530,19 +530,19 @@ const WhatsAppGatewaySettings = () => {
                */}
               {!isConnected && !isScanQR && (
                 <div className="p-8 text-center space-y-4">
-                  <div className="w-12 h-12 rounded-lg bg-gray-100 text-gray-400 flex items-center justify-center mx-auto border border-gray-200">
-                    <MessageCircle className="w-6 h-6 text-gray-400" />
+                  <div className="w-12 h-12 rounded-lg bg-gray-100 text-[#757F94] flex items-center justify-center mx-auto border border-[#DCE1EA]">
+                    <MessageCircle className="w-6 h-6 text-[#757F94]" />
                   </div>
                   <div className="max-w-md mx-auto">
-                    <h3 className="text-base font-semibold text-gray-900">
+                    <h3 className="text-base font-semibold text-[#191E2B]">
                       {t('WhatsApp Gateway Engine Offline')}
                     </h3>
-                    <p className="text-xs text-gray-500 font-medium mt-1 leading-relaxed">
+                    <p className="text-xs text-[#757F94] font-medium mt-1 leading-relaxed">
                       {t('The gateway is currently offline or waiting for initialization. Click below to start the Baileys engine and generate a pairing QR code.')}
                     </p>
                     {statusData?.disconnectReason && (
-                      <div className="mt-3 inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs sm:text-sm font-medium text-gray-700 font-sans shadow-none">
-                        <span className="text-gray-400 font-normal">{t('Status')}:</span>
+                      <div className="mt-3 inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg text-xs sm:text-sm font-medium text-[#4E5668] font-sans shadow-none">
+                        <span className="text-[#757F94] font-normal">{t('Status')}:</span>
                         <span>{statusData.disconnectReason}</span>
                       </div>
                     )}
@@ -552,7 +552,7 @@ const WhatsAppGatewaySettings = () => {
                     type="button"
                     onClick={() => restartMutation.mutate()}
                     disabled={restartMutation.isPending}
-                    className="cursor-pointer h-9 px-4 text-xs font-semibold text-white bg-[#093C5D] hover:bg-[#082a42] rounded-lg inline-flex items-center gap-2 transition-all active:scale-95 shadow-none disabled:opacity-50"
+                    className="cursor-pointer h-9 px-4 text-xs font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] rounded-lg inline-flex items-center gap-2 transition-all active:scale-95 shadow-none disabled:opacity-50"
                   >
                     <RotateCcw className={`w-3.5 h-3.5 ${restartMutation.isPending ? 'animate-spin' : ''}`} />
                     <span>{t('Initialize WhatsApp Gateway')}</span>
@@ -571,16 +571,16 @@ const WhatsAppGatewaySettings = () => {
       {showDisconnectModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
-            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
             onClick={() => setShowDisconnectModal(false)}
           />
 
-          <div className="relative bg-white rounded-lg shadow-2xl w-full max-w-sm p-6 text-center z-10 border border-gray-100 animate-in fade-in zoom-in-95 duration-150">
+          <div className="relative bg-[#FFFFFF] rounded-lg shadow-2xl w-full max-w-sm p-6 text-center z-10 border border-[#E8ECF2] animate-in fade-in zoom-in-95 duration-150">
             <div className="w-12 h-12 rounded-full bg-red-50 text-red-600 mx-auto flex items-center justify-center mb-4 border border-red-100">
               <LogOut className="w-6 h-6 ml-0.5 text-red-600" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">{t('Disconnect WhatsApp?')}</h3>
-            <p className="text-xs text-gray-500 font-medium leading-relaxed mb-6">
+            <h3 className="text-lg font-semibold text-[#191E2B] mb-1">{t('Disconnect WhatsApp?')}</h3>
+            <p className="text-xs text-[#757F94] font-medium leading-relaxed mb-6">
               {t('This will log out the linked WhatsApp business session and clear saved keys from the cloud. Automated reminders and bill slips will be paused until a new device is paired.')}
             </p>
 
@@ -588,7 +588,7 @@ const WhatsAppGatewaySettings = () => {
               <button
                 type="button"
                 onClick={() => setShowDisconnectModal(false)}
-                className="flex-1 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-xs transition-colors cursor-pointer"
+                className="flex-1 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-[#4E5668] rounded-lg font-semibold text-xs transition-colors cursor-pointer"
               >
                 {t('Cancel')}
               </button>

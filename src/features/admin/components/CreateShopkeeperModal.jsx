@@ -307,7 +307,7 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
        * Backdrop Overlay
        */}
       <div
-        className="fixed inset-0 bg-gray-900/60 backdrop-blur-xs transition-opacity animate-modal-overlay overscroll-contain"
+        className="fixed inset-0 bg-[#191E2B]/50 backdrop-blur-xs transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
         onWheel={(e) => e.preventDefault()}
         onTouchMove={(e) => e.preventDefault()}
@@ -317,24 +317,24 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
        * Modal Container Shell
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-6 z-[60] pointer-events-none">
-        <div className="relative bg-white w-full sm:max-w-3xl rounded-t-2xl sm:rounded-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-none">
+        <div className="relative bg-[#FFFFFF] w-full sm:max-w-3xl rounded-t-2xl sm:rounded-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-none">
           
           {/**
            * Mobile Drag Handle
            */}
-          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-white">
+          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#FFFFFF]">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
           </div>
 
           {/**
            * Modal Header Toolbar
            */}
-          <div className="px-5 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white flex-shrink-0 gap-3">
+          <div className="px-5 sm:px-6 py-4 border-b border-[#E8ECF2] flex items-center justify-between bg-[#FFFFFF] flex-shrink-0 gap-3">
             <div className="min-w-0 flex-1">
-              <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-snug truncate">
+              <h3 className="text-base sm:text-lg font-semibold text-[#191E2B] leading-snug truncate">
                 Create New Shopkeeper Account
               </h3>
-              <p className="text-xs text-gray-500 font-medium truncate mt-0.5">
+              <p className="text-xs text-[#757F94] font-medium truncate mt-0.5">
                 Provision merchant credentials, complete business setup, and configure plan
               </p>
             </div>
@@ -343,7 +343,7 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="cursor-pointer text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 border border-gray-200"
+              className="cursor-pointer text-[#757F94] hover:text-[#191E2B] bg-gray-100 hover:bg-gray-200 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 border border-[#DCE1EA]"
               title="Close"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -358,15 +358,15 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
 
               {/** Section 1: Merchant Credentials */}
               <div>
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-[#757F94] mb-3">
                   Merchant Credentials
                 </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/** Name */}
                   <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
-                      Merchant Full Name <span className="text-red-500">*</span>
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
+                      Merchant Full Name <span className="text-[#B91C1C]">*</span>
                     </label>
                     <input
                       type="text"
@@ -378,17 +378,17 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                       }}
                       className={`block w-full rounded-lg border ${
                         errors.name
-                          ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                          : 'border-gray-300 focus:ring-[#3A3550] focus:border-[#3A3550]'
+                          ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
+                          : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
                       } px-3 py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
                     />
-                    {errors.name && <p className="text-red-500 text-xs mt-1 font-medium">{errors.name}</p>}
+                    {errors.name && <p className="text-[#B91C1C] text-xs mt-1 font-medium">{errors.name}</p>}
                   </div>
 
                   {/** Email */}
                   <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
-                      Email Address <span className="text-red-500">*</span>
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
+                      Email Address <span className="text-[#B91C1C]">*</span>
                     </label>
                     <input
                       type="email"
@@ -400,17 +400,17 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                       }}
                       className={`block w-full rounded-lg border ${
                         errors.email
-                          ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                          : 'border-gray-300 focus:ring-[#3A3550] focus:border-[#3A3550]'
+                          ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
+                          : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
                       } px-3 py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
                     />
-                    {errors.email && <p className="text-red-500 text-xs mt-1 font-medium">{errors.email}</p>}
+                    {errors.email && <p className="text-[#B91C1C] text-xs mt-1 font-medium">{errors.email}</p>}
                   </div>
 
                   {/** Mobile Number */}
                   <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
-                      Mobile Number (10 Digits) <span className="text-red-500">*</span>
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
+                      Mobile Number (10 Digits) <span className="text-[#B91C1C]">*</span>
                     </label>
                     <input
                       type="tel"
@@ -422,25 +422,25 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                       }}
                       className={`block w-full rounded-lg border ${
                         errors.phone
-                          ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                          : 'border-gray-300 focus:ring-[#3A3550] focus:border-[#3A3550]'
+                          ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
+                          : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
                       } px-3 py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
                     />
-                    {errors.phone && <p className="text-red-500 text-xs mt-1 font-medium">{errors.phone}</p>}
+                    {errors.phone && <p className="text-[#B91C1C] text-xs mt-1 font-medium">{errors.phone}</p>}
                   </div>
 
                   {/** Password */}
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
-                      <label className="text-xs sm:text-[13px] font-medium text-gray-700">
-                        Account Password <span className="text-red-500">*</span>
+                      <label className="text-xs sm:text-[13px] font-medium text-[#4E5668]">
+                        Account Password <span className="text-[#B91C1C]">*</span>
                       </label>
                       <button
                         type="button"
                         onClick={handleGeneratePassword}
-                        className="cursor-pointer text-[11px] font-semibold text-[#585272] hover:text-[#3A3550] flex items-center gap-1 transition-colors"
+                        className="cursor-pointer text-[11px] font-semibold text-[#4338CA] hover:text-[#4338CA] flex items-center gap-1 transition-colors"
                       >
-                        <Sparkles className="w-3 h-3 text-[#585272]" />
+                        <Sparkles className="w-3 h-3 text-[#4338CA]" />
                         Generate Strong
                       </button>
                     </div>
@@ -455,8 +455,8 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         }}
                         className={`block w-full rounded-lg border ${
                           errors.password
-                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                            : 'border-gray-300 focus:ring-[#3A3550] focus:border-[#3A3550]'
+                            ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
+                            : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
                         } px-3 pr-16 py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
                       />
                       <div className="absolute inset-y-0 right-0 flex items-center pr-2 gap-1">
@@ -464,7 +464,7 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                           <button
                             type="button"
                             onClick={handleCopyPassword}
-                            className="cursor-pointer p-1 text-gray-400 hover:text-gray-700 transition-colors"
+                            className="cursor-pointer p-1 text-[#757F94] hover:text-[#4E5668] transition-colors"
                             title="Copy Password"
                           >
                             {copiedPassword ? (
@@ -477,7 +477,7 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="cursor-pointer p-1 text-gray-400 hover:text-gray-700 transition-colors"
+                          className="cursor-pointer p-1 text-[#757F94] hover:text-[#4E5668] transition-colors"
                           title={showPassword ? 'Hide password' : 'Show password'}
                         >
                           {showPassword ? (
@@ -488,34 +488,34 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         </button>
                       </div>
                     </div>
-                    {errors.password && <p className="text-red-500 text-xs mt-1 font-medium">{errors.password}</p>}
+                    {errors.password && <p className="text-[#B91C1C] text-xs mt-1 font-medium">{errors.password}</p>}
                   </div>
                 </div>
               </div>
 
               {/** Section 2: Business Information (Exact 1:1 Matching BusinessSetup.jsx) */}
-              <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
+              <section className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] overflow-hidden shadow-none">
                 
                 {/** Card Header with Store Icon and Subtitle */}
-                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white">
+                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#FFFFFF]">
                   <div>
-                    <h2 className="text-base md:text-lg font-semibold text-gray-900 flex items-center gap-2">
-                      <Store className="w-5 h-5 text-[#3A3550]" />
+                    <h2 className="text-base md:text-lg font-semibold text-[#191E2B] flex items-center gap-2">
+                      <Store className="w-5 h-5 text-[#4338CA]" />
                       Business Information
                     </h2>
-                    <p className="text-xs text-gray-500 mt-0.5 font-medium">
+                    <p className="text-xs text-[#757F94] mt-0.5 font-medium">
                       Details shown on your invoices and receipts
                     </p>
                   </div>
 
-                  <label className="inline-flex items-center gap-2 cursor-pointer select-none bg-gray-50 hover:bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-200 transition-colors self-start sm:self-auto">
+                  <label className="inline-flex items-center gap-2 cursor-pointer select-none bg-[#F0F2F6] hover:bg-gray-100 px-3 py-1.5 rounded-lg border border-[#DCE1EA] transition-colors self-start sm:self-auto">
                     <input
                       type="checkbox"
                       checked={formData.isBusinessSetupCompleted}
                       onChange={(e) => setFormData({ ...formData, isBusinessSetupCompleted: e.target.checked })}
-                      className="w-4 h-4 rounded text-[#3A3550] focus:ring-[#3A3550] border-gray-300 cursor-pointer"
+                      className="w-4 h-4 rounded text-[#4338CA] focus:ring-[#3A3550] border-[#DCE1EA] cursor-pointer"
                     />
-                    <span className="text-xs font-semibold text-gray-800">
+                    <span className="text-xs font-semibold text-[#191E2B]">
                       Business Setup Completed (DB: true)
                     </span>
                   </label>
@@ -527,8 +527,8 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
 
                     {/** 1. Business / Shop Name */}
                     <div className="md:col-span-2">
-                      <label htmlFor="shopName" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
-                        Business / Shop Name {formData.isBusinessSetupCompleted && <span className="text-red-500">*</span>}
+                      <label htmlFor="shopName" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
+                        Business / Shop Name {formData.isBusinessSetupCompleted && <span className="text-[#B91C1C]">*</span>}
                       </label>
                       <input
                         id="shopName"
@@ -541,17 +541,17 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         }}
                         className={`block w-full rounded-lg border ${
                           errors.shopName
-                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                            : 'border-gray-300 focus:ring-[#3A3550] focus:border-[#3A3550]'
+                            ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
+                            : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
                         } px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
                         placeholder="Enter Business / Shop Name"
                       />
-                      {errors.shopName && <p className="text-red-500 text-xs mt-1 font-medium">{errors.shopName}</p>}
+                      {errors.shopName && <p className="text-[#B91C1C] text-xs mt-1 font-medium">{errors.shopName}</p>}
                     </div>
 
                     {/** 2. GST Number */}
                     <div>
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                      <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
                         GST Number
                       </label>
                       <input
@@ -565,16 +565,16 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         placeholder="23ABCDE0000A1A2"
                         className={`block w-full rounded-lg border ${
                           errors.gstNumber
-                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                            : 'border-gray-300 focus:ring-[#3A3550] focus:border-[#3A3550]'
+                            ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
+                            : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
                         } px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none uppercase`}
                       />
-                      {errors.gstNumber && <p className="text-red-500 text-xs mt-1 font-medium">{errors.gstNumber}</p>}
+                      {errors.gstNumber && <p className="text-[#B91C1C] text-xs mt-1 font-medium">{errors.gstNumber}</p>}
                     </div>
 
                     {/** 3. UPI Id */}
                     <div>
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                      <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
                         UPI Id
                       </label>
                       <input
@@ -583,14 +583,14 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         value={formData.upiId}
                         onChange={(e) => setFormData({ ...formData, upiId: e.target.value })}
                         placeholder="yourshop@upi"
-                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#3A3550] focus:border-[#3A3550]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#3A3550] focus:border-[#4338CA]"
                       />
                     </div>
 
                     {/** 4. Business Phone */}
                     <div>
-                      <label htmlFor="shopPhone" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
-                        Business Phone {formData.isBusinessSetupCompleted && <span className="text-red-500">*</span>}
+                      <label htmlFor="shopPhone" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
+                        Business Phone {formData.isBusinessSetupCompleted && <span className="text-[#B91C1C]">*</span>}
                       </label>
                       <input
                         id="shopPhone"
@@ -603,15 +603,15 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         }}
                         className={`block w-full rounded-lg border ${
                           errors.shopPhone
-                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                            : 'border-gray-300 focus:ring-[#3A3550] focus:border-[#3A3550]'
+                            ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
+                            : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
                         } px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
                         placeholder="+91 98005 00012"
                       />
                       {errors.shopPhone ? (
-                        <p className="text-red-500 text-xs mt-1 font-medium">{errors.shopPhone}</p>
+                        <p className="text-[#B91C1C] text-xs mt-1 font-medium">{errors.shopPhone}</p>
                       ) : (
-                        <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
+                        <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">
                           Shown on invoices, can differ from personal phone
                         </p>
                       )}
@@ -619,7 +619,7 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
 
                     {/** 5. Business Email */}
                     <div>
-                      <label htmlFor="shopEmail" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                      <label htmlFor="shopEmail" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
                         Business Email
                       </label>
                       <input
@@ -633,15 +633,15 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         }}
                         className={`block w-full rounded-lg border ${
                           errors.shopEmail
-                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                            : 'border-gray-300 focus:ring-[#3A3550] focus:border-[#3A3550]'
+                            ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
+                            : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
                         } px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
                         placeholder="yourshop@gmail.com"
                       />
                       {errors.shopEmail ? (
-                        <p className="text-red-500 text-xs mt-1 font-medium">{errors.shopEmail}</p>
+                        <p className="text-[#B91C1C] text-xs mt-1 font-medium">{errors.shopEmail}</p>
                       ) : (
-                        <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
+                        <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">
                           Shown on invoices, can differ from personal email
                         </p>
                       )}
@@ -649,50 +649,50 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
 
                     {/** 6. Invoice Branding Logo */}
                     <div className="md:col-span-2">
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                      <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
                         Invoice Logo
                       </label>
 
                       <div className="flex flex-col items-start gap-4">
                         {formData.invoiceLogo ? (
                           <div className="flex items-center gap-3">
-                            <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-white border border-gray-300 rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
+                            <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
                               <img src={formData.invoiceLogo} alt="Logo" className="w-full h-full object-contain" />
                               <button
                                 type="button"
                                 onClick={() => setFormData(prev => ({ ...prev, invoiceLogo: '' }))}
-                                className="absolute top-1.5 right-1.5 cursor-pointer bg-[#3A3550] text-white hover:bg-[#585272] w-6 h-6 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[24px] !min-w-[24px] !p-0 shadow-none z-10"
+                                className="absolute top-1.5 right-1.5 cursor-pointer bg-[#4338CA] text-white hover:bg-[#3730A3] w-6 h-6 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[24px] !min-w-[24px] !p-0 shadow-none z-10"
                                 title="Remove Logo"
                               >
                                 <X className="w-3.5 h-3.5" />
                               </button>
                             </div>
                             <div className="flex flex-col items-start justify-center">
-                              <span className="text-[13px] sm:text-sm font-semibold text-gray-800">Logo Uploaded</span>
+                              <span className="text-[13px] sm:text-sm font-semibold text-[#191E2B]">Logo Uploaded</span>
                             </div>
                           </div>
                         ) : (
                           <div className="flex-1 w-full space-y-2">
                             <div className="flex flex-col md:flex-row items-start md:items-center gap-3 w-full">
-                              <label className={`cursor-pointer w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 md:py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium text-xs md:text-sm transition-colors ${uploadingLogo ? 'opacity-50' : 'hover:bg-gray-50 hover:text-gray-900 active:bg-gray-100'}`}>
-                                {uploadingLogo ? <Loader2 className="w-4 h-4 animate-spin text-[#3A3550]" /> : <Upload className="w-4 h-4 text-gray-500" />}
+                              <label className={`cursor-pointer w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 md:py-2.5 rounded-lg border border-[#DCE1EA] text-[#4E5668] font-medium text-xs md:text-sm transition-colors ${uploadingLogo ? 'opacity-50' : 'hover:bg-[#F0F2F6] hover:text-[#191E2B] active:bg-gray-100'}`}>
+                                {uploadingLogo ? <Loader2 className="w-4 h-4 animate-spin text-[#4338CA]" /> : <Upload className="w-4 h-4 text-[#757F94]" />}
                                 <span>{uploadingLogo ? 'Uploading...' : 'Upload New Logo'}</span>
                                 <input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} disabled={uploadingLogo} />
                               </label>
 
                               <div className="flex-1 w-full flex items-center gap-2">
-                                <span className="text-gray-400 font-medium text-xs md:text-sm hidden md:inline-block">Or</span>
+                                <span className="text-[#757F94] font-medium text-xs md:text-sm hidden md:inline-block">Or</span>
                                 <input
                                   type="url"
                                   name="invoiceLogo"
                                   value={formData.invoiceLogo}
                                   onChange={(e) => setFormData(prev => ({ ...prev, invoiceLogo: e.target.value }))}
                                   placeholder="Enter image URL (https://...)"
-                                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-gray-900 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#3A3550] focus:border-[#3A3550]"
+                                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#3A3550] focus:border-[#4338CA]"
                                 />
                               </div>
                             </div>
-                            <p className="text-gray-500 text-[11px] sm:text-xs font-medium">
+                            <p className="text-[#757F94] text-[11px] sm:text-xs font-medium">
                               Upload from your device or paste an image URL. Recommended size: 400x150px. Max 5MB.
                             </p>
                           </div>
@@ -702,39 +702,39 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
 
                     {/** 7. Authorized Signature */}
                     <div className="md:col-span-2">
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
-                        Authorized Signature <span className="text-gray-400 font-normal text-xs">(Optional)</span>
+                      <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
+                        Authorized Signature <span className="text-[#757F94] font-normal text-xs">(Optional)</span>
                       </label>
 
                       <div className="flex flex-col items-start gap-4">
                         {formData.signatureImage ? (
                           <div className="flex items-center gap-3">
-                            <div className="w-28 h-16 sm:w-32 sm:h-20 shrink-0 bg-white border border-gray-300 rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
+                            <div className="w-28 h-16 sm:w-32 sm:h-20 shrink-0 bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
                               <img src={formData.signatureImage} alt="Signature" className="w-full h-full object-contain" />
                               <button
                                 type="button"
                                 onClick={() => setFormData(prev => ({ ...prev, signatureImage: '' }))}
-                                className="absolute top-1.5 right-1.5 cursor-pointer bg-[#3A3550] text-white hover:bg-[#585272] w-6 h-6 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[24px] !min-w-[24px] !p-0 shadow-none z-10"
+                                className="absolute top-1.5 right-1.5 cursor-pointer bg-[#4338CA] text-white hover:bg-[#3730A3] w-6 h-6 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[24px] !min-w-[24px] !p-0 shadow-none z-10"
                                 title="Remove Signature"
                               >
                                 <X className="w-3.5 h-3.5" />
                               </button>
                             </div>
                             <div className="flex flex-col items-start justify-center">
-                              <span className="text-[13px] sm:text-sm font-semibold text-gray-800">Signature Uploaded</span>
+                              <span className="text-[13px] sm:text-sm font-semibold text-[#191E2B]">Signature Uploaded</span>
                             </div>
                           </div>
                         ) : (
                           <div className="flex-1 w-full space-y-2">
                             <div className="flex flex-col md:flex-row items-start md:items-center gap-3 w-full">
-                              <label className={`cursor-pointer w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 md:py-2.5 rounded-lg border ${errors.signatureImage ? 'border-red-400' : 'border-gray-300'} text-gray-700 font-medium text-xs md:text-sm transition-colors ${uploadingSignature ? 'opacity-50' : 'hover:bg-gray-50 hover:text-gray-900 active:bg-gray-100'}`}>
-                                {uploadingSignature ? <Loader2 className="w-4 h-4 animate-spin text-[#3A3550]" /> : <Upload className="w-4 h-4 text-gray-500" />}
+                              <label className={`cursor-pointer w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 md:py-2.5 rounded-lg border ${errors.signatureImage ? 'border-red-400' : 'border-[#DCE1EA]'} text-[#4E5668] font-medium text-xs md:text-sm transition-colors ${uploadingSignature ? 'opacity-50' : 'hover:bg-[#F0F2F6] hover:text-[#191E2B] active:bg-gray-100'}`}>
+                                {uploadingSignature ? <Loader2 className="w-4 h-4 animate-spin text-[#4338CA]" /> : <Upload className="w-4 h-4 text-[#757F94]" />}
                                 <span>{uploadingSignature ? 'Uploading...' : 'Upload Signature'}</span>
                                 <input type="file" className="hidden" accept="image/*" onChange={handleSignatureUpload} disabled={uploadingSignature} />
                               </label>
 
                               <div className="flex-1 w-full flex items-center gap-2">
-                                <span className="text-gray-400 font-medium text-xs md:text-sm hidden md:inline-block">Or</span>
+                                <span className="text-[#757F94] font-medium text-xs md:text-sm hidden md:inline-block">Or</span>
                                 <input
                                   type="url"
                                   name="signatureImage"
@@ -746,19 +746,19 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                                   placeholder="Enter signature image URL (https://...)"
                                   className={`block w-full rounded-lg border ${
                                     errors.signatureImage
-                                      ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                                      : 'border-gray-300 focus:ring-[#3A3550] focus:border-[#3A3550]'
-                                  } px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-gray-900 transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                                      ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
+                                      : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
+                                  } px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:ring-1 focus:outline-none`}
                                 />
                               </div>
                             </div>
                             {errors.signatureImage && (
-                              <p className="text-red-500 text-xs mt-1 font-medium">{errors.signatureImage}</p>
+                              <p className="text-[#B91C1C] text-xs mt-1 font-medium">{errors.signatureImage}</p>
                             )}
-                            <p className="text-gray-500 text-[11px] sm:text-xs font-medium">
+                            <p className="text-[#757F94] text-[11px] sm:text-xs font-medium">
                               Upload from your device or paste an image URL. Recommended size: 300x100px. Max 5MB.
                             </p>
-                            <p className="text-gray-400 text-[11px] sm:text-xs font-medium">
+                            <p className="text-[#757F94] text-[11px] sm:text-xs font-medium">
                               Leave blank to automatically generate digital signature from merchant name
                             </p>
                           </div>
@@ -768,7 +768,7 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
 
                     {/** 8. Default Currency */}
                     <div>
-                      <label htmlFor="currency" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                      <label htmlFor="currency" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
                         Default Currency
                       </label>
                       <select
@@ -776,7 +776,7 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         name="currency"
                         value={formData.currency}
                         onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#3A3550] focus:border-[#3A3550] bg-white cursor-pointer"
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#3A3550] focus:border-[#4338CA] bg-[#FFFFFF] cursor-pointer"
                       >
                         <option value="INR">₹ INR</option>
                         <option value="USD">$ USD</option>
@@ -785,8 +785,8 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
 
                     {/** 9. Shop Address */}
                     <div className="md:col-span-2">
-                      <label htmlFor="shopAddress" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
-                        Shop Address {formData.isBusinessSetupCompleted && <span className="text-red-500">*</span>}
+                      <label htmlFor="shopAddress" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
+                        Shop Address {formData.isBusinessSetupCompleted && <span className="text-[#B91C1C]">*</span>}
                       </label>
                       <textarea
                         id="shopAddress"
@@ -799,12 +799,12 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         }}
                         className={`block w-full rounded-lg border ${
                           errors.shopAddress
-                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                            : 'border-gray-300 focus:ring-[#3A3550] focus:border-[#3A3550]'
+                            ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
+                            : 'border-[#DCE1EA] focus:ring-[#3A3550] focus:border-[#4338CA]'
                         } px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none resize-none`}
                         placeholder="Enter full business address (Building, Street, City, State, PIN)"
                       />
-                      {errors.shopAddress && <p className="text-red-500 text-xs mt-1 font-medium">{errors.shopAddress}</p>}
+                      {errors.shopAddress && <p className="text-[#B91C1C] text-xs mt-1 font-medium">{errors.shopAddress}</p>}
                     </div>
 
                   </div>
@@ -812,12 +812,12 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
               </section>
 
               {/** Section 3: Subscription Plan Allocation */}
-              <div className="pt-2 border-t border-gray-200">
+              <div className="pt-2 border-t border-[#DCE1EA]">
                 <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <h4 className="text-xs font-semibold uppercase tracking-wider text-[#757F94]">
                     Initial Subscription Plan
                   </h4>
-                  <span className="text-[11px] font-semibold text-[#585272] bg-[#F4EFF3] px-2.5 py-0.5 rounded-full border border-[#DCD3E0]">
+                  <span className="text-[11px] font-semibold text-[#4338CA] bg-[#EEF0FB] px-2.5 py-0.5 rounded-full border border-[#D8DCF5]">
                     Admin Complimentary
                   </span>
                 </div>
@@ -832,8 +832,8 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         onClick={() => setFormData({ ...formData, subscriptionPlan: plan.id })}
                         className={`cursor-pointer p-3 rounded-xl border text-left transition-all duration-150 flex flex-col justify-between ${
                           isSelected
-                            ? 'bg-[#3A3550] text-white border-[#3A3550]'
-                            : 'bg-white text-gray-800 border-gray-200 hover:border-gray-400 hover:bg-gray-50'
+                            ? 'bg-[#4338CA] text-white border-[#4338CA]'
+                            : 'bg-[#FFFFFF] text-[#191E2B] border-[#DCE1EA] hover:border-gray-400 hover:bg-[#F0F2F6]'
                         }`}
                       >
                         <div className="flex items-center justify-between mb-1">
@@ -842,17 +842,17 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                             className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
                               isSelected
                                 ? 'bg-[#585272] text-[#F4EFF3]'
-                                : 'bg-gray-100 text-gray-600'
+                                : 'bg-gray-100 text-[#4E5668]'
                             }`}
                           >
                             {plan.badge}
                           </span>
                         </div>
                         <div className="flex items-baseline gap-1">
-                          <span className={`text-sm font-bold ${isSelected ? 'text-white' : 'text-gray-900'}`}>
+                          <span className={`text-sm font-bold ${isSelected ? 'text-white' : 'text-[#191E2B]'}`}>
                             {plan.price}
                           </span>
-                          <span className={`text-[10px] font-medium ${isSelected ? 'text-[#DCD3E0]' : 'text-gray-500'}`}>
+                          <span className={`text-[10px] font-medium ${isSelected ? 'text-[#DCD3E0]' : 'text-[#757F94]'}`}>
                             / {plan.duration}
                           </span>
                         </div>
@@ -863,12 +863,12 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
 
                 {/** Custom Trial Days if Free Trial */}
                 {formData.subscriptionPlan === 'FREE' && (
-                  <div className="mt-3 p-3 bg-gray-50 border border-gray-200 rounded-xl flex items-center justify-between gap-3">
+                  <div className="mt-3 p-3 bg-[#F0F2F6] border border-[#DCE1EA] rounded-xl flex items-center justify-between gap-3">
                     <div>
-                      <span className="text-xs font-semibold text-gray-800 block">
+                      <span className="text-xs font-semibold text-[#191E2B] block">
                         Trial Validity Days
                       </span>
-                      <span className="text-[11px] text-gray-500 font-medium">
+                      <span className="text-[11px] text-[#757F94] font-medium">
                         Number of days free trial remains active before prompt
                       </span>
                     </div>
@@ -881,48 +881,48 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         onChange={(e) =>
                           setFormData({ ...formData, trialDays: Math.max(0, parseInt(e.target.value, 10) || 0) })
                         }
-                        className="w-16 h-8 text-center text-xs font-semibold text-gray-900 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#3A3550]"
+                        className="w-16 h-8 text-center text-xs font-semibold text-[#191E2B] bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#3A3550]"
                       />
-                      <span className="text-xs font-medium text-gray-600">Days</span>
+                      <span className="text-xs font-medium text-[#4E5668]">Days</span>
                     </div>
                   </div>
                 )}
               </div>
 
               {/** Section 4: Provisioning Options */}
-              <div className="pt-2 border-t border-gray-200 space-y-2.5">
-                <label className="flex items-center gap-3 p-3 rounded-xl border border-gray-200 bg-gray-50/50 cursor-pointer hover:bg-gray-50 transition-colors">
+              <div className="pt-2 border-t border-[#DCE1EA] space-y-2.5">
+                <label className="flex items-center gap-3 p-3 rounded-xl border border-[#DCE1EA] bg-[#F0F2F6]/50 cursor-pointer hover:bg-[#F0F2F6] transition-colors">
                   <input
                     type="checkbox"
                     checked={formData.isVerified}
                     onChange={(e) => setFormData({ ...formData, isVerified: e.target.checked })}
-                    className="w-4 h-4 rounded text-[#3A3550] focus:ring-[#3A3550] border-gray-300 cursor-pointer"
+                    className="w-4 h-4 rounded text-[#4338CA] focus:ring-[#3A3550] border-[#DCE1EA] cursor-pointer"
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
                       <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                      <span className="text-xs font-semibold text-gray-800">
+                      <span className="text-xs font-semibold text-[#191E2B]">
                         Pre-Verify Email & Account Access (Recommended)
                       </span>
                     </div>
-                    <p className="text-[11px] text-gray-500 font-medium">
+                    <p className="text-[11px] text-[#757F94] font-medium">
                       Bypasses initial OTP email verification so the shopkeeper can log in immediately with their credentials.
                     </p>
                   </div>
                 </label>
 
-                <label className="flex items-center gap-3 p-3 rounded-xl border border-gray-200 bg-gray-50/50 cursor-pointer hover:bg-gray-50 transition-colors">
+                <label className="flex items-center gap-3 p-3 rounded-xl border border-[#DCE1EA] bg-[#F0F2F6]/50 cursor-pointer hover:bg-[#F0F2F6] transition-colors">
                   <input
                     type="checkbox"
                     checked={formData.sendWelcomeEmail}
                     onChange={(e) => setFormData({ ...formData, sendWelcomeEmail: e.target.checked })}
-                    className="w-4 h-4 rounded text-[#3A3550] focus:ring-[#3A3550] border-gray-300 cursor-pointer"
+                    className="w-4 h-4 rounded text-[#4338CA] focus:ring-[#3A3550] border-[#DCE1EA] cursor-pointer"
                   />
                   <div className="min-w-0 flex-1">
-                    <span className="text-xs font-semibold text-gray-800 block">
+                    <span className="text-xs font-semibold text-[#191E2B] block">
                       Send Welcome Email Notification
                     </span>
-                    <p className="text-[11px] text-gray-500 font-medium">
+                    <p className="text-[11px] text-[#757F94] font-medium">
                       Sends a welcome email to the merchant informing them about their registered store account.
                     </p>
                   </div>
@@ -934,19 +934,19 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
             {/**
              * Modal Footer Toolbar
              */}
-            <div className="px-5 sm:px-6 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-end gap-3 flex-shrink-0">
+            <div className="px-5 sm:px-6 py-3.5 bg-[#F0F2F6] border-t border-[#DCE1EA] flex items-center justify-end gap-3 flex-shrink-0">
               <button
                 type="button"
                 onClick={onClose}
                 disabled={isLoading}
-                className="cursor-pointer px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 hover:text-gray-900 bg-white hover:bg-gray-100 border border-gray-300 rounded-xl transition-all duration-150 active:scale-95"
+                className="cursor-pointer px-4 py-2 text-xs sm:text-sm font-medium text-[#4E5668] hover:text-[#191E2B] bg-[#FFFFFF] hover:bg-gray-100 border border-[#DCE1EA] rounded-xl transition-all duration-150 active:scale-95"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isLoading || uploadingLogo || uploadingSignature}
-                className="cursor-pointer px-5 py-2 text-xs sm:text-sm font-semibold text-white bg-[#3A3550] hover:bg-[#585272] border border-[#3A3550] rounded-xl flex items-center gap-2 transition-all duration-150 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="cursor-pointer px-5 py-2 text-xs sm:text-sm font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] border border-[#4338CA] rounded-xl flex items-center gap-2 transition-all duration-150 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <>

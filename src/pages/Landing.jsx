@@ -40,53 +40,53 @@ const Landing = () => {
       icon: Receipt,
       titleKey: 'Smart Billing',
       descriptionKey: 'Create professional bills in seconds with our intuitive interface',
-      color: 'text-[#093C5D]',
-      bgColor: 'bg-blue-50'
+      color: 'text-[#4338CA]',
+      bgColor: 'bg-[#EEF0FB]'
     },
     {
       icon: Users,
       titleKey: 'Customer Management',
       descriptionKey: 'Track customers, credit history, and payment patterns easily',
-      color: 'text-green-600',
-      bgColor: 'bg-green-50'
+      color: 'text-[#0D7A57]',
+      bgColor: 'bg-[#ECFDF5]'
     },
     {
       icon: BarChart3,
       titleKey: 'Business Insights',
       descriptionKey: 'Real-time analytics and reports to grow your business',
-      color: 'text-yellow-600',
-      bgColor: 'bg-yellow-50'
+      color: 'text-[#B45309]',
+      bgColor: 'bg-[#FEF3C7]'
     },
     {
       icon: Shield,
       titleKey: 'Secure & Reliable',
       descriptionKey: 'Bank-grade security with 99.9% uptime guarantee',
-      color: 'text-[#093C5D]',
-      bgColor: 'bg-blue-50'
+      color: 'text-[#4338CA]',
+      bgColor: 'bg-[#EEF0FB]'
     },
     {
       icon: Zap,
       titleKey: 'Voice Billing',
       descriptionKey: 'Create bills using voice commands in your language',
-      color: 'text-red-600',
-      bgColor: 'bg-red-50'
+      color: 'text-[#B91C1C]',
+      bgColor: 'bg-[#FDF2F2]'
     },
     {
       icon: Clock,
       titleKey: 'Auto Reminders',
       descriptionKey: 'Automated payment reminders via SMS and WhatsApp',
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50'
+      color: 'text-[#4338CA]',
+      bgColor: 'bg-[#EEF0FB]'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-white font-sans">
+    <div className="min-h-screen bg-[#FBFBFC] font-sans">
       {/**
        * Top Navigation Header
        * Brand identity logo, regional language switcher, and authentication entry point
        */}
-      <header className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 safe-top">
+      <header className="fixed top-0 w-full z-50 bg-[#FBFBFC]/90 backdrop-blur-md border-b border-[#DCE1EA] safe-top">
         <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
           <div className="flex items-center justify-between h-14 sm:h-16 w-full">
             {/**
@@ -94,7 +94,7 @@ const Landing = () => {
              * Interactive brand marker routing users back to root landing view
              */}
             <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-              <span className="text-[22px] sm:text-[24px] md:text-[28px] font-semibold tracking-tight text-[#093C5D] select-none">UdharPay<span className="inline-block w-[6px] h-[6px] sm:w-[7px] sm:h-[7px] md:w-2 md:h-2 rounded-full bg-[#2ECC71] ml-[2px] mb-[2px] align-baseline"></span></span>
+              <span className="text-[22px] sm:text-[24px] md:text-[28px] font-semibold tracking-tight text-[#191E2B] select-none">UdharPay<span className="inline-block w-[6px] h-[6px] sm:w-[7px] sm:h-[7px] md:w-2 md:h-2 rounded-full bg-[#10B981] ml-[2px] mb-[2px] align-baseline"></span></span>
             </div>
 
             {/**
@@ -105,7 +105,7 @@ const Landing = () => {
               <LanguageSwitcher variant="default" />
               <button
                 onClick={() => navigate('/login')}
-                className="cursor-pointer px-4 sm:px-5 h-9 flex items-center justify-center text-sm font-medium text-white bg-[#093C5D] rounded-md hover:bg-[#072C44] transition-colors"
+                className="cursor-pointer px-4 sm:px-5 h-9 flex items-center justify-center text-sm font-semibold text-white bg-[#4338CA] rounded-lg hover:bg-[#3730A3] transition-colors shadow-none active:scale-95"
               >
                 {t('Sign in')}
               </button>
@@ -130,33 +130,33 @@ const Landing = () => {
              * Retailer Trust Badge
              * Social proof pill showcasing active shopkeeper adoption
              */}
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[#093C5D]/5 border border-[#093C5D]/10 text-[#093C5D] text-xs sm:text-sm font-medium mb-6 sm:mb-8">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[#EEF0FB] border border-[#D8DCF5] text-[#4338CA] text-xs sm:text-sm font-medium mb-6 sm:mb-8">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#093C5D] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#093C5D]"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4338CA] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#4338CA]"></span>
               </span>
               {t('Smart Choice for Indian Retailers')}
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-gray-900 tracking-tight leading-tight sm:leading-tight md:leading-tight lg:leading-tight mb-5 sm:mb-6">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-[#191E2B] tracking-tight leading-tight sm:leading-tight md:leading-tight lg:leading-tight mb-5 sm:mb-6">
               <span className="block sm:inline">{t("Your Shop's")}</span>{' '}
-              <span className="text-[#093C5D] block sm:inline">{t("Digital Partner")}</span>
+              <span className="text-[#4338CA] block sm:inline">{t("Digital Partner")}</span>
             </h1>
             
-            <p className="text-sm sm:text-lg md:text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto mb-8 sm:mb-10 px-2 sm:px-0">
+            <p className="text-sm sm:text-lg md:text-xl text-[#4E5668] leading-relaxed max-w-2xl mx-auto mb-8 sm:mb-10 px-2 sm:px-0">
               {t('Complete billing, udhar tracking, and easy business analytics. Built for modern Indian shopkeepers to scale effortlessly.')}
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto mx-auto px-4 sm:px-0">
               <button
                 onClick={() => navigate('/register')}
-                className="cursor-pointer w-full sm:w-auto min-w-[200px] h-12 sm:h-14 bg-[#093C5D] text-white rounded-lg font-semibold text-base sm:text-lg hover:bg-[#072C44] transition-all flex items-center justify-center"
+                className="cursor-pointer w-full sm:w-auto min-w-[200px] h-12 sm:h-14 bg-[#4338CA] text-white rounded-lg font-semibold text-base sm:text-lg hover:bg-[#3730A3] transition-all flex items-center justify-center shadow-none active:scale-95"
               >
                 {t('Get started free')}
               </button>
             </div>
             
-            <p className="text-xs sm:text-sm text-gray-500 mt-6 sm:mt-8 font-medium flex items-center justify-center gap-1.5 flex-wrap">
+            <p className="text-xs sm:text-sm text-[#757F94] mt-6 sm:mt-8 font-medium flex items-center justify-center gap-1.5 flex-wrap">
               {t('Trusted by 10,000+ Shopkeepers')} <span className="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-gray-300 mx-1"></span><span className="sm:hidden w-full h-0"></span> {t('No credit card required')}
             </p>
           </div>
@@ -166,14 +166,14 @@ const Landing = () => {
            * Simulated interface preview demonstrating simplicity and elegance of the merchant dashboard
            */}
           <div className="mt-16 sm:mt-24 w-full max-w-5xl mx-auto text-center px-4 sm:px-0">
-            <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-3 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-[#191E2B] mb-3 tracking-tight">
               {t('A dashboard designed for simplicity')}
             </h2>
-            <p className="text-sm sm:text-medium text-gray-500 mb-10 sm:mb-12 max-w-xl mx-auto">
+            <p className="text-sm sm:text-medium text-[#757F94] mb-10 sm:mb-12 max-w-xl mx-auto">
               {t('Get a complete overview of your sales, outstanding balances, and recent activities without the clutter. Visualizing your business has never been this easy.')}
             </p>
 
-            <div className="rounded-2xl bg-white p-6 sm:p-10 mb-[-1px] sm:mb-0 relative overflow-hidden border border-gray-200 hover:border-[#093C5D]/30">
+            <div className="rounded-2xl bg-[#FBFBFC] p-6 sm:p-10 mb-[-1px] sm:mb-0 relative overflow-hidden border border-[#DCE1EA] shadow-none">
               
               {/**
                * Ambient Lighting Accents
@@ -186,11 +186,11 @@ const Landing = () => {
                * Window Controls Frame
                * macOS-style decorative titlebar dots and URL placeholder bar
                */}
-              <div className="relative z-10 flex items-center gap-2 mb-6 sm:mb-8 border-b border-gray-100 pb-4">
+              <div className="relative z-10 flex items-center gap-2 mb-6 sm:mb-8 border-b border-[#E8ECF2] pb-4">
                 <div className="w-3 h-3 rounded-full bg-[#FF5F56]"></div>
                 <div className="w-3 h-3 rounded-full bg-[#FFBD2E]"></div>
                 <div className="w-3 h-3 rounded-full bg-[#27C93F]"></div>
-                <div className="ml-3 sm:ml-4 h-6 w-32 sm:w-48 bg-gray-50/80 rounded border border-gray-100"></div>
+                <div className="ml-3 sm:ml-4 h-6 w-32 sm:w-48 bg-gray-50/80 rounded border border-[#E8ECF2]"></div>
               </div>
 
               {/**
@@ -208,7 +208,7 @@ const Landing = () => {
                    * Mock brand icon and label placeholder
                    */}
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="h-6 w-6 rounded-md bg-[#093C5D]/20"></div>
+                    <div className="h-6 w-6 rounded-md bg-[#4338CA]/20"></div>
                     <div className="h-5 w-20 bg-gray-100 rounded-md"></div>
                   </div>
                   
@@ -217,10 +217,10 @@ const Landing = () => {
                    * Pill indicators simulating active and inactive route tabs
                    */}
                   <div className="flex flex-col gap-4">
-                    <div className="h-6 w-full bg-[#093C5D]/10 rounded border border-[#093C5D]/20"></div>
-                    <div className="h-5 w-4/5 bg-gray-50 rounded border border-gray-100"></div>
-                    <div className="h-5 w-3/4 bg-gray-50 rounded border border-gray-100"></div>
-                    <div className="h-5 w-5/6 bg-gray-50 rounded border border-gray-100"></div>
+                    <div className="h-6 w-full bg-[#EEF0FB] rounded border border-[#D8DCF5]"></div>
+                    <div className="h-5 w-4/5 bg-gray-50 rounded border border-[#E8ECF2]"></div>
+                    <div className="h-5 w-3/4 bg-gray-50 rounded border border-[#E8ECF2]"></div>
+                    <div className="h-5 w-5/6 bg-gray-50 rounded border border-[#E8ECF2]"></div>
                   </div>
                 </div>
 
@@ -235,7 +235,7 @@ const Landing = () => {
                    */}
                   <div className="flex justify-between items-center mb-8 pb-4 border-b border-gray-50">
                      <div className="h-7 w-48 sm:w-64 bg-gray-100 rounded-md border border-gray-50"></div>
-                     <div className="h-9 w-9 bg-gray-100 rounded-full hidden sm:block border border-gray-200/60"></div>
+                     <div className="h-9 w-9 bg-gray-100 rounded-full hidden sm:block border border-[#DCE1EA]/60"></div>
                   </div>
 
                   {/**
@@ -261,9 +261,9 @@ const Landing = () => {
                       <div className="h-2 w-28 bg-gray-200/60 rounded-full"></div>
                     </div>
 
-                    <div className="rounded-xl p-5 text-left border border-[#093C5D]/10 bg-[#093C5D]/[0.03] backdrop-blur-sm">
+                    <div className="rounded-xl p-5 text-left border border-[#D8DCF5] bg-[#EEF0FB]/40 backdrop-blur-sm">
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-2.5 h-2.5 rounded-full bg-[#093C5D]"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#4338CA]"></div>
                         <span className="h-2.5 w-16 bg-gray-200/80 rounded-full"></span>
                       </div>
                       <div className="h-7 w-28 bg-gray-300/80 rounded-md mb-2"></div>
@@ -275,7 +275,7 @@ const Landing = () => {
                    * Performance Visualizer
                    * Graphical chart container simulating daily transaction rhythms
                    */}
-                  <div className="relative h-48 sm:h-56 w-full border border-gray-100 rounded-xl bg-gray-50/30 flex items-end justify-between gap-3 sm:gap-6 px-4 pt-4 overflow-hidden">
+                  <div className="relative h-48 sm:h-56 w-full border border-[#E8ECF2] rounded-xl bg-gray-50/30 flex items-end justify-between gap-3 sm:gap-6 px-4 pt-4 overflow-hidden">
                     {/**
                      * Chart Header Skeleton
                      * Metric legend and date range placeholders
@@ -289,8 +289,8 @@ const Landing = () => {
                      * Visual Gridlines
                      * Dashed horizontal dividers providing data reference lines
                      */}
-                    <div className="absolute inset-x-0 bottom-1/3 border-b border-gray-200/60 border-dashed"></div>
-                    <div className="absolute inset-x-0 bottom-2/3 border-b border-gray-200/60 border-dashed"></div>
+                    <div className="absolute inset-x-0 bottom-1/3 border-b border-[#DCE1EA]/60 border-dashed"></div>
+                    <div className="absolute inset-x-0 bottom-2/3 border-b border-[#DCE1EA]/60 border-dashed"></div>
                     
                     {/**
                      * Bimodal Data Bars
@@ -330,12 +330,12 @@ const Landing = () => {
          * Highlights core capabilities including billing, customer ledger, voice input, and insights
          */}
         <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-          <div className="bg-[#F5F5F5] rounded-2xl border border-gray-200 hover:border-[#093C5D]/30 sm:rounded-3xl py-12 sm:py-16 px-4 sm:px-8">
+          <div className="bg-[#F0F2F6] rounded-2xl border border-[#DCE1EA] shadow-none hover:border-[#D8DCF5] sm:rounded-3xl py-12 sm:py-16 px-4 sm:px-8">
             <div className="text-center mb-10 sm:mb-12">
-              <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 tracking-tight mb-2 sm:mb-3">
+              <h2 className="text-2xl sm:text-3xl font-semibold text-[#191E2B] tracking-tight mb-2 sm:mb-3">
                 {t('Everything you need to grow')}
               </h2>
-              <p className="text-base text-gray-600 max-w-xl mx-auto">
+              <p className="text-base text-[#4E5668] max-w-xl mx-auto">
                 {t('All the powerful tools packed into one simple interface.')}
               </p>
             </div>
@@ -344,15 +344,15 @@ const Landing = () => {
               {features.map((feature, index) => (
                 <div
                   key={index}
-                  className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 transition-colors hover:border-[#093C5D]/30"
+                  className="bg-[#FBFBFC] p-5 sm:p-6 rounded-xl border border-[#DCE1EA] transition-colors hover:border-[#D8DCF5] shadow-none"
                 >
                   <div className={`w-10 h-10 ${feature.bgColor} rounded-md flex items-center justify-center mb-4`}>
                     <feature.icon className={`w-5 h-5 ${feature.color}`} />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1 sm:mb-2">
+                  <h3 className="text-lg font-semibold text-[#191E2B] mb-1 sm:mb-2">
                     {t(feature.titleKey)}
                   </h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">
+                  <p className="text-sm text-[#4E5668] leading-relaxed">
                     {t(feature.descriptionKey)}
                   </p>
                 </div>
@@ -366,18 +366,18 @@ const Landing = () => {
          * Numerical proof points highlighting transaction volumes, merchant count, and store ratings
          */}
         <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full ">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center max-w-4xl mx-auto border-y border-gray-200 border hover:border-[#093C5D]/30 sm:border sm:border-gray-200 bg-white sm:rounded-2xl rounded-2xl py-8 sm:py-10">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center max-w-4xl mx-auto border-y border-[#DCE1EA] border hover:border-[#D8DCF5] sm:border sm:border-[#DCE1EA] bg-[#FBFBFC] sm:rounded-2xl rounded-2xl py-8 sm:py-10 shadow-none">
             <div className="p-2 sm:p-4">
-              <h3 className="text-3xl sm:text-4xl font-bold text-[#093C5D] mb-1">10K+</h3>
-              <p className="text-sm text-gray-600 font-medium">{t('Active Shops')}</p>
+              <h3 className="text-3xl sm:text-4xl font-bold text-[#4338CA] mb-1">10K+</h3>
+              <p className="text-sm text-[#4E5668] font-medium">{t('Active Shops')}</p>
             </div>
-            <div className="p-2 sm:p-4 border-t sm:border-t-0 sm:border-l border-gray-200 pt-6 sm:pt-4">
-              <h3 className="text-3xl sm:text-4xl font-bold text-[#093C5D] mb-1">₹50Cr</h3>
-              <p className="text-sm text-gray-600 font-medium">{t('Transactions')}</p>
+            <div className="p-2 sm:p-4 border-t sm:border-t-0 sm:border-l border-[#DCE1EA] pt-6 sm:pt-4">
+              <h3 className="text-3xl sm:text-4xl font-bold text-[#4338CA] mb-1">₹50Cr</h3>
+              <p className="text-sm text-[#4E5668] font-medium">{t('Transactions')}</p>
             </div>
-            <div className="p-2 sm:p-4 border-t sm:border-t-0 sm:border-l border-gray-200 pt-6 sm:pt-4">
-              <h3 className="text-3xl sm:text-4xl font-bold text-[#093C5D] mb-1">4.9</h3>
-              <p className="text-sm text-gray-600 font-medium">{t('Store Rating')}</p>
+            <div className="p-2 sm:p-4 border-t sm:border-t-0 sm:border-l border-[#DCE1EA] pt-6 sm:pt-4">
+              <h3 className="text-3xl sm:text-4xl font-bold text-[#4338CA] mb-1">4.9</h3>
+              <p className="text-sm text-[#4E5668] font-medium">{t('Store Rating')}</p>
             </div>
           </div>
         </section>
@@ -387,7 +387,7 @@ const Landing = () => {
          * High-conversion prompt encouraging new merchants to create a free account
          */}
         <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-          <div className="bg-[#093C5D] rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center flex flex-col items-center">
+          <div className="bg-[#1E1B4B] border border-[#312E81] rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center flex flex-col items-center shadow-none">
             <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-3 sm:mb-4">
               {t('Ready to digitize your shop?')}
             </h2>
@@ -396,7 +396,7 @@ const Landing = () => {
             </p>
             <button
               onClick={() => navigate('/register')}
-              className="cursor-pointer w-full sm:w-auto min-w-[200px] h-12 flex items-center justify-center bg-white text-[#093C5D] rounded-md font-semibold text-base hover:bg-gray-100 transition-colors"
+              className="cursor-pointer w-full sm:w-auto min-w-[200px] h-12 flex items-center justify-center bg-white text-[#1E1B4B] rounded-lg font-semibold text-base hover:bg-[#F0F2F6] transition-colors"
             >
               {t('Create free account')}
             </button>
@@ -408,27 +408,27 @@ const Landing = () => {
        * Global Footer
        * Secondary navigation links, compliance notices, and developer credits
        */}
-      <footer className="bg-white border-t border-gray-200 py-8 md:py-12 mt-auto">
+      <footer className="bg-[#FBFBFC] border-t border-[#DCE1EA] py-8 md:py-12 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-5 md:gap-6">
             <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-              <span className="text-[22px] sm:text-[24px] md:text-[28px] font-semibold tracking-tight text-[#093C5D] select-none">UdharPay<span className="inline-block w-[6px] h-[6px] sm:w-[7px] sm:h-[7px] md:w-2 md:h-2 rounded-full bg-[#2ECC71] ml-[2px] mb-[2px] align-baseline"></span></span>
+              <span className="text-[22px] sm:text-[24px] md:text-[28px] font-semibold tracking-tight text-[#191E2B] select-none">UdharPay<span className="inline-block w-[6px] h-[6px] sm:w-[7px] sm:h-[7px] md:w-2 md:h-2 rounded-full bg-[#10B981] ml-[2px] mb-[2px] align-baseline"></span></span>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 md:gap-10 text-sm text-gray-600 font-medium">
-              <span onClick={() => navigate('/privacy-policy')} className="cursor-pointer hover:text-[#093C5D] transition-colors">{t('Privacy Policy')}</span>
-              <span onClick={() => navigate('/terms-of-service')} className="cursor-pointer hover:text-[#093C5D] transition-colors">{t('Terms of Service')}</span>
-              <span onClick={() => navigate('/contact-support')} className="cursor-pointer hover:text-[#093C5D] transition-colors">{t('Contact Support')}</span>
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 md:gap-10 text-sm text-[#4E5668] font-medium">
+              <span onClick={() => navigate('/privacy-policy')} className="cursor-pointer hover:text-[#4338CA] transition-colors">{t('Privacy Policy')}</span>
+              <span onClick={() => navigate('/terms-of-service')} className="cursor-pointer hover:text-[#4338CA] transition-colors">{t('Terms of Service')}</span>
+              <span onClick={() => navigate('/contact-support')} className="cursor-pointer hover:text-[#4338CA] transition-colors">{t('Contact Support')}</span>
             </div>
           </div>
           
-          <div className="mt-8 md:mt-10 pt-6 md:pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 text-center">
-            <p className="text-sm text-gray-500 font-medium order-3 md:order-1 mt-2 md:mt-0">
+          <div className="mt-8 md:mt-10 pt-6 md:pt-8 border-t border-[#DCE1EA] flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 text-center">
+            <p className="text-sm text-[#757F94] font-medium order-3 md:order-1 mt-2 md:mt-0">
               {t(`© ${new Date().getFullYear()} UdharPay. All rights reserved.`)}
             </p>
             
-            <p className="text-sm text-gray-600 font-medium flex items-center justify-center gap-1.5 order-1 md:order-2">
-              {t('Developer:')} <span className="font-medium text-gray-900 tracking-wide">Developed with ❤️ by</span> <span className="text-[#093C5D] font-semibold animate-pulse">ANKIT</span>
+            <p className="text-sm text-[#4E5668] font-medium flex items-center justify-center gap-1.5 order-1 md:order-2">
+              {t('Developer:')} <span className="font-medium text-[#191E2B] tracking-wide">Developed with ❤️ by</span> <span className="text-[#4338CA] font-semibold animate-pulse">ANKIT</span>
             </p>
 
           </div>

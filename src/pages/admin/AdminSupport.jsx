@@ -210,10 +210,10 @@ const AdminSupport = () => {
        */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B]">
             Support Desk & Helpdesk
           </h1>
-          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
+          <p className="text-[#4E5668] text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
             Monitor, triage, and reply directly to merchant tickets with live in-app notifications.
           </p>
         </div>
@@ -265,8 +265,8 @@ const AdminSupport = () => {
             onClick={() => setFilter('status', opt.value)}
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlStatus === opt.value
-                ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
+                ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
+                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {opt.label}
@@ -281,8 +281,8 @@ const AdminSupport = () => {
             onClick={() => setFilter('priority', opt.value)}
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlPriority === opt.value
-                ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
+                ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
+                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {opt.label}
@@ -297,8 +297,8 @@ const AdminSupport = () => {
             onClick={() => setFilter('category', opt.value)}
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlCategory === opt.value
-                ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
+                ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
+                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {opt.label}
@@ -328,14 +328,14 @@ const AdminSupport = () => {
       <div className="flex flex-col w-full mb-3 sm:mb-4">
         <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-[#757F94]" />
           </div>
           <input
             type="text"
             placeholder="Search By Ticket ID & Requester & Store & Subject & Email"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-white border border-gray-300 rounded-lg text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
+            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg text-[13px] sm:text-sm text-[#191E2B] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors duration-200 shadow-none"
           />
           {searchTerm && (
             <button
@@ -350,7 +350,7 @@ const AdminSupport = () => {
                   return next;
                 }, { replace: true });
               }}
-              className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
+              className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-[#757F94] hover:text-[#4E5668] cursor-pointer"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
@@ -362,21 +362,21 @@ const AdminSupport = () => {
        * Support Tickets Stream
        * Renders responsive desktop table layout or touch-friendly mobile cards.
        */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
+      <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] overflow-hidden shadow-none">
         {loading ? (
-          <div className="p-8 md:p-12 text-center text-gray-500 flex flex-col items-center justify-center">
-            <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#093C5D] mx-auto mb-3" />
-            <p className="text-sm font-medium text-gray-500">Loading support inquiries...</p>
+          <div className="p-8 md:p-12 text-center text-[#757F94] flex flex-col items-center justify-center">
+            <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#4338CA] mx-auto mb-3" />
+            <p className="text-sm font-medium text-[#757F94]">Loading support inquiries...</p>
           </div>
         ) : tickets.length === 0 ? (
           <div className="p-8 md:p-12 text-center px-4">
-            <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 mx-auto mb-3">
+            <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-[#757F94] mx-auto mb-3">
               <Inbox className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-semibold text-gray-900 tracking-tight">
+            <h3 className="text-base font-semibold text-[#191E2B] tracking-tight">
               No tickets found
             </h3>
-            <p className="text-xs sm:text-sm text-gray-500 mt-1 max-w-sm mx-auto font-medium">
+            <p className="text-xs sm:text-sm text-[#757F94] mt-1 max-w-sm mx-auto font-medium">
               {debouncedSearch || statusFilter !== 'ALL' || priorityFilter !== 'ALL'
                 ? 'Try clearing or modifying your search and filter criteria.'
                 : 'All clear! No pending support inquiries at this time.'}
@@ -389,8 +389,8 @@ const AdminSupport = () => {
              * Tabular presentation of support tickets with status badges and quick action controls.
              */}
             <div className="hidden lg:block overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-              <table className="w-full text-left text-sm text-gray-600 whitespace-nowrap">
-                <thead className="bg-gray-50/80 border-b border-gray-200 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <table className="w-full text-left text-sm text-[#4E5668] whitespace-nowrap">
+                <thead className="bg-[#F0F2F6]/80 border-b border-[#DCE1EA] text-xs font-semibold text-[#757F94] uppercase tracking-wider">
                   <tr>
                     <th className="py-3.5 px-4 lg:px-6">Ticket</th>
                     <th className="py-3.5 px-4 lg:px-6">Requester</th>
@@ -406,14 +406,14 @@ const AdminSupport = () => {
                     <tr
                       key={ticket._id}
                       onClick={() => handleOpenTicket(ticket)}
-                      className="hover:bg-[#F5F5F5]/60 transition-colors cursor-pointer group"
+                      className="hover:bg-[#EEF0FB]/60 transition-colors cursor-pointer group"
                     >
                       {/**
                        * Ticket Identifier
                        * Unique hexadecimal/numeric ticket reference code.
                        */}
                       <td className="py-3.5 px-4 lg:px-6 align-middle">
-                        <span className="font-mono text-xs font-semibold bg-gray-100 group-hover:bg-[#093C5D]/10 group-hover:text-[#093C5D] px-2.5 py-1 rounded transition-colors text-gray-800">
+                        <span className="font-mono text-xs font-semibold bg-gray-100 group-hover:bg-[#EEF0FB] group-hover:text-[#4338CA] px-2.5 py-1 rounded transition-colors text-[#191E2B]">
                           #{ticket.ticketId}
                         </span>
                       </td>
@@ -424,18 +424,18 @@ const AdminSupport = () => {
                        */}
                       <td className="py-3.5 px-4 lg:px-6 align-middle">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-lg p-[2px] border border-gray-200 bg-white shrink-0">
-                            <div className="w-full h-full rounded-md flex items-center justify-center text-xs lg:text-sm font-semibold bg-gray-50 text-[#093C5D]">
+                          <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-lg p-[2px] border border-[#DCE1EA] bg-[#FFFFFF] shrink-0">
+                            <div className="w-full h-full rounded-md flex items-center justify-center text-xs lg:text-sm font-semibold bg-[#F0F2F6] text-[#4338CA]">
                               {getInitials(ticket.name)}
                             </div>
                           </div>
                           <div>
-                            <div className="text-xs lg:text-sm font-semibold text-gray-900">{ticket.name}</div>
-                            <div className="text-xs text-gray-500 truncate max-w-[180px]">
+                            <div className="text-xs lg:text-sm font-semibold text-[#191E2B]">{ticket.name}</div>
+                            <div className="text-xs text-[#757F94] truncate max-w-[180px]">
                               {ticket.email}
                             </div>
                             {(ticket.shopName || ticket.user?.businessName) && (
-                              <div className="text-[11px] text-[#093C5D] font-medium mt-0.5 flex items-center gap-1">
+                              <div className="text-[11px] text-[#4338CA] font-medium mt-0.5 flex items-center gap-1">
                                 <Store className="w-3 h-3" />
                                 <span>{ticket.shopName || ticket.user?.businessName}</span>
                               </div>
@@ -450,10 +450,10 @@ const AdminSupport = () => {
                        */}
                       <td className="py-3.5 px-4 lg:px-6 align-middle">
                         <div className="max-w-[280px]">
-                          <div className="text-xs lg:text-sm font-semibold text-gray-900 truncate">
+                          <div className="text-xs lg:text-sm font-semibold text-[#191E2B] truncate">
                             {ticket.subject}
                           </div>
-                          <span className="inline-block text-[10px] font-semibold text-gray-500 bg-gray-100 px-2 py-0.5 rounded mt-0.5 uppercase tracking-wide">
+                          <span className="inline-block text-[10px] font-semibold text-[#757F94] bg-gray-100 px-2 py-0.5 rounded mt-0.5 uppercase tracking-wide">
                             {ticket.category}
                           </span>
                         </div>
@@ -479,7 +479,7 @@ const AdminSupport = () => {
                        * Submission Date
                        * Timestamp when the support ticket was opened.
                        */}
-                      <td className="py-3.5 px-4 lg:px-6 align-middle text-xs font-medium text-gray-600 whitespace-nowrap">
+                      <td className="py-3.5 px-4 lg:px-6 align-middle text-xs font-medium text-[#4E5668] whitespace-nowrap">
                         {formatDate(ticket.createdAt)}
                       </td>
 
@@ -494,7 +494,7 @@ const AdminSupport = () => {
                               type="button"
                               onClick={(e) => handleQuickResolve(e, ticket)}
                               title="Quick Resolve"
-                              className="shrink-0 cursor-pointer p-1.5 text-gray-400 hover:text-emerald-700 hover:bg-emerald-50 rounded-md transition-colors active:scale-95 border border-transparent hover:border-emerald-200"
+                              className="shrink-0 cursor-pointer p-1.5 text-[#757F94] hover:text-emerald-700 hover:bg-emerald-50 rounded-md transition-colors active:scale-95 border border-transparent hover:border-emerald-200"
                             >
                               <CheckCircle2 className="w-4 h-4" />
                             </button>
@@ -505,7 +505,7 @@ const AdminSupport = () => {
                               e.stopPropagation();
                               handleOpenTicket(ticket);
                             }}
-                            className="shrink-0 cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/15 hover:bg-[#093C5D]/10 px-2.5 sm:px-3 py-1 rounded-md flex items-center justify-center transition-all text-[11px] sm:text-xs active:scale-95 whitespace-nowrap"
+                            className="shrink-0 cursor-pointer text-[#4338CA] font-medium bg-[#EEF0FB] border border-[#4338CA]/15 hover:bg-[#EEF0FB] px-2.5 sm:px-3 py-1 rounded-md flex items-center justify-center transition-all text-[11px] sm:text-xs active:scale-95 whitespace-nowrap"
                           >
                             View
                           </button>
@@ -526,7 +526,7 @@ const AdminSupport = () => {
                 <div
                   key={ticket._id}
                   onClick={() => handleOpenTicket(ticket)}
-                  className="bg-white border border-gray-200 rounded-lg p-3.5 transition-colors cursor-pointer active:bg-gray-50 shadow-none space-y-3"
+                  className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-3.5 transition-colors cursor-pointer active:bg-[#F0F2F6] shadow-none space-y-3"
                 >
                   {/**
                    * Top Row: Avatar, Name & Status
@@ -534,22 +534,22 @@ const AdminSupport = () => {
                    */}
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-9 h-9 rounded-lg p-[2px] border border-gray-200 bg-white shrink-0">
-                        <div className="w-full h-full rounded-md flex items-center justify-center text-xs font-semibold bg-gray-50 text-[#093C5D]">
+                      <div className="w-9 h-9 rounded-lg p-[2px] border border-[#DCE1EA] bg-[#FFFFFF] shrink-0">
+                        <div className="w-full h-full rounded-md flex items-center justify-center text-xs font-semibold bg-[#F0F2F6] text-[#4338CA]">
                           {getInitials(ticket.name)}
                         </div>
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-mono font-semibold text-[#093C5D]">
+                          <span className="text-xs font-mono font-semibold text-[#4338CA]">
                             #{ticket.ticketId}
                           </span>
-                          <span className="text-xs text-gray-400">•</span>
-                          <span className="text-xs text-gray-500 font-medium">
+                          <span className="text-xs text-[#757F94]">•</span>
+                          <span className="text-xs text-[#757F94] font-medium">
                             {formatDate(ticket.createdAt)}
                           </span>
                         </div>
-                        <h4 className="text-sm font-semibold text-gray-900 truncate">{ticket.name}</h4>
+                        <h4 className="text-sm font-semibold text-[#191E2B] truncate">{ticket.name}</h4>
                       </div>
                     </div>
 
@@ -561,15 +561,15 @@ const AdminSupport = () => {
                    * Support inquiry subject line and category metadata tags.
                    */}
                   <div className="space-y-1">
-                    <p className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-1">
+                    <p className="text-xs sm:text-sm font-semibold text-[#191E2B] line-clamp-1">
                       {ticket.subject}
                     </p>
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
-                      <span className="inline-block text-[10px] font-semibold text-gray-500 bg-gray-100 px-2 py-0.5 rounded uppercase tracking-wide">
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-[#757F94]">
+                      <span className="inline-block text-[10px] font-semibold text-[#757F94] bg-gray-100 px-2 py-0.5 rounded uppercase tracking-wide">
                         {ticket.category}
                       </span>
                       {(ticket.shopName || ticket.user?.businessName) && (
-                        <span className="inline-flex items-center gap-1 text-[11px] text-[#093C5D] font-medium">
+                        <span className="inline-flex items-center gap-1 text-[11px] text-[#4338CA] font-medium">
                           <Store className="w-3 h-3" />
                           <span>{ticket.shopName || ticket.user?.businessName}</span>
                         </span>
@@ -581,7 +581,7 @@ const AdminSupport = () => {
                    * Bottom Row: Priority & Actions
                    * Priority indicator badge and buttons to resolve or view full thread.
                    */}
-                  <div className="pt-2 border-t border-gray-100 flex items-center justify-between gap-2">
+                  <div className="pt-2 border-t border-[#E8ECF2] flex items-center justify-between gap-2">
                     <TicketPriorityBadge priority={ticket.priority} />
 
                     <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
@@ -600,7 +600,7 @@ const AdminSupport = () => {
                           e.stopPropagation();
                           handleOpenTicket(ticket);
                         }}
-                        className="shrink-0 cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/15 hover:bg-[#093C5D]/10 px-3 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95"
+                        className="shrink-0 cursor-pointer text-[#4338CA] font-medium bg-[#EEF0FB] border border-[#4338CA]/15 hover:bg-[#EEF0FB] px-3 py-1 rounded-md flex items-center justify-center transition-all text-xs active:scale-95"
                       >
                         View
                       </button>
@@ -617,27 +617,27 @@ const AdminSupport = () => {
          * Page index summary and previous/next page navigation buttons.
          */}
         {pagination.totalPages > 1 && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border-t border-gray-200 bg-gray-50/60">
-            <span className="text-xs text-gray-500 font-medium">
-              Showing page <span className="font-semibold text-gray-800">{pagination.page}</span> of{' '}
-              <span className="font-semibold text-gray-800">{pagination.totalPages}</span> ({pagination.total} tickets total)
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border-t border-[#DCE1EA] bg-[#F0F2F6]/60">
+            <span className="text-xs text-[#757F94] font-medium">
+              Showing page <span className="font-semibold text-[#191E2B]">{pagination.page}</span> of{' '}
+              <span className="font-semibold text-[#191E2B]">{pagination.totalPages}</span> ({pagination.total} tickets total)
             </span>
 
             <div className="flex items-center gap-1.5">
               <button
                 disabled={pagination.page <= 1}
                 onClick={() => handlePageChange(pagination.page - 1)}
-                className="cursor-pointer p-1.5 rounded border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="cursor-pointer p-1.5 rounded border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:bg-[#F0F2F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
-              <span className="text-xs font-semibold px-2.5 text-gray-700">
+              <span className="text-xs font-semibold px-2.5 text-[#4E5668]">
                 {pagination.page} / {pagination.totalPages}
               </span>
               <button
                 disabled={pagination.page >= pagination.totalPages}
                 onClick={() => handlePageChange(pagination.page + 1)}
-                className="cursor-pointer p-1.5 rounded border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="cursor-pointer p-1.5 rounded border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:bg-[#F0F2F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>

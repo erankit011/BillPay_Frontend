@@ -29,7 +29,7 @@ export const generateStatementPDF = async (filteredBills, filteredTransactions, 
    */
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(18);
-  doc.setTextColor(9, 60, 93);
+  doc.setTextColor(67, 56, 202);
   doc.text(t('Store Statement'), 14, 22);
 
   doc.setFont('helvetica', 'normal');
@@ -51,7 +51,7 @@ export const generateStatementPDF = async (filteredBills, filteredTransactions, 
   if (shopSettings) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12);
-    doc.setTextColor(9, 60, 93);
+    doc.setTextColor(67, 56, 202);
     const shopName = shopSettings.shopName || 'UdharPay Shop';
     doc.text(shopName, pageWidth - 14, 22, { align: 'right' });
 
@@ -97,8 +97,8 @@ export const generateStatementPDF = async (filteredBills, filteredTransactions, 
     head: [tableColumn],
     body: tableRows,
     theme: 'grid',
-    headStyles: { fillColor: [9, 60, 93], textColor: 255 },
-    alternateRowStyles: { fillColor: [245, 245, 245] }
+    headStyles: { fillColor: [67, 56, 202], textColor: 255 },
+    alternateRowStyles: { fillColor: [240, 242, 246] }
   });
 
   const finalY = (doc.lastAutoTable && doc.lastAutoTable.finalY) || startY;

@@ -13,12 +13,12 @@ import { Link } from 'react-router-dom';
 const TYPE_CONFIG = {
   INFO: {
     bg: 'bg-blue-50/90',
-    border: 'border-blue-200',
+    border: 'border-[#D8DCF5]',
     text: 'text-blue-900',
-    iconColor: 'text-[#093C5D]',
-    badgeBg: 'bg-blue-100 text-[#093C5D]',
+    iconColor: 'text-[#4338CA]',
+    badgeBg: 'bg-blue-100 text-[#4338CA]',
     icon: Info,
-    buttonClass: 'bg-[#093C5D] text-white hover:bg-[#072d46]',
+    buttonClass: 'bg-[#4338CA] text-white hover:bg-[#072d46]',
   },
   WARNING: {
     bg: 'bg-amber-50/95',
@@ -85,7 +85,7 @@ const BroadcastBanner = ({ broadcast, onDismiss, isPreview = false }) => {
               )}
 
               {isPreview && (
-                <span className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded bg-gray-200 text-gray-700">
+                <span className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded bg-gray-200 text-[#4E5668]">
                   Preview
                 </span>
               )}

@@ -62,7 +62,7 @@ const ForceLogoutModal = ({
        * Darkened modal background dismissing confirmation view on backdrop tap.
        */}
       <div
-        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain z-[100]"
+        className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay overscroll-contain z-[100]"
         onClick={() => {
           if (!isLoading) onClose();
         }}
@@ -76,7 +76,7 @@ const ForceLogoutModal = ({
        */}
       <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
         <div
-          className="relative bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
+          className="relative bg-[#FFFFFF] rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#E8ECF2]"
           onClick={(e) => e.stopPropagation()}
         >
           {/**
@@ -88,7 +88,7 @@ const ForceLogoutModal = ({
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200 disabled:opacity-50"
+              className="cursor-pointer text-[#757F94] bg-gray-100 hover:bg-gray-200 hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] disabled:opacity-50"
               title="Close"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -107,7 +107,7 @@ const ForceLogoutModal = ({
              * Dialog Headline
              * Plain confirmation title banner.
              */}
-            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-lg sm:text-xl font-semibold text-[#191E2B] mb-2">
               Force Logout Shopkeeper
             </h3>
 
@@ -115,10 +115,10 @@ const ForceLogoutModal = ({
              * Action Impact Description
              * Explains that all active sessions will be terminated immediately across devices.
              */}
-            <p className="text-gray-500 text-sm mb-4 font-medium leading-relaxed">
+            <p className="text-[#757F94] text-sm mb-4 font-medium leading-relaxed">
               Are you sure you want to forcibly log out{' '}
-              <span className="font-semibold text-gray-800">{shopName}</span>
-              {ownerName ? <span className="text-gray-500 font-normal"> ({ownerName})</span> : ''}?
+              <span className="font-semibold text-[#191E2B]">{shopName}</span>
+              {ownerName ? <span className="text-[#757F94] font-normal"> ({ownerName})</span> : ''}?
               All active sessions across all devices will be terminated immediately.
             </p>
 
@@ -145,7 +145,7 @@ const ForceLogoutModal = ({
                 type="button"
                 onClick={onClose}
                 disabled={isLoading}
-                className="cursor-pointer flex-1 px-3 py-2 sm:px-4 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded font-semibold text-xs sm:text-[13px] transition-colors active:scale-95 disabled:opacity-50"
+                className="cursor-pointer flex-1 px-3 py-2 sm:px-4 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-[#4E5668] rounded font-semibold text-xs sm:text-[13px] transition-colors active:scale-95 disabled:opacity-50"
               >
                 Cancel
               </button>

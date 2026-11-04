@@ -220,7 +220,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
 
   if (!isModalOpen) return null;
 
-  const inputCls = "w-full h-[42px] rounded-lg border border-[#DCE1EA] px-3 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] bg-white transition-colors outline-none shadow-none";
+  const inputCls = "w-full h-[42px] rounded-lg border border-[#DCE1EA] px-3 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-[#FBFBFC] transition-colors outline-none shadow-none";
 
   return (
     <div className="fixed inset-0 z-50">
@@ -373,7 +373,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                     </div>
                     <div className="flex-shrink-0">
                       <input type="number" {...register(`products.${index}.quantity`)} placeholder="1"
-                        className="w-16 sm:w-20 h-[42px] font-medium rounded-lg border border-[#DCE1EA] px-2 text-sm text-center text-[#191E2B] placeholder-[#9AA4B8] focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] bg-white transition-colors outline-none shadow-none" />
+                        className="w-16 sm:w-20 h-[42px] font-medium rounded-lg border border-[#DCE1EA] px-2 text-sm text-center text-[#191E2B] placeholder-[#9AA4B8] focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-[#FBFBFC] transition-colors outline-none shadow-none" />
                       {errors.products?.[index]?.quantity && (
                         <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1 font-medium text-center">
                           {t(errors.products[index].quantity.message)}
@@ -414,7 +414,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                   <span className="text-sm font-medium text-[#3730A3]">{t('Discount')} {isPercentage ? '(%)' : '(₹)'}</span>
                   <div className="flex items-center gap-1">
                     <span className="text-sm font-medium text-[#3730A3]">{isPercentage ? '%' : '₹'}</span>
-                    <input type="number" {...register('discountInput')} className="w-20 rounded-md border border-[#D8DCF5] px-2 py-1 text-sm font-medium text-right text-[#191E2B] bg-white focus:outline-none focus:ring-1 focus:ring-[#4338CA]" placeholder="0" min="0" />
+                    <input type="number" {...register('discountInput')} className="w-20 rounded-md border border-[#DCE1EA] px-2 py-1 text-sm font-medium text-right text-[#191E2B] bg-white focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]" placeholder="0" min="0" />
                   </div>
                 </div>
 

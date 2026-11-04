@@ -196,10 +196,10 @@ const AdminBroadcasts = () => {
        */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B]">
             Global Announcements & Broadcasts
           </h1>
-          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
+          <p className="text-[#4E5668] text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
             Broadcast operational notices, scheduled maintenance alerts, or new feature updates to merchant stores.
           </p>
         </div>
@@ -207,7 +207,7 @@ const AdminBroadcasts = () => {
         <button
           type="button"
           onClick={handleOpenCreate}
-          className="cursor-pointer h-10 sm:h-11 px-4 sm:px-5 rounded-lg bg-[#093C5D] hover:bg-[#082a42] text-white text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition-all active:scale-95 shadow-none shrink-0"
+          className="cursor-pointer h-10 sm:h-11 px-4 sm:px-5 rounded-lg bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition-all active:scale-95 shadow-none shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>New Broadcast</span>
@@ -266,8 +266,8 @@ const AdminBroadcasts = () => {
             onClick={() => setFilter('type', chip.value)}
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlType === chip.value
-                ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
+                ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
+                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {chip.label}
@@ -286,8 +286,8 @@ const AdminBroadcasts = () => {
             onClick={() => setFilter('status', chip.value)}
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlStatus === chip.value
-                ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
+                ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
+                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {chip.label}
@@ -317,14 +317,14 @@ const AdminBroadcasts = () => {
       <div className="flex flex-col w-full mb-3 sm:mb-4">
         <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-[#757F94]" />
           </div>
           <input
             type="text"
             placeholder="Search By Announcement Title & Content & Audience"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-white border border-gray-300 rounded-lg text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
+            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg text-[13px] sm:text-sm text-[#191E2B] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors duration-200 shadow-none"
           />
           {searchTerm && (
             <button
@@ -338,7 +338,7 @@ const AdminBroadcasts = () => {
                   return next;
                 }, { replace: true });
               }}
-              className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
+              className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-[#757F94] hover:text-[#4E5668] cursor-pointer"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
@@ -351,17 +351,17 @@ const AdminBroadcasts = () => {
        * Renders live announcement banners with embedded administration and status toggles.
        */}
       {isLoading ? (
-        <div className="p-12 text-center bg-white rounded-lg border border-gray-200 shadow-none">
-          <SwirlingLoader className="w-10 h-10 text-[#093C5D] mx-auto mb-3" />
-          <p className="text-sm font-medium text-gray-600">Loading announcements...</p>
+        <div className="p-12 text-center bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] shadow-none">
+          <SwirlingLoader className="w-10 h-10 text-[#4338CA] mx-auto mb-3" />
+          <p className="text-sm font-medium text-[#4E5668]">Loading announcements...</p>
         </div>
       ) : filteredBroadcasts.length === 0 ? (
-        <div className="p-8 md:p-12 text-center bg-white rounded-lg border border-gray-200 shadow-none">
-          <div className="w-12 h-12 rounded-lg bg-gray-100 text-gray-400 flex items-center justify-center mx-auto mb-3">
+        <div className="p-8 md:p-12 text-center bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] shadow-none">
+          <div className="w-12 h-12 rounded-lg bg-gray-100 text-[#757F94] flex items-center justify-center mx-auto mb-3">
             <Megaphone className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-semibold text-gray-900 tracking-tight">No Announcements Found</h3>
-          <p className="text-xs sm:text-sm text-gray-500 max-w-sm mx-auto mt-1 font-medium leading-relaxed">
+          <h3 className="text-base font-semibold text-[#191E2B] tracking-tight">No Announcements Found</h3>
+          <p className="text-xs sm:text-sm text-[#757F94] max-w-sm mx-auto mt-1 font-medium leading-relaxed">
             {debouncedSearch || urlType !== 'ALL' || urlStatus !== 'ALL'
               ? 'Try modifying your search or clearing your active category filters.'
               : 'Broadcast platform-wide updates, holiday notices, or new features directly across merchant dashboards.'}
@@ -369,7 +369,7 @@ const AdminBroadcasts = () => {
           <button
             type="button"
             onClick={handleOpenCreate}
-            className="cursor-pointer mt-4 h-10 px-4 rounded-lg bg-[#093C5D] hover:bg-[#072d46] text-white text-xs sm:text-sm font-semibold inline-flex items-center gap-2 transition-all active:scale-95 shadow-none"
+            className="cursor-pointer mt-4 h-10 px-4 rounded-lg bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs sm:text-sm font-semibold inline-flex items-center gap-2 transition-all active:scale-95 shadow-none"
           >
             <Plus className="w-4 h-4" />
             <span>Create First Announcement</span>
@@ -380,7 +380,7 @@ const AdminBroadcasts = () => {
           {filteredBroadcasts.map((broadcast) => (
             <div
               key={broadcast._id}
-              className="bg-white border border-gray-200 rounded-lg overflow-hidden transition-all hover:border-gray-300 shadow-none"
+              className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg overflow-hidden transition-all hover:border-[#DCE1EA] shadow-none"
             >
               {/**
                * Live Banner Visual Preview
@@ -394,17 +394,17 @@ const AdminBroadcasts = () => {
                * Administrative Metadata & Management Toolbar
                * Displays scheduling timeline, audience targeting, and lifecycle actions.
                */}
-              <div className="px-4 py-3 sm:px-5 bg-gray-50/80 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <div className="px-4 py-3 sm:px-5 bg-[#F0F2F6]/80 border-t border-[#E8ECF2] flex flex-wrap items-center justify-between gap-3 text-xs">
                 {/**
                  * Lifecycle Status & Schedule Details
                  * Indicates active/paused state and scheduled start/expiry dates.
                  */}
-                <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-gray-500 font-medium">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[#757F94] font-medium">
                   <span
                     className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[10px] lg:text-xs font-semibold uppercase tracking-wide ${
                       broadcast.isActive
                         ? 'bg-green-50 text-green-700 border border-green-200'
-                        : 'bg-gray-100 text-gray-600 border border-gray-200'
+                        : 'bg-gray-100 text-[#4E5668] border border-[#DCE1EA]'
                     }`}
                   >
                     <span
@@ -419,17 +419,17 @@ const AdminBroadcasts = () => {
                    * Target Audience Badge
                    * Indicates store tier audience (Paid Pro, Free Trial, or All Stores).
                    */}
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-blue-50 text-[#093C5D] border border-blue-200 font-semibold text-[10px] lg:text-xs uppercase">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] font-semibold text-[10px] lg:text-xs uppercase">
                     Audience: {broadcast.targetAudience === 'PAID_SUBSCRIBERS' ? 'Paid Pro' : broadcast.targetAudience === 'FREE_TRIAL' ? 'Free Trial' : 'All Stores'}
                   </span>
 
-                  <span className="text-gray-500 font-medium">
-                    Started: <strong className="text-gray-800 font-semibold">{formatDate(broadcast.startsAt || broadcast.createdAt)}</strong>
+                  <span className="text-[#757F94] font-medium">
+                    Started: <strong className="text-[#191E2B] font-semibold">{formatDate(broadcast.startsAt || broadcast.createdAt)}</strong>
                   </span>
 
                   {broadcast.expiresAt && (
-                    <span className="text-gray-500 font-medium">
-                      Expires: <strong className="text-gray-800 font-semibold">{formatDate(broadcast.expiresAt)}</strong>
+                    <span className="text-[#757F94] font-medium">
+                      Expires: <strong className="text-[#191E2B] font-semibold">{formatDate(broadcast.expiresAt)}</strong>
                     </span>
                   )}
                 </div>
@@ -456,9 +456,9 @@ const AdminBroadcasts = () => {
                   <button
                     type="button"
                     onClick={() => handleOpenEdit(broadcast)}
-                    className="cursor-pointer px-2.5 py-1 rounded-md text-xs font-semibold bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 transition-all inline-flex items-center gap-1.5 active:scale-95"
+                    className="cursor-pointer px-2.5 py-1 rounded-md text-xs font-semibold bg-[#FFFFFF] hover:bg-[#F0F2F6] text-[#4E5668] border border-[#DCE1EA] transition-all inline-flex items-center gap-1.5 active:scale-95"
                   >
-                    <Edit2 className="w-3.5 h-3.5 text-gray-500" />
+                    <Edit2 className="w-3.5 h-3.5 text-[#757F94]" />
                     <span>Edit</span>
                   </button>
 

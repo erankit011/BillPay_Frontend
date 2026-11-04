@@ -95,10 +95,10 @@ const AdminPlans = () => {
        */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B]">
             {t('SaaS Plan Limits & Pricing')}
           </h1>
-          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
+          <p className="text-[#4E5668] text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
             {t('Configure live subscription plan pricing, customer quotas, monthly invoice allowances, and feature entitlements.')}
           </p>
         </div>
@@ -108,7 +108,7 @@ const AdminPlans = () => {
             type="button"
             onClick={() => setConfirmResetModal(true)}
             disabled={resetting || loading}
-            className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 sm:px-5 h-10 sm:h-11 text-xs sm:text-sm font-semibold text-rose-600 bg-white border border-rose-200 hover:bg-rose-50 rounded-lg transition-all active:scale-95 shadow-none disabled:opacity-50"
+            className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 sm:px-5 h-10 sm:h-11 text-xs sm:text-sm font-semibold text-rose-600 bg-[#FFFFFF] border border-rose-200 hover:bg-rose-50 rounded-lg transition-all active:scale-95 shadow-none disabled:opacity-50"
             title={t('Reset all tiers to factory defaults')}
           >
             <RotateCcw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-600 ${resetting ? 'animate-spin' : ''}`} />
@@ -160,9 +160,9 @@ const AdminPlans = () => {
        * 4-column responsive grid displaying each pricing tier and feature allowance.
        */}
       {loading ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-16 text-center shadow-none">
-          <SwirlingLoader className="w-10 h-10 text-[#093C5D] mx-auto mb-3" />
-          <p className="text-sm font-medium text-gray-600">{t('Loading SaaS plans configuration...')}</p>
+        <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-16 text-center shadow-none">
+          <SwirlingLoader className="w-10 h-10 text-[#4338CA] mx-auto mb-3" />
+          <p className="text-sm font-medium text-[#4E5668]">{t('Loading SaaS plans configuration...')}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 items-stretch">
@@ -197,7 +197,7 @@ const AdminPlans = () => {
            * Semi-transparent overlay blocking interaction with background.
            */}
           <div
-            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
             onClick={() => !resetting && setConfirmResetModal(false)}
           />
 
@@ -207,17 +207,17 @@ const AdminPlans = () => {
            */}
           <div className="fixed inset-0 flex items-center justify-center p-4 z-50 pointer-events-none">
             <div
-              className="bg-white rounded-lg w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-200 shadow-none"
+              className="bg-[#FFFFFF] rounded-lg w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#DCE1EA] shadow-none"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-5 sm:p-6 text-center">
                 <div className="w-12 h-12 rounded-full bg-rose-50 mx-auto flex items-center justify-center mb-3.5 border border-rose-100">
                   <RotateCcw className="w-6 h-6 text-rose-600" />
                 </div>
-                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1.5">
+                <h3 className="text-base sm:text-lg font-semibold text-[#191E2B] mb-1.5">
                   {t('Reset All Plan Tiers?')}
                 </h3>
-                <p className="text-gray-500 text-xs sm:text-sm mb-6 font-medium leading-relaxed">
+                <p className="text-[#757F94] text-xs sm:text-sm mb-6 font-medium leading-relaxed">
                   {t('Are you sure you want to reset all 4 plan tiers to platform factory default quotas and pricing? This will overwrite custom limits.')}
                 </p>
 
@@ -226,7 +226,7 @@ const AdminPlans = () => {
                     type="button"
                     onClick={() => setConfirmResetModal(false)}
                     disabled={resetting}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium text-xs sm:text-sm transition-colors active:scale-95 disabled:opacity-50"
+                    className="cursor-pointer flex-1 px-4 py-2 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-[#4E5668] rounded-lg font-medium text-xs sm:text-sm transition-colors active:scale-95 disabled:opacity-50"
                   >
                     {t('No, Cancel')}
                   </button>

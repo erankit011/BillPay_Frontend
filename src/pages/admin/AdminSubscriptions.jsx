@@ -148,7 +148,7 @@ const AdminSubscriptions = () => {
       case 'MONTHLY':
         return 'bg-green-50 text-green-700 border-green-200';
       default:
-        return 'bg-blue-50 text-blue-700 border-blue-200';
+        return 'bg-blue-50 text-blue-700 border-[#D8DCF5]';
     }
   };
 
@@ -160,10 +160,10 @@ const AdminSubscriptions = () => {
        */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B]">
             Platform Subscriptions & Billing Receipts
           </h1>
-          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
+          <p className="text-[#4E5668] text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
             Track merchant subscription orders, Razorpay payment collections, plan validity, and platform revenue receipts.
           </p>
         </div>
@@ -218,8 +218,8 @@ const AdminSubscriptions = () => {
             onClick={() => setStatusFilter(f.value)}
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlStatus === f.value
-                ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
+                ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
+                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {f.label}
@@ -248,20 +248,20 @@ const AdminSubscriptions = () => {
       <div className="flex flex-col w-full mb-3 sm:mb-4">
         <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-[#757F94]" />
           </div>
           <input
             type="text"
             placeholder="Search By Payment ID & Reference & Shop & Owner"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-white border border-gray-300 rounded-lg text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
+            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg text-[13px] sm:text-sm text-[#191E2B] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors duration-200 shadow-none"
           />
           {searchTerm && (
             <button
               type="button"
               onClick={() => setSearchTerm('')}
-              className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-gray-400 hover:text-gray-600"
+              className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-[#757F94] hover:text-[#4E5668]"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
@@ -273,16 +273,16 @@ const AdminSubscriptions = () => {
        * Subscriptions Records Container
        * Desktop data table and responsive mobile cards for platform invoices.
        */}
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-none">
+      <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg overflow-hidden shadow-none">
         {isLoading ? (
           <div className="flex justify-center items-center py-16">
-            <SwirlingLoader className="w-10 h-10 text-[#093C5D]" />
+            <SwirlingLoader className="w-10 h-10 text-[#4338CA]" />
           </div>
         ) : invoices.length === 0 ? (
-          <div className="p-12 text-center text-gray-500">
+          <div className="p-12 text-center text-[#757F94]">
             <Receipt className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-            <p className="font-semibold text-gray-800 text-sm sm:text-base">No subscription invoices found</p>
-            <p className="text-xs text-gray-500 mt-1 font-medium">
+            <p className="font-semibold text-[#191E2B] text-sm sm:text-base">No subscription invoices found</p>
+            <p className="text-xs text-[#757F94] mt-1 font-medium">
               There are no billing or payment records matching your query. Try selecting "All Invoices".
             </p>
           </div>
@@ -294,30 +294,30 @@ const AdminSubscriptions = () => {
              */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse whitespace-nowrap">
-                <thead className="bg-gray-50/80 border-b border-gray-200">
+                <thead className="bg-[#F0F2F6]/80 border-b border-[#DCE1EA]">
                   <tr>
-                    <th className="px-4 lg:px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-[150px]">
+                    <th className="px-4 lg:px-5 py-3.5 text-left text-xs font-semibold text-[#757F94] uppercase tracking-wider min-w-[150px]">
                       Payment ID
                     </th>
-                    <th className="px-4 lg:px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-[200px]">
+                    <th className="px-4 lg:px-5 py-3.5 text-left text-xs font-semibold text-[#757F94] uppercase tracking-wider min-w-[200px]">
                       Store & Merchant
                     </th>
-                    <th className="px-4 lg:px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-[170px]">
+                    <th className="px-4 lg:px-5 py-3.5 text-left text-xs font-semibold text-[#757F94] uppercase tracking-wider min-w-[170px]">
                       Merchant Owner
                     </th>
-                    <th className="px-4 lg:px-5 py-3.5 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-[130px]">
+                    <th className="px-4 lg:px-5 py-3.5 text-center text-xs font-semibold text-[#757F94] uppercase tracking-wider min-w-[130px]">
                       Subscription Plan
                     </th>
-                    <th className="px-4 lg:px-5 py-3.5 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-[130px]">
+                    <th className="px-4 lg:px-5 py-3.5 text-right text-xs font-semibold text-[#757F94] uppercase tracking-wider min-w-[130px]">
                       Billed Amount
                     </th>
-                    <th className="px-4 lg:px-5 py-3.5 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-[120px]">
+                    <th className="px-4 lg:px-5 py-3.5 text-center text-xs font-semibold text-[#757F94] uppercase tracking-wider min-w-[120px]">
                       Payment Status
                     </th>
-                    <th className="px-4 lg:px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-[170px]">
+                    <th className="px-4 lg:px-5 py-3.5 text-left text-xs font-semibold text-[#757F94] uppercase tracking-wider min-w-[170px]">
                       Billing Date
                     </th>
-                    <th className="px-4 lg:px-5 py-3.5 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-[120px]">
+                    <th className="px-4 lg:px-5 py-3.5 text-right text-xs font-semibold text-[#757F94] uppercase tracking-wider min-w-[120px]">
                       Receipt Action
                     </th>
                   </tr>
@@ -330,13 +330,13 @@ const AdminSubscriptions = () => {
                     const paymentId = inv.razorpayPaymentId || inv._id.slice(-8).toUpperCase();
 
                     return (
-                      <tr key={inv._id} className="hover:bg-gray-50/60 transition-colors">
+                      <tr key={inv._id} className="hover:bg-[#F0F2F6]/60 transition-colors">
                         {/**
                          * Razorpay Payment Identifier
                          * Transaction reference number or shortened order ID.
                          */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-left">
-                          <span className="font-semibold text-xs text-[#093C5D]">
+                          <span className="font-semibold text-xs text-[#4338CA]">
                             {paymentId}
                           </span>
                         </td>
@@ -347,10 +347,10 @@ const AdminSubscriptions = () => {
                          */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-left">
                           <div className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#093C5D] shrink-0">
+                            <div className="w-8 h-8 rounded-lg border border-[#DCE1EA] bg-[#EEF0FB] flex items-center justify-center text-xs font-semibold text-[#4338CA] shrink-0">
                               {getInitials(shopName)}
                             </div>
-                            <span className="text-sm font-semibold text-[#093C5D] truncate max-w-[200px]" title={shopName}>
+                            <span className="text-sm font-semibold text-[#4338CA] truncate max-w-[200px]" title={shopName}>
                               {shopName}
                             </span>
                           </div>
@@ -361,10 +361,10 @@ const AdminSubscriptions = () => {
                          * Display name and verified email of the store administrator.
                          */}
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-left">
-                          <div className="text-sm font-semibold text-gray-900 truncate max-w-[160px]" title={ownerName}>
+                          <div className="text-sm font-semibold text-[#191E2B] truncate max-w-[160px]" title={ownerName}>
                             {ownerName}
                           </div>
-                          <div className="text-[11px] text-gray-500 font-normal truncate max-w-[160px]" title={inv.shopId?.email}>
+                          <div className="text-[11px] text-[#757F94] font-normal truncate max-w-[160px]" title={inv.shopId?.email}>
                             {inv.shopId?.email || 'N/A'}
                           </div>
                         </td>
@@ -387,7 +387,7 @@ const AdminSubscriptions = () => {
                          * Billed Amount Column
                          * Total INR transaction value charged for the subscription.
                          */}
-                        <td className="px-4 lg:px-5 py-3.5 align-middle text-right font-semibold text-gray-900 text-sm">
+                        <td className="px-4 lg:px-5 py-3.5 align-middle text-right font-semibold text-[#191E2B] text-sm">
                           {formatCurrency(inv.amount ?? 0)}
                         </td>
 
@@ -403,7 +403,7 @@ const AdminSubscriptions = () => {
                          * Transaction Timestamp
                          * Date and time when the payment order was initiated or processed.
                          */}
-                        <td className="px-4 lg:px-5 py-3.5 align-middle text-left text-xs text-gray-600 font-medium">
+                        <td className="px-4 lg:px-5 py-3.5 align-middle text-left text-xs text-[#4E5668] font-medium">
                           {formatDate(inv.createdAt)}
                         </td>
 
@@ -414,7 +414,7 @@ const AdminSubscriptions = () => {
                         <td className="px-4 lg:px-5 py-3.5 align-middle text-right">
                           <Link
                             to={`/platform-receipt/${inv._id}`}
-                            className="cursor-pointer h-8 px-2.5 sm:px-3 text-[#093C5D] font-semibold bg-[#093C5D]/10 border border-[#093C5D]/20 hover:bg-[#093C5D]/15 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
+                            className="cursor-pointer h-8 px-2.5 sm:px-3 text-[#4338CA] font-semibold bg-[#4338CA]/10 border border-[#4338CA]/20 hover:bg-[#4338CA]/15 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
                             title="View and download platform tax invoice"
                           >
                             <Receipt className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
@@ -432,7 +432,7 @@ const AdminSubscriptions = () => {
              * Mobile & Tablet Cards View
              * Responsive card list optimized for touch screens and compact displays.
              */}
-            <div className="md:hidden space-y-3 p-3 bg-gray-50/50">
+            <div className="md:hidden space-y-3 p-3 bg-[#F0F2F6]/50">
               {invoices.map((inv) => {
                 const shopName = inv.shopId?.businessName || inv.shopId?.name || 'Shop';
                 const ownerName = inv.shopId?.name || 'Merchant';
@@ -442,7 +442,7 @@ const AdminSubscriptions = () => {
                 return (
                   <div
                     key={inv._id}
-                    className="bg-white border border-gray-200 rounded-lg p-3.5 sm:p-4 space-y-3 shadow-none pt-3 first:pt-0"
+                    className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-3.5 sm:p-4 space-y-3 shadow-none pt-3 first:pt-0"
                   >
                     {/**
                      * Card Header Strip
@@ -450,14 +450,14 @@ const AdminSubscriptions = () => {
                      */}
                     <div className="flex items-center justify-between gap-2.5">
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-9 h-9 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#093C5D] shrink-0">
+                        <div className="w-9 h-9 rounded-lg border border-[#DCE1EA] bg-[#EEF0FB] flex items-center justify-center text-xs font-semibold text-[#4338CA] shrink-0">
                           {getInitials(shopName)}
                         </div>
                         <div className="min-w-0">
-                          <h3 className="text-sm font-semibold text-gray-900 truncate" title={shopName}>
+                          <h3 className="text-sm font-semibold text-[#191E2B] truncate" title={shopName}>
                             {shopName}
                           </h3>
-                          <div className="text-[11px] font-semibold text-[#093C5D] truncate">
+                          <div className="text-[11px] font-semibold text-[#4338CA] truncate">
                             {paymentId}
                           </div>
                         </div>
@@ -479,13 +479,13 @@ const AdminSubscriptions = () => {
                      * Merchant Owner & Date Info Strip
                      * Quick summary of owner name and transaction date.
                      */}
-                    <div className="bg-gray-50/80 border border-gray-200/80 rounded-lg p-2.5 flex items-center justify-between gap-2 text-xs">
-                      <div className="flex items-center gap-1.5 text-gray-900 font-semibold truncate min-w-0">
-                        <User className="w-3.5 h-3.5 text-[#093C5D] shrink-0" />
+                    <div className="bg-[#F0F2F6]/80 border border-[#DCE1EA]/80 rounded-lg p-2.5 flex items-center justify-between gap-2 text-xs">
+                      <div className="flex items-center gap-1.5 text-[#191E2B] font-semibold truncate min-w-0">
+                        <User className="w-3.5 h-3.5 text-[#4338CA] shrink-0" />
                         <span className="truncate">{ownerName}</span>
                       </div>
-                      <div className="flex items-center gap-1.5 text-gray-500 font-medium shrink-0 text-[11px]">
-                        <Clock className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                      <div className="flex items-center gap-1.5 text-[#757F94] font-medium shrink-0 text-[11px]">
+                        <Clock className="w-3.5 h-3.5 text-[#757F94] shrink-0" />
                         <span>{formatDate(inv.createdAt)}</span>
                       </div>
                     </div>
@@ -495,13 +495,13 @@ const AdminSubscriptions = () => {
                      * Compact pills displaying billed amount and merchant contact.
                      */}
                     <div className="grid grid-cols-2 gap-2 text-center">
-                      <div className="bg-gray-50 border border-gray-200 rounded-lg py-2 px-1">
-                        <span className="text-[10px] font-semibold text-gray-500 uppercase block">Billed Amount</span>
-                        <span className="text-sm font-semibold text-gray-900 mt-0.5 block">{formatCurrency(inv.amount ?? 0)}</span>
+                      <div className="bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg py-2 px-1">
+                        <span className="text-[10px] font-semibold text-[#757F94] uppercase block">Billed Amount</span>
+                        <span className="text-sm font-semibold text-[#191E2B] mt-0.5 block">{formatCurrency(inv.amount ?? 0)}</span>
                       </div>
-                      <div className="bg-gray-50 border border-gray-200 rounded-lg py-2 px-1">
-                        <span className="text-[10px] font-semibold text-gray-500 uppercase block">Merchant Contact</span>
-                        <span className="text-xs font-semibold text-gray-700 mt-0.5 block truncate px-1" title={inv.shopId?.email || 'N/A'}>
+                      <div className="bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg py-2 px-1">
+                        <span className="text-[10px] font-semibold text-[#757F94] uppercase block">Merchant Contact</span>
+                        <span className="text-xs font-semibold text-[#4E5668] mt-0.5 block truncate px-1" title={inv.shopId?.email || 'N/A'}>
                           {inv.shopId?.phone ? `+91 ${inv.shopId.phone}` : (inv.shopId?.email || 'N/A')}
                         </span>
                       </div>
@@ -511,10 +511,10 @@ const AdminSubscriptions = () => {
                      * Mobile Receipt Action
                      * Full-width button linking to the official platform receipt document.
                      */}
-                    <div className="pt-2 border-t border-gray-100">
+                    <div className="pt-2 border-t border-[#E8ECF2]">
                       <Link
                         to={`/platform-receipt/${inv._id}`}
-                        className="cursor-pointer w-full h-8.5 text-[#093C5D] font-semibold bg-[#093C5D]/10 border border-[#093C5D]/20 hover:bg-[#093C5D]/20 px-2 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
+                        className="cursor-pointer w-full h-8.5 text-[#4338CA] font-semibold bg-[#4338CA]/10 border border-[#4338CA]/20 hover:bg-[#4338CA]/20 px-2 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
                       >
                         <Receipt className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
                         <span className="leading-none">View Platform Receipt</span>
@@ -530,27 +530,27 @@ const AdminSubscriptions = () => {
              * Page counter display and previous/next page navigation buttons.
              */}
             {totalPages > 1 && (
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border-t border-gray-200 bg-gray-50/60">
-                <span className="text-xs text-gray-500 font-medium">
-                  Showing page <span className="font-semibold text-gray-800">{currentPage}</span> of{' '}
-                  <span className="font-semibold text-gray-800">{totalPages}</span> ({totalCount} total records)
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border-t border-[#DCE1EA] bg-[#F0F2F6]/60">
+                <span className="text-xs text-[#757F94] font-medium">
+                  Showing page <span className="font-semibold text-[#191E2B]">{currentPage}</span> of{' '}
+                  <span className="font-semibold text-[#191E2B]">{totalPages}</span> ({totalCount} total records)
                 </span>
 
                 <div className="flex items-center gap-1.5">
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage <= 1}
-                    className="cursor-pointer p-1.5 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    className="cursor-pointer p-1.5 rounded-lg border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:bg-[#F0F2F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
-                  <span className="text-xs font-semibold px-2.5 text-gray-700">
+                  <span className="text-xs font-semibold px-2.5 text-[#4E5668]">
                     {currentPage} / {totalPages}
                   </span>
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage >= totalPages}
-                    className="cursor-pointer p-1.5 rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    className="cursor-pointer p-1.5 rounded-lg border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:bg-[#F0F2F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </button>

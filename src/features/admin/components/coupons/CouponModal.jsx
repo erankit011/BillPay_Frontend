@@ -189,7 +189,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
        * Darkened semi-transparent overlay closing dialog on background tap.
        */}
       <div
-        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
+        className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
         onWheel={(e) => e.preventDefault()}
         onTouchMove={(e) => e.preventDefault()}
@@ -201,14 +201,14 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div
-          className="relative w-full sm:max-w-4xl bg-white rounded-t-2xl sm:rounded-xl border border-gray-200 animate-modal-content overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[88vh] pointer-events-auto shadow-2xl sm:shadow-xl"
+          className="relative w-full sm:max-w-4xl bg-[#FFFFFF] rounded-t-2xl sm:rounded-xl border border-[#DCE1EA] animate-modal-content overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[88vh] pointer-events-auto shadow-2xl sm:shadow-xl"
           onClick={(e) => e.stopPropagation()}
         >
           {/**
            * Mobile Drag Pill
            * Visual drag pill indicator displayed on mobile devices.
            */}
-          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-gray-50/80">
+          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#F0F2F6]/80">
             <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
           </div>
 
@@ -216,16 +216,16 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
            * Modal Header
            * Coupon tag icon, headline title, subtitle explanation, and close button.
            */}
-          <div className="px-5 sm:px-6 py-4 border-b border-gray-200 bg-gray-50/80 flex items-center justify-between shrink-0 gap-3">
+          <div className="px-5 sm:px-6 py-4 border-b border-[#DCE1EA] bg-[#F0F2F6]/80 flex items-center justify-between shrink-0 gap-3">
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
-              <div className="w-9 h-9 rounded bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center shrink-0">
+              <div className="w-9 h-9 rounded bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0">
                 <Tag className="w-5 h-5" />
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="text-base font-semibold text-gray-900 tracking-tight truncate">
+                <h3 className="text-base font-semibold text-[#191E2B] tracking-tight truncate">
                   {coupon ? 'Edit Coupon Code' : 'Create New Promo Code'}
                 </h3>
-                <p className="text-xs text-gray-500 font-medium truncate">
+                <p className="text-xs text-[#757F94] font-medium truncate">
                   Configure discount rules and plan eligibility for merchant checkout
                 </p>
               </div>
@@ -233,7 +233,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200 ml-auto"
+              className="cursor-pointer text-[#757F94] bg-gray-100 hover:bg-gray-200 hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
               title="Close"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -256,11 +256,11 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="text-xs font-semibold text-gray-700">Coupon Code *</label>
+                  <label className="text-xs font-semibold text-[#4E5668]">Coupon Code *</label>
                   <button
                     type="button"
                     onClick={handleGenerateCode}
-                    className="cursor-pointer text-xs font-medium text-[#093C5D] hover:underline flex items-center gap-1"
+                    className="cursor-pointer text-xs font-medium text-[#4338CA] hover:underline flex items-center gap-1"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
                     Generate
@@ -272,7 +272,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                   value={code}
                   onChange={(e) => setCode(e.target.value.toUpperCase())}
                   placeholder="e.g. DIWALI50 or SAVE20"
-                  className="w-full text-sm font-mono font-semibold tracking-wider px-3.5 py-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none uppercase"
+                  className="w-full text-sm font-mono font-semibold tracking-wider px-3.5 py-2.5 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none uppercase"
                 />
               </div>
 
@@ -281,13 +281,13 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                * Brief human explanation describing the promo campaign.
                */}
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">Description</label>
+                <label className="block text-xs font-semibold text-[#4E5668] mb-1">Description</label>
                 <input
                   type="text"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="e.g. 50% discount on Yearly Pro subscriptions"
-                  className="w-full text-sm font-medium px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+                  className="w-full text-sm font-medium px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                 />
               </div>
 
@@ -297,14 +297,14 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Discount Type</label>
+                  <label className="block text-xs font-semibold text-[#4E5668] mb-1">Discount Type</label>
                   <div className="grid grid-cols-2 gap-1.5 p-1 bg-gray-100 rounded-lg">
                     <button
                       type="button"
                       onClick={() => setDiscountType('PERCENTAGE')}
                       className={`cursor-pointer py-1.5 text-xs font-semibold rounded transition-colors ${discountType === 'PERCENTAGE'
-                          ? 'bg-white text-[#093C5D] border border-gray-200'
-                          : 'text-gray-600 hover:text-gray-900'
+                          ? 'bg-[#FFFFFF] text-[#4338CA] border border-[#DCE1EA]'
+                          : 'text-[#4E5668] hover:text-[#191E2B]'
                         }`}
                     >
                       Percentage (%)
@@ -313,8 +313,8 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                       type="button"
                       onClick={() => setDiscountType('FLAT')}
                       className={`cursor-pointer py-1.5 text-xs font-semibold rounded transition-colors ${discountType === 'FLAT'
-                          ? 'bg-white text-[#093C5D] border border-gray-200'
-                          : 'text-gray-600 hover:text-gray-900'
+                          ? 'bg-[#FFFFFF] text-[#4338CA] border border-[#DCE1EA]'
+                          : 'text-[#4E5668] hover:text-[#191E2B]'
                         }`}
                     >
                       Flat Cash (₹)
@@ -323,7 +323,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  <label className="block text-xs font-semibold text-[#4E5668] mb-1">
                     Discount Value {discountType === 'PERCENTAGE' ? '(%)' : '(₹)'} *
                   </label>
                   <input
@@ -333,7 +333,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                     required
                     value={discountValue}
                     onChange={(e) => setDiscountValue(e.target.value)}
-                    className="w-full text-sm px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+                    className="w-full text-sm px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                   />
                 </div>
               </div>
@@ -345,7 +345,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {discountType === 'PERCENTAGE' && (
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    <label className="block text-xs font-semibold text-[#4E5668] mb-1">
                       Max Discount Cap (₹)
                     </label>
                     <input
@@ -354,13 +354,13 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                       value={maxDiscountAmount}
                       onChange={(e) => setMaxDiscountAmount(e.target.value)}
                       placeholder="No cap (e.g. 500)"
-                      className="w-full text-sm px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+                      className="w-full text-sm px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                     />
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  <label className="block text-xs font-semibold text-[#4E5668] mb-1">
                     Min Order Amount (₹)
                   </label>
                   <input
@@ -369,7 +369,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                     value={minOrderAmount}
                     onChange={(e) => setMinOrderAmount(e.target.value)}
                     placeholder="0 (no minimum)"
-                    className="w-full text-sm px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+                    className="w-full text-sm px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                   />
                 </div>
               </div>
@@ -379,20 +379,20 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                * Selectable checkboxes restricting coupon applicability to specific plans.
                */}
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                <label className="block text-xs font-semibold text-[#4E5668] mb-1.5">
                   Eligible Plans *
                 </label>
                 <div className="space-y-2">
                   {availablePlans.map((p) => (
                     <label
                       key={p.id}
-                      className="flex items-center gap-2.5 text-xs text-gray-700 cursor-pointer"
+                      className="flex items-center gap-2.5 text-xs text-[#4E5668] cursor-pointer"
                     >
                       <input
                         type="checkbox"
                         checked={applicablePlans.includes(p.id)}
                         onChange={() => handleTogglePlan(p.id)}
-                        className="rounded text-[#093C5D] focus:ring-[#093C5D] w-4 h-4"
+                        className="rounded text-[#4338CA] focus:ring-[#4338CA] w-4 h-4"
                       />
                       <span>{p.label}</span>
                     </label>
@@ -406,7 +406,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  <label className="block text-xs font-semibold text-[#4E5668] mb-1">
                     Total Usage Limit
                   </label>
                   <input
@@ -415,12 +415,12 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                     value={usageLimit}
                     onChange={(e) => setUsageLimit(e.target.value)}
                     placeholder="Unlimited (e.g. 100)"
-                    className="w-full text-sm px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+                    className="w-full text-sm px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  <label className="block text-xs font-semibold text-[#4E5668] mb-1">
                     Per-Merchant Limit
                   </label>
                   <input
@@ -428,7 +428,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                     min="1"
                     value={perUserLimit}
                     onChange={(e) => setPerUserLimit(e.target.value)}
-                    className="w-full text-sm px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+                    className="w-full text-sm px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                   />
                 </div>
               </div>
@@ -438,14 +438,14 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                * Optional calendar date after which the promo coupon is rejected.
                */}
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                <label className="block text-xs font-semibold text-[#4E5668] mb-1">
                   Expiration Date (Optional)
                 </label>
                 <input
                   type="date"
                   value={expiresAt}
                   onChange={(e) => setExpiresAt(e.target.value)}
-                  className="w-full text-sm px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+                  className="w-full text-sm px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                 />
               </div>
 
@@ -455,19 +455,19 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="block text-xs font-semibold text-gray-700">
+                  <label className="block text-xs font-semibold text-[#4E5668]">
                     Razorpay Offer ID (Optional)
                   </label>
-                  <span className="text-[10px] text-gray-400 font-medium">NPCI AutoPay Compliant</span>
+                  <span className="text-[10px] text-[#757F94] font-medium">NPCI AutoPay Compliant</span>
                 </div>
                 <input
                   type="text"
                   value={offerId}
                   onChange={(e) => setOfferId(e.target.value)}
                   placeholder="e.g. offer_K1abc2xyz (Model 1 1st-cycle discount)"
-                  className="w-full text-sm font-mono px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+                  className="w-full text-sm font-mono px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                 />
-                <p className="text-[11px] text-gray-500 mt-1">
+                <p className="text-[11px] text-[#757F94] mt-1">
                   Razorpay Dashboard &gt; Offers se banaya gaya Offer ID. AutoPay e-mandate me 1st cycle discount deta hai bina NPCI cap exceed kiye.
                 </p>
               </div>
@@ -477,8 +477,8 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
              * Live Voucher Preview Pane
              * Visual demonstration of merchant-facing coupon design and terms.
              */}
-            <div className="lg:col-span-5 bg-gray-50/70 p-6 border-t lg:border-t-0 lg:border-l border-gray-200 flex flex-col justify-center">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+            <div className="lg:col-span-5 bg-[#F0F2F6]/70 p-6 border-t lg:border-t-0 lg:border-l border-[#DCE1EA] flex flex-col justify-center">
+              <span className="text-xs font-semibold text-[#757F94] uppercase tracking-wider mb-3">
                 Live Voucher Preview
               </span>
 
@@ -486,21 +486,21 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                * Merchant Voucher Preview Card
                * Live rendering of percentage discount, promo badge, and terms.
                */}
-              <div className="bg-white rounded-lg border-2 border-dashed border-[#093C5D]/30 p-5 space-y-4 relative overflow-hidden">
+              <div className="bg-[#FFFFFF] rounded-lg border-2 border-dashed border-[#4338CA]/30 p-5 space-y-4 relative overflow-hidden">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-[#093C5D]/10 text-[#093C5D]">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-[#EEF0FB] text-[#4338CA]">
                     Special Promo
                   </span>
-                  <span className="text-xs text-gray-400 font-medium">UdharPay SaaS</span>
+                  <span className="text-xs text-[#757F94] font-medium">UdharPay SaaS</span>
                 </div>
 
                 <div>
-                  <span className="text-3xl font-semibold tracking-tight text-gray-900">
+                  <span className="text-3xl font-semibold tracking-tight text-[#191E2B]">
                     {discountType === 'PERCENTAGE'
                       ? `${discountValue || 0}% OFF`
                       : `₹${discountValue || 0} FLAT`}
                   </span>
-                  <p className="text-xs text-gray-600 mt-1 font-medium">
+                  <p className="text-xs text-[#4E5668] mt-1 font-medium">
                     {description || 'Get instant savings on subscription upgrades'}
                   </p>
                 </div>
@@ -510,13 +510,13 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                  * Monospace visual box highlighting the voucher coupon code.
                  */}
                 <div className="p-2.5 bg-gray-100 rounded-xl flex items-center justify-between">
-                  <span className="font-mono font-bold text-sm tracking-wider text-[#093C5D]">
+                  <span className="font-mono font-bold text-sm tracking-wider text-[#4338CA]">
                     {code || 'ENTER_CODE'}
                   </span>
-                  <span className="text-[10px] text-gray-500 font-medium">Valid at Checkout</span>
+                  <span className="text-[10px] text-[#757F94] font-medium">Valid at Checkout</span>
                 </div>
 
-                <div className="space-y-1 text-[11px] text-gray-500 border-t border-gray-100 pt-3">
+                <div className="space-y-1 text-[11px] text-[#757F94] border-t border-[#E8ECF2] pt-3">
                   <p>
                     • Applies to: {applicablePlans.length > 0 ? applicablePlans.join(', ') : 'None'}
                   </p>
@@ -533,13 +533,13 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
            * Modal Action Footer
            * Immediate activation checkbox switch, cancel action, and save trigger.
            */}
-          <div className="px-6 py-4 border-t border-gray-200 bg-gray-50/80 flex items-center justify-between shrink-0">
-            <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-gray-700">
+          <div className="px-6 py-4 border-t border-[#DCE1EA] bg-[#F0F2F6]/80 flex items-center justify-between shrink-0">
+            <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-[#4E5668]">
               <input
                 type="checkbox"
                 checked={isActive}
                 onChange={(e) => setIsActive(e.target.checked)}
-                className="rounded text-[#093C5D] focus:ring-[#093C5D] w-4 h-4"
+                className="rounded text-[#4338CA] focus:ring-[#4338CA] w-4 h-4"
               />
               <span>Active immediately upon saving</span>
             </label>
@@ -548,7 +548,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
               <button
                 type="button"
                 onClick={onClose}
-                className="cursor-pointer px-4 py-2 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+                className="cursor-pointer px-4 py-2 text-xs font-semibold text-[#4E5668] bg-[#FFFFFF] border border-[#DCE1EA] rounded hover:bg-[#F0F2F6] transition-colors"
               >
                 Cancel
               </button>
@@ -556,7 +556,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                 type="submit"
                 form="coupon-form"
                 disabled={saving}
-                className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#093C5D] hover:bg-[#072C44] px-4 py-2 rounded transition-colors disabled:opacity-50"
+                className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] px-4 py-2 rounded transition-colors disabled:opacity-50"
               >
                 <Save className="w-4 h-4" />
                 {saving ? 'Saving...' : coupon ? 'Update Coupon' : 'Create Coupon'}

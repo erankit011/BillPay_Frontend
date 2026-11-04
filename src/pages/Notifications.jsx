@@ -113,15 +113,15 @@ const Notifications = () => {
        */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B] flex items-center gap-2">
             {t('All Notifications')}
             {unreadCount > 0 && (
-              <span className="bg-[#093C5D]/10 text-[#093C5D] text-xs sm:text-sm font-semibold px-2.5 py-0.5 rounded-lg">
+              <span className="bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] text-xs sm:text-sm font-semibold px-2.5 py-0.5 rounded-lg shadow-none">
                 {unreadCount}
               </span>
             )}
           </h1>
-          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 font-medium">
+          <p className="text-[#4E5668] text-xs sm:text-sm mt-1 sm:mt-1.5 font-medium">
             {data?.pages?.[0]?.totalCount || 0} {t('total notifications')}
           </p>
         </div>
@@ -129,7 +129,7 @@ const Notifications = () => {
           <button
             onClick={markAllAsRead}
             disabled={markAllReadMutation.isPending}
-            className="cursor-pointer flex items-center justify-center gap-2 w-full sm:w-auto bg-[#093C5D] hover:bg-[#082a42] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg font-semibold text-xs md:text-sm active:scale-95 transition-all disabled:opacity-50"
+            className="cursor-pointer flex items-center justify-center gap-2 w-full sm:w-auto bg-[#4338CA] hover:bg-[#3730A3] text-white px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg font-semibold text-xs md:text-sm active:scale-95 transition-all disabled:opacity-50 shadow-none"
           >
             {markAllReadMutation.isPending ? (
               <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
@@ -147,20 +147,20 @@ const Notifications = () => {
        */}
       <div className="space-y-3 md:space-y-4">
         {isLoading ? (
-          <div className="bg-white rounded-xl p-8 md:p-10 lg:p-12 text-center border border-gray-200 flex justify-center">
-            <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#093C5D]" />
+          <div className="bg-[#FBFBFC] rounded-xl p-8 md:p-10 lg:p-12 text-center border border-[#DCE1EA] flex justify-center shadow-none">
+            <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#4338CA]" />
           </div>
         ) : isError ? (
-          <div className="bg-white border border-gray-200 rounded-xl p-8 md:p-10 lg:p-12 text-center text-red-500">
+          <div className="bg-[#FBFBFC] border border-[#F9D4D4] rounded-xl p-8 md:p-10 lg:p-12 text-center text-[#B91C1C] shadow-none">
             <p className="font-medium text-xs md:text-sm">{t('Failed to load notifications.')}</p>
           </div>
         ) : notifications.length === 0 ? (
-          <div className="bg-white rounded-xl p-8 md:p-10 lg:p-12 text-center border border-gray-200">
-            <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-4 rounded-xl bg-[#F5F5F5] flex items-center justify-center border border-gray-200">
-              <Bell className="w-7 h-7 md:w-8 md:h-8 text-gray-400" strokeWidth={2} />
+          <div className="bg-[#FBFBFC] rounded-xl p-8 md:p-10 lg:p-12 text-center border border-[#DCE1EA] shadow-none">
+            <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-4 rounded-xl bg-[#F0F2F6] flex items-center justify-center border border-[#DCE1EA]">
+              <Bell className="w-7 h-7 md:w-8 md:h-8 text-[#757F94]" strokeWidth={2} />
             </div>
-            <p className="text-base md:text-lg text-gray-900 font-semibold mb-1">{t('No notifications')}</p>
-            <p className="text-gray-500 text-sm md:text-base font-medium">{t("You're all caught up!")}</p>
+            <p className="text-base md:text-lg text-[#191E2B] font-semibold mb-1">{t('No notifications')}</p>
+            <p className="text-[#757F94] text-sm md:text-base font-medium">{t("You're all caught up!")}</p>
           </div>
         ) : (
           <div>
@@ -168,9 +168,9 @@ const Notifications = () => {
               <div
                 key={notification._id}
                 onClick={() => !notification.isRead && markAsRead(notification._id)}
-                className={`mb-3 md:mb-4 bg-white rounded-xl p-4 md:p-5 border transition-all duration-200 animate-fade-in ${!notification.isRead
-                    ? 'cursor-pointer border-[#093C5D]/20 hover:border-[#093C5D]/40 bg-[#093C5D]/[0.02]'
-                    : 'border-gray-200 hover:border-gray-300'
+                className={`mb-3 md:mb-4 rounded-xl p-4 md:p-5 border transition-all duration-200 animate-fade-in shadow-none ${!notification.isRead
+                    ? 'cursor-pointer border-[#D8DCF5] hover:border-[#4338CA]/40 bg-[#EEF0FB]/40'
+                    : 'bg-[#FBFBFC] border-[#DCE1EA] hover:border-[#CBD5E1]'
                   }`}
                 style={{ animationDelay: `${index * 40}ms` }}
               >
@@ -179,7 +179,7 @@ const Notifications = () => {
                    * Notification Category Icon
                    * Type-specific iconography for reminders, bills, payments, and admin alerts.
                    */}
-                  <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-lg md:text-xl border border-gray-200">
+                  <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-xl bg-[#F0F2F6] flex items-center justify-center text-lg md:text-xl border border-[#DCE1EA]">
                     {getNotificationIcon(notification.type)}
                   </div>
 
@@ -189,34 +189,34 @@ const Notifications = () => {
                    */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2 mb-1 md:mb-1.5">
-                      <h3 className={`text-sm md:text-base font-semibold leading-snug ${!notification.isRead ? 'text-gray-900' : 'text-gray-700'
+                      <h3 className={`text-sm md:text-base font-semibold leading-snug ${!notification.isRead ? 'text-[#191E2B]' : 'text-[#4E5668]'
                         }`}>
                         {notification.title}
                       </h3>
                       <div className="flex-shrink-0 mt-0.5">
                         {!notification.isRead ? (
-                          <span className="w-2 h-2 md:w-2.5 md:h-2.5 bg-[#093C5D] rounded-full block"></span>
+                          <span className="w-2 h-2 md:w-2.5 md:h-2.5 bg-[#4338CA] rounded-full block"></span>
                         ) : (
-                          <Check className="w-4 h-4 md:w-5 md:h-5 text-green-500" />
+                          <Check className="w-4 h-4 md:w-5 md:h-5 text-[#0D7A57]" />
                         )}
                       </div>
                     </div>
-                    <p className="text-xs sm:text-sm md:text-base text-gray-600 mb-2 leading-relaxed font-medium line-clamp-2">
+                    <p className="text-xs sm:text-sm md:text-base text-[#4E5668] mb-2 leading-relaxed font-medium line-clamp-2">
                       {notification.message}
                     </p>
-                    <div className="flex items-center gap-2 md:gap-3 text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wide flex-wrap">
+                    <div className="flex items-center gap-2 md:gap-3 text-[10px] sm:text-xs text-[#757F94] font-semibold uppercase tracking-wide flex-wrap">
                       <span>{formatRelativeTime(notification.createdAt)}</span>
-                      <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                      <span className="w-1 h-1 rounded-full bg-[#DCE1EA]"></span>
                       {notification.type === 'ADMIN_NOTICE' ? (
                         <>
-                          <span className="text-[#093C5D] font-bold lowercase first-letter:uppercase">Official Notice</span>
+                          <span className="text-[#4338CA] font-bold lowercase first-letter:uppercase">Official Notice</span>
                           {notification.priority === 'URGENT' && (
-                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#FDF2F2] text-[#B91C1C] border border-[#F9D4D4]">
                               Urgent
                             </span>
                           )}
                           {notification.priority === 'HIGH' && (
-                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#FEF3C7] text-[#B45309] border border-[#FDE68A]">
                               High Priority
                             </span>
                           )}

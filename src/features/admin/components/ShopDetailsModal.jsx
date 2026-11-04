@@ -111,7 +111,7 @@ const ShopDetailsModal = ({
        * Darkened semi-transparent overlay intercepting outside clicks.
        */}
       <div
-        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
+        className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
         onWheel={(e) => e.preventDefault()}
         onTouchMove={(e) => e.preventDefault()}
@@ -122,13 +122,13 @@ const ShopDetailsModal = ({
        * Renders as responsive bottom drawer on mobile and centered card on tablet/desktop.
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
-        <div className="relative bg-white w-full sm:max-w-2xl lg:max-w-3xl rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
+        <div className="relative bg-[#FFFFFF] w-full sm:max-w-2xl lg:max-w-3xl rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
           
           {/**
            * Mobile Gesture Drag Indicator
            * Visual affordance handle for mobile touch interactions.
            */}
-          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-white">
+          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#FFFFFF]">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
           </div>
 
@@ -136,19 +136,19 @@ const ShopDetailsModal = ({
            * Modal Header Toolbar
            * Displays store avatar initials, store name, status pill, and close button.
            */}
-          <div className="px-5 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white flex-shrink-0 gap-3">
+          <div className="px-5 sm:px-6 py-4 border-b border-[#E8ECF2] flex items-center justify-between bg-[#FFFFFF] flex-shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
-              <div className="w-10 h-10 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#093C5D] shrink-0">
+              <div className="w-10 h-10 rounded-lg border border-[#DCE1EA] bg-[#EEF0FB] flex items-center justify-center text-xs font-semibold text-[#4338CA] shrink-0">
                 {getInitials(shopName)}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-snug truncate" title={shopName}>
+                  <h3 className="text-base sm:text-lg font-semibold text-[#191E2B] leading-snug truncate" title={shopName}>
                     {shopName}
                   </h3>
                   <span
                     className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider border leading-none shrink-0 ${
-                      planBadgeStyles[plan] || 'bg-gray-100 text-gray-700 border-gray-200'
+                      planBadgeStyles[plan] || 'bg-gray-100 text-[#4E5668] border-[#DCE1EA]'
                     }`}
                   >
                     {plan}
@@ -167,8 +167,8 @@ const ShopDetailsModal = ({
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-gray-500 font-medium mt-0.5 truncate">
-                  Shop ID: <span className="font-semibold text-gray-700">#{shortId}</span>
+                <p className="text-xs text-[#757F94] font-medium mt-0.5 truncate">
+                  Shop ID: <span className="font-semibold text-[#4E5668]">#{shortId}</span>
                   {shop.email && (
                     <>
                       <span className="mx-1.5 text-gray-300">•</span>
@@ -182,7 +182,7 @@ const ShopDetailsModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200 ml-auto"
+              className="cursor-pointer text-[#757F94] bg-gray-100 hover:bg-gray-200 hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
               title="Close"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -231,22 +231,22 @@ const ShopDetailsModal = ({
              * High-level glance at total customers, bill count, and outstanding credit ledger.
              */}
             <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
-              <div className="p-3 rounded-lg bg-gray-50/80 border border-gray-200">
-                <div className="flex items-center gap-1.5 text-gray-500 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider">
-                  <Users className="w-3.5 h-3.5 text-[#093C5D]" />
+              <div className="p-3 rounded-lg bg-[#F0F2F6]/80 border border-[#DCE1EA]">
+                <div className="flex items-center gap-1.5 text-[#757F94] text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider">
+                  <Users className="w-3.5 h-3.5 text-[#4338CA]" />
                   <span>Customers</span>
                 </div>
-                <p className="text-base sm:text-lg font-semibold text-gray-900 mt-1">
+                <p className="text-base sm:text-lg font-semibold text-[#191E2B] mt-1">
                   {shop.customerCount ?? 0}
                 </p>
               </div>
 
-              <div className="p-3 rounded-lg bg-gray-50/80 border border-gray-200">
-                <div className="flex items-center gap-1.5 text-gray-500 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider">
-                  <FileText className="w-3.5 h-3.5 text-[#093C5D]" />
+              <div className="p-3 rounded-lg bg-[#F0F2F6]/80 border border-[#DCE1EA]">
+                <div className="flex items-center gap-1.5 text-[#757F94] text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider">
+                  <FileText className="w-3.5 h-3.5 text-[#4338CA]" />
                   <span>Bills Issued</span>
                 </div>
-                <p className="text-base sm:text-lg font-semibold text-gray-900 mt-1">
+                <p className="text-base sm:text-lg font-semibold text-[#191E2B] mt-1">
                   {shop.billCount ?? shop.billsCount ?? 0}
                 </p>
               </div>
@@ -266,35 +266,35 @@ const ShopDetailsModal = ({
              * Shopkeeper Owner Details Card
              * Contact identifiers including name, email, phone, and registration timestamp.
              */}
-            <div className="bg-white rounded-lg border border-gray-200 p-3.5 sm:p-4">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">
+            <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-[#757F94] mb-3">
                 Shopkeeper Information
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
                 <div>
-                  <span className="text-gray-500 font-medium block text-xs">Owner Name</span>
-                  <span className="font-semibold text-gray-900 mt-0.5 block">{ownerName}</span>
+                  <span className="text-[#757F94] font-medium block text-xs">Owner Name</span>
+                  <span className="font-semibold text-[#191E2B] mt-0.5 block">{ownerName}</span>
                 </div>
                 <div>
-                  <span className="text-gray-500 font-medium block text-xs">Registered Email</span>
-                  <span className="font-medium text-gray-800 mt-0.5 block truncate" title={shop.email}>
+                  <span className="text-[#757F94] font-medium block text-xs">Registered Email</span>
+                  <span className="font-medium text-[#191E2B] mt-0.5 block truncate" title={shop.email}>
                     {shop.email || 'N/A'}
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-500 font-medium block text-xs">Phone Number</span>
-                  <span className="font-medium text-gray-800 mt-0.5 block">
+                  <span className="text-[#757F94] font-medium block text-xs">Phone Number</span>
+                  <span className="font-medium text-[#191E2B] mt-0.5 block">
                     {shop.phone ? `+91 ${shop.phone}` : 'N/A'}
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-500 font-medium block text-xs">Joined Platform</span>
-                  <span className="font-medium text-gray-800 mt-0.5 block">
+                  <span className="text-[#757F94] font-medium block text-xs">Joined Platform</span>
+                  <span className="font-medium text-[#191E2B] mt-0.5 block">
                     {shop.createdAt ? formatDate(shop.createdAt) : 'N/A'}
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-500 font-medium block text-xs">Email Verification</span>
+                  <span className="text-[#757F94] font-medium block text-xs">Email Verification</span>
                   <span className="mt-0.5 inline-flex items-center gap-1.5 font-medium text-xs">
                     {shop.isVerified ? (
                       <span className="text-emerald-700 font-semibold inline-flex items-center gap-1">
@@ -308,12 +308,12 @@ const ShopDetailsModal = ({
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-500 font-medium block text-xs">Business Setup</span>
+                  <span className="text-[#757F94] font-medium block text-xs">Business Setup</span>
                   <span className="mt-0.5 inline-flex items-center gap-1.5 font-medium text-xs">
                     {shop.isBusinessSetupCompleted ? (
                       <span className="text-emerald-700 font-semibold">Completed</span>
                     ) : (
-                      <span className="text-gray-500 font-medium">Incomplete</span>
+                      <span className="text-[#757F94] font-medium">Incomplete</span>
                     )}
                   </span>
                 </div>
@@ -324,33 +324,33 @@ const ShopDetailsModal = ({
              * Business Profile Details Card
              * Commercial identity attributes including trade name, GSTIN, and UPI ID.
              */}
-            <div className="bg-white rounded-lg border border-gray-200 p-3.5 sm:p-4">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">
+            <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-[#757F94] mb-3">
                 Business Settings & Store Info
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
                 <div>
-                  <span className="text-gray-500 font-medium block text-xs">Business Name</span>
-                  <span className="font-semibold text-gray-900 mt-0.5 block">
-                    {businessName || <span className="text-gray-400 font-normal italic">Not configured</span>}
+                  <span className="text-[#757F94] font-medium block text-xs">Business Name</span>
+                  <span className="font-semibold text-[#191E2B] mt-0.5 block">
+                    {businessName || <span className="text-[#757F94] font-normal italic">Not configured</span>}
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-500 font-medium block text-xs">GST Number</span>
-                  <span className="font-medium text-gray-800 mt-0.5 block">
-                    {gstNumber || <span className="text-gray-400 font-normal italic">None</span>}
+                  <span className="text-[#757F94] font-medium block text-xs">GST Number</span>
+                  <span className="font-medium text-[#191E2B] mt-0.5 block">
+                    {gstNumber || <span className="text-[#757F94] font-normal italic">None</span>}
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-500 font-medium block text-xs">UPI ID for Payments</span>
-                  <span className="font-medium text-gray-800 mt-0.5 block">
-                    {upiId || <span className="text-gray-400 font-normal italic">Not configured</span>}
+                  <span className="text-[#757F94] font-medium block text-xs">UPI ID for Payments</span>
+                  <span className="font-medium text-[#191E2B] mt-0.5 block">
+                    {upiId || <span className="text-[#757F94] font-normal italic">Not configured</span>}
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-500 font-medium block text-xs">Store Address</span>
-                  <span className="font-medium text-gray-800 mt-0.5 block truncate" title={address || ''}>
-                    {address || <span className="text-gray-400 font-normal italic">Not configured</span>}
+                  <span className="text-[#757F94] font-medium block text-xs">Store Address</span>
+                  <span className="font-medium text-[#191E2B] mt-0.5 block truncate" title={address || ''}>
+                    {address || <span className="text-[#757F94] font-normal italic">Not configured</span>}
                   </span>
                 </div>
               </div>
@@ -360,11 +360,11 @@ const ShopDetailsModal = ({
              * Subscription & Validity Management Card
              * Displays current tier, validity window, and plan modification action trigger.
              */}
-            <div className="bg-white rounded-lg border border-gray-200 p-3.5 sm:p-4">
+            <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4">
               <div className="flex items-center justify-between mb-3 gap-2">
                 <div className="flex items-center gap-1.5">
                   <Crown className="w-3.5 h-3.5 text-amber-600 shrink-0" strokeWidth={2} />
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-700">
+                  <h4 className="text-xs font-semibold uppercase tracking-wider text-[#4E5668]">
                     Subscription Status & Plan
                   </h4>
                 </div>
@@ -372,7 +372,7 @@ const ShopDetailsModal = ({
                   <button
                     type="button"
                     onClick={() => onOpenPlanModal(shop)}
-                    className="cursor-pointer px-3 py-1.5 text-xs font-semibold text-[#093C5D] bg-[#093C5D]/10 hover:bg-[#093C5D]/15 border border-[#093C5D]/20 rounded-lg inline-flex items-center gap-1.5 transition-all active:scale-95 shadow-none shrink-0"
+                    className="cursor-pointer px-3 py-1.5 text-xs font-semibold text-[#4338CA] bg-[#EEF0FB] hover:bg-[#E0E7FF] border border-[#D8DCF5] rounded-lg inline-flex items-center gap-1.5 transition-all active:scale-95 shadow-none shrink-0"
                   >
                     <Crown className="w-3.5 h-3.5 text-amber-600 shrink-0" strokeWidth={2} />
                     <span>Change Plan / Extend</span>
@@ -385,8 +385,8 @@ const ShopDetailsModal = ({
                  * Plan Tier Information Tile
                  * Indicates whether merchant is on Free or Pro subscription tier.
                  */}
-                <div className="p-3 bg-gray-50/80 border border-gray-200/80 rounded-lg flex flex-col justify-between">
-                  <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                <div className="p-3 bg-[#F0F2F6]/80 border border-[#DCE1EA]/80 rounded-lg flex flex-col justify-between">
+                  <span className="text-[11px] font-semibold text-[#757F94] uppercase tracking-wider">
                     Current Plan Tier
                   </span>
                   <div className="mt-2 flex items-center gap-2">
@@ -397,7 +397,7 @@ const ShopDetailsModal = ({
                     >
                       {plan}
                     </span>
-                    <span className="text-xs text-gray-600 font-medium">
+                    <span className="text-xs text-[#4E5668] font-medium">
                       {plan === 'FREE' ? 'Standard Store Tier' : 'Pro Merchant Tier'}
                     </span>
                   </div>
@@ -407,15 +407,15 @@ const ShopDetailsModal = ({
                  * Subscription Expiry Information Tile
                  * Calculates days remaining or shows perpetual Free tier status.
                  */}
-                <div className="p-3 bg-gray-50/80 border border-gray-200/80 rounded-lg flex flex-col justify-between">
-                  <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                <div className="p-3 bg-[#F0F2F6]/80 border border-[#DCE1EA]/80 rounded-lg flex flex-col justify-between">
+                  <span className="text-[11px] font-semibold text-[#757F94] uppercase tracking-wider">
                     Subscription Validity
                   </span>
                   <div className="mt-2">
-                    <span className="text-xs sm:text-sm font-semibold text-gray-900 block">
+                    <span className="text-xs sm:text-sm font-semibold text-[#191E2B] block">
                       {expiryInfo.title}
                     </span>
-                    <span className="text-[11px] text-gray-500 font-normal block mt-0.5">
+                    <span className="text-[11px] text-[#757F94] font-normal block mt-0.5">
                       {expiryInfo.subtext}
                     </span>
                   </div>
@@ -427,18 +427,18 @@ const ShopDetailsModal = ({
              * Active Sessions & Security Controls Card
              * Displays connected device count with instant remote termination action.
              */}
-            <div className="bg-white rounded-lg border border-gray-200 p-3.5 sm:p-4">
+            <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-9 h-9 rounded-lg bg-gray-100/90 border border-gray-200 flex items-center justify-center text-gray-600 shrink-0">
+                  <div className="w-9 h-9 rounded-lg bg-gray-100/90 border border-[#DCE1EA] flex items-center justify-center text-[#4E5668] shrink-0">
                     <ShieldCheck className="w-4.5 h-4.5 text-emerald-600" />
                   </div>
                   <div className="min-w-0">
-                    <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-700">
+                    <h4 className="text-xs font-semibold uppercase tracking-wider text-[#4E5668]">
                       Security & Active Sessions
                     </h4>
-                    <p className="text-xs text-gray-600 font-medium mt-0.5">
-                      Currently active on <span className="font-semibold text-gray-900">{shop.activeSessionsCount ?? 1} device(s)</span>
+                    <p className="text-xs text-[#4E5668] font-medium mt-0.5">
+                      Currently active on <span className="font-semibold text-[#191E2B]">{shop.activeSessionsCount ?? 1} device(s)</span>
                     </p>
                   </div>
                 </div>
@@ -460,7 +460,7 @@ const ShopDetailsModal = ({
            * Modal Footer Controls
            * Houses suspension toggling, broadcast notice dispatch, and close actions.
            */}
-          <div className="px-5 py-3.5 bg-gray-50 border-t border-gray-200 flex flex-wrap items-center justify-between flex-shrink-0 gap-3">
+          <div className="px-5 py-3.5 bg-[#F0F2F6] border-t border-[#DCE1EA] flex flex-wrap items-center justify-between flex-shrink-0 gap-3">
             <div className="flex items-center gap-2 flex-wrap">
               <button
                 type="button"
@@ -487,10 +487,10 @@ const ShopDetailsModal = ({
               <button
                 type="button"
                 onClick={() => onOpenDirectNoticeModal && onOpenDirectNoticeModal(shop)}
-                className="cursor-pointer h-9 px-3.5 text-xs sm:text-sm font-semibold text-[#093C5D] bg-[#093C5D]/10 hover:bg-[#093C5D]/20 border border-[#093C5D]/30 rounded-lg transition-all active:scale-95 inline-flex items-center gap-1.5 shadow-none shrink-0"
+                className="cursor-pointer h-9 px-3.5 text-xs sm:text-sm font-semibold text-[#4338CA] bg-[#EEF0FB] hover:bg-[#E0E7FF] border border-[#D8DCF5] rounded-lg transition-all active:scale-95 inline-flex items-center gap-1.5 shadow-none shrink-0"
                 title="Send official direct notification to this store"
               >
-                <BellRing className="w-4 h-4 shrink-0 text-[#093C5D]" />
+                <BellRing className="w-4 h-4 shrink-0 text-[#4338CA]" />
                 <span>Send Direct Notice</span>
               </button>
             </div>
@@ -498,7 +498,7 @@ const ShopDetailsModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer h-9 px-5 text-xs sm:text-sm font-semibold text-gray-700 bg-white hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors active:scale-95 inline-flex items-center justify-center shadow-none ml-auto"
+              className="cursor-pointer h-9 px-5 text-xs sm:text-sm font-semibold text-[#4E5668] bg-[#FFFFFF] hover:bg-gray-100 border border-[#DCE1EA] rounded-lg transition-colors active:scale-95 inline-flex items-center justify-center shadow-none ml-auto"
             >
               Close
             </button>

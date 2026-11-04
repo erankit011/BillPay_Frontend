@@ -53,26 +53,26 @@ const ForgotPassword = () => {
          * Confirms dispatch of time-limited password reset credentials
          */}
         <div className="mb-6">
-          <div className="w-12 h-12 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center justify-center mb-4 mx-auto lg:mx-0">
-            <CheckCircle2 className="w-6 h-6 text-[#2ECC71]" />
+          <div className="w-12 h-12 bg-[#ECFDF5] border border-[#A7F3D0] rounded-lg flex items-center justify-center mb-4 mx-auto lg:mx-0 shadow-none">
+            <CheckCircle2 className="w-6 h-6 text-[#0D7A57]" />
           </div>
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 mb-1.5 tracking-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B] mb-1.5 tracking-tight">
             {t('Check Your Email')}
           </h2>
-          <p className="text-gray-500 font-medium text-xs sm:text-sm leading-relaxed">
-            {t('If an account exists, a password reset link has been sent to')} <strong className="text-gray-900 font-semibold">{email}</strong>
+          <p className="text-[#757F94] font-medium text-xs sm:text-sm leading-relaxed">
+            {t('If an account exists, a password reset link has been sent to')} <strong className="text-[#191E2B] font-semibold">{email}</strong>
           </p>
         </div>
 
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3.5 sm:p-4 mb-6 text-left">
-          <p className="text-blue-900 text-xs sm:text-sm leading-relaxed font-medium">
+        <div className="bg-[#EEF0FB] border border-[#D8DCF5] rounded-lg p-3.5 sm:p-4 mb-6 text-left shadow-none">
+          <p className="text-[#4338CA] text-xs sm:text-sm leading-relaxed font-medium">
             📧 {t('Please check your inbox and click the reset link. The link will expire in 10 minutes.')}
           </p>
         </div>
 
         <Link
           to="/login"
-          className="w-full cursor-pointer bg-[#093C5D] hover:bg-[#072c44] text-white rounded-lg py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center transition-colors"
+          className="w-full cursor-pointer bg-[#4338CA] hover:bg-[#3730A3] text-white rounded-lg py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center transition-colors shadow-none active:scale-[0.99]"
         >
           {t('Back to Sign In')}
         </Link>
@@ -87,10 +87,10 @@ const ForgotPassword = () => {
        * Explains self-service credential recovery workflow
        */}
       <div className="mb-6">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 mb-1.5 tracking-tight">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B] mb-1.5 tracking-tight">
           {t('Forgot Password?')}
         </h2>
-        <p className="text-gray-500 font-medium text-xs sm:text-sm leading-relaxed">
+        <p className="text-[#757F94] font-medium text-xs sm:text-sm leading-relaxed">
           {t('Enter your email address and we will send you a link to reset your password.')}
         </p>
       </div>
@@ -101,8 +101,8 @@ const ForgotPassword = () => {
          * Collects registered user email address matching BusinessSetup styling
          */}
         <div>
-          <label htmlFor="recoveryEmail" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5 text-left">
-            {t('Email Address')} <span className="text-red-500">*</span>
+          <label htmlFor="recoveryEmail" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5 text-left">
+            {t('Email Address')} <span className="text-[#B91C1C]">*</span>
           </label>
           <input
             id="recoveryEmail"
@@ -112,17 +112,17 @@ const ForgotPassword = () => {
               setEmail(e.target.value);
               if (errorMessage) setErrorMessage('');
             }}
-            className={`block w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm md:text-base font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal transition-colors duration-200 focus:ring-1 focus:outline-none ${
+            className={`block w-full rounded-lg border bg-[#FBFBFC] px-3.5 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] placeholder:font-normal transition-colors duration-200 focus:outline-none shadow-none ${
               errorMessage
-                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                : 'border-gray-300 focus:border-[#093C5D] focus:ring-[#093C5D]'
+                ? 'border-[#B91C1C] focus:border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20'
+                : 'border-[#DCE1EA] focus:border-[#4338CA] focus:ring-2 focus:ring-[#4338CA]/20'
             }`}
             placeholder={t('Enter your registered email')}
             required
             autoFocus
           />
           {errorMessage && (
-            <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
+            <p className="text-[#B91C1C] text-xs mt-1.5 font-medium flex items-center gap-1 text-left">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{errorMessage}</span>
             </p>
@@ -136,7 +136,7 @@ const ForgotPassword = () => {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full cursor-pointer bg-[#093C5D] hover:bg-[#072c44] text-white rounded-lg py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors active:scale-[0.99] mt-2"
+          className="w-full cursor-pointer bg-[#4338CA] hover:bg-[#3730A3] text-white rounded-lg py-2.5 sm:py-3 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors active:scale-[0.99] mt-2 shadow-none"
         >
           {isLoading ? (
             <>
@@ -154,9 +154,9 @@ const ForgotPassword = () => {
        * Direct navigation shortcut for users remembering their credentials
        */}
       <div className="mt-6 sm:mt-7 text-center text-xs sm:text-sm">
-        <span className="text-gray-500 font-medium">
+        <span className="text-[#757F94] font-medium">
           {t('Remember your password?')}
-          <Link to="/login" className="text-[#093C5D] font-semibold cursor-pointer ml-1.5 hover:underline">
+          <Link to="/login" className="text-[#4338CA] hover:text-[#3730A3] font-semibold cursor-pointer ml-1.5 hover:underline">
             {t('Login Here')}
           </Link>
         </span>

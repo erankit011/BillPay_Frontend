@@ -232,10 +232,10 @@ const AdminAuditLogs = () => {
        */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B]">
             Platform Security & Audit Logs
           </h1>
-          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
+          <p className="text-[#4E5668] text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
             Tamper-resistant audit trails tracking all administrative mutations, merchant lifecycle events, and security access.
           </p>
         </div>
@@ -244,7 +244,7 @@ const AdminAuditLogs = () => {
           <button
             onClick={handleExportCSV}
             disabled={exporting || loading}
-            className="cursor-pointer h-10 sm:h-11 px-4 sm:px-5 rounded-lg bg-[#093C5D] hover:bg-[#072d46] text-white text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition-all active:scale-95 shrink-0 disabled:opacity-60 shadow-none"
+            className="cursor-pointer h-10 sm:h-11 px-4 sm:px-5 rounded-lg bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition-all active:scale-95 shrink-0 disabled:opacity-60 shadow-none"
           >
             <Download className={`w-4 h-4 ${exporting ? 'animate-bounce' : ''}`} />
             <span>{exporting ? 'Exporting...' : 'Export CSV'}</span>
@@ -303,8 +303,8 @@ const AdminAuditLogs = () => {
             onClick={() => setFilter('category', opt.value)}
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlCategory === opt.value
-                ? 'bg-[#093C5D] text-white border-[#093C5D] shadow-none'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50 shadow-none'
+                ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
+                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {opt.label}
@@ -334,14 +334,14 @@ const AdminAuditLogs = () => {
       <div className="flex flex-col w-full mb-3 sm:mb-4">
         <div className="relative flex-1 w-full">
           <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+            <Search className="h-4 w-4 sm:h-5 sm:w-5 text-[#757F94]" />
           </div>
           <input
             type="text"
             placeholder="Search By Action Event & Actor Name & Target Resource & IP Address"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-white border border-gray-300 rounded-lg text-[13px] sm:text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] transition-colors duration-200 shadow-none"
+            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg text-[13px] sm:text-sm text-[#191E2B] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors duration-200 shadow-none"
           />
           {searchTerm && (
             <button
@@ -356,7 +356,7 @@ const AdminAuditLogs = () => {
                   return next;
                 }, { replace: true });
               }}
-              className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"
+              className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-[#757F94] hover:text-[#4E5668] cursor-pointer"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
@@ -368,21 +368,21 @@ const AdminAuditLogs = () => {
        * Audit Logs Main Data Container
        * Renders loading skeletons, empty state, or responsive log tables and cards.
        */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
+      <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] overflow-hidden shadow-none">
         {loading ? (
-          <div className="py-16 text-center text-gray-400">
+          <div className="py-16 text-center text-[#757F94]">
             <div className="flex flex-col items-center justify-center gap-3">
-              <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#093C5D] mx-auto" />
-              <p className="text-sm font-medium text-gray-600">Loading audit logs...</p>
+              <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#4338CA] mx-auto" />
+              <p className="text-sm font-medium text-[#4E5668]">Loading audit logs...</p>
             </div>
           </div>
         ) : logs.length === 0 ? (
-          <div className="py-16 text-center text-gray-400 px-4">
-            <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 mx-auto mb-3">
+          <div className="py-16 text-center text-[#757F94] px-4">
+            <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-[#757F94] mx-auto mb-3">
               <Inbox className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-semibold text-gray-900 tracking-tight">No audit logs found</h3>
-            <p className="text-xs sm:text-sm text-gray-500 font-medium max-w-sm mx-auto mt-1">
+            <h3 className="text-base font-semibold text-[#191E2B] tracking-tight">No audit logs found</h3>
+            <p className="text-xs sm:text-sm text-[#757F94] font-medium max-w-sm mx-auto mt-1">
               Try adjusting your search criteria or clearing your category filters.
             </p>
           </div>
@@ -395,7 +395,7 @@ const AdminAuditLogs = () => {
             <div className="hidden lg:block overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               <table className="w-full text-left border-collapse whitespace-nowrap">
                 <thead>
-                  <tr className="border-b border-gray-200 bg-gray-50/80 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <tr className="border-b border-[#DCE1EA] bg-[#F0F2F6]/80 text-xs font-semibold text-[#4E5668] uppercase tracking-wider">
                     <th className="py-3.5 px-4 lg:px-6">Timestamp (IST)</th>
                     <th className="py-3.5 px-4 lg:px-6">Action Event</th>
                     <th className="py-3.5 px-4 lg:px-6">Category</th>
@@ -412,16 +412,16 @@ const AdminAuditLogs = () => {
                     return (
                       <tr
                         key={log._id}
-                        className="hover:bg-[#F5F5F5]/60 transition-colors group cursor-pointer"
+                        className="hover:bg-[#EEF0FB]/60 transition-colors group cursor-pointer"
                         onClick={() => openLogDetails(log)}
                       >
                         {/**
                          * Event Timestamp Column
                          * Displays execution timestamp in localized Indian Standard Time.
                          */}
-                        <td className="py-3.5 px-4 lg:px-6 text-gray-600 font-medium">
+                        <td className="py-3.5 px-4 lg:px-6 text-[#4E5668] font-medium">
                           <div className="flex items-center gap-1.5">
-                            <Clock className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                            <Clock className="w-3.5 h-3.5 text-[#757F94] shrink-0" />
                             <span>{dateStr}</span>
                           </div>
                         </td>
@@ -431,7 +431,7 @@ const AdminAuditLogs = () => {
                          * Displays human-readable label of the triggered system mutation.
                          */}
                         <td className="py-3.5 px-4 lg:px-6">
-                          <span className="font-semibold text-gray-900 group-hover:text-[#093C5D] transition-colors">
+                          <span className="font-semibold text-[#191E2B] group-hover:text-[#4338CA] transition-colors">
                             {formatActionName(log.action)}
                           </span>
                         </td>
@@ -450,16 +450,16 @@ const AdminAuditLogs = () => {
                          */}
                         <td className="py-3.5 px-4 lg:px-6">
                           <div className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 rounded-lg p-[2px] border border-gray-200 bg-white shrink-0">
-                              <div className="w-full h-full rounded-md flex items-center justify-center text-xs font-semibold bg-gray-50 text-[#093C5D]">
+                            <div className="w-8 h-8 rounded-lg p-[2px] border border-[#DCE1EA] bg-[#FFFFFF] shrink-0">
+                              <div className="w-full h-full rounded-md flex items-center justify-center text-xs font-semibold bg-[#F0F2F6] text-[#4338CA]">
                                 {getInitials(log.actor?.name)}
                               </div>
                             </div>
                             <div className="truncate max-w-[140px]">
-                              <p className="font-semibold text-gray-900 truncate">
+                              <p className="font-semibold text-[#191E2B] truncate">
                                 {log.actor?.name || 'Platform System'}
                               </p>
-                              <p className="text-[10px] text-gray-500 truncate">
+                              <p className="text-[10px] text-[#757F94] truncate">
                                 {log.actor?.email || 'system'}
                               </p>
                             </div>
@@ -472,10 +472,10 @@ const AdminAuditLogs = () => {
                          */}
                         <td className="py-3.5 px-4 lg:px-6">
                           <div className="truncate max-w-[150px]">
-                            <span className="font-semibold text-gray-900 block truncate">
+                            <span className="font-semibold text-[#191E2B] block truncate">
                               {log.targetName || log.targetType || 'Platform'}
                             </span>
-                            <span className="text-[10px] text-gray-500 block truncate font-medium">
+                            <span className="text-[10px] text-[#757F94] block truncate font-medium">
                               {log.targetType || 'General'}
                             </span>
                           </div>
@@ -485,7 +485,7 @@ const AdminAuditLogs = () => {
                          * Originating IP Address Column
                          * Client IP address captured during the HTTP request lifecycle.
                          */}
-                        <td className="py-3.5 px-4 lg:px-6 font-mono text-[11px] text-gray-600">
+                        <td className="py-3.5 px-4 lg:px-6 font-mono text-[11px] text-[#4E5668]">
                           {log.ipAddress || '127.0.0.1'}
                         </td>
 
@@ -499,7 +499,7 @@ const AdminAuditLogs = () => {
                               e.stopPropagation();
                               openLogDetails(log);
                             }}
-                            className="shrink-0 cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/15 hover:bg-[#093C5D]/10 px-2.5 py-1 rounded-md transition-all text-xs active:scale-95 inline-flex items-center gap-1"
+                            className="shrink-0 cursor-pointer text-[#4338CA] font-medium bg-[#EEF0FB] border border-[#4338CA]/15 hover:bg-[#EEF0FB] px-2.5 py-1 rounded-md transition-all text-xs active:scale-95 inline-flex items-center gap-1"
                             title="View Full Audit Snapshot"
                           >
                             <Eye className="w-3.5 h-3.5" />
@@ -525,7 +525,7 @@ const AdminAuditLogs = () => {
                   <div
                     key={log._id}
                     onClick={() => openLogDetails(log)}
-                    className="bg-white border border-gray-200 rounded-lg p-3.5 transition-colors cursor-pointer active:bg-gray-50 shadow-none space-y-3"
+                    className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-3.5 transition-colors cursor-pointer active:bg-[#F0F2F6] shadow-none space-y-3"
                   >
                     {/**
                      * Card Header
@@ -533,16 +533,16 @@ const AdminAuditLogs = () => {
                      */}
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="w-8 h-8 rounded-lg p-[2px] border border-gray-200 bg-white shrink-0">
-                          <div className="w-full h-full rounded-md flex items-center justify-center text-xs font-semibold bg-gray-50 text-[#093C5D]">
+                        <div className="w-8 h-8 rounded-lg p-[2px] border border-[#DCE1EA] bg-[#FFFFFF] shrink-0">
+                          <div className="w-full h-full rounded-md flex items-center justify-center text-xs font-semibold bg-[#F0F2F6] text-[#4338CA]">
                             {getInitials(log.actor?.name)}
                           </div>
                         </div>
                         <div className="min-w-0">
-                          <h4 className="text-xs sm:text-sm font-semibold text-gray-900 truncate">
+                          <h4 className="text-xs sm:text-sm font-semibold text-[#191E2B] truncate">
                             {formatActionName(log.action)}
                           </h4>
-                          <p className="text-[11px] text-gray-500 truncate">
+                          <p className="text-[11px] text-[#757F94] truncate">
                             by {log.actor?.name || 'Platform System'}
                           </p>
                         </div>
@@ -555,18 +555,18 @@ const AdminAuditLogs = () => {
                      * Card Context Row
                      * Target resource identifier and originating IP address.
                      */}
-                    <div className="flex flex-wrap items-center justify-between text-[11px] text-gray-500 gap-2 pt-1 border-t border-gray-100">
-                      <span>Target: <strong className="text-gray-800 font-semibold">{log.targetName || log.targetType || 'Platform'}</strong></span>
-                      <span className="font-mono text-[10px] text-gray-500">{log.ipAddress || '127.0.0.1'}</span>
+                    <div className="flex flex-wrap items-center justify-between text-[11px] text-[#757F94] gap-2 pt-1 border-t border-[#E8ECF2]">
+                      <span>Target: <strong className="text-[#191E2B] font-semibold">{log.targetName || log.targetType || 'Platform'}</strong></span>
+                      <span className="font-mono text-[10px] text-[#757F94]">{log.ipAddress || '127.0.0.1'}</span>
                     </div>
 
                     {/**
                      * Card Footer Controls
                      * Formatted timestamp alongside modal inspection trigger button.
                      */}
-                    <div className="flex items-center justify-between text-xs text-gray-500 pt-1">
+                    <div className="flex items-center justify-between text-xs text-[#757F94] pt-1">
                       <div className="flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5 text-gray-400" />
+                        <Clock className="w-3.5 h-3.5 text-[#757F94]" />
                         <span>{dateStr}</span>
                       </div>
 
@@ -575,7 +575,7 @@ const AdminAuditLogs = () => {
                           e.stopPropagation();
                           openLogDetails(log);
                         }}
-                        className="shrink-0 cursor-pointer text-[#093C5D] font-medium bg-[#093C5D]/5 border border-[#093C5D]/15 hover:bg-[#093C5D]/10 px-2.5 py-1 rounded-md transition-all text-xs active:scale-95 inline-flex items-center gap-1"
+                        className="shrink-0 cursor-pointer text-[#4338CA] font-medium bg-[#EEF0FB] border border-[#4338CA]/15 hover:bg-[#EEF0FB] px-2.5 py-1 rounded-md transition-all text-xs active:scale-95 inline-flex items-center gap-1"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         <span>View</span>
@@ -593,27 +593,27 @@ const AdminAuditLogs = () => {
          * Previous/next page pagination with total recorded event count.
          */}
         {pagination.total > 0 && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border-t border-gray-200 bg-gray-50/60">
-            <span className="text-xs text-gray-500 font-medium">
-              Showing page <span className="font-semibold text-gray-800">{pagination.page}</span> of{' '}
-              <span className="font-semibold text-gray-800">{pagination.totalPages}</span> ({pagination.total} total events)
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border-t border-[#DCE1EA] bg-[#F0F2F6]/60">
+            <span className="text-xs text-[#757F94] font-medium">
+              Showing page <span className="font-semibold text-[#191E2B]">{pagination.page}</span> of{' '}
+              <span className="font-semibold text-[#191E2B]">{pagination.totalPages}</span> ({pagination.total} total events)
             </span>
 
             <div className="flex items-center gap-1.5">
               <button
                 onClick={() => handlePageChange(pagination.page - 1)}
                 disabled={pagination.page <= 1 || loading}
-                className="cursor-pointer p-1.5 rounded border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="cursor-pointer p-1.5 rounded border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:bg-[#F0F2F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
-              <span className="text-xs font-semibold px-2.5 text-gray-700">
+              <span className="text-xs font-semibold px-2.5 text-[#4E5668]">
                 {pagination.page} / {pagination.totalPages}
               </span>
               <button
                 onClick={() => handlePageChange(pagination.page + 1)}
                 disabled={pagination.page >= pagination.totalPages || loading}
-                className="cursor-pointer p-1.5 rounded border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="cursor-pointer p-1.5 rounded border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:bg-[#F0F2F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>

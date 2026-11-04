@@ -118,8 +118,8 @@ const AuthInitializer = ({ children }) => {
    */
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-gray-50">
-        <SwirlingLoader className="w-12 h-12 text-[#093C5D]" />
+      <div className="flex h-screen items-center justify-center bg-[#F0F2F6]">
+        <SwirlingLoader className="w-12 h-12 text-[#4338CA]" />
       </div>
     );
   }

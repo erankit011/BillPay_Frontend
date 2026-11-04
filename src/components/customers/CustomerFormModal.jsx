@@ -138,7 +138,7 @@ const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSub
                 </label>
                 <input
                   {...register('name')}
-                  className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.name ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8]'}`}
+                  className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none ${errors.name ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC]'}`}
                   placeholder={t("Enter Full Name")}
                 />
                 {errors.name && (
@@ -155,7 +155,7 @@ const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSub
                 </label>
                 <input
                   {...register('phone')}
-                  className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none disabled:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 ${errors.phone ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8]'}`}
+                  className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none disabled:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 ${errors.phone ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC]'}`}
                   placeholder={t("Enter Phone Number")}
                   disabled={isEditMode}
                 />
@@ -174,7 +174,7 @@ const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSub
                 </label>
                 <input
                   {...register('email')}
-                  className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.email ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8]'}`}
+                  className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none ${errors.email ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC]'}`}
                   placeholder={t("Enter Email Address")}
                 />
                 {errors.email && (
@@ -191,7 +191,7 @@ const CustomerFormModal = ({ isOpen, isEditMode, editingCustomer, onClose, onSub
                 </label>
                 <textarea
                   {...register('address')}
-                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium focus:ring-1 focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 resize-none"
+                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 resize-none"
                   rows="3"
                   placeholder={t("Enter Address")}
                 />

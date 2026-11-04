@@ -20,7 +20,7 @@ const STATUS_CONFIG = {
     label: 'In Progress',
     bg: 'bg-blue-50',
     text: 'text-blue-700',
-    border: 'border-blue-200',
+    border: 'border-[#D8DCF5]',
     dot: 'bg-blue-500 animate-pulse',
   },
   RESOLVED: {
@@ -33,8 +33,8 @@ const STATUS_CONFIG = {
   CLOSED: {
     label: 'Closed',
     bg: 'bg-gray-100',
-    text: 'text-gray-600',
-    border: 'border-gray-200',
+    text: 'text-[#4E5668]',
+    border: 'border-[#DCE1EA]',
     dot: 'bg-gray-400',
   },
 };

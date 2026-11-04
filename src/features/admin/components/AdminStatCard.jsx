@@ -39,39 +39,39 @@ const AdminStatCard = ({
    */
   const variantStyles = {
     default: {
-      card: 'border border-gray-200 hover:border-gray-300',
-      iconBg: 'bg-[#F5F5F5] text-[#093C5D] border border-gray-200',
-      titleColor: 'text-gray-500',
-      valueColor: 'text-gray-900',
-      subtextColor: 'text-gray-500',
+      card: 'border border-[#DCE1EA]',
+      iconBg: 'bg-[#F0F2F6] text-[#4338CA] border border-[#DCE1EA]',
+      titleColor: 'text-[#757F94]',
+      valueColor: 'text-[#191E2B]',
+      subtextColor: 'text-[#757F94]',
     },
     primary: {
-      card: 'border-l-4 border-l-[#093C5D] border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300',
-      iconBg: 'bg-[#F5F5F5] text-[#093C5D] border border-gray-200',
-      titleColor: 'text-gray-500',
-      valueColor: 'text-gray-900',
-      subtextColor: 'text-gray-500',
+      card: 'border-l-4 border-l-[#4338CA] border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA]',
+      iconBg: 'bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5]',
+      titleColor: 'text-[#757F94]',
+      valueColor: 'text-[#191E2B]',
+      subtextColor: 'text-[#757F94]',
     },
     success: {
-      card: 'border-l-4 border-l-green-700 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300',
-      iconBg: 'bg-green-50 text-green-700 border border-green-100',
-      titleColor: 'text-gray-500',
-      valueColor: 'text-green-700',
-      subtextColor: 'text-green-700',
+      card: 'border-l-4 border-l-[#0D7A57] border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA]',
+      iconBg: 'bg-[#F0FDF4] text-[#0D7A57] border border-[#DCFCE7]',
+      titleColor: 'text-[#757F94]',
+      valueColor: 'text-[#0D7A57]',
+      subtextColor: 'text-[#0D7A57]',
     },
     danger: {
-      card: 'border-l-4 border-l-red-700 border-t border-t-gray-200 border-r border-r-gray-200 border-b border-b-gray-200 hover:border-r-gray-300 hover:border-t-gray-300 hover:border-b-gray-300',
-      iconBg: 'bg-red-50 text-red-700 border border-red-100',
-      titleColor: 'text-gray-500',
-      valueColor: 'text-red-700',
-      subtextColor: 'text-red-700',
+      card: 'border-l-4 border-l-[#B91C1C] border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA]',
+      iconBg: 'bg-[#FDF2F2] text-[#B91C1C] border border-[#F9D4D4]',
+      titleColor: 'text-[#757F94]',
+      valueColor: 'text-[#B91C1C]',
+      subtextColor: 'text-[#B91C1C]',
     },
     warning: {
-      card: 'border border-gray-200 hover:border-gray-300',
-      iconBg: 'bg-amber-50 text-amber-700 border border-amber-100',
-      titleColor: 'text-gray-500',
-      valueColor: 'text-gray-900',
-      subtextColor: 'text-amber-700',
+      card: 'border-l-4 border-l-[#B45309] border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA]',
+      iconBg: 'bg-[#FEF3C7] text-[#B45309] border border-[#FDE68A]',
+      titleColor: 'text-[#757F94]',
+      valueColor: 'text-[#191E2B]',
+      subtextColor: 'text-[#B45309]',
     },
   };
 
@@ -82,7 +82,7 @@ const AdminStatCard = ({
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.2 }}
-      className={`bg-white rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] transition-all duration-200 overflow-hidden cursor-default shadow-none ${style.card}`}
+      className={`bg-[#FFFFFF] rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] xl:min-h-[10rem] transition-all duration-200 overflow-hidden cursor-default shadow-none ${style.card}`}
     >
       {/**
        * Metric Icon Emblem
@@ -100,7 +100,7 @@ const AdminStatCard = ({
        */}
       <div className="mt-auto pt-2 min-w-0">
         <p
-          className="text-[10px] md:text-xs xl:text-sm text-gray-600 mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate"
+          className="text-[10px] md:text-xs xl:text-sm text-[#757F94] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate"
           title={title}
         >
           {title}

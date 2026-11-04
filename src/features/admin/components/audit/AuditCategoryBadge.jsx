@@ -12,7 +12,7 @@ import { Store, Sliders, Megaphone, Tag, Headphones, Shield, FileText } from 'lu
 const CATEGORY_CONFIG = {
   MERCHANT_MGMT: {
     label: 'Merchant Mgmt',
-    bg: 'bg-blue-50 text-[#093C5D] border-blue-200',
+    bg: 'bg-[#EEF0FB] text-[#4338CA] border-[#D8DCF5]',
     icon: Store,
   },
   SYSTEM_SETTINGS: {
@@ -42,7 +42,7 @@ const CATEGORY_CONFIG = {
   },
   GENERAL: {
     label: 'General System',
-    bg: 'bg-gray-100 text-gray-700 border-gray-200',
+    bg: 'bg-gray-100 text-[#4E5668] border-[#DCE1EA]',
     icon: FileText,
   },
 };

@@ -140,20 +140,20 @@ const AdminActiveDevices = () => {
 
   return (
     <>
-      <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
+      <section className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] overflow-hidden shadow-none">
         {/**
          * Devices Section Header
          * Section title, device management description, refresh button, and logout all others action.
          */}
-        <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <Laptop className="w-5 h-5 text-[#093C5D] shrink-0" />
-              <h2 className="text-base md:text-lg font-semibold text-gray-900">
+              <Laptop className="w-5 h-5 text-[#4338CA] shrink-0" />
+              <h2 className="text-base md:text-lg font-semibold text-[#191E2B]">
                 {t('Active Devices & Sessions')}
               </h2>
             </div>
-            <p className="text-xs text-gray-500 mt-0.5 leading-relaxed font-normal">
+            <p className="text-xs text-[#757F94] mt-0.5 leading-relaxed font-normal">
               {t('Manage and review devices where your admin account is currently signed in.')}
             </p>
           </div>
@@ -163,12 +163,12 @@ const AdminActiveDevices = () => {
               type="button"
               onClick={fetchDevices}
               disabled={devicesLoading}
-              className="cursor-pointer !min-h-0 !min-w-0 h-[30px] sm:h-[34px] px-3.5 sm:px-4 rounded-lg border border-gray-200 bg-white text-gray-700 hover:text-gray-900 hover:bg-gray-50 text-xs font-semibold whitespace-nowrap transition-colors shrink-0 flex items-center justify-center gap-1.5 active:scale-95"
+              className="cursor-pointer !min-h-0 !min-w-0 h-[30px] sm:h-[34px] px-3.5 sm:px-4 rounded-lg border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:text-[#191E2B] hover:bg-[#F0F2F6] text-xs font-semibold whitespace-nowrap transition-colors shrink-0 flex items-center justify-center gap-1.5 active:scale-95"
               title={t('Refresh devices')}
             >
               <RefreshCw
                 className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${
-                  devicesLoading ? 'animate-spin text-[#093C5D]' : ''
+                  devicesLoading ? 'animate-spin text-[#4338CA]' : ''
                 }`}
               />
               <span>{t('Refresh')}</span>
@@ -195,12 +195,12 @@ const AdminActiveDevices = () => {
          */}
         <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
           {devicesLoading && devices.length === 0 ? (
-            <div className="py-12 flex flex-col items-center justify-center text-gray-500 gap-3">
-              <Loader2 className="w-6 h-6 animate-spin text-[#093C5D]" />
+            <div className="py-12 flex flex-col items-center justify-center text-[#757F94] gap-3">
+              <Loader2 className="w-6 h-6 animate-spin text-[#4338CA]" />
               <p className="text-xs font-medium">{t('Loading')}...</p>
             </div>
           ) : devices.length === 0 ? (
-            <div className="py-10 text-center text-gray-500">
+            <div className="py-10 text-center text-[#757F94]">
               <Laptop className="w-8 h-8 mx-auto text-gray-300 mb-2" />
               <p className="text-sm font-medium">{t('No active devices found')}</p>
             </div>
@@ -213,8 +213,8 @@ const AdminActiveDevices = () => {
                     key={device._id}
                     className={`p-3 sm:p-4 rounded-lg border transition-all ${
                       device.isCurrentDevice
-                        ? 'border-[#093C5D]/30 bg-white'
-                        : 'border-gray-200 bg-white hover:border-gray-300'
+                        ? 'border-[#D8DCF5] bg-[#FFFFFF]'
+                        : 'border-[#DCE1EA] bg-[#FFFFFF] hover:border-[#DCE1EA]'
                     }`}
                   >
                     {/**
@@ -226,15 +226,15 @@ const AdminActiveDevices = () => {
                         <div
                           className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0 ${
                             device.isCurrentDevice
-                              ? 'bg-[#093C5D]/10 text-[#093C5D] border border-[#093C5D]/20'
-                              : 'bg-gray-50 text-gray-600 border border-gray-200'
+                              ? 'bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5]'
+                              : 'bg-[#F0F2F6] text-[#4E5668] border border-[#DCE1EA]'
                           }`}
                         >
                           <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         </div>
 
                         <h3
-                          className="text-xs sm:text-sm font-semibold text-gray-900 leading-snug whitespace-nowrap truncate"
+                          className="text-xs sm:text-sm font-semibold text-[#191E2B] leading-snug whitespace-nowrap truncate"
                           title={getDeviceTitle(device)}
                         >
                           {getDeviceTitle(device)}
@@ -268,11 +268,11 @@ const AdminActiveDevices = () => {
                      * Client Fingerprint Row
                      * Displays browser vendor string and remote network IP address.
                      */}
-                    <div className="text-[11px] sm:text-xs text-gray-500 font-medium mb-2.5 flex items-center gap-1.5 flex-wrap">
-                      <span className="text-gray-700 font-medium">{device.browser || 'Browser'}</span>
+                    <div className="text-[11px] sm:text-xs text-[#757F94] font-medium mb-2.5 flex items-center gap-1.5 flex-wrap">
+                      <span className="text-[#4E5668] font-medium">{device.browser || 'Browser'}</span>
                       <span className="text-gray-300">•</span>
                       <span>
-                        IP: <span className="font-mono text-gray-700">{device.ip}</span>
+                        IP: <span className="font-mono text-[#4E5668]">{device.ip}</span>
                       </span>
                     </div>
 
@@ -280,9 +280,9 @@ const AdminActiveDevices = () => {
                      * Session Chronology Grid
                      * Timestamps for initial authentication and most recent network activity.
                      */}
-                    <div className="grid grid-cols-2 gap-2 sm:gap-3 bg-gray-50/80 px-2.5 sm:px-3 py-2 sm:py-2.5 rounded-lg border border-gray-100">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3 bg-[#F0F2F6]/80 px-2.5 sm:px-3 py-2 sm:py-2.5 rounded-lg border border-[#E8ECF2]">
                       <div className="min-w-0 text-left">
-                        <span className="text-[10px] sm:text-[11px] font-semibold text-gray-500 uppercase tracking-wider block leading-tight">
+                        <span className="text-[10px] sm:text-[11px] font-semibold text-[#757F94] uppercase tracking-wider block leading-tight">
                           {t('Last active')}
                         </span>
                         <div className="mt-1 flex items-center h-5 text-[11px] sm:text-xs md:text-[13px] truncate">
@@ -292,7 +292,7 @@ const AdminActiveDevices = () => {
                               <span className="leading-none">{t('Active Now')}</span>
                             </span>
                           ) : (
-                            <span className="text-gray-800 font-medium leading-none truncate">
+                            <span className="text-[#191E2B] font-medium leading-none truncate">
                               {formatDeviceTime(device.lastActive)}
                             </span>
                           )}
@@ -300,10 +300,10 @@ const AdminActiveDevices = () => {
                       </div>
 
                       <div className="min-w-0 text-right">
-                        <span className="text-[10px] sm:text-[11px] font-semibold text-gray-500 uppercase tracking-wider block leading-tight">
+                        <span className="text-[10px] sm:text-[11px] font-semibold text-[#757F94] uppercase tracking-wider block leading-tight">
                           {t('First signed in')}
                         </span>
-                        <div className="mt-1 flex items-center justify-end h-5 text-[11px] sm:text-xs md:text-[13px] text-gray-800 font-medium truncate leading-none">
+                        <div className="mt-1 flex items-center justify-end h-5 text-[11px] sm:text-xs md:text-[13px] text-[#191E2B] font-medium truncate leading-none">
                           {formatDeviceDate(device.createdAt)}
                         </div>
                       </div>
@@ -323,31 +323,31 @@ const AdminActiveDevices = () => {
       {deviceToLogout && (
         <div className="fixed inset-0 z-[100]">
           <div
-            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
             onClick={() => setDeviceToLogout(null)}
           />
           <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
             <div
-              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
+              className="bg-[#FFFFFF] rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#E8ECF2]"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-5 sm:p-6 text-center">
                 <div className="w-12 h-12 rounded-full bg-red-50 mx-auto flex items-center justify-center mb-4 border border-red-100">
                   <LogOut className="w-6 h-6 text-red-600" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{t('Log Out Device')}</h3>
-                <p className="text-gray-500 text-sm mb-3 font-medium">
+                <h3 className="text-lg sm:text-xl font-semibold text-[#191E2B] mb-2">{t('Log Out Device')}</h3>
+                <p className="text-[#757F94] text-sm mb-3 font-medium">
                   {t('Are you sure you want to log out this device?')}
                 </p>
-                <div className="text-xs font-semibold text-gray-700 bg-gray-50 border border-gray-200 rounded-lg p-2.5 mb-5 text-left">
-                  <div className="truncate text-gray-900">{deviceToLogout.device}</div>
-                  <div className="text-gray-500 font-normal mt-0.5">IP: {deviceToLogout.ip}</div>
+                <div className="text-xs font-semibold text-[#4E5668] bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg p-2.5 mb-5 text-left">
+                  <div className="truncate text-[#191E2B]">{deviceToLogout.device}</div>
+                  <div className="text-[#757F94] font-normal mt-0.5">IP: {deviceToLogout.ip}</div>
                 </div>
                 <div className="flex gap-2 sm:gap-3 justify-center">
                   <button
                     type="button"
                     onClick={() => setDeviceToLogout(null)}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-sm transition-colors active:scale-95"
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-[#4E5668] rounded-lg font-semibold text-sm transition-colors active:scale-95"
                   >
                     {t('Cancel')}
                   </button>
@@ -374,22 +374,22 @@ const AdminActiveDevices = () => {
       {confirmLogoutOthersModal && (
         <div className="fixed inset-0 z-[100]">
           <div
-            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
             onClick={() => setConfirmLogoutOthersModal(false)}
           />
           <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
             <div
-              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
+              className="bg-[#FFFFFF] rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#E8ECF2]"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-5 sm:p-6 text-center">
                 <div className="w-12 h-12 rounded-full bg-red-50 mx-auto flex items-center justify-center mb-4 border border-red-100">
                   <AlertTriangle className="w-6 h-6 text-red-600" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold text-[#191E2B] mb-2">
                   {t('Log Out All Other Devices')}
                 </h3>
-                <p className="text-gray-500 text-sm mb-6 font-medium">
+                <p className="text-[#757F94] text-sm mb-6 font-medium">
                   {t(
                     'Are you sure you want to log out all other active devices? Anyone else using your account will be required to log in again.'
                   )}
@@ -398,7 +398,7 @@ const AdminActiveDevices = () => {
                   <button
                     type="button"
                     onClick={() => setConfirmLogoutOthersModal(false)}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-sm transition-colors active:scale-95"
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-[#4E5668] rounded-lg font-semibold text-sm transition-colors active:scale-95"
                   >
                     {t('Cancel')}
                   </button>

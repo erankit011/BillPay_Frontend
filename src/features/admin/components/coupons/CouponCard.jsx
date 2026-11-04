@@ -51,24 +51,24 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
 
   return (
     <div
-      className={`relative bg-white rounded-lg border transition-all duration-200 overflow-hidden hover:border-gray-300 ${
+      className={`relative bg-[#FFFFFF] rounded-lg border transition-all duration-200 overflow-hidden hover:border-[#DCE1EA] ${
         !coupon.isActive
-          ? 'border-gray-200 opacity-75'
+          ? 'border-[#DCE1EA] opacity-75'
           : isExpired
           ? 'border-amber-200 bg-amber-50/10'
-          : 'border-gray-200'
+          : 'border-[#DCE1EA]'
       }`}
     >
       {/**
        * Banner Header
        * Displays discount amount badge, promotional description, and active status tag.
        */}
-      <div className="p-4 sm:p-5 flex items-start justify-between gap-3 border-b border-dashed border-gray-200">
+      <div className="p-4 sm:p-5 flex items-start justify-between gap-3 border-b border-dashed border-[#DCE1EA]">
         <div className="flex items-center gap-3">
           <div
             className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border ${
               coupon.discountType === 'PERCENTAGE'
-                ? 'bg-blue-50 text-[#093C5D] border-blue-200'
+                ? 'bg-[#EEF0FB] text-[#4338CA] border-[#D8DCF5]'
                 : 'bg-emerald-50 text-emerald-700 border-emerald-200'
             }`}
           >
@@ -80,18 +80,18 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-lg sm:text-xl font-semibold tracking-tight text-gray-900">
+              <span className="text-lg sm:text-xl font-semibold tracking-tight text-[#191E2B]">
                 {coupon.discountType === 'PERCENTAGE'
                   ? `${coupon.discountValue}% OFF`
                   : `₹${coupon.discountValue} FLAT`}
               </span>
               {coupon.maxDiscountAmount && coupon.discountType === 'PERCENTAGE' && (
-                <span className="text-[10px] font-semibold text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded border border-gray-200">
+                <span className="text-[10px] font-semibold text-[#4E5668] bg-gray-100 px-1.5 py-0.5 rounded border border-[#DCE1EA]">
                   Upto ₹{coupon.maxDiscountAmount}
                 </span>
               )}
             </div>
-            <p className="text-xs text-gray-500 mt-0.5 line-clamp-1 font-medium">
+            <p className="text-xs text-[#757F94] mt-0.5 line-clamp-1 font-medium">
               {coupon.description || 'Promotional coupon code'}
             </p>
           </div>
@@ -108,7 +108,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
               Expired
             </span>
           ) : !coupon.isActive ? (
-            <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-gray-100 text-gray-600 border border-gray-200 uppercase tracking-wide">
+            <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-gray-100 text-[#4E5668] border border-[#DCE1EA] uppercase tracking-wide">
               <PauseCircle className="w-3 h-3" />
               Paused
             </span>
@@ -131,17 +131,17 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
        * Dashed code container with single-click clipboard copy utility button.
        */}
       <div className="p-4 sm:p-5 space-y-4">
-        <div className="flex items-center justify-between gap-2 p-2.5 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+        <div className="flex items-center justify-between gap-2 p-2.5 bg-[#F0F2F6] rounded-lg border border-dashed border-[#DCE1EA]">
           <div className="flex items-center gap-2 overflow-hidden">
-            <Tag className="w-4 h-4 text-[#093C5D] shrink-0" />
-            <span className="font-mono font-semibold text-gray-900 tracking-wider text-sm truncate">
+            <Tag className="w-4 h-4 text-[#4338CA] shrink-0" />
+            <span className="font-mono font-semibold text-[#191E2B] tracking-wider text-sm truncate">
               {coupon.code}
             </span>
           </div>
           <button
             type="button"
             onClick={handleCopyCode}
-            className="cursor-pointer inline-flex items-center gap-1 text-xs font-semibold text-[#093C5D] hover:text-[#072C44] px-2.5 py-1 rounded-md bg-white border border-gray-200 hover:border-gray-300 transition-all active:scale-95 shrink-0 shadow-none"
+            className="cursor-pointer inline-flex items-center gap-1 text-xs font-semibold text-[#4338CA] hover:text-[#072C44] px-2.5 py-1 rounded-md bg-[#FFFFFF] border border-[#DCE1EA] hover:border-[#DCE1EA] transition-all active:scale-95 shrink-0 shadow-none"
           >
             {copied ? (
               <>
@@ -162,7 +162,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
          * List of subscription tier tags for which this coupon discount is applicable.
          */}
         <div className="space-y-1">
-          <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+          <span className="text-[11px] font-semibold text-[#757F94] uppercase tracking-wider">
             Valid For Plans
           </span>
           <div className="flex flex-wrap gap-1.5 pt-0.5">
@@ -170,13 +170,13 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
               coupon.applicablePlans.map((plan) => (
                 <span
                   key={plan}
-                  className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-gray-100 text-gray-700 border border-gray-200"
+                  className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-gray-100 text-[#4E5668] border border-[#DCE1EA]"
                 >
                   {plan}
                 </span>
               ))
             ) : (
-              <span className="text-xs text-gray-500 font-medium">All SaaS Subscription Plans</span>
+              <span className="text-xs text-[#757F94] font-medium">All SaaS Subscription Plans</span>
             )}
           </div>
         </div>
@@ -186,14 +186,14 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
          * Progress bar and textual counts for used coupons versus maximum limit.
          */}
         <div className="space-y-1.5 pt-1">
-          <div className="flex items-center justify-between text-xs text-gray-600">
+          <div className="flex items-center justify-between text-xs text-[#4E5668]">
             <span className="flex items-center gap-1 font-medium">
-              <Users className="w-3.5 h-3.5 text-gray-400" />
+              <Users className="w-3.5 h-3.5 text-[#757F94]" />
               Redemptions
             </span>
-            <span className="font-semibold text-gray-900">
+            <span className="font-semibold text-[#191E2B]">
               {coupon.usedCount}{' '}
-              <span className="font-normal text-gray-500">
+              <span className="font-normal text-[#757F94]">
                 / {coupon.usageLimit ? `${coupon.usageLimit} max` : 'Unlimited'}
               </span>
             </span>
@@ -207,7 +207,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
                     ? 'bg-rose-500'
                     : usagePercentage >= 60
                     ? 'bg-amber-500'
-                    : 'bg-[#093C5D]'
+                    : 'bg-[#4338CA]'
                 }`}
                 style={{ width: `${usagePercentage}%` }}
               />
@@ -219,9 +219,9 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
          * Temporal Validity & Criteria
          * Expiration date and minimum order purchase threshold requirements.
          */}
-        <div className="flex items-center justify-between text-[11px] text-gray-500 pt-1 border-t border-gray-100 font-medium">
+        <div className="flex items-center justify-between text-[11px] text-[#757F94] pt-1 border-t border-[#E8ECF2] font-medium">
           <span className="flex items-center gap-1">
-            <Calendar className="w-3.5 h-3.5 text-gray-400" />
+            <Calendar className="w-3.5 h-3.5 text-[#757F94]" />
             Expires: {formatDate(coupon.expiresAt)}
           </span>
           {coupon.minOrderAmount > 0 && (
@@ -234,7 +234,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
        * Action Toolbar
        * Pause/activate toggle switch and edit/delete coupon controls.
        */}
-      <div className="px-4 py-3 bg-gray-50/80 border-t border-gray-200 flex items-center justify-between text-xs">
+      <div className="px-4 py-3 bg-[#F0F2F6]/80 border-t border-[#DCE1EA] flex items-center justify-between text-xs">
         <button
           type="button"
           onClick={() => onToggleActive(coupon._id)}
@@ -251,7 +251,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
           <button
             type="button"
             onClick={() => onEdit(coupon)}
-            className="cursor-pointer p-1.5 text-gray-500 hover:text-[#093C5D] hover:bg-white rounded-md transition-all active:scale-95 border border-transparent hover:border-gray-200"
+            className="cursor-pointer p-1.5 text-[#757F94] hover:text-[#4338CA] hover:bg-[#FFFFFF] rounded-md transition-all active:scale-95 border border-transparent hover:border-[#DCE1EA]"
             title="Edit Coupon"
           >
             <Edit2 className="w-4 h-4" />
@@ -259,7 +259,7 @@ const CouponCard = ({ coupon, onEdit, onToggleActive, onDelete }) => {
           <button
             type="button"
             onClick={() => onDelete(coupon._id, coupon.code)}
-            className="cursor-pointer p-1.5 text-gray-500 hover:text-rose-600 hover:bg-white rounded-md transition-all active:scale-95 border border-transparent hover:border-gray-200"
+            className="cursor-pointer p-1.5 text-[#757F94] hover:text-rose-600 hover:bg-[#FFFFFF] rounded-md transition-all active:scale-95 border border-transparent hover:border-[#DCE1EA]"
             title="Delete Coupon"
           >
             <Trash2 className="w-4 h-4" />
