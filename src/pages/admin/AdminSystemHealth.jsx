@@ -56,10 +56,10 @@ const AdminSystemHealth = () => {
        */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B]">
             System Infrastructure & Health Diagnostics
           </h1>
-          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
+          <p className="text-[#4E5668] text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
             Real-time operational status of backend microservices, database clusters, server memory, and payment gateways.
           </p>
         </div>
@@ -67,7 +67,7 @@ const AdminSystemHealth = () => {
         <button
           onClick={() => refetch()}
           disabled={isFetching}
-          className="cursor-pointer h-10 sm:h-11 px-4 sm:px-5 rounded-lg bg-[#093C5D] hover:bg-[#072d46] text-white text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition-all active:scale-95 shrink-0 shadow-none disabled:opacity-70"
+          className="cursor-pointer h-10 sm:h-11 px-4 sm:px-5 rounded-lg bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition-all active:scale-95 shrink-0 shadow-none disabled:opacity-70"
           title="Refresh real-time system diagnostics"
         >
           <RotateCcw className={`w-4 h-4 mr-1.5 sm:mr-2 ${isFetching ? 'animate-spin' : ''}`} />
@@ -111,16 +111,16 @@ const AdminSystemHealth = () => {
       </div>
 
       {isLoading ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-16 text-center shadow-none">
-          <SwirlingLoader className="w-10 h-10 text-[#093C5D] mx-auto mb-3" />
-          <p className="text-sm font-medium text-gray-600">Checking system infrastructure health & diagnostics...</p>
+        <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-16 text-center shadow-none">
+          <SwirlingLoader className="w-10 h-10 text-[#4338CA] mx-auto mb-3" />
+          <p className="text-sm font-medium text-[#4E5668]">Checking system infrastructure health & diagnostics...</p>
         </div>
       ) : isError ? (
-        <div className="p-8 text-center bg-white rounded-lg border border-red-200 text-red-700 shadow-none">
+        <div className="p-8 text-center bg-[#FFFFFF] rounded-lg border border-red-200 text-red-700 shadow-none">
           <p className="font-semibold text-sm sm:text-base">Failed to retrieve system health diagnostics.</p>
           <button
             onClick={() => refetch()}
-            className="cursor-pointer mt-3 px-4 py-2 bg-[#093C5D] text-white text-xs sm:text-sm font-semibold rounded-lg hover:bg-[#082a42] transition-colors"
+            className="cursor-pointer mt-3 px-4 py-2 bg-[#4338CA] text-white text-xs sm:text-sm font-semibold rounded-lg hover:bg-[#3730A3] transition-colors"
           >
             Retry Check
           </button>
@@ -131,25 +131,25 @@ const AdminSystemHealth = () => {
            * Server Runtime & Memory Load Overview
            * Displays Node.js process environment, engine version, uptime, and V8 heap breakdown.
            */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-5 shadow-none hover:border-gray-300 transition-all duration-200">
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+          <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-4 sm:p-5 shadow-none hover:border-gray-300 transition-all duration-200">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#E8ECF2]">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#F5F5F5] text-[#093C5D] flex items-center justify-center border border-gray-200 shrink-0">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center border border-[#DCE1EA] shrink-0">
                   <Cpu className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
             <div>
-              <h3 className="text-sm sm:text-base font-semibold text-gray-900 tracking-tight">
+              <h3 className="text-sm sm:text-base font-semibold text-[#191E2B] tracking-tight">
                 Backend Node.js Server Runtime
               </h3>
-              <p className="text-xs font-medium text-gray-500">
-                Environment: <span className="font-semibold uppercase text-gray-800">{server.environment || 'development'}</span> • Runtime Engine: Node {server.nodeVersion || 'v20.x'}
+              <p className="text-xs font-medium text-[#757F94]">
+                Environment: <span className="font-semibold uppercase text-[#191E2B]">{server.environment || 'development'}</span> • Runtime Engine: Node {server.nodeVersion || 'v20.x'}
               </p>
             </div>
           </div>
 
           <div className="text-right">
-            <span className="text-[10px] sm:text-xs text-gray-500 font-medium block">Continuous Server Uptime</span>
-            <span className="text-xs sm:text-sm font-semibold text-gray-900">
+            <span className="text-[10px] sm:text-xs text-[#757F94] font-medium block">Continuous Server Uptime</span>
+            <span className="text-xs sm:text-sm font-semibold text-[#191E2B]">
               {formatUptime(server.uptime)}
             </span>
           </div>
@@ -160,24 +160,24 @@ const AdminSystemHealth = () => {
          * Visualizes used heap, total reserved heap, and resident set physical memory.
          */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
-          <div className="bg-white rounded-lg p-3.5 sm:p-4 border border-gray-200 border-l-4 border-l-[#093C5D] hover:border-gray-300 transition-all duration-200 shadow-none">
-            <span className="text-gray-500 font-semibold block uppercase text-[10px] sm:text-xs tracking-wide">Heap Memory Used</span>
-            <span className="text-base sm:text-xl font-bold text-gray-900 mt-1 block">
+          <div className="bg-[#FFFFFF] rounded-lg p-3.5 sm:p-4 border border-[#DCE1EA] border-l-4 border-l-[#4338CA] hover:border-gray-300 transition-all duration-200 shadow-none">
+            <span className="text-[#757F94] font-semibold block uppercase text-[10px] sm:text-xs tracking-wide">Heap Memory Used</span>
+            <span className="text-base sm:text-xl font-bold text-[#191E2B] mt-1 block">
               {server.memory?.heapUsed || 'N/A'}
             </span>
-            <span className="text-[11px] text-gray-500 font-medium block mt-0.5">Memory occupied by active data objects</span>
+            <span className="text-[11px] text-[#757F94] font-medium block mt-0.5">Memory occupied by active data objects</span>
           </div>
 
-          <div className="bg-white rounded-lg p-3.5 sm:p-4 border border-gray-200 border-l-4 border-l-purple-700 hover:border-gray-300 transition-all duration-200 shadow-none">
-            <span className="text-gray-500 font-semibold block uppercase text-[10px] sm:text-xs tracking-wide">Total Allocated Heap</span>
-            <span className="text-base sm:text-xl font-bold text-gray-900 mt-1 block">
+          <div className="bg-[#FFFFFF] rounded-lg p-3.5 sm:p-4 border border-[#DCE1EA] border-l-4 border-l-purple-700 hover:border-gray-300 transition-all duration-200 shadow-none">
+            <span className="text-[#757F94] font-semibold block uppercase text-[10px] sm:text-xs tracking-wide">Total Allocated Heap</span>
+            <span className="text-base sm:text-xl font-bold text-[#191E2B] mt-1 block">
               {server.memory?.heapTotal || 'N/A'}
             </span>
-            <span className="text-[11px] text-gray-500 font-medium block mt-0.5">Total memory space reserved by V8 engine</span>
+            <span className="text-[11px] text-[#757F94] font-medium block mt-0.5">Total memory space reserved by V8 engine</span>
           </div>
 
-          <div className="bg-white rounded-lg p-3.5 sm:p-4 border border-gray-200 border-l-4 border-l-emerald-700 hover:border-gray-300 transition-all duration-200 shadow-none">
-            <span className="text-gray-500 font-semibold block uppercase text-[10px] sm:text-xs tracking-wide">Resident Set Size (RSS)</span>
+          <div className="bg-[#FFFFFF] rounded-lg p-3.5 sm:p-4 border border-[#DCE1EA] border-l-4 border-l-emerald-700 hover:border-gray-300 transition-all duration-200 shadow-none">
+            <span className="text-[#757F94] font-semibold block uppercase text-[10px] sm:text-xs tracking-wide">Resident Set Size (RSS)</span>
             <span className="text-base sm:text-xl font-bold text-emerald-700 mt-1 block">
               {server.memory?.rss || 'N/A'}
             </span>
@@ -192,8 +192,8 @@ const AdminSystemHealth = () => {
        */}
       <div>
         <div className="mb-3 sm:mb-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-600 flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-[#093C5D]" />
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-[#4E5668] flex items-center gap-1.5">
+            <ShieldCheck className="w-4 h-4 text-[#4338CA]" />
             Core Infrastructure & Third-Party Service Integrations
           </h2>
         </div>

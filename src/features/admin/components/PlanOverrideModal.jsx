@@ -167,7 +167,7 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
        * Semi-transparent dark background dismissing plan override dialog on click.
        */}
       <div
-        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
+        className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
         onWheel={(e) => e.preventDefault()}
         onTouchMove={(e) => e.preventDefault()}
@@ -178,13 +178,13 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
        * Renders as mobile bottom sheet or desktop centered dialogue modal.
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-[60] pointer-events-none">
-        <div className="relative bg-white w-full sm:max-w-lg rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
+        <div className="relative bg-[#FFFFFF] w-full sm:max-w-lg rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
           
           {/**
            * Mobile Drag Pill
            * Visual drag pill indicator displayed on mobile devices.
            */}
-          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-white">
+          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#FFFFFF]">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
           </div>
 
@@ -192,16 +192,16 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
            * Modal Header
            * Crown emblem, modal title banner, and round close button.
            */}
-          <div className="px-5 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white flex-shrink-0 gap-3">
+          <div className="px-5 sm:px-6 py-4 border-b border-[#E8ECF2] flex items-center justify-between bg-[#FFFFFF] flex-shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="w-10 h-10 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center border border-amber-200 shrink-0">
                 <Crown className="w-5 h-5 text-amber-600" strokeWidth={2} />
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-snug">
+                <h3 className="text-base sm:text-lg font-semibold text-[#191E2B] leading-snug">
                   Update Subscription Plan
                 </h3>
-                <p className="text-xs text-gray-500 font-medium truncate mt-0.5">
+                <p className="text-xs text-[#757F94] font-medium truncate mt-0.5">
                   Change plan tier & manage merchant validity
                 </p>
               </div>
@@ -210,7 +210,7 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200 ml-auto"
+              className="cursor-pointer text-[#757F94] bg-gray-100 hover:bg-gray-200 hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
               title="Close"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -228,18 +228,18 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                * Merchant Profile & Active Tier Card
                * Displays store name, email address, active plan badge, and current expiration date.
                */}
-              <div className="p-3.5 bg-gray-50/80 border border-gray-200 rounded-lg space-y-2.5">
+              <div className="p-3.5 bg-[#F0F2F6]/80 border border-[#DCE1EA] rounded-lg space-y-2.5">
                 {/**
                  * Shop Title & Plan Pill
                  * Basic shop identifier alongside current subscription tier chip.
                  */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
-                    <h4 className="text-xs sm:text-sm font-semibold text-gray-900 leading-snug truncate" title={shopDisplayName}>
+                    <h4 className="text-xs sm:text-sm font-semibold text-[#191E2B] leading-snug truncate" title={shopDisplayName}>
                       {shopDisplayName}
                     </h4>
                     {shop.email && (
-                      <p className="text-[11px] text-gray-500 font-normal truncate mt-0.5" title={shop.email}>
+                      <p className="text-[11px] text-[#757F94] font-normal truncate mt-0.5" title={shop.email}>
                         {shop.email}
                       </p>
                     )}
@@ -271,14 +271,14 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                  * Expiry Timestamp Row
                  * Displays current expiry date or free tier absence of expiration.
                  */}
-                <div className="pt-2 border-t border-gray-200/80 flex items-center justify-between gap-2 text-xs">
-                  <div className="flex items-center gap-2 min-w-0 text-gray-500">
-                    <div className="w-5 h-5 rounded bg-white border border-gray-200 flex items-center justify-center shrink-0">
-                      <Clock className="w-3 h-3 text-[#093C5D]" />
+                <div className="pt-2 border-t border-[#DCE1EA]/80 flex items-center justify-between gap-2 text-xs">
+                  <div className="flex items-center gap-2 min-w-0 text-[#757F94]">
+                    <div className="w-5 h-5 rounded bg-[#FFFFFF] border border-[#DCE1EA] flex items-center justify-center shrink-0">
+                      <Clock className="w-3 h-3 text-[#4338CA]" />
                     </div>
                     <span className="font-medium">Current Expiry:</span>
                   </div>
-                  <strong className="font-semibold text-gray-900 text-xs truncate">
+                  <strong className="font-semibold text-[#191E2B] text-xs truncate">
                     {shop.currentPeriodEnd ? formatDate(shop.currentPeriodEnd) : 'No Expiry (Free Tier)'}
                   </strong>
                 </div>
@@ -289,7 +289,7 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                * List of selectable subscription plans with pricing, duration, and feature notes.
                */}
               <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-2">
+                <label className="block text-xs font-semibold text-[#4E5668] mb-2">
                   Select Subscription Tier
                 </label>
                 <div className="space-y-2">
@@ -301,13 +301,13 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                         onClick={() => setSelectedPlan(plan.id)}
                         className={`p-3 rounded-lg border transition-all cursor-pointer flex items-center justify-between gap-3 ${
                           isSelected
-                            ? 'border-[#093C5D] bg-blue-50/40 ring-1 ring-[#093C5D]'
-                            : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50/50'
+                            ? 'border-[#4338CA] bg-[#EEF0FB]/50 ring-1 ring-[#4338CA]'
+                            : 'border-[#DCE1EA] hover:border-[#DCE1EA] bg-[#FFFFFF] hover:bg-[#F0F2F6]/50'
                         }`}
                       >
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-xs sm:text-sm font-semibold text-gray-900 leading-tight">
+                            <span className="text-xs sm:text-sm font-semibold text-[#191E2B] leading-tight">
                               {plan.label}
                             </span>
                             {/**
@@ -320,7 +320,7 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                               </span>
                             )}
                           </div>
-                          <p className="text-[11px] text-gray-500 font-medium mt-1 leading-normal">
+                          <p className="text-[11px] text-[#757F94] font-medium mt-1 leading-normal">
                             {plan.desc}
                           </p>
                         </div>
@@ -332,12 +332,12 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                         <div
                           className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
                             isSelected
-                              ? 'border-[#093C5D] bg-white'
-                              : 'border-gray-300 bg-white'
+                              ? 'border-[#4338CA] bg-[#FFFFFF]'
+                              : 'border-[#DCE1EA] bg-[#FFFFFF]'
                           }`}
                         >
                           {isSelected && (
-                            <span className="w-2.5 h-2.5 rounded-full bg-[#093C5D]" />
+                            <span className="w-2.5 h-2.5 rounded-full bg-[#4338CA]" />
                           )}
                         </div>
                       </div>
@@ -356,26 +356,26 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                     <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0" />
                     <span>Selected Plan Validity:</span>
                   </div>
-                  <span className="font-semibold text-blue-700 bg-white border border-blue-200 px-2.5 py-1 rounded-md text-[11px] uppercase tracking-wider">
+                  <span className="font-semibold text-blue-700 bg-[#FFFFFF] border border-blue-200 px-2.5 py-1 rounded-md text-[11px] uppercase tracking-wider">
                     Free Tier • No Expiry Limit
                   </span>
                 </div>
               ) : (
-                <div className="p-3.5 bg-gray-50/80 border border-gray-200 rounded-lg space-y-2.5">
+                <div className="p-3.5 bg-[#F0F2F6]/80 border border-[#DCE1EA] rounded-lg space-y-2.5">
                   <div className="flex items-center justify-between gap-2 text-xs">
-                    <div className="flex items-center gap-2 text-gray-600">
-                      <div className="w-5 h-5 rounded bg-white border border-gray-200 flex items-center justify-center shrink-0">
-                        <Calendar className="w-3 h-3 text-[#093C5D]" />
+                    <div className="flex items-center gap-2 text-[#4E5668]">
+                      <div className="w-5 h-5 rounded bg-[#FFFFFF] border border-[#DCE1EA] flex items-center justify-center shrink-0">
+                        <Calendar className="w-3 h-3 text-[#4338CA]" />
                       </div>
                       <span className="font-medium">Plan Duration Added:</span>
                     </div>
-                    <span className="font-semibold text-[#093C5D] bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded text-[11px] shrink-0">
+                    <span className="font-semibold text-[#4338CA] bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded text-[11px] shrink-0">
                       +{selectedOption.days} Days ({selectedOption.badge})
                     </span>
                   </div>
 
-                  <div className="pt-2 border-t border-gray-200/80 flex items-center justify-between gap-2 text-xs">
-                    <div className="flex items-center gap-2 min-w-0 text-gray-600">
+                  <div className="pt-2 border-t border-[#DCE1EA]/80 flex items-center justify-between gap-2 text-xs">
+                    <div className="flex items-center gap-2 min-w-0 text-[#4E5668]">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
                       <span className="font-medium text-xs">
                         {hasActiveFutureExpiry ? 'Extended Expiry Date:' : 'New Expiry Date:'}
@@ -392,11 +392,11 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                * Official Invoice Configuration
                * Form inputs for invoice amount, fee waiver checkbox, and receipt generation.
                */}
-              <div className="p-3.5 bg-gray-50/80 border border-gray-200 rounded-lg space-y-2.5">
+              <div className="p-3.5 bg-[#F0F2F6]/80 border border-[#DCE1EA] rounded-lg space-y-2.5">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <Receipt className="w-4 h-4 text-[#093C5D]" />
-                    <span className="text-xs font-semibold text-gray-900">
+                    <Receipt className="w-4 h-4 text-[#4338CA]" />
+                    <span className="text-xs font-semibold text-[#191E2B]">
                       Platform Invoice Configuration
                     </span>
                   </div>
@@ -408,10 +408,10 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                 {selectedPlan !== 'FREE' ? (
                   <div className="space-y-2 pt-1">
                     <div className="flex items-center justify-between gap-3">
-                      <label className="text-xs font-medium text-gray-700">
+                      <label className="text-xs font-medium text-[#4E5668]">
                         Invoice Amount (₹):
                       </label>
-                      <label className="flex items-center gap-1.5 cursor-pointer text-[11px] text-gray-600 font-medium">
+                      <label className="flex items-center gap-1.5 cursor-pointer text-[11px] text-[#4E5668] font-medium">
                         <input
                           type="checkbox"
                           checked={isWaived}
@@ -420,7 +420,7 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                             if (e.target.checked) setCustomAmount('0');
                             else setCustomAmount(String(selectedOption.price || 0));
                           }}
-                          className="rounded border-gray-300 text-[#093C5D] focus:ring-[#093C5D] w-3.5 h-3.5 cursor-pointer"
+                          className="rounded border-[#DCE1EA] text-[#4338CA] focus:ring-[#093C5D] w-3.5 h-3.5 cursor-pointer"
                         />
                         <span>Waive Fee (₹0 Invoice)</span>
                       </label>
@@ -428,26 +428,26 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
 
                     {!isWaived && (
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs font-semibold">₹</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#757F94] text-xs font-semibold">₹</span>
                         <input
                           type="number"
                           min="0"
                           step="1"
                           value={customAmount}
                           onChange={(e) => setCustomAmount(e.target.value)}
-                          className="w-full pl-7 pr-3 py-2 text-xs font-semibold text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D]"
+                          className="w-full pl-7 pr-3 py-2 text-xs font-semibold text-[#191E2B] bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#4338CA]"
                           placeholder="Amount in Rupees"
                         />
                       </div>
                     )}
                   </div>
                 ) : (
-                  <div className="text-[11px] text-gray-500 font-normal">
+                  <div className="text-[11px] text-[#757F94] font-normal">
                     Free starter tier invoice will be recorded with ₹0 amount for audit trail.
                   </div>
                 )}
 
-                <p className="text-[11px] text-gray-500 font-normal leading-normal border-t border-gray-200/60 pt-2">
+                <p className="text-[11px] text-[#757F94] font-normal leading-normal border-t border-[#DCE1EA]/60 pt-2">
                   A formal tax invoice and PDF receipt will be automatically generated, saved to merchant billing records, and emailed to the store.
                 </p>
               </div>
@@ -457,19 +457,19 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
              * Modal Action Footer
              * Buttons to dismiss modal or submit and execute plan tier override.
              */}
-            <div className="px-4 sm:px-5 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-end gap-2.5 flex-shrink-0">
+            <div className="px-4 sm:px-5 py-3.5 bg-[#F0F2F6] border-t border-[#DCE1EA] flex items-center justify-end gap-2.5 flex-shrink-0">
               <button
                 type="button"
                 onClick={onClose}
                 disabled={isLoading}
-                className="cursor-pointer h-10 px-4 sm:px-5 text-xs sm:text-sm font-semibold text-gray-700 bg-white hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors active:scale-95 inline-flex items-center justify-center flex-1 sm:flex-initial"
+                className="cursor-pointer h-10 px-4 sm:px-5 text-xs sm:text-sm font-semibold text-[#4E5668] bg-[#FFFFFF] hover:bg-gray-100 border border-[#DCE1EA] rounded-lg transition-colors active:scale-95 inline-flex items-center justify-center flex-1 sm:flex-initial"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="cursor-pointer h-10 px-5 text-xs sm:text-sm font-semibold rounded-lg text-white bg-[#093C5D] hover:bg-[#082a42] border border-[#093C5D] shadow-none transition-all active:scale-95 disabled:opacity-50 inline-flex items-center justify-center gap-2 flex-1 sm:flex-initial"
+                className="cursor-pointer h-10 px-5 text-xs sm:text-sm font-semibold rounded-lg text-white bg-[#4338CA] hover:bg-[#3730A3] border border-[#4338CA] shadow-none transition-all active:scale-95 disabled:opacity-50 inline-flex items-center justify-center gap-2 flex-1 sm:flex-initial"
               >
                 <Crown className="w-4 h-4 text-amber-400 shrink-0" strokeWidth={2} />
                 <span>{isLoading ? 'Updating...' : 'Save Plan Update'}</span>

@@ -71,12 +71,12 @@ const CustomGrowthTooltip = ({ active, payload, label }) => {
   const shopsItem = payload.find((p) => p.dataKey === 'shops');
 
   return (
-    <div className="bg-white/95 backdrop-blur-md border border-gray-200/90 rounded-lg shadow-lg p-3 min-w-[210px] select-none animate-in fade-in zoom-in-95 duration-100">
-      <div className="flex items-center justify-between pb-2 mb-2 border-b border-gray-100">
-        <span className="text-xs font-semibold text-[#093C5D]">
+    <div className="bg-[#FFFFFF]/95 backdrop-blur-md border border-[#DCE1EA] rounded-lg shadow-none p-3 min-w-[210px] select-none animate-in fade-in zoom-in-95 duration-100">
+      <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#E8ECF2]">
+        <span className="text-xs font-semibold text-[#4338CA]">
           {formatMonthYear(label)}
         </span>
-        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 uppercase tracking-wider">
+        <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-[#F0F2F6] text-[#4E5668] uppercase tracking-wider">
           Timeline
         </span>
       </div>
@@ -88,10 +88,10 @@ const CustomGrowthTooltip = ({ active, payload, label }) => {
          */}
         <div className="flex items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#093C5D] shrink-0" />
-            <span className="text-gray-600 font-medium">New Stores:</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-[#4338CA] shrink-0" />
+            <span className="text-[#4E5668] font-medium">New Stores:</span>
           </div>
-          <span className="font-semibold text-gray-900">
+          <span className="font-semibold text-[#191E2B]">
             {shopsItem?.value || 0} {shopsItem?.value === 1 ? 'store' : 'stores'}
           </span>
         </div>
@@ -103,7 +103,7 @@ const CustomGrowthTooltip = ({ active, payload, label }) => {
         <div className="flex items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-[#10B981] shrink-0" />
-            <span className="text-gray-600 font-medium">Subscription Rev:</span>
+            <span className="text-[#4E5668] font-medium">Subscription Rev:</span>
           </div>
           <span className="font-semibold text-emerald-700">
             {formatCurrency(revenueItem?.value || 0)}
@@ -315,10 +315,10 @@ const AdminDashboard = () => {
        * Introductory title and description of executive administrative controls.
        */}
       <div>
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B]">
           Admin Dashboard Overview
         </h1>
-        <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
+        <p className="text-[#4E5668] text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
           Real-time platform metrics, merchant registrations, subscription revenue, and billing activity across all stores.
         </p>
       </div>
@@ -366,12 +366,12 @@ const AdminDashboard = () => {
       </div>
 
       {isLoading ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-16 md:p-20 text-center shadow-none">
-          <SwirlingLoader className="w-10 h-10 text-[#093C5D] mx-auto mb-3" />
-          <p className="text-sm font-medium text-gray-600">Loading platform overview metrics & store insights...</p>
+        <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-16 md:p-20 text-center shadow-none">
+          <SwirlingLoader className="w-10 h-10 text-[#4338CA] mx-auto mb-3" />
+          <p className="text-sm font-medium text-[#4E5668]">Loading platform overview metrics & store insights...</p>
         </div>
       ) : isError ? (
-        <div className="p-8 text-center bg-white rounded-lg border border-red-200 text-red-700 shadow-none">
+        <div className="p-8 text-center bg-[#FDF2F2] rounded-lg border border-[#F9D4D4] text-[#B91C1C] shadow-none">
           <p className="font-semibold text-sm sm:text-base">Failed to load admin overview metrics.</p>
         </div>
       ) : (
@@ -381,33 +381,33 @@ const AdminDashboard = () => {
            * 3-tile strip showing platform bill counts, customer profiles, and active pro stores.
            */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="bg-white border border-gray-200 rounded-lg p-3.5 flex items-center justify-between shadow-none">
+            <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-3.5 flex items-center justify-between shadow-none">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#093C5D] flex items-center justify-center">
+                <div className="w-9 h-9 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center">
                   <FileText className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-xs font-semibold text-gray-500 uppercase block">Total Bills Issued</span>
-              <span className="text-base font-semibold text-gray-900">{totalBillsCount} Invoices</span>
+              <span className="text-xs font-semibold text-[#757F94] uppercase block">Total Bills Issued</span>
+              <span className="text-base font-semibold text-[#191E2B]">{totalBillsCount} Invoices</span>
             </div>
           </div>
           <Link
             to="/admin/bills"
-            className="text-xs font-semibold text-[#093C5D] hover:underline flex items-center gap-1"
+            className="text-xs font-semibold text-[#4338CA] hover:underline flex items-center gap-1"
             title="View all itemized bills across shops"
           >
             Audit Bills <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg p-3.5 flex items-center justify-between shadow-none">
+        <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-3.5 flex items-center justify-between shadow-none">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
               <Users className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-xs font-semibold text-gray-500 uppercase block">Customer Profiles</span>
-              <span className="text-base font-semibold text-gray-900">{totalCustomersCount} Buyers</span>
+              <span className="text-xs font-semibold text-[#757F94] uppercase block">Customer Profiles</span>
+              <span className="text-base font-semibold text-[#191E2B]">{totalCustomersCount} Buyers</span>
             </div>
           </div>
           <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-lg border border-emerald-200">
@@ -415,14 +415,14 @@ const AdminDashboard = () => {
           </span>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg p-3.5 flex items-center justify-between shadow-none">
+        <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-3.5 flex items-center justify-between shadow-none">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center">
               <Store className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-xs font-semibold text-gray-500 uppercase block">Active Stores</span>
-              <span className="text-base font-semibold text-gray-900">{totalShops} Stores ({activeSubscribers} Pro)</span>
+              <span className="text-xs font-semibold text-[#757F94] uppercase block">Active Stores</span>
+              <span className="text-base font-semibold text-[#191E2B]">{totalShops} Stores ({activeSubscribers} Pro)</span>
             </div>
           </div>
           <Link
@@ -444,7 +444,7 @@ const AdminDashboard = () => {
          * Growth Trends Composed Chart Section
          * Interactive multi-axis graph plotting new merchant registrations and subscription revenue.
          */}
-        <div className="lg:col-span-2 bg-white rounded-lg border border-gray-200 p-4 sm:p-5 shadow-none flex flex-col justify-between">
+        <div className="lg:col-span-2 bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-4 sm:p-5 shadow-none flex flex-col justify-between">
           <div>
             {/**
              * Chart Header & Segmented View Controller
@@ -452,10 +452,10 @@ const AdminDashboard = () => {
              */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
               <div>
-                <h3 className="text-sm sm:text-base font-semibold text-gray-900">
+                <h3 className="text-sm sm:text-base font-semibold text-[#191E2B]">
                   Store Signups & Platform Growth
                 </h3>
-                <p className="text-xs font-medium text-gray-500 mt-0.5">
+                <p className="text-xs font-medium text-[#757F94] mt-0.5">
                   Monthly trajectory of new stores onboarded & subscription revenue
                 </p>
               </div>
@@ -467,7 +467,7 @@ const AdminDashboard = () => {
               <div
                 role="tablist"
                 aria-label="Filter chart by series"
-                className="self-start sm:self-auto inline-flex items-center p-1 bg-gray-100 rounded-lg border border-gray-200 gap-1 text-xs shadow-none"
+                className="self-start sm:self-auto inline-flex items-center p-1 bg-[#F0F2F6] rounded-lg border border-[#DCE1EA] gap-1 text-xs shadow-none"
               >
                 <button
                   type="button"
@@ -476,11 +476,11 @@ const AdminDashboard = () => {
                   onClick={() => setChartViewMode('ALL')}
                   className={`cursor-pointer inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all select-none shadow-none active:scale-95 ${
                     chartViewMode === 'ALL'
-                      ? 'bg-white text-gray-900 border border-gray-200'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/70 border border-transparent'
+                      ? 'bg-[#FFFFFF] text-[#191E2B] border border-[#DCE1EA]'
+                      : 'text-[#4E5668] hover:text-[#191E2B] hover:bg-gray-200/70 border border-transparent'
                   }`}
                 >
-                  <span className={`w-1.5 h-1.5 rounded-full transition-colors ${chartViewMode === 'ALL' ? 'bg-[#093C5D]' : 'bg-gray-400'}`} />
+                  <span className={`w-1.5 h-1.5 rounded-full transition-colors ${chartViewMode === 'ALL' ? 'bg-[#4338CA]' : 'bg-gray-400'}`} />
                   Combined
                 </button>
                 <button
@@ -490,8 +490,8 @@ const AdminDashboard = () => {
                   onClick={() => setChartViewMode('REVENUE')}
                   className={`cursor-pointer inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all select-none shadow-none active:scale-95 ${
                     chartViewMode === 'REVENUE'
-                      ? 'bg-white text-emerald-700 border border-emerald-200'
-                      : 'text-gray-600 hover:text-emerald-700 hover:bg-gray-200/70 border border-transparent'
+                      ? 'bg-[#FFFFFF] text-emerald-700 border border-emerald-200'
+                      : 'text-[#4E5668] hover:text-emerald-700 hover:bg-gray-200/70 border border-transparent'
                   }`}
                 >
                   <span className={`w-1.5 h-1.5 rounded-full transition-colors ${chartViewMode === 'REVENUE' ? 'bg-[#10B981]' : 'bg-gray-400'}`} />
@@ -504,11 +504,11 @@ const AdminDashboard = () => {
                   onClick={() => setChartViewMode('STORES')}
                   className={`cursor-pointer inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all select-none shadow-none active:scale-95 ${
                     chartViewMode === 'STORES'
-                      ? 'bg-white text-[#093C5D] border border-blue-200'
-                      : 'text-gray-600 hover:text-[#093C5D] hover:bg-gray-200/70 border border-transparent'
+                      ? 'bg-[#FFFFFF] text-[#4338CA] border border-[#D8DCF5]'
+                      : 'text-[#4E5668] hover:text-[#4338CA] hover:bg-gray-200/70 border border-transparent'
                   }`}
                 >
-                  <span className={`w-1.5 h-1.5 rounded-full transition-colors ${chartViewMode === 'STORES' ? 'bg-[#093C5D]' : 'bg-gray-400'}`} />
+                  <span className={`w-1.5 h-1.5 rounded-full transition-colors ${chartViewMode === 'STORES' ? 'bg-[#4338CA]' : 'bg-gray-400'}`} />
                   Stores
                 </button>
               </div>
@@ -523,14 +523,14 @@ const AdminDashboard = () => {
                * Onboarded Store Volume Tile
                * Total stores registered within active analytics timeline.
                */}
-              <div className="p-2.5 rounded-lg bg-gray-50/90 border border-gray-200/80 flex items-center justify-between">
+              <div className="p-2.5 rounded-lg bg-[#F0F2F6]/90 border border-[#DCE1EA]/80 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] uppercase font-medium text-gray-500 tracking-wider block">Stores Onboarded</span>
-                  <span className="text-sm sm:text-base font-semibold text-gray-900 mt-0.5 block">
+                  <span className="text-[10px] uppercase font-medium text-[#757F94] tracking-wider block">Stores Onboarded</span>
+                  <span className="text-sm sm:text-base font-semibold text-[#191E2B] mt-0.5 block">
                     {totalStoresInPeriod} {totalStoresInPeriod === 1 ? 'store' : 'stores'}
                   </span>
                 </div>
-                <div className="w-8 h-8 rounded-lg bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-[#4338CA]/10 text-[#4338CA] flex items-center justify-center shrink-0">
                   <Store className="w-4 h-4" />
                 </div>
               </div>
@@ -558,11 +558,11 @@ const AdminDashboard = () => {
               <div className="p-2.5 rounded-lg bg-blue-50/50 border border-blue-200/70 flex items-center justify-between">
                 <div>
                   <span className="text-[10px] uppercase font-medium text-blue-800 tracking-wider block">Avg Revenue / Store</span>
-                  <span className="text-sm sm:text-base font-semibold text-[#093C5D] mt-0.5 block">
+                  <span className="text-sm sm:text-base font-semibold text-[#4338CA] mt-0.5 block">
                     {formatCurrency(avgRevPerStore)}
                   </span>
                 </div>
-                <div className="w-8 h-8 rounded-lg bg-blue-100/70 text-[#093C5D] flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-blue-100/70 text-[#4338CA] flex items-center justify-center shrink-0">
                   <TrendingUp className="w-4 h-4" />
                 </div>
               </div>
@@ -646,7 +646,7 @@ const AdminDashboard = () => {
                     yAxisId={chartViewMode === 'STORES' ? 'left' : 'right'}
                     dataKey="shops"
                     name="New Stores Onboarded"
-                    fill="#093C5D"
+                    fill="#4338CA"
                     radius={[4, 4, 0, 0]}
                     maxBarSize={chartViewMode === 'STORES' ? 42 : 32}
                   />
@@ -679,18 +679,18 @@ const AdminDashboard = () => {
          * Subscription Tier Share Card
          * Displays SaaS plan tier distribution bars and paid conversion insights.
          */}
-        <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-5 shadow-none flex flex-col justify-between">
+        <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-4 sm:p-5 shadow-none flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-1">
-              <h3 className="text-sm sm:text-base font-semibold text-gray-900">
+              <h3 className="text-sm sm:text-base font-semibold text-[#191E2B]">
                 Subscription Plan Share
               </h3>
-              <div className="px-2 py-0.5 rounded-lg bg-blue-50 text-[#093C5D] border border-blue-100 flex items-center gap-1.5 text-[11px] font-semibold">
-                <PieChart className="w-3.5 h-3.5 text-[#093C5D]" />
+              <div className="px-2 py-0.5 rounded-lg bg-[#EEF0FB] text-[#4338CA] border border-blue-100 flex items-center gap-1.5 text-[11px] font-semibold">
+                <PieChart className="w-3.5 h-3.5 text-[#4338CA]" />
                 <span>SaaS Distribution</span>
               </div>
             </div>
-            <p className="text-xs font-medium text-gray-500 mb-3.5">
+            <p className="text-xs font-medium text-[#757F94] mb-3.5">
               Active shop accounts categorized by billing plan.
             </p>
 
@@ -698,12 +698,12 @@ const AdminDashboard = () => {
              * Executive 3-Badge Summary Strip
              * Compact glance at total stores, paid pro members, and free trial accounts.
              */}
-            <div className="grid grid-cols-3 gap-2 p-2.5 bg-gray-50/90 rounded-lg border border-gray-200/80 mb-4">
+            <div className="grid grid-cols-3 gap-2 p-2.5 bg-[#F0F2F6]/90 rounded-lg border border-[#DCE1EA]/80 mb-4">
               <div className="text-center">
-                <span className="text-[10px] uppercase font-medium text-gray-500 tracking-wider block">Total Stores</span>
-                <span className="text-sm sm:text-base font-medium text-gray-900 mt-0.5 block">{totalShops}</span>
+                <span className="text-[10px] uppercase font-medium text-[#757F94] tracking-wider block">Total Stores</span>
+                <span className="text-sm sm:text-base font-medium text-[#191E2B] mt-0.5 block">{totalShops}</span>
               </div>
-              <div className="text-center border-x border-gray-200">
+              <div className="text-center border-x border-[#DCE1EA]">
                 <span className="text-[10px] uppercase font-medium text-emerald-700 tracking-wider block">Paid Pro</span>
                 <span className="text-sm sm:text-base font-medium text-emerald-600 mt-0.5 block">{activeSubscribers}</span>
               </div>
@@ -723,22 +723,22 @@ const AdminDashboard = () => {
                * Complimentary 7-day trial store accounts.
                */}
               <div>
-                <div className="flex justify-between items-baseline text-xs font-semibold text-gray-700 mb-1.5">
-                  <span className="flex items-center gap-1.5 text-[#093C5D]">
-                    <span className="w-2 h-2 rounded-full bg-[#093C5D]"></span>
+                <div className="flex justify-between items-baseline text-xs font-semibold text-[#4E5668] mb-1.5">
+                  <span className="flex items-center gap-1.5 text-[#4338CA]">
+                    <span className="w-2 h-2 rounded-full bg-[#4338CA]"></span>
                     <span>Free Plan (Trial)</span>
-                    <span className="text-[10px] font-medium text-gray-600 bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded">7-day</span>
+                    <span className="text-[10px] font-medium text-[#4E5668] bg-gray-100 border border-[#DCE1EA] px-1.5 py-0.5 rounded">7-day</span>
                   </span>
-                  <span className="font-semibold text-gray-900">
+                  <span className="font-semibold text-[#191E2B]">
                     {planBreakdown.FREE || 0} {planBreakdown.FREE === 1 ? 'shop' : 'shops'}
-                    <span className="text-gray-400 font-normal ml-1">
+                    <span className="text-[#757F94] font-normal ml-1">
                       ({totalShops > 0 ? Math.round(((planBreakdown.FREE || 0) / totalShops) * 100) : 0}%)
                     </span>
                   </span>
                 </div>
                 <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
                   <div
-                    className="bg-[#093C5D] h-2.5 rounded-full transition-all duration-300"
+                    className="bg-[#4338CA] h-2.5 rounded-full transition-all duration-300"
                     style={{
                       width: `${
                         totalShops > 0 ? ((planBreakdown.FREE || 0) / totalShops) * 100 : 0
@@ -753,15 +753,15 @@ const AdminDashboard = () => {
                * Standard 30-day recurring paid store subscriptions.
                */}
               <div>
-                <div className="flex justify-between items-baseline text-xs font-semibold text-gray-700 mb-1.5">
+                <div className="flex justify-between items-baseline text-xs font-semibold text-[#4E5668] mb-1.5">
                   <span className="flex items-center gap-1.5 text-green-700">
                     <span className="w-2 h-2 rounded-full bg-green-600"></span>
                     <span>Monthly Pro</span>
                     <span className="text-[10px] font-medium text-green-700 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded">₹299/mo</span>
                   </span>
-                  <span className="font-semibold text-gray-900">
+                  <span className="font-semibold text-[#191E2B]">
                     {planBreakdown.MONTHLY || 0} {planBreakdown.MONTHLY === 1 ? 'shop' : 'shops'}
-                    <span className="text-gray-400 font-normal ml-1">
+                    <span className="text-[#757F94] font-normal ml-1">
                       ({totalShops > 0 ? Math.round(((planBreakdown.MONTHLY || 0) / totalShops) * 100) : 0}%)
                     </span>
                   </span>
@@ -783,15 +783,15 @@ const AdminDashboard = () => {
                * 90-day discounted tier subscriptions.
                */}
               <div>
-                <div className="flex justify-between items-baseline text-xs font-semibold text-gray-700 mb-1.5">
+                <div className="flex justify-between items-baseline text-xs font-semibold text-[#4E5668] mb-1.5">
                   <span className="flex items-center gap-1.5 text-emerald-700">
                     <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
                     <span>Quarterly Pro</span>
                     <span className="text-[10px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded">₹799/3mo</span>
                   </span>
-                  <span className="font-semibold text-gray-900">
+                  <span className="font-semibold text-[#191E2B]">
                     {planBreakdown.QUARTERLY || 0} {planBreakdown.QUARTERLY === 1 ? 'shop' : 'shops'}
-                    <span className="text-gray-400 font-normal ml-1">
+                    <span className="text-[#757F94] font-normal ml-1">
                       ({totalShops > 0 ? Math.round(((planBreakdown.QUARTERLY || 0) / totalShops) * 100) : 0}%)
                     </span>
                   </span>
@@ -813,15 +813,15 @@ const AdminDashboard = () => {
                * Annual recurring membership tier.
                */}
               <div>
-                <div className="flex justify-between items-baseline text-xs font-semibold text-gray-700 mb-1.5">
+                <div className="flex justify-between items-baseline text-xs font-semibold text-[#4E5668] mb-1.5">
                   <span className="flex items-center gap-1.5 text-purple-700">
                     <span className="w-2 h-2 rounded-full bg-purple-600"></span>
                     <span>Yearly Pro</span>
                     <span className="text-[10px] font-medium text-purple-700 bg-purple-50 border border-purple-200 px-1.5 py-0.5 rounded">₹2,999/yr</span>
                   </span>
-                  <span className="font-semibold text-gray-900">
+                  <span className="font-semibold text-[#191E2B]">
                     {planBreakdown.YEARLY || 0} {planBreakdown.YEARLY === 1 ? 'shop' : 'shops'}
-                    <span className="text-gray-400 font-normal ml-1">
+                    <span className="text-[#757F94] font-normal ml-1">
                       ({totalShops > 0 ? Math.round(((planBreakdown.YEARLY || 0) / totalShops) * 100) : 0}%)
                     </span>
                   </span>
@@ -850,24 +850,24 @@ const AdminDashboard = () => {
                   Paid Conversion: <span className="font-medium text-emerald-800">{totalShops > 0 ? Math.round((activeSubscribers / totalShops) * 100) : 0}% of shops</span>
                 </span>
               </div>
-              <span className="font-semibold text-emerald-800 bg-white px-2 py-0.5 rounded-md border border-emerald-200 text-[11px] shrink-0">
+              <span className="font-semibold text-emerald-800 bg-[#FFFFFF] px-2 py-0.5 rounded-md border border-emerald-200 text-[11px] shrink-0">
                 {activeSubscribers} / {totalShops} Active
               </span>
             </div>
           </div>
 
-          <div className="pt-3 border-t border-gray-100 mt-4">
+          <div className="pt-3 border-t border-[#E8ECF2] mt-4">
             <Link
               to="/admin/subscriptions"
-              className="cursor-pointer w-full py-2.5 px-3.5 bg-gray-50 hover:bg-blue-50/60 text-gray-700 hover:text-[#093C5D] border border-gray-200 hover:border-[#093C5D]/30 rounded-lg flex items-center justify-between text-xs font-semibold transition-all duration-200 group shadow-none"
+              className="cursor-pointer w-full py-2.5 px-3.5 bg-[#F0F2F6] hover:bg-blue-50/60 text-[#4E5668] hover:text-[#4338CA] border border-[#DCE1EA] hover:border-[#4338CA]/30 rounded-lg flex items-center justify-between text-xs font-semibold transition-all duration-200 group shadow-none"
             >
               <div className="flex items-center gap-2.5">
-                <div className="w-6 h-6 rounded bg-white border border-gray-200 group-hover:border-[#093C5D]/30 flex items-center justify-center text-[#093C5D] transition-colors">
+                <div className="w-6 h-6 rounded bg-[#FFFFFF] border border-[#DCE1EA] group-hover:border-[#4338CA]/30 flex items-center justify-center text-[#4338CA] transition-colors">
                   <CreditCard className="w-3.5 h-3.5" />
                 </div>
                 <span>Manage All Subscriptions & Invoices</span>
               </div>
-              <span className="text-xs font-semibold text-gray-500 group-hover:text-[#093C5D] tracking-wider uppercase transition-colors shrink-0">
+              <span className="text-xs font-semibold text-[#757F94] group-hover:text-[#4338CA] tracking-wider uppercase transition-colors shrink-0">
                 VIEW
               </span>
             </Link>
@@ -884,26 +884,26 @@ const AdminDashboard = () => {
          * Recently Registered Merchant Stores Table Card
          * Quick glance at newly onboarded merchants with instant inspection action.
          */}
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-none flex flex-col justify-between h-full">
-          <div className="p-4 sm:p-5 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-h-[78px]">
+        <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg overflow-hidden shadow-none flex flex-col justify-between h-full">
+          <div className="p-4 sm:p-5 border-b border-[#DCE1EA] flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-h-[78px]">
             <div>
-              <h3 className="text-sm sm:text-base font-semibold text-gray-900">Recently Registered Merchant Shops</h3>
-              <p className="text-xs font-medium text-gray-500 mt-0.5">Latest stores onboarded to the UdharPay network</p>
+              <h3 className="text-sm sm:text-base font-semibold text-[#191E2B]">Recently Registered Merchant Shops</h3>
+              <p className="text-xs font-medium text-[#757F94] mt-0.5">Latest stores onboarded to the UdharPay network</p>
             </div>
             <Link
               to="/admin/shops"
-              className="cursor-pointer px-3.5 py-1.5 rounded-lg border border-gray-200 hover:border-[#093C5D]/40 bg-gray-50/80 hover:bg-blue-50/70 text-[#093C5D] text-xs font-semibold inline-flex items-center gap-1.5 transition-colors shadow-none whitespace-nowrap shrink-0"
+              className="cursor-pointer px-3.5 py-1.5 rounded-lg border border-[#DCE1EA] hover:border-[#4338CA]/40 bg-[#F0F2F6]/80 hover:bg-blue-50/70 text-[#4338CA] text-xs font-semibold inline-flex items-center gap-1.5 transition-colors shadow-none whitespace-nowrap shrink-0"
               title="Inspect and manage all registered merchant stores"
             >
               <span>View All Merchants</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#093C5D]" />
+              <ArrowRight className="w-3.5 h-3.5 text-[#4338CA]" />
             </Link>
           </div>
 
           {recentShops.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 flex-1 flex flex-col items-center justify-center">
+            <div className="p-8 text-center text-[#757F94] flex-1 flex flex-col items-center justify-center">
               <Store className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-              <p className="text-xs font-medium text-gray-500">No shops registered yet. Newly onboarded stores will appear here.</p>
+              <p className="text-xs font-medium text-[#757F94]">No shops registered yet. Newly onboarded stores will appear here.</p>
             </div>
           ) : (
             <>
@@ -913,15 +913,15 @@ const AdminDashboard = () => {
                */}
               <div className="block sm:hidden divide-y divide-gray-100 flex-1">
                 {recentShops.map((shop) => (
-                  <div key={shop._id} className="p-3.5 space-y-2.5 hover:bg-gray-50/50 transition-colors">
+                  <div key={shop._id} className="p-3.5 space-y-2.5 hover:bg-[#F0F2F6]/50 transition-colors">
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="w-8 h-8 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#093C5D] shrink-0">
+                        <div className="w-8 h-8 rounded-lg border border-[#DCE1EA] bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#4338CA] shrink-0">
                           {getInitials(shop.businessName || shop.name)}
                         </div>
                         <div className="min-w-0">
-                          <div className="text-xs font-semibold text-[#093C5D] truncate">{shop.businessName || shop.name}</div>
-                          <div className="text-[11px] text-gray-500 font-normal truncate">{shop.name} • {shop.email}</div>
+                          <div className="text-xs font-semibold text-[#4338CA] truncate">{shop.businessName || shop.name}</div>
+                          <div className="text-[11px] text-[#757F94] font-normal truncate">{shop.name} • {shop.email}</div>
                         </div>
                       </div>
                       <span className={`shrink-0 inline-block px-2.5 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide border ${getPlanBadge(shop.subscriptionPlan)}`}>
@@ -931,7 +931,7 @@ const AdminDashboard = () => {
                     <div className="flex items-center justify-end pt-1">
                       <button
                         onClick={() => setInspectShop(shop)}
-                        className="cursor-pointer h-7 px-2.5 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg inline-flex items-center gap-1 transition-all active:scale-95 shadow-none"
+                        className="cursor-pointer h-7 px-2.5 text-xs font-semibold text-[#4338CA] bg-[#EEF0FB] hover:bg-[#E0E7FF] border border-[#D8DCF5] rounded-lg inline-flex items-center gap-1 transition-all active:scale-95 shadow-none"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         <span>Inspect Shop</span>
@@ -947,7 +947,7 @@ const AdminDashboard = () => {
                */}
               <div className="hidden sm:block overflow-x-auto flex-1">
                 <table className="w-full text-left whitespace-nowrap">
-                  <thead className="bg-gray-50/80 border-b border-gray-200 font-semibold text-gray-500 uppercase text-[11px] tracking-wider">
+                  <thead className="bg-[#F0F2F6]/80 border-b border-[#DCE1EA] font-semibold text-[#757F94] uppercase text-[11px] tracking-wider">
                     <tr>
                       <th className="py-3 px-3.5">Shop Name & Store</th>
                       <th className="py-3 px-3.5">Merchant Owner</th>
@@ -957,23 +957,23 @@ const AdminDashboard = () => {
                   </thead>
                   <tbody className="divide-y divide-gray-100 font-medium text-xs">
                     {recentShops.map((shop) => (
-                      <tr key={shop._id} className="hover:bg-gray-50/60 transition-colors">
+                      <tr key={shop._id} className="hover:bg-[#F0F2F6]/60 transition-colors">
                         <td className="py-3 px-3.5 align-middle">
                           <div className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#093C5D] shrink-0">
+                            <div className="w-8 h-8 rounded-lg border border-[#DCE1EA] bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#4338CA] shrink-0">
                               {getInitials(shop.businessName || shop.name)}
                             </div>
-                            <span className="text-xs sm:text-[13px] font-semibold text-[#093C5D] truncate max-w-[130px] lg:max-w-[150px]" title={shop.businessName || shop.name}>
+                            <span className="text-xs sm:text-[13px] font-semibold text-[#4338CA] truncate max-w-[130px] lg:max-w-[150px]" title={shop.businessName || shop.name}>
                               {shop.businessName || shop.name}
                             </span>
                           </div>
                         </td>
                         <td className="py-3 px-3.5 align-middle">
                           <div className="min-w-0">
-                            <div className="font-semibold text-xs text-gray-900 truncate max-w-[120px] lg:max-w-[140px]" title={shop.name}>
+                            <div className="font-semibold text-xs text-[#191E2B] truncate max-w-[120px] lg:max-w-[140px]" title={shop.name}>
                               {shop.name}
                             </div>
-                            <div className="text-[11px] text-gray-500 font-normal truncate max-w-[120px] lg:max-w-[140px]" title={shop.email}>
+                            <div className="text-[11px] text-[#757F94] font-normal truncate max-w-[120px] lg:max-w-[140px]" title={shop.email}>
                               {shop.email}
                             </div>
                           </div>
@@ -986,7 +986,7 @@ const AdminDashboard = () => {
                         <td className="py-3 px-3.5 align-middle text-right">
                           <button
                             onClick={() => setInspectShop(shop)}
-                            className="cursor-pointer h-7 px-2.5 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg inline-flex items-center gap-1 transition-all active:scale-95 shadow-none"
+                            className="cursor-pointer h-7 px-2.5 text-xs font-semibold text-[#4338CA] bg-[#EEF0FB] hover:bg-[#E0E7FF] border border-[#D8DCF5] rounded-lg inline-flex items-center gap-1 transition-all active:scale-95 shadow-none"
                             title="Inspect full merchant details and manage store"
                           >
                             <Eye className="w-3.5 h-3.5" />
@@ -1003,7 +1003,7 @@ const AdminDashboard = () => {
                * Store Card Footer
                * Displays store count indicator.
                */}
-              <div className="p-3 sm:px-4 bg-gray-50/60 border-t border-gray-200 flex items-center text-xs text-gray-500 font-medium">
+              <div className="p-3 sm:px-4 bg-[#F0F2F6]/60 border-t border-[#DCE1EA] flex items-center text-xs text-[#757F94] font-medium">
                 <span>Showing {recentShops.length} registered {recentShops.length === 1 ? 'store' : 'stores'}</span>
               </div>
             </>
@@ -1014,26 +1014,26 @@ const AdminDashboard = () => {
          * Recent Subscription Invoices Table Card
          * Financial transactions list logging incoming merchant subscription payments.
          */}
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-none flex flex-col justify-between h-full">
-          <div className="p-4 sm:p-5 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-h-[78px]">
+        <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg overflow-hidden shadow-none flex flex-col justify-between h-full">
+          <div className="p-4 sm:p-5 border-b border-[#DCE1EA] flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-h-[78px]">
             <div>
-              <h3 className="text-sm sm:text-base font-semibold text-gray-900">Recent Subscription Invoices</h3>
-              <p className="text-xs font-medium text-gray-500 mt-0.5">Live SaaS revenue receipts & membership fees collected from merchants</p>
+              <h3 className="text-sm sm:text-base font-semibold text-[#191E2B]">Recent Subscription Invoices</h3>
+              <p className="text-xs font-medium text-[#757F94] mt-0.5">Live SaaS revenue receipts & membership fees collected from merchants</p>
             </div>
             <Link
               to="/admin/subscriptions"
-              className="cursor-pointer px-3.5 py-1.5 rounded-lg border border-gray-200 hover:border-[#093C5D]/40 bg-gray-50/80 hover:bg-blue-50/70 text-[#093C5D] text-xs font-semibold inline-flex items-center gap-1.5 transition-colors shadow-none whitespace-nowrap shrink-0"
+              className="cursor-pointer px-3.5 py-1.5 rounded-lg border border-[#DCE1EA] hover:border-[#4338CA]/40 bg-[#F0F2F6]/80 hover:bg-blue-50/70 text-[#4338CA] text-xs font-semibold inline-flex items-center gap-1.5 transition-colors shadow-none whitespace-nowrap shrink-0"
               title="Audit all platform subscriptions and revenue receipts"
             >
               <span>Audit Subscriptions</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#093C5D]" />
+              <ArrowRight className="w-3.5 h-3.5 text-[#4338CA]" />
             </Link>
           </div>
 
           {recentInvoices.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 flex-1 flex flex-col items-center justify-center">
+            <div className="p-8 text-center text-[#757F94] flex-1 flex flex-col items-center justify-center">
               <CreditCard className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-              <p className="text-xs font-medium text-gray-500">No subscription receipts found. New plan purchases will appear here.</p>
+              <p className="text-xs font-medium text-[#757F94]">No subscription receipts found. New plan purchases will appear here.</p>
             </div>
           ) : (
             <>
@@ -1043,24 +1043,24 @@ const AdminDashboard = () => {
                */}
               <div className="block sm:hidden divide-y divide-gray-100 flex-1">
                 {recentInvoices.map((inv) => (
-                  <div key={inv._id} className="p-3.5 space-y-2 hover:bg-gray-50/50 transition-colors">
+                  <div key={inv._id} className="p-3.5 space-y-2 hover:bg-[#F0F2F6]/50 transition-colors">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="font-mono text-xs font-semibold text-[#093C5D]">
+                      <span className="font-mono text-xs font-semibold text-[#4338CA]">
                         {inv.razorpayPaymentId || `#INV-${inv._id.toString().slice(-6).toUpperCase()}`}
                       </span>
                       {getInvoiceStatusBadge(inv.status)}
                     </div>
                     <div className="flex items-center justify-between text-xs pt-0.5">
                       <div className="min-w-0 pr-2">
-                        <span className="font-semibold text-gray-900 truncate block">
+                        <span className="font-semibold text-[#191E2B] truncate block">
                           {inv.shopId?.name || 'Merchant Store'}
                         </span>
-                        <span className="text-[11px] text-gray-500 font-normal truncate block">
+                        <span className="text-[11px] text-[#757F94] font-normal truncate block">
                           {inv.shopId?.email || 'Store Owner'} • {inv.createdAt ? formatDate(inv.createdAt) : 'Live'}
                         </span>
                       </div>
                       <div className="text-right shrink-0">
-                        <span className="font-semibold text-gray-900 text-xs sm:text-sm block">
+                        <span className="font-semibold text-[#191E2B] text-xs sm:text-sm block">
                           {formatCurrency(inv.amount)}
                         </span>
                         <span className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-semibold uppercase tracking-wide border mt-1 ${getPlanBadge(inv.planName || inv.shopId?.subscriptionPlan)}`}>
@@ -1078,7 +1078,7 @@ const AdminDashboard = () => {
                */}
               <div className="hidden sm:block overflow-x-auto flex-1">
                 <table className="w-full text-left whitespace-nowrap">
-                  <thead className="bg-gray-50/80 border-b border-gray-200 font-semibold text-gray-500 uppercase text-[11px] tracking-wider">
+                  <thead className="bg-[#F0F2F6]/80 border-b border-[#DCE1EA] font-semibold text-[#757F94] uppercase text-[11px] tracking-wider">
                     <tr>
                       <th className="py-3 px-3.5">Payment ID</th>
                       <th className="py-3 px-3.5">Merchant Store</th>
@@ -1089,20 +1089,20 @@ const AdminDashboard = () => {
                   </thead>
                   <tbody className="divide-y divide-gray-100 font-medium text-xs">
                     {recentInvoices.map((inv) => (
-                      <tr key={inv._id} className="hover:bg-gray-50/60 transition-colors">
+                      <tr key={inv._id} className="hover:bg-[#F0F2F6]/60 transition-colors">
                         <td className="py-3 px-3.5 align-middle">
-                          <div className="font-mono text-xs font-semibold text-[#093C5D]">
+                          <div className="font-mono text-xs font-semibold text-[#4338CA]">
                             {inv.razorpayPaymentId || `#INV-${inv._id.toString().slice(-6).toUpperCase()}`}
                           </div>
-                          <div className="text-[11px] text-gray-500 font-normal">
+                          <div className="text-[11px] text-[#757F94] font-normal">
                             {inv.createdAt ? formatDate(inv.createdAt) : 'Live'}
                           </div>
                         </td>
                         <td className="py-3 px-3.5 align-middle">
-                          <div className="font-semibold text-xs text-gray-900 truncate max-w-[120px] lg:max-w-[140px]" title={inv.shopId?.name || 'Merchant Store'}>
+                          <div className="font-semibold text-xs text-[#191E2B] truncate max-w-[120px] lg:max-w-[140px]" title={inv.shopId?.name || 'Merchant Store'}>
                             {inv.shopId?.name || 'Merchant Store'}
                           </div>
-                          <div className="text-[11px] text-gray-500 font-normal truncate max-w-[120px] lg:max-w-[140px]" title={inv.shopId?.email || '-'}>
+                          <div className="text-[11px] text-[#757F94] font-normal truncate max-w-[120px] lg:max-w-[140px]" title={inv.shopId?.email || '-'}>
                             {inv.shopId?.email || '-'}
                           </div>
                         </td>
@@ -1111,7 +1111,7 @@ const AdminDashboard = () => {
                             {inv.planName || inv.shopId?.subscriptionPlan || 'PRO'}
                           </span>
                         </td>
-                        <td className="py-3 px-3.5 align-middle text-right font-semibold text-gray-900">
+                        <td className="py-3 px-3.5 align-middle text-right font-semibold text-[#191E2B]">
                           {formatCurrency(inv.amount)}
                         </td>
                         <td className="py-3 px-3.5 align-middle text-center">
@@ -1127,7 +1127,7 @@ const AdminDashboard = () => {
                * Invoice Card Footer
                * Displays total invoice count indicator.
                */}
-              <div className="p-3 sm:px-4 bg-gray-50/60 border-t border-gray-200 flex items-center text-xs text-gray-500 font-medium">
+              <div className="p-3 sm:px-4 bg-[#F0F2F6]/60 border-t border-[#DCE1EA] flex items-center text-xs text-[#757F94] font-medium">
                 <span>Showing {recentInvoices.length} recent subscription {recentInvoices.length === 1 ? 'receipt' : 'receipts'}</span>
               </div>
             </>

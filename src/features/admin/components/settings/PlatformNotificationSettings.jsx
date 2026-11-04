@@ -59,10 +59,10 @@ const PlatformNotificationSettings = ({ settings, onUpdate, isUpdating }) => {
        * Admin Alert Preferences Card Section
        * Toggle switches for merchant registration, subscription, email, and WhatsApp notifications.
        */}
-      <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
-        <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
-          <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Notifications & Alerts')}</h2>
-          <p className="text-xs text-gray-500 mt-0.5">{t('Control automated messages and administrative alerts')}</p>
+      <section className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] overflow-hidden shadow-none">
+        <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2]">
+          <h2 className="text-base md:text-lg font-semibold text-[#191E2B]">{t('Notifications & Alerts')}</h2>
+          <p className="text-xs text-[#757F94] mt-0.5">{t('Control automated messages and administrative alerts')}</p>
         </div>
 
         <div className="px-4 sm:px-5 md:px-6 py-2 sm:py-3 space-y-0">

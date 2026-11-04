@@ -71,10 +71,10 @@ const AdminSecuritySettings = () => {
        * Change Admin Password Card Section
        * Form card for rotating administrative credentials securely.
        */}
-      <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
-        <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
-          <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Change Admin Password')}</h2>
-          <p className="text-xs text-gray-500 mt-0.5">{t('Update credentials used to access the administrative control panel')}</p>
+      <section className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] overflow-hidden shadow-none">
+        <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2]">
+          <h2 className="text-base md:text-lg font-semibold text-[#191E2B]">{t('Change Admin Password')}</h2>
+          <p className="text-xs text-[#757F94] mt-0.5">{t('Update credentials used to access the administrative control panel')}</p>
         </div>
 
         <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
@@ -84,7 +84,7 @@ const AdminSecuritySettings = () => {
              * Validates active credential authenticity before allowing changes.
              */}
             <div>
-              <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+              <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
                 {t('Current Password')} <span className="text-red-500">*</span>
               </label>
               <div className="relative">
@@ -95,12 +95,12 @@ const AdminSecuritySettings = () => {
                   onChange={handlePasswordChange}
                   required
                   placeholder={t('Enter current password')}
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 pr-10 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 pr-10 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                 />
                 <button
                   type="button"
                   onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                  className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 cursor-pointer"
+                  className="absolute right-3 top-3 text-[#757F94] hover:text-[#4E5668] cursor-pointer"
                 >
                   {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -112,7 +112,7 @@ const AdminSecuritySettings = () => {
              * Captures new master credential meeting minimum complexity rules.
              */}
             <div>
-              <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+              <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
                 {t('New Password')} <span className="text-red-500">*</span>
               </label>
               <div className="relative">
@@ -123,12 +123,12 @@ const AdminSecuritySettings = () => {
                   onChange={handlePasswordChange}
                   required
                   placeholder={t('Min 6 characters')}
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 pr-10 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 pr-10 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                 />
                 <button
                   type="button"
                   onClick={() => setShowNewPassword(!showNewPassword)}
-                  className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 cursor-pointer"
+                  className="absolute right-3 top-3 text-[#757F94] hover:text-[#4E5668] cursor-pointer"
                 >
                   {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -140,7 +140,7 @@ const AdminSecuritySettings = () => {
              * Verifies match consistency to prevent accidental typos.
              */}
             <div>
-              <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+              <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
                 {t('Confirm New Password')} <span className="text-red-500">*</span>
               </label>
               <input
@@ -152,12 +152,12 @@ const AdminSecuritySettings = () => {
                 placeholder={t('Confirm new password')}
                 className={`block w-full rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${
                   passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword
-                    ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
+                    ? 'border-red-300 focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
                     : passwordData.confirmPassword &&
                       passwordData.newPassword === passwordData.confirmPassword &&
                       passwordData.newPassword.length >= 6
-                    ? 'border-green-300 focus:ring-green-500 focus:border-green-500'
-                    : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'
+                    ? 'border-green-300 focus:ring-2 focus:ring-[#0D7A57]/20 focus:border-[#0D7A57]'
+                    : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'
                 }`}
               />
               {passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword && (
@@ -179,7 +179,7 @@ const AdminSecuritySettings = () => {
               <button
                 type="submit"
                 disabled={isChangingPassword || !isFormValid}
-                className={`cursor-pointer bg-[#093C5D] text-white px-8 py-2 sm:py-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold text-sm w-full sm:w-auto active:scale-[0.98] transition-colors duration-300 ${
+                className={`cursor-pointer bg-[#4338CA] text-white px-8 py-2 sm:py-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold text-sm w-full sm:w-auto active:scale-[0.98] transition-colors duration-300 ${
                   isChangingPassword || !isFormValid ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#072d46]'
                 }`}
               >

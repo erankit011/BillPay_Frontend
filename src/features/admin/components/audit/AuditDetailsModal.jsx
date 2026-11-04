@@ -84,7 +84,7 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
        * Darkened modal background overlay closing the view on backdrop click.
        */}
       <div
-        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
+        className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
         onWheel={(e) => e.preventDefault()}
         onTouchMove={(e) => e.preventDefault()}
@@ -96,14 +96,14 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div
-          className="relative w-full sm:max-w-3xl bg-white rounded-t-2xl sm:rounded-xl border border-gray-200 animate-modal-content overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[88vh] pointer-events-auto shadow-2xl sm:shadow-xl"
+          className="relative w-full sm:max-w-3xl bg-[#FFFFFF] rounded-t-2xl sm:rounded-xl border border-[#DCE1EA] animate-modal-content overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[88vh] pointer-events-auto shadow-2xl sm:shadow-xl"
           onClick={(e) => e.stopPropagation()}
         >
           {/**
            * Mobile Drag Handle
            * Visual drag pill handle displayed on mobile touch screens.
            */}
-          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-gray-50/70">
+          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#F0F2F6]/70">
             <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
           </div>
 
@@ -111,19 +111,19 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
            * Audit Log Header
            * Displays security icon, formatted action name, category badge, and log ID.
            */}
-          <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-gray-200 bg-gray-50/70 flex-shrink-0 gap-3">
+          <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-[#DCE1EA] bg-[#F0F2F6]/70 flex-shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
-              <div className="w-10 h-10 rounded bg-[#093C5D]/10 border border-[#093C5D]/20 text-[#093C5D] flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded bg-[#EEF0FB] border border-[#D8DCF5] text-[#4338CA] flex items-center justify-center shrink-0">
                 <Shield className="w-5 h-5" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-snug truncate">
+                  <h3 className="text-base sm:text-lg font-semibold text-[#191E2B] leading-snug truncate">
                     {formatActionName(log.action)}
                   </h3>
                   <AuditCategoryBadge category={log.actionCategory} size="xs" />
                 </div>
-                <p className="text-xs text-gray-500 font-mono mt-0.5 truncate">
+                <p className="text-xs text-[#757F94] font-mono mt-0.5 truncate">
                   Audit ID: {log._id}
                 </p>
               </div>
@@ -131,7 +131,7 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200 ml-auto"
+              className="cursor-pointer text-[#757F94] bg-gray-100 hover:bg-gray-200 hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
               title="Close"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -152,22 +152,22 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
                * Executing Actor Card
                * Displays name, system role, email, and internal database identifier.
                */}
-              <div className="p-4 rounded-lg border border-gray-200 bg-gray-50/50 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  <User className="w-3.5 h-3.5 text-[#093C5D]" />
+              <div className="p-4 rounded-lg border border-[#DCE1EA] bg-[#F0F2F6]/50 space-y-2">
+                <div className="flex items-center gap-2 text-xs font-semibold text-[#757F94] uppercase tracking-wider">
+                  <User className="w-3.5 h-3.5 text-[#4338CA]" />
                   <span>Executing Actor</span>
                 </div>
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-gray-900">
+                    <span className="text-sm font-semibold text-[#191E2B]">
                       {log.actor?.name || 'Platform System'}
                     </span>
-                    <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-50 text-[#093C5D] border border-blue-200">
+                    <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5]">
                       {log.actor?.role || 'SYSTEM'}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 font-medium">{log.actor?.email || 'N/A'}</p>
-                  <p className="text-[11px] text-gray-400 font-mono truncate">
+                  <p className="text-xs text-[#757F94] font-medium">{log.actor?.email || 'N/A'}</p>
+                  <p className="text-[11px] text-[#757F94] font-mono truncate">
                     Actor ID: {log.actor?._id || 'N/A'}
                   </p>
                 </div>
@@ -177,21 +177,21 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
                * Target Resource Card
                * Identifies target name, category type, and underlying entity ID.
                */}
-              <div className="p-4 rounded-lg border border-gray-200 bg-gray-50/50 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <div className="p-4 rounded-lg border border-[#DCE1EA] bg-[#F0F2F6]/50 space-y-2">
+                <div className="flex items-center gap-2 text-xs font-semibold text-[#757F94] uppercase tracking-wider">
                   <Target className="w-3.5 h-3.5 text-emerald-500" />
                   <span>Target Resource</span>
                 </div>
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-gray-900">
+                    <span className="text-sm font-semibold text-[#191E2B]">
                       {log.targetName || log.targetType || 'System Platform'}
                     </span>
                     <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                       {log.targetType || 'General'}
                     </span>
                   </div>
-                  <p className="text-[11px] text-gray-400 font-mono truncate">
+                  <p className="text-[11px] text-[#757F94] font-mono truncate">
                     Target ID: {log.targetId || 'N/A'}
                   </p>
                 </div>
@@ -202,29 +202,29 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
              * Network & Client Fingerprint
              * Captures IP address, localized timestamp, and raw user-agent string.
              */}
-            <div className="p-4 rounded-lg border border-gray-200 bg-gray-50/50 space-y-3">
-              <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            <div className="p-4 rounded-lg border border-[#DCE1EA] bg-[#F0F2F6]/50 space-y-3">
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#757F94] uppercase tracking-wider">
                 <Globe className="w-3.5 h-3.5 text-sky-500" />
                 <span>Network & Client Fingerprint</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div>
-                  <span className="text-gray-400 block mb-0.5">IP Address</span>
-                  <span className="font-mono font-medium text-gray-800 bg-white px-2 py-1 rounded border border-gray-200 inline-block">
+                  <span className="text-[#757F94] block mb-0.5">IP Address</span>
+                  <span className="font-mono font-medium text-[#191E2B] bg-[#FFFFFF] px-2 py-1 rounded border border-[#DCE1EA] inline-block">
                     {log.ipAddress || '127.0.0.1'}
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Timestamp (IST)</span>
-                  <div className="flex items-center gap-1.5 font-medium text-gray-800">
-                    <Clock className="w-3.5 h-3.5 text-gray-400" />
+                  <span className="text-[#757F94] block mb-0.5">Timestamp (IST)</span>
+                  <div className="flex items-center gap-1.5 font-medium text-[#191E2B]">
+                    <Clock className="w-3.5 h-3.5 text-[#757F94]" />
                     <span>{formattedDate}</span>
                   </div>
                 </div>
                 <div className="sm:col-span-2">
-                  <span className="text-gray-400 block mb-0.5">Client User-Agent</span>
-                  <div className="flex items-start gap-1.5 text-gray-600 bg-white p-2 rounded border border-gray-200 font-mono text-[11px] break-all">
-                    <Laptop className="w-3.5 h-3.5 text-gray-400 mt-0.5 shrink-0" />
+                  <span className="text-[#757F94] block mb-0.5">Client User-Agent</span>
+                  <div className="flex items-start gap-1.5 text-[#4E5668] bg-[#FFFFFF] p-2 rounded border border-[#DCE1EA] font-mono text-[11px] break-all">
+                    <Laptop className="w-3.5 h-3.5 text-[#757F94] mt-0.5 shrink-0" />
                     <span>{log.userAgent || 'Unknown User-Agent'}</span>
                   </div>
                 </div>
@@ -237,14 +237,14 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
              */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                <div className="flex items-center gap-2 text-xs font-semibold text-[#4E5668] uppercase tracking-wider">
                   <FileCode className="w-4 h-4 text-purple-500" />
                   <span>Event Mutation Details & Payload</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => copyToClipboard(log.details || {}, 'details')}
-                  className="cursor-pointer flex items-center gap-1 text-xs text-[#093C5D] hover:underline font-semibold transition-colors"
+                  className="cursor-pointer flex items-center gap-1 text-xs text-[#4338CA] hover:underline font-semibold transition-colors"
                 >
                   {copiedKey === 'details' ? (
                     <>
@@ -274,11 +274,11 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
            * Modal Action Footer
            * Controls to copy log ID to clipboard and dismiss the modal dialog.
            */}
-          <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+          <div className="px-6 py-4 bg-[#F0F2F6] border-t border-[#E8ECF2] flex items-center justify-between">
             <button
               type="button"
               onClick={() => copyToClipboard(log._id, 'id')}
-              className="cursor-pointer flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-800 transition-colors font-medium"
+              className="cursor-pointer flex items-center gap-1.5 text-xs text-[#757F94] hover:text-[#191E2B] transition-colors font-medium"
             >
               {copiedKey === 'id' ? (
                 <Check className="w-3.5 h-3.5 text-emerald-600" />
@@ -290,7 +290,7 @@ const AuditDetailsModal = ({ isOpen, log, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded text-xs sm:text-sm transition-colors"
+              className="cursor-pointer px-4 py-2 bg-gray-200 hover:bg-gray-300 text-[#191E2B] font-semibold rounded text-xs sm:text-sm transition-colors"
             >
               Close
             </button>

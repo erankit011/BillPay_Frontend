@@ -42,7 +42,7 @@ const getPlanBadge = (plan) => {
     case 'MONTHLY':
       return 'bg-green-50 text-green-700 border-green-200';
     default:
-      return 'bg-blue-50 text-blue-700 border-blue-200';
+      return 'bg-blue-50 text-blue-700 border-[#D8DCF5]';
   }
 };
 
@@ -166,10 +166,10 @@ const AdminReports = () => {
        */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B] tracking-tight">
             Merchant Store Analytics & Performance Reports
           </h1>
-          <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
+          <p className="text-[#4E5668] text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
             In-depth breakdown of merchant store sales turnover, bills issued, customer udhar credit recovery, settlement modes, and top performing stores.
           </p>
         </div>
@@ -211,12 +211,12 @@ const AdminReports = () => {
       </div>
 
       {isLoading ? (
-        <div className="py-24 flex flex-col items-center justify-center text-gray-500 gap-3 bg-white border border-gray-200 rounded-lg shadow-none">
-          <SwirlingLoader className="w-8 h-8 text-[#093C5D]" />
+        <div className="py-24 flex flex-col items-center justify-center text-[#757F94] gap-3 bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg shadow-none">
+          <SwirlingLoader className="w-8 h-8 text-[#4338CA]" />
           <p className="text-xs sm:text-sm font-medium">Generating store financial reports...</p>
         </div>
       ) : isError ? (
-        <div className="py-16 text-center text-rose-600 bg-white border border-gray-200 rounded-lg shadow-none">
+        <div className="py-16 text-center text-rose-600 bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg shadow-none">
           <AlertCircle className="w-8 h-8 mx-auto mb-2" />
           <p className="text-sm font-semibold">Failed to generate store reports</p>
         </div>
@@ -231,20 +231,20 @@ const AdminReports = () => {
              * Monthly Store Sales & Collections Trend
              * Displays comparative area chart of billed sales versus payments collected.
              */}
-            <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-none">
+            <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-5 shadow-none">
               <div className="mb-4">
-                <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-[#093C5D]" />
+                <h3 className="text-base font-semibold text-[#191E2B] flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-[#4338CA]" />
                   Monthly Store Sales & Collections Trend
                 </h3>
-                <p className="text-xs font-medium text-gray-500 mt-0.5">
+                <p className="text-xs font-medium text-[#757F94] mt-0.5">
                   Gross billed sales turnover compared with direct invoice collections across stores
                 </p>
               </div>
 
               <div className="h-64 w-full">
                 {gmvChartData.length === 0 ? (
-                  <div className="h-full flex items-center justify-center text-xs text-gray-400">
+                  <div className="h-full flex items-center justify-center text-xs text-[#757F94]">
                     No billing activity recorded in this period
                   </div>
                 ) : (
@@ -252,8 +252,8 @@ const AdminReports = () => {
                     <AreaChart data={gmvChartData} margin={{ top: 12, right: 10, left: -10, bottom: 0 }}>
                       <defs>
                         <linearGradient id="gmvGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#093C5D" stopOpacity={0.25} />
-                          <stop offset="95%" stopColor="#093C5D" stopOpacity={0} />
+                          <stop offset="5%" stopColor="#4338CA" stopOpacity={0.25} />
+                          <stop offset="95%" stopColor="#4338CA" stopOpacity={0} />
                         </linearGradient>
                         <linearGradient id="paidGradient" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="#10B981" stopOpacity={0.25} />
@@ -288,7 +288,7 @@ const AdminReports = () => {
                           boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                           color: '#111827'
                         }}
-                        labelStyle={{ color: '#093C5D', fontWeight: 600, marginBottom: '4px' }}
+                        labelStyle={{ color: '#4338CA', fontWeight: 600, marginBottom: '4px' }}
                         labelFormatter={(label) => formatMonthFull(label)}
                       />
                       <Legend
@@ -299,9 +299,9 @@ const AdminReports = () => {
                         type="monotone"
                         dataKey="GMV"
                         name="GMV"
-                        stroke="#093C5D"
+                        stroke="#4338CA"
                         strokeWidth={2.5}
-                        dot={{ r: 3, fill: '#093C5D' }}
+                        dot={{ r: 3, fill: '#4338CA' }}
                         activeDot={{ r: 5 }}
                         fillOpacity={1}
                         fill="url(#gmvGradient)"
@@ -327,20 +327,20 @@ const AdminReports = () => {
              * Monthly Store Bills Issued Trend
              * Displays bar chart representing count of invoices generated each month.
              */}
-            <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-none">
+            <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-5 shadow-none">
               <div className="mb-4">
-                <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                  <Receipt className="w-4 h-4 text-[#093C5D]" />
+                <h3 className="text-base font-semibold text-[#191E2B] flex items-center gap-2">
+                  <Receipt className="w-4 h-4 text-[#4338CA]" />
                   Monthly Store Bills Issued
                 </h3>
-                <p className="text-xs font-medium text-gray-500 mt-0.5">
+                <p className="text-xs font-medium text-[#757F94] mt-0.5">
                   Total count of customer invoice bills generated each month across stores
                 </p>
               </div>
 
               <div className="h-64 w-full">
                 {gmvChartData.length === 0 ? (
-                  <div className="h-full flex items-center justify-center text-xs text-gray-400">
+                  <div className="h-full flex items-center justify-center text-xs text-[#757F94]">
                     No billing records recorded in this period
                   </div>
                 ) : (
@@ -373,13 +373,13 @@ const AdminReports = () => {
                           boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                           color: '#111827'
                         }}
-                        labelStyle={{ color: '#093C5D', fontWeight: 600, marginBottom: '4px' }}
+                        labelStyle={{ color: '#4338CA', fontWeight: 600, marginBottom: '4px' }}
                         labelFormatter={(label) => formatMonthFull(label)}
                       />
                       <Bar
                         dataKey="Bills"
                         name="Bills Issued"
-                        fill="#093C5D"
+                        fill="#4338CA"
                         radius={[6, 6, 0, 0]}
                         maxBarSize={44}
                       />
@@ -399,20 +399,20 @@ const AdminReports = () => {
              * Payment Modes Distribution
              * Visualizes volume and transaction count distribution by payment method.
              */}
-            <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-5 lg:col-span-1 shadow-none flex flex-col justify-between">
+            <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-4 sm:p-5 lg:col-span-1 shadow-none flex flex-col justify-between">
               <div>
                 <div className="mb-3.5">
-                  <h3 className="text-sm sm:text-base font-semibold text-gray-900 flex items-center gap-2">
-                    <CreditCard className="w-4 h-4 text-[#093C5D]" />
+                  <h3 className="text-sm sm:text-base font-semibold text-[#191E2B] flex items-center gap-2">
+                    <CreditCard className="w-4 h-4 text-[#4338CA]" />
                     Settlement Modes Breakdown
                   </h3>
-                  <p className="text-xs text-gray-500 mt-0.5 font-medium">
+                  <p className="text-xs text-[#757F94] mt-0.5 font-medium">
                     Distribution of store sales by payment method (Cash, UPI, Credit)
                   </p>
                 </div>
 
                 {paymentModes.length === 0 ? (
-                  <div className="py-8 text-center text-xs text-gray-400 font-medium">
+                  <div className="py-8 text-center text-xs text-[#757F94] font-medium">
                     No transaction settlement data recorded yet
                   </div>
                 ) : (
@@ -420,20 +420,20 @@ const AdminReports = () => {
                     {paymentModes.map((m) => (
                       <div
                         key={m._id}
-                        className="p-3 bg-gray-50/70 hover:bg-gray-50 border border-gray-200/80 rounded-lg flex items-center justify-between transition-colors"
+                        className="p-3 bg-[#F0F2F6]/70 hover:bg-[#F0F2F6] border border-[#DCE1EA]/80 rounded-lg flex items-center justify-between transition-colors"
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
                           <span className={`w-2 h-2 rounded-full shrink-0 ${getPaymentModeColor(m._id)}`} />
                           <div className="min-w-0">
-                            <span className="text-xs font-semibold text-gray-800 tracking-wide block truncate">
+                            <span className="text-xs font-semibold text-[#191E2B] tracking-wide block truncate">
                               {formatPaymentMode(m._id)}
                             </span>
-                            <p className="text-[11px] text-gray-500 font-medium mt-0.5">
+                            <p className="text-[11px] text-[#757F94] font-medium mt-0.5">
                               {m.count} {m.count === 1 ? 'bill' : 'bills'} processed
                             </p>
                           </div>
                         </div>
-                        <span className="text-sm font-semibold text-gray-900 shrink-0 ml-2">
+                        <span className="text-sm font-semibold text-[#191E2B] shrink-0 ml-2">
                           {formatCurrency(m.volume || 0)}
                         </span>
                       </div>
@@ -447,19 +447,19 @@ const AdminReports = () => {
              * Top Performing Stores Ranking
              * High-volume merchants driving sales volume across the platform.
              */}
-            <div className="bg-white border border-gray-200 rounded-lg p-4 sm:p-5 lg:col-span-2 shadow-none">
+            <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-4 sm:p-5 lg:col-span-2 shadow-none">
               <div className="mb-3.5">
-                <h3 className="text-sm sm:text-base font-semibold text-gray-900 flex items-center gap-2">
-                  <Store className="w-4 h-4 text-[#093C5D]" />
+                <h3 className="text-sm sm:text-base font-semibold text-[#191E2B] flex items-center gap-2">
+                  <Store className="w-4 h-4 text-[#4338CA]" />
                   Top Performing Stores by Sales
                 </h3>
-                <p className="text-xs text-gray-500 mt-0.5 font-medium">
+                <p className="text-xs text-[#757F94] mt-0.5 font-medium">
                   Merchant businesses driving highest sales volume across UdharPay
                 </p>
               </div>
 
               {topShops.length === 0 ? (
-                <div className="py-12 text-center text-xs text-gray-400 font-medium">
+                <div className="py-12 text-center text-xs text-[#757F94] font-medium">
                   No merchant transactions logged yet
                 </div>
               ) : (
@@ -471,7 +471,7 @@ const AdminReports = () => {
                   <div className="hidden sm:block overflow-x-auto">
                     <table className="w-full text-left text-xs border-collapse whitespace-nowrap">
                       <thead>
-                        <tr className="bg-gray-50/80 border-b border-gray-200 font-semibold text-gray-500 uppercase text-[11px]">
+                        <tr className="bg-[#F0F2F6]/80 border-b border-[#DCE1EA] font-semibold text-[#757F94] uppercase text-[11px]">
                           <th className="py-3 px-3.5 tracking-wider">Store & Business</th>
                           <th className="py-3 px-3.5 tracking-wider">Merchant Owner</th>
                           <th className="py-3 px-3.5 text-center tracking-wider">Plan</th>
@@ -481,17 +481,17 @@ const AdminReports = () => {
                       </thead>
                       <tbody className="divide-y divide-gray-100 font-medium">
                         {topShops.map((shop) => (
-                          <tr key={shop.shopId} className="hover:bg-gray-50/60 transition-colors">
+                          <tr key={shop.shopId} className="hover:bg-[#F0F2F6]/60 transition-colors">
                             {/**
                              * Store Identity Column
                              * Renders merchant brand avatar and business name.
                              */}
                             <td className="py-3 px-3.5 align-middle">
                               <div className="flex items-center gap-2.5">
-                                <div className="w-8 h-8 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#093C5D] shrink-0">
+                                <div className="w-8 h-8 rounded-lg border border-[#DCE1EA] bg-[#EEF0FB] flex items-center justify-center text-xs font-semibold text-[#4338CA] shrink-0">
                                   {getInitials(shop.shopName)}
                                 </div>
-                                <span className="font-semibold text-sm text-[#093C5D] truncate max-w-[200px]" title={shop.shopName}>
+                                <span className="font-semibold text-sm text-[#4338CA] truncate max-w-[200px]" title={shop.shopName}>
                                   {shop.shopName}
                                 </span>
                               </div>
@@ -502,10 +502,10 @@ const AdminReports = () => {
                              * Shows owner display name and contact email.
                              */}
                             <td className="py-3 px-3.5 align-middle">
-                              <div className="font-semibold text-xs sm:text-sm text-gray-900 truncate max-w-[170px]" title={shop.merchantName}>
+                              <div className="font-semibold text-xs sm:text-sm text-[#191E2B] truncate max-w-[170px]" title={shop.merchantName}>
                                 {shop.merchantName}
                               </div>
-                              <span className="text-[11px] text-gray-500 font-normal block truncate max-w-[170px]" title={shop.merchantEmail}>
+                              <span className="text-[11px] text-[#757F94] font-normal block truncate max-w-[170px]" title={shop.merchantEmail}>
                                 {shop.merchantEmail || 'N/A'}
                               </span>
                             </td>
@@ -528,7 +528,7 @@ const AdminReports = () => {
                              * Invoices Count Column
                              * Shows total number of bills generated by merchant.
                              */}
-                            <td className="py-3 px-3.5 align-middle text-center text-gray-800 font-semibold text-xs sm:text-sm">
+                            <td className="py-3 px-3.5 align-middle text-center text-[#191E2B] font-semibold text-xs sm:text-sm">
                               {shop.billsCount}
                             </td>
 
@@ -536,7 +536,7 @@ const AdminReports = () => {
                              * Total GMV Column
                              * Formatted aggregate gross sales turnover for the store.
                              */}
-                            <td className="py-3 px-3.5 align-middle text-right font-semibold text-gray-900 text-sm">
+                            <td className="py-3 px-3.5 align-middle text-right font-semibold text-[#191E2B] text-sm">
                               {formatCurrency(shop.totalGMV)}
                             </td>
                           </tr>
@@ -553,18 +553,18 @@ const AdminReports = () => {
                     {topShops.map((shop) => (
                       <div
                         key={shop.shopId}
-                        className="bg-gray-50/70 border border-gray-200/80 rounded-lg p-3 space-y-2.5"
+                        className="bg-[#F0F2F6]/70 border border-[#DCE1EA]/80 rounded-lg p-3 space-y-2.5"
                       >
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2.5 min-w-0">
-                            <div className="w-8 h-8 rounded-lg border border-gray-200 bg-[#F5F5F5] flex items-center justify-center text-xs font-semibold text-[#093C5D] shrink-0">
+                            <div className="w-8 h-8 rounded-lg border border-[#DCE1EA] bg-[#EEF0FB] flex items-center justify-center text-xs font-semibold text-[#4338CA] shrink-0">
                               {getInitials(shop.shopName)}
                             </div>
                             <div className="min-w-0">
-                              <h4 className="text-xs font-semibold text-[#093C5D] truncate" title={shop.shopName}>
+                              <h4 className="text-xs font-semibold text-[#4338CA] truncate" title={shop.shopName}>
                                 {shop.shopName}
                               </h4>
-                              <p className="text-[11px] text-gray-500 font-normal truncate">
+                              <p className="text-[11px] text-[#757F94] font-normal truncate">
                                 {shop.merchantName}
                               </p>
                             </div>
@@ -579,14 +579,14 @@ const AdminReports = () => {
                           </span>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-2 text-center pt-2 border-t border-gray-200/60">
-                          <div className="bg-white border border-gray-200 rounded py-1 px-1.5">
-                            <span className="text-[10px] font-semibold text-gray-500 uppercase block">Invoices</span>
-                            <span className="text-xs font-semibold text-gray-900">{shop.billsCount}</span>
+                        <div className="grid grid-cols-2 gap-2 text-center pt-2 border-t border-[#DCE1EA]/60">
+                          <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded py-1 px-1.5">
+                            <span className="text-[10px] font-semibold text-[#757F94] uppercase block">Invoices</span>
+                            <span className="text-xs font-semibold text-[#191E2B]">{shop.billsCount}</span>
                           </div>
-                          <div className="bg-white border border-gray-200 rounded py-1 px-1.5">
-                            <span className="text-[10px] font-semibold text-gray-500 uppercase block">Total GMV</span>
-                            <span className="text-xs font-semibold text-gray-900">{formatCurrency(shop.totalGMV)}</span>
+                          <div className="bg-[#FFFFFF] border border-[#DCE1EA] rounded py-1 px-1.5">
+                            <span className="text-[10px] font-semibold text-[#757F94] uppercase block">Total GMV</span>
+                            <span className="text-xs font-semibold text-[#191E2B]">{formatCurrency(shop.totalGMV)}</span>
                           </div>
                         </div>
                       </div>

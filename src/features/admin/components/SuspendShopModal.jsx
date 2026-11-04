@@ -62,7 +62,7 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
        * Darkened semi-transparent overlay blocking interaction with background.
        */}
       <div
-        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
+        className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
         onWheel={(e) => e.preventDefault()}
         onTouchMove={(e) => e.preventDefault()}
@@ -73,13 +73,13 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
        * Renders as responsive bottom drawer on mobile and centered dialog on sm+ screens.
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-[60] pointer-events-none">
-        <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
+        <div className="relative bg-[#FFFFFF] w-full sm:max-w-md rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
           
           {/**
            * Mobile Drag Affordance Handle
            * Visual indicator for touch gestures on mobile devices.
            */}
-          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-white">
+          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#FFFFFF]">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
           </div>
 
@@ -87,7 +87,7 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
            * Modal Header Toolbar
            * Shows status badge icon, dialog title, merchant name, and dismiss button.
            */}
-          <div className="px-5 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white flex-shrink-0 gap-3">
+          <div className="px-5 sm:px-6 py-4 border-b border-[#E8ECF2] flex items-center justify-between bg-[#FFFFFF] flex-shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div
                 className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border ${
@@ -103,10 +103,10 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-snug truncate">
+                <h3 className="text-base sm:text-lg font-semibold text-[#191E2B] leading-snug truncate">
                   {isSuspended ? 'Unsuspend Shop Account' : 'Suspend Shop Account'}
                 </h3>
-                <p className="text-xs text-gray-500 font-medium truncate mt-0.5">
+                <p className="text-xs text-[#757F94] font-medium truncate mt-0.5">
                   {shopDisplayName} {shop.email && `• ${shop.email}`}
                 </p>
               </div>
@@ -115,7 +115,7 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200 ml-auto"
+              className="cursor-pointer text-[#757F94] bg-gray-100 hover:bg-gray-200 hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
               title="Close"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -147,7 +147,7 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                    * Fast-selection badges for common violation categories.
                    */}
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                    <label className="block text-xs font-semibold text-[#4E5668] mb-1.5">
                       Select Common Reason
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
@@ -161,7 +161,7 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                             className={`cursor-pointer px-2.5 py-1.5 text-left text-[11px] sm:text-xs font-medium rounded-lg border transition-all active:scale-95 truncate ${
                               isSelected
                                 ? 'bg-rose-50 text-rose-800 border-rose-300 ring-1 ring-rose-200 font-semibold'
-                                : 'bg-gray-50/70 hover:bg-gray-100 text-gray-700 border-gray-200'
+                                : 'bg-[#F0F2F6]/70 hover:bg-gray-100 text-[#4E5668] border-[#DCE1EA]'
                             }`}
                             title={opt}
                           >
@@ -177,7 +177,7 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                    * Detailed notes entered by admin and displayed in audit logs.
                    */}
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    <label className="block text-xs font-semibold text-[#4E5668] mb-1">
                       Reason Details (Visible in logs & support)
                     </label>
                     <textarea
@@ -185,7 +185,7 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                       value={reason}
                       onChange={(e) => setReason(e.target.value)}
                       placeholder="Select an option above or enter custom reason..."
-                      className="w-full text-xs sm:text-sm border border-gray-300 rounded-lg p-2.5 focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] shadow-none resize-none"
+                      className="w-full text-xs sm:text-sm border border-[#DCE1EA] rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C] shadow-none resize-none"
                       required
                     />
                   </div>
@@ -197,11 +197,11 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                   </div>
 
                   {shop.suspendedReason && (
-                    <div className="p-3 bg-gray-50 border border-gray-200 rounded-lg text-xs">
-                      <span className="text-gray-500 font-medium block text-[11px] uppercase tracking-wider mb-0.5">
+                    <div className="p-3 bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg text-xs">
+                      <span className="text-[#757F94] font-medium block text-[11px] uppercase tracking-wider mb-0.5">
                         Previous Suspension Reason
                       </span>
-                      <span className="font-semibold text-gray-800">
+                      <span className="font-semibold text-[#191E2B]">
                         {shop.suspendedReason}
                       </span>
                     </div>
@@ -214,12 +214,12 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
              * Modal Action Footer Controls
              * Confirms or cancels suspension status toggle with loading feedback.
              */}
-            <div className="px-4 sm:px-5 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-end gap-2.5 flex-shrink-0">
+            <div className="px-4 sm:px-5 py-3.5 bg-[#F0F2F6] border-t border-[#DCE1EA] flex items-center justify-end gap-2.5 flex-shrink-0">
               <button
                 type="button"
                 onClick={onClose}
                 disabled={isLoading}
-                className="cursor-pointer h-10 px-4 sm:px-5 text-xs sm:text-sm font-semibold text-gray-700 bg-white hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors active:scale-95 inline-flex items-center justify-center flex-1 sm:flex-initial"
+                className="cursor-pointer h-10 px-4 sm:px-5 text-xs sm:text-sm font-semibold text-[#4E5668] bg-[#FFFFFF] hover:bg-gray-100 border border-[#DCE1EA] rounded-lg transition-colors active:scale-95 inline-flex items-center justify-center flex-1 sm:flex-initial"
               >
                 Cancel
               </button>

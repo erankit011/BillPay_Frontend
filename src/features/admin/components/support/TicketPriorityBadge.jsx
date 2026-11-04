@@ -33,9 +33,9 @@ const PRIORITY_CONFIG = {
   },
   LOW: {
     label: 'Low',
-    bg: 'bg-gray-50',
-    text: 'text-gray-600',
-    border: 'border-gray-200',
+    bg: 'bg-[#F0F2F6]',
+    text: 'text-[#4E5668]',
+    border: 'border-[#DCE1EA]',
     icon: ArrowDown,
   },
 };

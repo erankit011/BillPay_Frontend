@@ -59,23 +59,23 @@ const PlatformMaintenanceSettings = ({ settings, onUpdate, isUpdating }) => {
        * Maintenance Mode Card Section
        * Global operational kill-switch and public notice banner configuration.
        */}
-      <section className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-none">
-        <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+      <section className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] overflow-hidden shadow-none">
+        <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2] flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center shrink-0 border ${
               formData.isMaintenanceMode
                 ? 'bg-amber-50 text-amber-700 border-amber-200'
-                : 'bg-[#093C5D]/10 text-[#093C5D] border-[#093C5D]/20'
+                : 'bg-[#EEF0FB] text-[#4338CA] border-[#D8DCF5]'
             }`}>
               {formData.isMaintenanceMode ? (
                 <AlertTriangle className="w-5 h-5 text-amber-600" />
               ) : (
-                <Wrench className="w-5 h-5 text-[#093C5D]" />
+                <Wrench className="w-5 h-5 text-[#4338CA]" />
               )}
             </div>
             <div>
-              <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Platform Maintenance Mode')}</h2>
-              <p className="text-xs text-gray-500 mt-0.5">{t('Control system maintenance and merchant lockdown notice')}</p>
+              <h2 className="text-base md:text-lg font-semibold text-[#191E2B]">{t('Platform Maintenance Mode')}</h2>
+              <p className="text-xs text-[#757F94] mt-0.5">{t('Control system maintenance and merchant lockdown notice')}</p>
             </div>
           </div>
 
@@ -98,9 +98,9 @@ const PlatformMaintenanceSettings = ({ settings, onUpdate, isUpdating }) => {
           />
 
           {formData.isMaintenanceMode && (
-            <div className="pt-4 border-t border-gray-100 space-y-4">
+            <div className="pt-4 border-t border-[#E8ECF2] space-y-4">
               <div>
-                <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
                   {t('Public Maintenance Notice Message')}
                 </label>
                 <textarea
@@ -109,9 +109,9 @@ const PlatformMaintenanceSettings = ({ settings, onUpdate, isUpdating }) => {
                   value={formData.maintenanceMessage}
                   onChange={handleChange}
                   placeholder={t('Platform is currently undergoing scheduled system maintenance. Please check back shortly.')}
-                  className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] resize-none"
+                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
                 />
-                <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">
+                <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">
                   {t('This message will be shown prominently to all storekeepers and visitors')}
                 </p>
               </div>

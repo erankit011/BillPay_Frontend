@@ -148,7 +148,7 @@ const TicketDetailsModal = ({
        * Darkened semi-transparent overlay intercepting outside clicks.
        */}
       <div
-        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
+        className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
         onWheel={(e) => e.preventDefault()}
         onTouchMove={(e) => e.preventDefault()}
@@ -160,14 +160,14 @@ const TicketDetailsModal = ({
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div
-          className="relative w-full sm:max-w-3xl bg-white rounded-t-2xl sm:rounded-xl border border-gray-200 animate-modal-content overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[88vh] pointer-events-auto shadow-2xl sm:shadow-xl"
+          className="relative w-full sm:max-w-3xl bg-[#FFFFFF] rounded-t-2xl sm:rounded-xl border border-[#DCE1EA] animate-modal-content overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[88vh] pointer-events-auto shadow-2xl sm:shadow-xl"
           onClick={(e) => e.stopPropagation()}
         >
           {/**
            * Mobile Drag Affordance Handle
            * Visual indicator for mobile sheet gestures.
            */}
-          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-gray-50/80">
+          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#F0F2F6]/80">
             <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
           </div>
 
@@ -175,9 +175,9 @@ const TicketDetailsModal = ({
            * Ticket Modal Header
            * Shows ticket reference ID, status pill, priority indicator, and close button.
            */}
-          <div className="px-5 sm:px-6 py-4 border-b border-gray-200 bg-gray-50/80 flex items-center justify-between shrink-0 gap-3">
+          <div className="px-5 sm:px-6 py-4 border-b border-[#DCE1EA] bg-[#F0F2F6]/80 flex items-center justify-between shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
-              <span className="text-base font-semibold text-gray-900 tracking-tight">
+              <span className="text-base font-semibold text-[#191E2B] tracking-tight">
                 #{ticket.ticketId}
               </span>
               <TicketStatusBadge status={status} />
@@ -186,7 +186,7 @@ const TicketDetailsModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200 ml-auto"
+              className="cursor-pointer text-[#757F94] bg-gray-100 hover:bg-gray-200 hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
               title="Close"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -202,9 +202,9 @@ const TicketDetailsModal = ({
            * Top Ticket Submission Banner
            * Shows original creation date and resolution metadata when resolved.
            */}
-          <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-gray-500 bg-gray-50 p-3 rounded-lg border border-gray-200">
+          <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-[#757F94] bg-[#F0F2F6] p-3 rounded-lg border border-[#DCE1EA]">
             <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-gray-400" />
+              <Calendar className="w-4 h-4 text-[#757F94]" />
               <span>Submitted: {formatDate(ticket.createdAt)}</span>
             </div>
             {ticket.resolvedAt && (
@@ -222,33 +222,33 @@ const TicketDetailsModal = ({
            * Requester Identity Card
            * Displays contact details, store association, and subscriber plan badge.
            */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+          <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-4">
+            <h4 className="text-xs font-semibold text-[#757F94] uppercase tracking-wider mb-3">
               Requester Profile
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-              <div className="flex items-center gap-2.5 text-gray-800">
-                <User className="w-4 h-4 text-gray-400 shrink-0" />
-                <span className="font-medium text-gray-900">{ticket.name}</span>
+              <div className="flex items-center gap-2.5 text-[#191E2B]">
+                <User className="w-4 h-4 text-[#757F94] shrink-0" />
+                <span className="font-medium text-[#191E2B]">{ticket.name}</span>
                 {ticket.user && (
-                  <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
+                  <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-[#D8DCF5]">
                     Registered Merchant
                   </span>
                 )}
               </div>
 
-              <div className="flex items-center gap-2.5 text-gray-700">
-                <Mail className="w-4 h-4 text-gray-400 shrink-0" />
+              <div className="flex items-center gap-2.5 text-[#4E5668]">
+                <Mail className="w-4 h-4 text-[#757F94] shrink-0" />
                 <a
                   href={`mailto:${ticket.email}?subject=Re: [${ticket.ticketId}] ${ticket.subject}`}
-                  className="text-[#093C5D] hover:underline truncate"
+                  className="text-[#4338CA] hover:underline truncate"
                 >
                   {ticket.email}
                 </a>
                 <button
                   type="button"
                   onClick={handleCopyEmail}
-                  className="p-1 text-gray-400 hover:text-gray-700 rounded transition-colors"
+                  className="p-1 text-[#757F94] hover:text-[#4E5668] rounded transition-colors"
                   title="Copy email"
                 >
                   {copiedEmail ? (
@@ -260,11 +260,11 @@ const TicketDetailsModal = ({
               </div>
 
               {ticket.phone && (
-                <div className="flex items-center gap-2.5 text-gray-700">
-                  <Phone className="w-4 h-4 text-gray-400 shrink-0" />
+                <div className="flex items-center gap-2.5 text-[#4E5668]">
+                  <Phone className="w-4 h-4 text-[#757F94] shrink-0" />
                   <a
                     href={`tel:${ticket.phone}`}
-                    className="text-gray-700 hover:text-[#093C5D]"
+                    className="text-[#4E5668] hover:text-[#4338CA]"
                   >
                     {ticket.phone}
                   </a>
@@ -272,9 +272,9 @@ const TicketDetailsModal = ({
               )}
 
               {(ticket.shopName || ticket.user?.businessName) && (
-                <div className="flex items-center gap-2.5 text-gray-700">
-                  <Store className="w-4 h-4 text-gray-400 shrink-0" />
-                  <span className="text-gray-800 font-medium">
+                <div className="flex items-center gap-2.5 text-[#4E5668]">
+                  <Store className="w-4 h-4 text-[#757F94] shrink-0" />
+                  <span className="text-[#191E2B] font-medium">
                     Store: {ticket.shopName || ticket.user?.businessName}
                   </span>
                   {ticket.user?.subscriptionPlan && (
@@ -291,19 +291,19 @@ const TicketDetailsModal = ({
            * Inquiry Message Content Block
            * Displays ticket subject, classification tag, and full body text submitted by user.
            */}
-          <div className="bg-gray-50/60 rounded-lg border border-gray-200 p-4 space-y-2">
+          <div className="bg-[#F0F2F6]/60 rounded-lg border border-[#DCE1EA] p-4 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <span className="text-xs font-semibold text-[#757F94] uppercase tracking-wider">
                 Inquiry Subject
               </span>
-              <span className="text-xs font-medium px-2 py-0.5 rounded bg-gray-200 text-gray-700">
+              <span className="text-xs font-medium px-2 py-0.5 rounded bg-gray-200 text-[#4E5668]">
                 {ticket.category}
               </span>
             </div>
-            <h3 className="text-base font-semibold text-gray-900 tracking-tight">
+            <h3 className="text-base font-semibold text-[#191E2B] tracking-tight">
               {ticket.subject}
             </h3>
-            <div className="mt-2 text-sm text-gray-700 whitespace-pre-wrap leading-relaxed bg-white p-3.5 rounded-lg border border-gray-200">
+            <div className="mt-2 text-sm text-[#4E5668] whitespace-pre-wrap leading-relaxed bg-[#FFFFFF] p-3.5 rounded-lg border border-[#DCE1EA]">
               {ticket.message}
             </div>
           </div>
@@ -314,13 +314,13 @@ const TicketDetailsModal = ({
            */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-[#4E5668] mb-1">
                 Category
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full text-sm font-medium border border-gray-300 rounded-lg p-2 bg-white focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+                className="w-full text-sm font-medium border border-[#DCE1EA] rounded-lg p-2 bg-[#FFFFFF] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat.value} value={cat.value}>
@@ -331,13 +331,13 @@ const TicketDetailsModal = ({
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-[#4E5668] mb-1">
                 Priority Level
               </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
-                className="w-full text-sm font-medium border border-gray-300 rounded-lg p-2 bg-white focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+                className="w-full text-sm font-medium border border-[#DCE1EA] rounded-lg p-2 bg-[#FFFFFF] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
               >
                 <option value="LOW">Low</option>
                 <option value="MEDIUM">Medium</option>
@@ -347,13 +347,13 @@ const TicketDetailsModal = ({
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-[#4E5668] mb-1">
                 Status
               </label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="w-full text-sm font-medium border border-gray-300 rounded-lg p-2 bg-white focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none"
+                className="w-full text-sm font-medium border border-[#DCE1EA] rounded-lg p-2 bg-[#FFFFFF] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
               >
                 <option value="OPEN">Open</option>
                 <option value="IN_PROGRESS">In Progress</option>
@@ -368,8 +368,8 @@ const TicketDetailsModal = ({
            * Private team notes hidden from the end user for coordination and debugging.
            */}
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1 flex items-center gap-1.5">
-              <Shield className="w-3.5 h-3.5 text-gray-500" />
+            <label className="block text-xs font-medium text-[#4E5668] mb-1 flex items-center gap-1.5">
+              <Shield className="w-3.5 h-3.5 text-[#757F94]" />
               <span>Internal Admin Notes (Private to Team)</span>
             </label>
             <textarea
@@ -377,7 +377,7 @@ const TicketDetailsModal = ({
               value={adminNotes}
               onChange={(e) => setAdminNotes(e.target.value)}
               placeholder="Add internal notes about this user, debugging status, or next steps..."
-              className="w-full text-sm border border-gray-300 rounded-lg p-2.5 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none placeholder:text-gray-400 resize-none"
+              className="w-full text-sm border border-[#DCE1EA] rounded-lg p-2.5 focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none placeholder:text-[#757F94] resize-none"
             />
           </div>
 
@@ -386,8 +386,8 @@ const TicketDetailsModal = ({
            * Records resolution feedback and direct response provided to the merchant.
            */}
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1 flex items-center gap-1.5">
-              <MessageCircle className="w-3.5 h-3.5 text-[#093C5D]" />
+            <label className="block text-xs font-medium text-[#4E5668] mb-1 flex items-center gap-1.5">
+              <MessageCircle className="w-3.5 h-3.5 text-[#4338CA]" />
               <span>Admin Resolution & Reply Log</span>
             </label>
             <textarea
@@ -395,7 +395,7 @@ const TicketDetailsModal = ({
               value={adminReply}
               onChange={(e) => setAdminReply(e.target.value)}
               placeholder="Record the solution or response provided to the user..."
-              className="w-full text-sm border border-gray-300 rounded-lg p-2.5 focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D] outline-none placeholder:text-gray-400 resize-none"
+              className="w-full text-sm border border-[#DCE1EA] rounded-lg p-2.5 focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none placeholder:text-[#757F94] resize-none"
             />
           </div>
         </div>
@@ -404,7 +404,7 @@ const TicketDetailsModal = ({
          * Footer Action Toolbar
          * Houses ticket deletion, resolution shortcut, and changes persistence button.
          */}
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50/80 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div className="px-6 py-4 border-t border-[#DCE1EA] bg-[#F0F2F6]/80 flex flex-wrap items-center justify-between gap-3 shrink-0">
           <button
             type="button"
             onClick={handleDelete}
@@ -431,7 +431,7 @@ const TicketDetailsModal = ({
               type="button"
               disabled={saving}
               onClick={() => handleSave()}
-              className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#093C5D] hover:bg-[#072C44] px-4 py-2 rounded transition-colors disabled:opacity-50"
+              className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] px-4 py-2 rounded transition-colors disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
               {saving ? 'Saving...' : 'Save Changes'}

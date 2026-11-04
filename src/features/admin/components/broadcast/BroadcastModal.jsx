@@ -116,7 +116,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
        * Darkened modal background dismissing view upon backdrop click.
        */}
       <div
-        className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay overscroll-contain"
+        className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay overscroll-contain"
         onClick={onClose}
         onWheel={(e) => e.preventDefault()}
         onTouchMove={(e) => e.preventDefault()}
@@ -128,14 +128,14 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div
-          className="relative bg-white w-full sm:max-w-2xl rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-gray-200 animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl"
+          className="relative bg-[#FFFFFF] w-full sm:max-w-2xl rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl"
           onClick={(e) => e.stopPropagation()}
         >
           {/**
            * Mobile Drag Pill
            * Visual drag pill indicator for mobile bottom sheet.
            */}
-          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-white">
+          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#FFFFFF]">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
           </div>
 
@@ -143,23 +143,23 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
            * Modal Header
            * Banner title with megaphone icon and round close button.
            */}
-          <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-gray-100 flex-shrink-0 gap-3">
+          <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-[#E8ECF2] flex-shrink-0 gap-3">
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
-              <div className="w-8 h-8 rounded bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0">
                 <Megaphone className="w-4 h-4" />
               </div>
               <div className="min-w-0 flex-1">
-                <h2 className="text-base sm:text-lg font-semibold text-gray-900 leading-snug truncate">
+                <h2 className="text-base sm:text-lg font-semibold text-[#191E2B] leading-snug truncate">
                   {broadcastToEdit ? 'Edit Global Announcement' : 'Create Global Announcement'}
                 </h2>
-                <p className="text-xs text-gray-500 font-medium truncate">Broadcast an alert banner across merchant dashboards</p>
+                <p className="text-xs text-[#757F94] font-medium truncate">Broadcast an alert banner across merchant dashboards</p>
               </div>
             </div>
 
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-gray-500 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-gray-200 ml-auto"
+              className="cursor-pointer text-[#757F94] bg-gray-100 hover:bg-gray-200 hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
               title="Close"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -176,7 +176,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
              * Interactive preview reflecting real-time configuration changes.
              */}
             <div>
-              <div className="flex items-center gap-1.5 mb-2 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <div className="flex items-center gap-1.5 mb-2 text-xs font-semibold text-[#4E5668] uppercase tracking-wider">
                 <Eye className="w-3.5 h-3.5" />
                 <span>Live Merchant Banner Preview</span>
               </div>
@@ -188,7 +188,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
              * Headline text for the announcement banner.
              */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-[#4E5668] uppercase tracking-wider mb-1.5">
                 Announcement Title <span className="text-red-500">*</span>
               </label>
               <input
@@ -199,7 +199,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                 required
                 maxLength={150}
                 placeholder="e.g. Scheduled System Upgrade or New Feature Announcement"
-                className="w-full h-10 px-3.5 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium"
+                className="w-full h-10 px-3.5 text-sm bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium"
               />
             </div>
 
@@ -208,7 +208,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
              * Full explanatory message text rendered for storekeepers.
              */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-[#4E5668] uppercase tracking-wider mb-1.5">
                 Message Content <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -219,7 +219,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                 required
                 maxLength={1000}
                 placeholder="Enter clear, concise information for storekeepers..."
-                className="w-full p-3 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium leading-relaxed"
+                className="w-full p-3 text-sm bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium leading-relaxed"
               />
             </div>
 
@@ -233,14 +233,14 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                * Selects between info, warning, critical alert, and success styles.
                */}
               <div>
-                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-[#4E5668] uppercase tracking-wider mb-1.5">
                   Severity / Category
                 </label>
                 <select
                   name="type"
                   value={formData.type}
                   onChange={handleChange}
-                  className="w-full h-10 px-3 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium cursor-pointer"
+                  className="w-full h-10 px-3 text-sm bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium cursor-pointer"
                 >
                   <option value="INFO">Information (Blue)</option>
                   <option value="WARNING">Maintenance / Warning (Amber)</option>
@@ -254,14 +254,14 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                * Scopes delivery to all stores, free trial merchants, or paid subscribers.
                */}
               <div>
-                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-[#4E5668] uppercase tracking-wider mb-1.5">
                   Target Merchant Audience
                 </label>
                 <select
                   name="targetAudience"
                   value={formData.targetAudience}
                   onChange={handleChange}
-                  className="w-full h-10 px-3 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium cursor-pointer"
+                  className="w-full h-10 px-3 text-sm bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium cursor-pointer"
                 >
                   <option value="ALL">All Registered Stores</option>
                   <option value="FREE_TRIAL">Free Trial Stores Only</option>
@@ -276,7 +276,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
              */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-[#4E5668] uppercase tracking-wider mb-1.5">
                   CTA Button Text (Optional)
                 </label>
                 <input
@@ -286,12 +286,12 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                   onChange={handleChange}
                   maxLength={50}
                   placeholder="e.g. Upgrade Now or Learn More"
-                  className="w-full h-10 px-3.5 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium"
+                  className="w-full h-10 px-3.5 text-sm bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-[#4E5668] uppercase tracking-wider mb-1.5">
                   Action Destination Link (Optional)
                 </label>
                 <div className="relative">
@@ -301,9 +301,9 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                     value={formData.actionUrl}
                     onChange={handleChange}
                     placeholder="/subscription or https://..."
-                    className="w-full h-10 pl-9 pr-3.5 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium"
+                    className="w-full h-10 pl-9 pr-3.5 text-sm bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium"
                   />
-                  <LinkIcon className="w-4 h-4 text-gray-400 absolute left-3 top-3 pointer-events-none" />
+                  <LinkIcon className="w-4 h-4 text-[#757F94] absolute left-3 top-3 pointer-events-none" />
                 </div>
               </div>
             </div>
@@ -314,7 +314,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
              */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-[#4E5668] uppercase tracking-wider mb-1.5">
                   Start Display Date
                 </label>
                 <input
@@ -322,12 +322,12 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                   name="startsAt"
                   value={formData.startsAt}
                   onChange={handleChange}
-                  className="w-full h-10 px-3.5 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium"
+                  className="w-full h-10 px-3.5 text-sm bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-[#4E5668] uppercase tracking-wider mb-1.5">
                   Expiration Date (Optional)
                 </label>
                 <input
@@ -335,7 +335,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                   name="expiresAt"
                   value={formData.expiresAt}
                   onChange={handleChange}
-                  className="w-full h-10 px-3.5 text-sm bg-gray-50/70 border border-gray-200 rounded-lg focus:outline-none focus:border-[#093C5D] focus:bg-white transition-all text-gray-900 font-medium"
+                  className="w-full h-10 px-3.5 text-sm bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium"
                 />
               </div>
             </div>
@@ -351,9 +351,9 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                   name="isActive"
                   checked={formData.isActive}
                   onChange={handleChange}
-                  className="w-4 h-4 rounded text-[#093C5D] focus:ring-[#093C5D] border-gray-300"
+                  className="w-4 h-4 rounded text-[#4338CA] focus:ring-[#4338CA] border-[#DCE1EA]"
                 />
-                <span className="text-xs font-semibold text-gray-900">Active (Publish immediately)</span>
+                <span className="text-xs font-semibold text-[#191E2B]">Active (Publish immediately)</span>
               </label>
 
               <label className="inline-flex items-center gap-2.5 cursor-pointer select-none">
@@ -362,9 +362,9 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                   name="dismissible"
                   checked={formData.dismissible}
                   onChange={handleChange}
-                  className="w-4 h-4 rounded text-[#093C5D] focus:ring-[#093C5D] border-gray-300"
+                  className="w-4 h-4 rounded text-[#4338CA] focus:ring-[#4338CA] border-[#DCE1EA]"
                 />
-                <span className="text-xs font-semibold text-gray-900">Allow Merchants to Dismiss (✕)</span>
+                <span className="text-xs font-semibold text-[#191E2B]">Allow Merchants to Dismiss (✕)</span>
               </label>
             </div>
 
@@ -372,11 +372,11 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
              * Modal Action Footer
              * Buttons to cancel changes or save and broadcast the announcement.
              */}
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E8ECF2]">
               <button
                 type="button"
                 onClick={onClose}
-                className="cursor-pointer h-10 px-4 rounded bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs sm:text-sm font-semibold transition-all active:scale-95 shadow-none"
+                className="cursor-pointer h-10 px-4 rounded bg-gray-100 hover:bg-gray-200 text-[#4E5668] text-xs sm:text-sm font-semibold transition-all active:scale-95 shadow-none"
               >
                 Cancel
               </button>
@@ -384,7 +384,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
               <button
                 type="submit"
                 disabled={isSaving}
-                className="cursor-pointer h-10 px-5 rounded bg-[#093C5D] hover:bg-[#072d46] text-white text-xs sm:text-sm font-semibold inline-flex items-center gap-2 transition-all active:scale-95 shadow-none disabled:opacity-50"
+                className="cursor-pointer h-10 px-5 rounded bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs sm:text-sm font-semibold inline-flex items-center gap-2 transition-all active:scale-95 shadow-none disabled:opacity-50"
               >
                 {isSaving ? (
                   <>
