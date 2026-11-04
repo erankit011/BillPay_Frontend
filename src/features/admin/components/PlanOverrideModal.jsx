@@ -178,13 +178,13 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
        * Renders as mobile bottom sheet or desktop centered dialogue modal.
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-[60] pointer-events-none">
-        <div className="relative bg-[#FFFFFF] w-full sm:max-w-lg rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-2xl sm:shadow-xl">
+        <div className="relative bg-[#FBFBFC] w-full sm:max-w-lg rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-none">
           
           {/**
            * Mobile Drag Pill
            * Visual drag pill indicator displayed on mobile devices.
            */}
-          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#FFFFFF]">
+          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#FBFBFC]">
             <div className="w-10 h-1.5 bg-gray-200 rounded-full" />
           </div>
 
@@ -192,7 +192,7 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
            * Modal Header
            * Crown emblem, modal title banner, and round close button.
            */}
-          <div className="px-5 sm:px-6 py-4 border-b border-[#E8ECF2] flex items-center justify-between bg-[#FFFFFF] flex-shrink-0 gap-3">
+          <div className="px-5 sm:px-6 py-4 border-b border-[#E8ECF2] flex items-center justify-between bg-[#FBFBFC] flex-shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="w-10 h-10 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center border border-amber-200 shrink-0">
                 <Crown className="w-5 h-5 text-amber-600" strokeWidth={2} />
@@ -210,7 +210,7 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-[#757F94] bg-gray-100 hover:bg-gray-200 hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
+              className="cursor-pointer text-[#757F94] bg-[#F0F2F6] hover:bg-[#EBEEF4] hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
               title="Close"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -302,7 +302,7 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                         className={`p-3 rounded-lg border transition-all cursor-pointer flex items-center justify-between gap-3 ${
                           isSelected
                             ? 'border-[#4338CA] bg-[#EEF0FB]/50 ring-1 ring-[#4338CA]'
-                            : 'border-[#DCE1EA] hover:border-[#DCE1EA] bg-[#FFFFFF] hover:bg-[#F0F2F6]/50'
+                            : 'border-[#DCE1EA] hover:border-[#C2C9D6] bg-[#FBFBFC] hover:bg-[#F0F2F6]/50'
                         }`}
                       >
                         <div className="min-w-0 flex-1">
@@ -462,7 +462,7 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                 type="button"
                 onClick={onClose}
                 disabled={isLoading}
-                className="cursor-pointer h-10 px-4 sm:px-5 text-xs sm:text-sm font-semibold text-[#4E5668] bg-[#FFFFFF] hover:bg-gray-100 border border-[#DCE1EA] rounded-lg transition-colors active:scale-95 inline-flex items-center justify-center flex-1 sm:flex-initial"
+                className="cursor-pointer h-10 px-4 sm:px-5 text-xs sm:text-sm font-semibold text-[#4E5668] bg-[#FBFBFC] hover:bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg transition-colors active:scale-95 inline-flex items-center justify-center flex-1 sm:flex-initial"
               >
                 Cancel
               </button>

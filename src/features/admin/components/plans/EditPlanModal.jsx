@@ -294,7 +294,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-[#757F94] bg-gray-100 hover:bg-gray-200 hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
+              className="cursor-pointer text-[#757F94] bg-[#F0F2F6] hover:bg-[#EBEEF4] hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
               title={t('Close')}
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -814,7 +814,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                   type="button"
                   onClick={onClose}
                   disabled={saving}
-                  className="cursor-pointer h-10 px-4 sm:px-5 rounded-lg border border-[#DCE1EA] text-[#4E5668] bg-[#FBFBFC] hover:bg-gray-100 text-xs sm:text-sm font-medium transition-all active:scale-95 shadow-none disabled:opacity-50 flex-1 sm:flex-initial inline-flex items-center justify-center"
+                  className="cursor-pointer h-10 px-4 sm:px-5 rounded-lg border border-[#DCE1EA] text-[#4E5668] bg-[#FBFBFC] hover:bg-[#F0F2F6] text-xs sm:text-sm font-medium transition-all active:scale-95 shadow-none disabled:opacity-50 flex-1 sm:flex-initial inline-flex items-center justify-center"
                 >
                   {t('Cancel')}
                 </button>
@@ -824,7 +824,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                   className={`h-10 px-5 sm:px-6 rounded-lg bg-[#4338CA] text-white text-xs sm:text-sm font-medium transition-all shadow-none flex items-center justify-center gap-2 flex-1 sm:flex-initial ${
                     !hasChanges || saving
                       ? 'opacity-50 cursor-not-allowed'
-                      : 'cursor-pointer hover:bg-[#072d46] active:scale-95'
+                      : 'cursor-pointer hover:bg-[#3730A3] active:scale-95'
                   }`}
                 >
                   <Save className="w-4 h-4 shrink-0" />

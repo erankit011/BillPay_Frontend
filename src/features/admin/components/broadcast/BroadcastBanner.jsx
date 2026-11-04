@@ -18,7 +18,7 @@ const TYPE_CONFIG = {
     iconColor: 'text-[#4338CA]',
     badgeBg: 'bg-blue-100 text-[#4338CA]',
     icon: Info,
-    buttonClass: 'bg-[#4338CA] text-white hover:bg-[#072d46]',
+    buttonClass: 'bg-[#4338CA] text-white hover:bg-[#3730A3]',
   },
   WARNING: {
     bg: 'bg-amber-50/95',

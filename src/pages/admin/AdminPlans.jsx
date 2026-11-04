@@ -109,10 +109,10 @@ const AdminPlans = () => {
             type="button"
             onClick={() => setConfirmResetModal(true)}
             disabled={resetting || loading}
-            className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 sm:px-5 h-10 sm:h-11 text-xs sm:text-sm font-semibold text-rose-600 bg-[#FFFFFF] border border-rose-200 hover:bg-rose-50 rounded-lg transition-all active:scale-95 shadow-none disabled:opacity-50"
+            className="cursor-pointer inline-flex items-center justify-center gap-2 px-4 sm:px-5 h-10 sm:h-11 text-xs sm:text-sm font-semibold text-[#B91C1C] bg-[#FFF1F2] border border-[#FECDD3] hover:bg-[#FEE2E2] rounded-lg transition-all active:scale-95 shadow-none disabled:opacity-50"
             title={t('Reset all tiers to factory defaults')}
           >
-            <RotateCcw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-600 ${resetting ? 'animate-spin' : ''}`} />
+            <RotateCcw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#B91C1C] ${resetting ? 'animate-spin' : ''}`} />
             <span>{resetting ? t('Resetting...') : t('Reset Defaults')}</span>
           </button>
         </div>
@@ -161,7 +161,7 @@ const AdminPlans = () => {
        * 4-column responsive grid displaying each pricing tier and feature allowance.
        */}
       {loading ? (
-        <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-16 text-center shadow-none">
+        <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-16 text-center shadow-none">
           <SwirlingLoader className="w-10 h-10 text-[#4338CA] mx-auto mb-3" />
           <p className="text-sm font-medium text-[#4E5668]">{t('Loading SaaS plans configuration...')}</p>
         </div>

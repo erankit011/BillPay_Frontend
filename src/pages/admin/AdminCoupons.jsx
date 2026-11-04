@@ -40,14 +40,14 @@ import SwirlingLoader from '../../components/common/SwirlingLoader';
  * Coupon Status Filters
  */
 const STATUS_OPTIONS = [
-  { value: 'ALL', label: 'All Statuses' },
-  { value: 'ACTIVE', label: 'Active Now' },
-  { value: 'INACTIVE', label: 'Paused / Inactive' },
+  { value: 'ALL', label: 'All Coupons' },
+  { value: 'ACTIVE', label: 'Active' },
+  { value: 'INACTIVE', label: 'Inactive' },
   { value: 'EXPIRED', label: 'Expired' },
 ];
 
 const DISCOUNT_TYPE_OPTIONS = [
-  { value: 'ALL', label: 'All Discount Types' },
+  { value: 'ALL', label: 'All Types' },
   { value: 'PERCENTAGE', label: 'Percentage (%)' },
   { value: 'FLAT', label: 'Flat Cash (₹)' },
 ];
@@ -304,7 +304,7 @@ const AdminCoupons = () => {
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlStatus === opt.value
                 ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
-                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
+                : 'bg-[#FBFBFC] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {opt.label}
@@ -320,7 +320,7 @@ const AdminCoupons = () => {
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlDiscountType === opt.value
                 ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
-                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
+                : 'bg-[#FBFBFC] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {opt.label}
@@ -335,7 +335,7 @@ const AdminCoupons = () => {
               setDebouncedSearch('');
               setSearchParams({}, { replace: true });
             }}
-            className="shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 flex items-center gap-1.5 transition-colors shadow-none active:scale-95"
+            className="shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium text-[#B91C1C] bg-[#FFF1F2] border border-[#FECDD3] hover:bg-[#FEE2E2] flex items-center gap-1.5 transition-colors shadow-none active:scale-95"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset Filters</span>
@@ -354,7 +354,7 @@ const AdminCoupons = () => {
           </div>
           <input
             type="text"
-            placeholder="Search By Promo Code & Campaign Description & Applicable Plan"
+            placeholder="Search by promo code, description, or plan..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg text-[13px] sm:text-sm text-[#191E2B] placeholder-[#9AA4B8] focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors duration-200 shadow-none"
@@ -385,12 +385,12 @@ const AdminCoupons = () => {
        * Renders loading skeletons, empty state, or responsive grid of coupon discount cards.
        */}
       {loading ? (
-        <div className="py-16 md:py-20 text-center bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] shadow-none">
+        <div className="py-16 md:py-20 text-center bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] shadow-none">
           <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#4338CA] mx-auto mb-3" />
           <p className="text-sm font-medium text-[#4E5668]">Loading promo codes...</p>
         </div>
       ) : coupons.length === 0 ? (
-        <div className="py-16 text-center bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] px-4 shadow-none">
+        <div className="py-16 text-center bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] px-4 shadow-none">
           <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-[#757F94] mx-auto mb-3">
             <Inbox className="w-6 h-6" />
           </div>

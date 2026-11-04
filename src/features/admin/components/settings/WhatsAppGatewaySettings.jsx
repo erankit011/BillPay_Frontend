@@ -312,7 +312,7 @@ const WhatsAppGatewaySettings = () => {
                         type="button"
                         onClick={() => restartMutation.mutate()}
                         disabled={restartMutation.isPending}
-                        className="cursor-pointer flex-1 sm:flex-initial h-8 px-3 text-xs font-semibold text-[#4E5668] bg-[#FFFFFF] hover:bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg inline-flex items-center justify-center gap-1.5 transition-colors active:scale-95 shadow-none disabled:opacity-50"
+                        className="cursor-pointer flex-1 sm:flex-initial h-8 px-3 text-xs font-semibold text-[#4E5668] bg-[#FBFBFC] hover:bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg inline-flex items-center justify-center gap-1.5 transition-colors active:scale-95 shadow-none disabled:opacity-50"
                         title={t('Re-initialize socket connection without losing credentials')}
                       >
                         <RotateCcw className={`w-3.5 h-3.5 text-[#757F94] ${restartMutation.isPending ? 'animate-spin' : ''}`} />
@@ -339,7 +339,7 @@ const WhatsAppGatewaySettings = () => {
                      * Outbox Message Queue Metric Card
                      * Monitors pending message backlog and automated pacing.
                      */}
-                    <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 flex flex-col justify-between hover:border-[#DCE1EA] transition-colors shadow-none">
+                    <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 flex flex-col justify-between hover:border-[#C2C9D6] transition-colors shadow-none">
                       <div className="flex items-center justify-between text-xs text-[#757F94] font-medium mb-2">
                         <span className="uppercase text-[10px] tracking-wider font-semibold text-[#4E5668]">{t('Outbox Message Queue')}</span>
                         <div className="w-7 h-7 rounded-md bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0">
@@ -359,7 +359,7 @@ const WhatsAppGatewaySettings = () => {
                      * Circuit Breaker & Rate Limiter Metric Card
                      * Real-time safety status protecting against WhatsApp anti-spam bans.
                      */}
-                    <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 flex flex-col justify-between hover:border-[#DCE1EA] transition-colors shadow-none">
+                    <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 flex flex-col justify-between hover:border-[#C2C9D6] transition-colors shadow-none">
                       <div className="flex items-center justify-between text-xs text-[#757F94] font-medium mb-2">
                         <span className="uppercase text-[10px] tracking-wider font-semibold text-[#4E5668]">{t('Rate-Limit Protection')}</span>
                         <div className="w-7 h-7 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center shrink-0">
@@ -384,7 +384,7 @@ const WhatsAppGatewaySettings = () => {
                      * Engine & Authentication Protocol Metric Card
                      * Shows current underlying Baileys library and session store type.
                      */}
-                    <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 flex flex-col justify-between hover:border-[#DCE1EA] transition-colors shadow-none">
+                    <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 flex flex-col justify-between hover:border-[#C2C9D6] transition-colors shadow-none">
                       <div className="flex items-center justify-between text-xs text-[#757F94] font-medium mb-2">
                         <span className="uppercase text-[10px] tracking-wider font-semibold text-[#4E5668]">{t('Engine & Auth')}</span>
                         <div className="w-7 h-7 rounded-md bg-[#F0F2F6] text-[#4E5668] border border-[#DCE1EA] flex items-center justify-center shrink-0">
@@ -403,7 +403,7 @@ const WhatsAppGatewaySettings = () => {
                      * Session Persistence & Timestamp Metric Card
                      * Tracks continuous session creation and connection stability.
                      */}
-                    <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 flex flex-col justify-between hover:border-[#DCE1EA] transition-colors shadow-none">
+                    <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 flex flex-col justify-between hover:border-[#C2C9D6] transition-colors shadow-none">
                       <div className="flex items-center justify-between text-xs text-[#757F94] font-medium mb-2">
                         <span className="uppercase text-[10px] tracking-wider font-semibold text-[#4E5668]">{t('Session Persistence')}</span>
                         <div className="w-7 h-7 rounded-md bg-[#F0F2F6] text-[#4E5668] border border-[#DCE1EA] flex items-center justify-center shrink-0">
@@ -575,7 +575,7 @@ const WhatsAppGatewaySettings = () => {
             onClick={() => setShowDisconnectModal(false)}
           />
 
-          <div className="relative bg-[#FFFFFF] rounded-lg shadow-2xl w-full max-w-sm p-6 text-center z-10 border border-[#E8ECF2] animate-in fade-in zoom-in-95 duration-150">
+          <div className="relative bg-[#FBFBFC] rounded-xl shadow-none w-full max-w-sm p-6 text-center z-10 border border-[#DCE1EA] animate-modal-content">
             <div className="w-12 h-12 rounded-full bg-red-50 text-red-600 mx-auto flex items-center justify-center mb-4 border border-red-100">
               <LogOut className="w-6 h-6 ml-0.5 text-red-600" />
             </div>
@@ -588,7 +588,7 @@ const WhatsAppGatewaySettings = () => {
               <button
                 type="button"
                 onClick={() => setShowDisconnectModal(false)}
-                className="flex-1 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-[#4E5668] rounded-lg font-semibold text-xs transition-colors cursor-pointer"
+                className="flex-1 px-4 py-2.5 bg-[#FBFBFC] hover:bg-[#F0F2F6] border border-[#DCE1EA] text-[#4E5668] rounded-lg font-semibold text-xs transition-colors cursor-pointer active:scale-95 shadow-none"
               >
                 {t('Cancel')}
               </button>
@@ -596,7 +596,7 @@ const WhatsAppGatewaySettings = () => {
                 type="button"
                 onClick={() => logoutMutation.mutate()}
                 disabled={logoutMutation.isPending}
-                className="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-xs transition-colors cursor-pointer disabled:opacity-50"
+                className="flex-1 px-4 py-2.5 bg-[#B91C1C] hover:bg-[#991B1B] text-white rounded-lg font-semibold text-xs transition-colors cursor-pointer disabled:opacity-50 active:scale-95 shadow-none"
               >
                 {logoutMutation.isPending ? t('Disconnecting...') : t('Yes, Disconnect')}
               </button>

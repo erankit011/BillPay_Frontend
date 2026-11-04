@@ -40,7 +40,7 @@ import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 
 const STATUS_OPTIONS = [
-  { value: 'ALL', label: 'All Statuses' },
+  { value: 'ALL', label: 'All Status' },
   { value: 'OPEN', label: 'Open' },
   { value: 'IN_PROGRESS', label: 'In Progress' },
   { value: 'RESOLVED', label: 'Resolved' },
@@ -48,7 +48,7 @@ const STATUS_OPTIONS = [
 ];
 
 const PRIORITY_OPTIONS = [
-  { value: 'ALL', label: 'All Priorities' },
+  { value: 'ALL', label: 'All Priority' },
   { value: 'URGENT', label: 'Urgent' },
   { value: 'HIGH', label: 'High' },
   { value: 'MEDIUM', label: 'Medium' },
@@ -268,7 +268,7 @@ const AdminSupport = () => {
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlStatus === opt.value
                 ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
-                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
+                : 'bg-[#FBFBFC] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {opt.label}
@@ -284,7 +284,7 @@ const AdminSupport = () => {
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlPriority === opt.value
                 ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
-                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
+                : 'bg-[#FBFBFC] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {opt.label}
@@ -300,7 +300,7 @@ const AdminSupport = () => {
             className={`shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium transition-all duration-200 border active:scale-95 select-none flex items-center justify-center whitespace-nowrap !min-h-0 !min-w-0 !h-fit ${
               urlCategory === opt.value
                 ? 'bg-[#4338CA] text-white border-[#4338CA] shadow-none'
-                : 'bg-[#FFFFFF] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
+                : 'bg-[#FBFBFC] text-[#4E5668] border-[#DCE1EA] hover:border-[#DCE1EA] hover:bg-[#F0F2F6] shadow-none'
             }`}
           >
             {opt.label}
@@ -315,7 +315,7 @@ const AdminSupport = () => {
               setDebouncedSearch('');
               setSearchParams({}, { replace: true });
             }}
-            className="shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 flex items-center gap-1.5 transition-colors shadow-none active:scale-95"
+            className="shrink-0 cursor-pointer py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-[10px] sm:text-sm font-medium text-[#B91C1C] bg-[#FFF1F2] border border-[#FECDD3] hover:bg-[#FEE2E2] flex items-center gap-1.5 transition-colors shadow-none active:scale-95"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset Filters</span>
@@ -334,7 +334,7 @@ const AdminSupport = () => {
           </div>
           <input
             type="text"
-            placeholder="Search By Ticket ID & Requester & Store & Subject & Email"
+            placeholder="Search by ticket ID, merchant, subject, or email..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg text-[13px] sm:text-sm text-[#191E2B] placeholder-[#9AA4B8] focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors duration-200 shadow-none"
@@ -364,7 +364,7 @@ const AdminSupport = () => {
        * Support Tickets Stream
        * Renders responsive desktop table layout or touch-friendly mobile cards.
        */}
-      <div className="bg-[#FFFFFF] rounded-lg border border-[#DCE1EA] overflow-hidden shadow-none">
+      <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] overflow-hidden shadow-none">
         {loading ? (
           <div className="p-8 md:p-12 text-center text-[#757F94] flex flex-col items-center justify-center">
             <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#4338CA] mx-auto mb-3" />
@@ -528,7 +528,7 @@ const AdminSupport = () => {
                 <div
                   key={ticket._id}
                   onClick={() => handleOpenTicket(ticket)}
-                  className="bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg p-3.5 transition-colors cursor-pointer active:bg-[#F0F2F6] shadow-none space-y-3"
+                  className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg p-3.5 transition-colors cursor-pointer active:bg-[#F0F2F6] shadow-none space-y-3"
                 >
                   {/**
                    * Top Row: Avatar, Name & Status

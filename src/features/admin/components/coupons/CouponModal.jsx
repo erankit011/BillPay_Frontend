@@ -201,14 +201,14 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-8 z-50 pointer-events-none">
         <div
-          className="relative w-full sm:max-w-4xl bg-[#FFFFFF] rounded-t-2xl sm:rounded-xl border border-[#DCE1EA] animate-modal-content overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[88vh] pointer-events-auto shadow-2xl sm:shadow-xl"
+          className="relative w-full sm:max-w-4xl bg-[#FBFBFC] rounded-t-2xl sm:rounded-xl border border-[#DCE1EA] animate-modal-content overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[88vh] pointer-events-auto shadow-none"
           onClick={(e) => e.stopPropagation()}
         >
           {/**
            * Mobile Drag Pill
            * Visual drag pill indicator displayed on mobile devices.
            */}
-          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#F0F2F6]/80">
+          <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0 bg-[#FBFBFC]">
             <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
           </div>
 
@@ -216,9 +216,9 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
            * Modal Header
            * Coupon tag icon, headline title, subtitle explanation, and close button.
            */}
-          <div className="px-5 sm:px-6 py-4 border-b border-[#DCE1EA] bg-[#F0F2F6]/80 flex items-center justify-between shrink-0 gap-3">
+          <div className="px-5 sm:px-6 py-4 border-b border-[#DCE1EA] bg-[#FBFBFC] flex items-center justify-between shrink-0 gap-3">
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
-              <div className="w-9 h-9 rounded bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0">
+              <div className="w-9 h-9 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0">
                 <Tag className="w-5 h-5" />
               </div>
               <div className="min-w-0 flex-1">
@@ -233,7 +233,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer text-[#757F94] bg-gray-100 hover:bg-gray-200 hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
+              className="cursor-pointer text-[#757F94] bg-[#F0F2F6] hover:bg-[#EBEEF4] hover:text-[#191E2B] w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[32px] !min-w-[32px] border border-[#DCE1EA] ml-auto"
               title="Close"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -533,7 +533,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
            * Modal Action Footer
            * Immediate activation checkbox switch, cancel action, and save trigger.
            */}
-          <div className="px-6 py-4 border-t border-[#DCE1EA] bg-[#F0F2F6]/80 flex items-center justify-between shrink-0">
+          <div className="px-5 sm:px-6 py-3.5 border-t border-[#DCE1EA] bg-[#F0F2F6] flex items-center justify-between shrink-0">
             <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-[#4E5668]">
               <input
                 type="checkbox"
@@ -548,7 +548,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
               <button
                 type="button"
                 onClick={onClose}
-                className="cursor-pointer px-4 py-2 text-xs font-semibold text-[#4E5668] bg-[#FFFFFF] border border-[#DCE1EA] rounded hover:bg-[#F0F2F6] transition-colors"
+                className="cursor-pointer px-4 py-2 text-xs font-semibold text-[#4E5668] bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg hover:bg-[#F0F2F6] transition-colors active:scale-95"
               >
                 Cancel
               </button>
@@ -556,7 +556,7 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                 type="submit"
                 form="coupon-form"
                 disabled={saving}
-                className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] px-4 py-2 rounded transition-colors disabled:opacity-50"
+                className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] px-4 py-2 rounded-lg transition-all active:scale-95 disabled:opacity-50"
               >
                 <Save className="w-4 h-4" />
                 {saving ? 'Saving...' : coupon ? 'Update Coupon' : 'Create Coupon'}
