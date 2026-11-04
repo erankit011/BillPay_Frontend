@@ -112,7 +112,7 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
                 </label>
                 <input
                   {...register('name')}
-                  className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.name ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-white'}`}
+                  className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:outline-none ${errors.name ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-white'}`}
                   placeholder="e.g. Atta 5kg"
                 />
                 {errors.name && (
@@ -132,7 +132,7 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
                     type="number"
                     step="0.01"
                     {...register('price')}
-                    className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.price ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-white'}`}
+                    className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:outline-none ${errors.price ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-white'}`}
                     placeholder="0"
                   />
                   {errors.price && (
@@ -149,7 +149,7 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
                   <input
                     type="number"
                     {...register('stock')}
-                    className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${errors.stock ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-white'}`}
+                    className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:outline-none ${errors.stock ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-white'}`}
                     placeholder="0"
                   />
                   {errors.stock && (

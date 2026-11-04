@@ -539,7 +539,7 @@ const Subscription = () => {
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                 placeholder={t('Enter Promo Code')}
-                className="w-full sm:w-48 text-xs sm:text-sm font-semibold tracking-wider px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] outline-none uppercase placeholder:font-medium placeholder:normal-case placeholder:text-[#9AA4B8] bg-white text-[#191E2B] transition-colors shadow-none"
+                className="w-full sm:w-48 text-xs sm:text-sm font-semibold tracking-wider px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none uppercase placeholder:font-medium placeholder:normal-case placeholder:text-[#9AA4B8] bg-white text-[#191E2B] transition-colors shadow-none"
               />
               <button
                 type="submit"

@@ -429,7 +429,7 @@ const Reminders = () => {
             placeholder={t("Search By Name Or Number")}
             value={searchName}
             onChange={(e) => setSearchName(e.target.value)}
-            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg text-[13px] sm:text-sm text-[#191E2B] placeholder-[#757F94] focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] transition-colors duration-200 shadow-none"
+            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-3 sm:pr-4 bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg text-[13px] sm:text-sm text-[#191E2B] placeholder-[#757F94] focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors duration-200 shadow-none"
           />
         </div>
       </div>
@@ -440,17 +440,17 @@ const Reminders = () => {
        */}
       <div className="bg-[#FBFBFC] md:border md:border-[#DCE1EA] md:rounded-lg overflow-hidden shadow-none">
         {isLoading ? (
-          <div className="flex justify-center items-center py-12 border border-gray-100 rounded-lg md:border-none">
+          <div className="flex justify-center items-center py-12 border border-[#E8ECF2] rounded-lg md:border-none">
             <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#4338CA]" />
           </div>
         ) : isError ? (
-          <div className="flex flex-col items-center justify-center min-h-[300px] py-12 border border-gray-100 rounded-lg md:border-none">
+          <div className="flex flex-col items-center justify-center min-h-[300px] py-12 border border-[#E8ECF2] rounded-lg md:border-none">
             <AlertCircle className="w-12 h-12 text-[#B91C1C] mb-4" />
             <p className="text-sm font-medium text-[#191E2B] mb-1">{t('Failed to load data')}</p>
             <p className="text-xs text-[#757F94]">{t('Please try refreshing the page')}</p>
           </div>
         ) : reminders.length === 0 ? (
-          <div className="flex flex-col items-center justify-center min-h-[400px] py-12 border border-gray-100 rounded-lg md:border-none px-4 text-center">
+          <div className="flex flex-col items-center justify-center min-h-[400px] py-12 border border-[#E8ECF2] rounded-lg md:border-none px-4 text-center">
             <div className="w-16 h-16 bg-[#F0F2F6] rounded-full flex items-center justify-center mb-4 border border-[#DCE1EA]">
               <Bell className="w-8 h-8 text-[#757F94]" />
             </div>
@@ -824,7 +824,7 @@ const Reminders = () => {
                     </label>
                     <textarea
                       {...register('message', { required: 'Message is required' })}
-                      className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none resize-none bg-white text-[#191E2B] placeholder-[#9AA4B8] shadow-none ${errors.message ? 'border-[#B91C1C] focus:ring-[#B91C1C] focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'}`}
+                      className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:outline-none resize-none bg-white text-[#191E2B] placeholder-[#9AA4B8] shadow-none ${errors.message ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'}`}
                       rows="4"
                       placeholder={t("Dear customer, your payment of ₹...")}
                     ></textarea>
@@ -847,7 +847,7 @@ const Reminders = () => {
                     <input
                       type="date"
                       {...register('scheduledDate', { required: 'Scheduled date is required' })}
-                      className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none bg-white text-[#191E2B] shadow-none ${errors.scheduledDate ? 'border-[#B91C1C] focus:ring-[#B91C1C] focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'}`}
+                      className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:outline-none bg-white text-[#191E2B] shadow-none ${errors.scheduledDate ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'}`}
                     />
                     {errors.scheduledDate && (
                       <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
@@ -867,7 +867,7 @@ const Reminders = () => {
                     </label>
                     <select
                       {...register('type')}
-                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA] bg-white text-[#191E2B] shadow-none"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-white text-[#191E2B] shadow-none"
                     >
                       <option value="WHATSAPP">WhatsApp</option>
                     </select>
@@ -904,7 +904,7 @@ const Reminders = () => {
            * Dimmed background dismissing modal when clicked
            */}
           <div
-            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
             onClick={() => setReminderToDelete(null)}
           />
 
@@ -959,7 +959,7 @@ const Reminders = () => {
            * Dimmed background dismissing modal when clicked
            */}
           <div
-            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
             onClick={() => setReminderToSend(null)}
           />
 
@@ -1007,7 +1007,7 @@ const Reminders = () => {
        */}
       {reminderToView && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
-          <div className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay" onClick={() => setReminderToView(null)} />
+          <div className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay" onClick={() => setReminderToView(null)} />
           <div className="relative bg-[#FBFBFC] w-full max-w-sm rounded-lg shadow-none border border-[#DCE1EA] flex flex-col max-h-[80vh] overflow-hidden animate-scale-in z-[101]">
             <div className="flex items-center justify-between px-4 py-3 border-b border-[#E8ECF2] bg-[#F0F2F6]">
               <h3 className="font-semibold text-[#191E2B] flex items-center gap-2 text-base">

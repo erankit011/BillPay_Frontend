@@ -431,7 +431,7 @@ const VoiceBilling = () => {
                   type="text"
                   value={manualText}
                   onChange={(e) => setManualText(e.target.value)}
-                  className="w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] bg-white text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 shadow-none"
+                  className="w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-white text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 shadow-none"
                   placeholder="Ankit Singh ko 100 rupya udhar diya"
                   disabled={isProcessing}
                   autoFocus
@@ -450,7 +450,7 @@ const VoiceBilling = () => {
               <button
                 type="submit"
                 disabled={isProcessing || !manualText.trim()}
-                className="cursor-pointer w-full flex justify-center items-center px-5 md:px-6 lg:px-7 py-2.5 md:py-3 lg:py-3.5 rounded-lg text-xs md:text-sm font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:ring-offset-2 shadow-none"
+                className="cursor-pointer w-full flex justify-center items-center px-5 md:px-6 lg:px-7 py-2.5 md:py-3 lg:py-3.5 rounded-lg text-xs md:text-sm font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] focus:ring-offset-2 shadow-none"
               >
                 {isProcessing ? (
                   <>
@@ -518,7 +518,7 @@ const VoiceBilling = () => {
               <h3 className="text-base md:text-lg lg:text-xl font-semibold text-[#191E2B]">{t('Review & Edit Transaction')}</h3>
               <button
                 onClick={handleCancelForm}
-                className="cursor-pointer text-[#757F94] hover:text-[#191E2B] hover:bg-[#F0F2F6] w-9 h-9 md:w-10 md:h-10 flex items-center justify-center rounded-lg transition-colors active:scale-95 focus:outline-none focus:ring-1 focus:ring-[#DCE1EA] flex-shrink-0"
+                className="cursor-pointer text-[#757F94] hover:text-[#191E2B] hover:bg-[#F0F2F6] w-9 h-9 md:w-10 md:h-10 flex items-center justify-center rounded-lg transition-colors active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 flex-shrink-0"
               >
                 <span className="text-xl">✕</span>
               </button>
@@ -538,7 +538,7 @@ const VoiceBilling = () => {
                   name="customerName"
                   value={formData.customerName}
                   onChange={handleFormChange}
-                  className="w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] bg-white text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 shadow-none"
+                  className="w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-white text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 shadow-none"
                   placeholder={t('Enter customer name')}
                   required
                 />
@@ -557,7 +557,7 @@ const VoiceBilling = () => {
                   name="amount"
                   value={formData.amount}
                   onChange={handleFormChange}
-                  className="w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] bg-white text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 shadow-none"
+                  className="w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-white text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 shadow-none"
                   placeholder={t('Enter amount')}
                   min="0"
                   step="0.01"
@@ -577,7 +577,7 @@ const VoiceBilling = () => {
                   name="intent"
                   value={formData.intent}
                   onChange={handleFormChange}
-                  className="cursor-pointer w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] bg-white text-[#191E2B] transition-colors duration-200 shadow-none"
+                  className="cursor-pointer w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-white text-[#191E2B] transition-colors duration-200 shadow-none"
                 >
                   <option value="UDHAR">{t('Udhar (Given)')}</option>
                   <option value="PAYMENT">{t('Payment (Received)')}</option>
@@ -596,7 +596,7 @@ const VoiceBilling = () => {
                   name="paymentMode"
                   value={formData.paymentMode}
                   onChange={handleFormChange}
-                  className="cursor-pointer w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] bg-white text-[#191E2B] transition-colors duration-200 shadow-none"
+                  className="cursor-pointer w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-white text-[#191E2B] transition-colors duration-200 shadow-none"
                 >
                   <option value="CASH">{t('Cash')}</option>
                   <option value="UPI">{t('UPI')}</option>
@@ -624,14 +624,14 @@ const VoiceBilling = () => {
                 <button
                   type="button"
                   onClick={handleCancelForm}
-                  className="cursor-pointer flex-1 px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg text-xs md:text-sm font-semibold text-[#4E5668] bg-[#F0F2F6] hover:bg-[#EBEEF4] border border-[#DCE1EA] active:scale-95 transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-[#DCE1EA] shadow-none"
+                  className="cursor-pointer flex-1 px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg text-xs md:text-sm font-semibold text-[#4E5668] bg-[#F0F2F6] hover:bg-[#EBEEF4] border border-[#DCE1EA] active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 shadow-none"
                 >
                   {t('Cancel')}
                 </button>
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="cursor-pointer flex-1 px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg text-xs md:text-sm font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:ring-offset-2 shadow-none"
+                  className="cursor-pointer flex-1 px-4 sm:px-5 md:px-6 py-2 md:py-2.5 rounded-lg text-xs md:text-sm font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] focus:ring-offset-2 shadow-none"
                 >
                   {isSaving ? (
                     <>

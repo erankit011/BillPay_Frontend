@@ -260,7 +260,7 @@ const BusinessSetup = () => {
                     type="text"
                     value={formData.shopName}
                     onChange={handleChange}
-                    className={`block w-full rounded-lg border ${errors.shopName ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                    className={`block w-full rounded-lg border ${errors.shopName ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:outline-none`}
                     placeholder={t('Enter Business / Shop Name')}
                   />
                   {errors.shopName && <p className="text-red-500 text-xs mt-1 font-medium">{errors.shopName}</p>}
@@ -278,7 +278,7 @@ const BusinessSetup = () => {
                     value={formData.gstNumber}
                     onChange={handleChange}
                     placeholder="23ABCDE0000A1A2"
-                    className={`block w-full rounded-lg border ${errors.gstNumber ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                    className={`block w-full rounded-lg border ${errors.gstNumber ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:outline-none`}
                   />
                   {errors.gstNumber && <p className="text-red-500 text-xs mt-1 font-medium">{errors.gstNumber}</p>}
                 </div>
@@ -295,7 +295,7 @@ const BusinessSetup = () => {
                     value={formData.upiId}
                     onChange={handleChange}
                     placeholder="yourshop@upi"
-                    className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
+                    className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                   />
                 </div>
 
@@ -313,7 +313,7 @@ const BusinessSetup = () => {
                     type="tel"
                     value={formData.shopPhone}
                     onChange={handleChange}
-                    className={`block w-full rounded-lg border ${errors.shopPhone ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                    className={`block w-full rounded-lg border ${errors.shopPhone ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:outline-none`}
                     placeholder={t('+91 98005 00012')}
                   />
                   {errors.shopPhone ? (
@@ -337,7 +337,7 @@ const BusinessSetup = () => {
                     type="email"
                     value={formData.shopEmail}
                     onChange={handleChange}
-                    className={`block w-full rounded-lg border ${errors.shopEmail ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                    className={`block w-full rounded-lg border ${errors.shopEmail ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:outline-none`}
                     placeholder={t('yourshop@gmail.com')}
                   />
                   {errors.shopEmail ? (
@@ -389,7 +389,7 @@ const BusinessSetup = () => {
                               value={formData.invoiceLogo}
                               onChange={handleChange}
                               placeholder={t('Enter image URL (https://...)')}
-                              className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
+                              className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                             />
                           </div>
                         </div>
@@ -443,7 +443,7 @@ const BusinessSetup = () => {
                               value={formData.signatureImage}
                               onChange={handleChange}
                               placeholder={t('Enter signature image URL (https://...)')}
-                              className={`block w-full rounded-lg border ${errors.signatureImage ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]`}
+                              className={`block w-full rounded-lg border ${errors.signatureImage ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]`}
                             />
                           </div>
                         </div>
@@ -469,7 +469,7 @@ const BusinessSetup = () => {
                     name="currency"
                     value={formData.currency}
                     onChange={handleChange}
-                    className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA] appearance-none bg-[#FBFBFC] cursor-pointer"
+                    className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] appearance-none bg-[#FBFBFC] cursor-pointer"
                     style={{
                       backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
                       backgroundPosition: 'right 0.75rem center',
@@ -497,7 +497,7 @@ const BusinessSetup = () => {
                     rows={3}
                     value={formData.shopAddress}
                     onChange={handleChange}
-                    className={`block w-full rounded-lg border ${errors.shopAddress ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none resize-none`}
+                    className={`block w-full rounded-lg border ${errors.shopAddress ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:outline-none resize-none`}
                     placeholder={t('Enter full business address (Building, Street, City, State, PIN)')}
                   />
                   {errors.shopAddress && <p className="text-red-500 text-xs mt-1 font-medium">{errors.shopAddress}</p>}

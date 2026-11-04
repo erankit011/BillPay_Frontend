@@ -120,7 +120,7 @@ const Reports = () => {
           <select
             value={statementPeriod}
             onChange={(e) => setStatementPeriod(e.target.value)}
-            className="cursor-pointer bg-[#FBFBFC] border border-[#DCE1EA] text-[#191E2B] text-xs sm:text-sm rounded-lg px-4 sm:px-5 md:px-6 py-2 md:py-2.5 font-semibold w-full sm:w-auto focus:outline-none focus:ring-1 focus:ring-[#4338CA] focus:border-[#4338CA] transition-colors duration-200 shadow-none"
+            className="cursor-pointer bg-[#FBFBFC] border border-[#DCE1EA] text-[#191E2B] text-xs sm:text-sm rounded-lg px-4 sm:px-5 md:px-6 py-2 md:py-2.5 font-semibold w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors duration-200 shadow-none"
           >
             <option value="today">{t('Today')}</option>
             <option value="7days">{t('Last 7 Days')}</option>
