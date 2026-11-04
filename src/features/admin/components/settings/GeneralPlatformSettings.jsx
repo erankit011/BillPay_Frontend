@@ -76,7 +76,7 @@ const GeneralPlatformSettings = ({ settings, onUpdate, isUpdating }) => {
               onChange={handleChange}
               required
               placeholder="UdharPay"
-              className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+              className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
             />
             <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">
               {t('Shown in emails, invoices, receipts and dashboard branding')}
@@ -112,7 +112,7 @@ const GeneralPlatformSettings = ({ settings, onUpdate, isUpdating }) => {
                 onChange={handleChange}
                 required
                 placeholder="support@udharpay.in"
-                className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
               />
               <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">
                 {t('Merchants will receive notifications and reach out on this email')}
@@ -134,7 +134,7 @@ const GeneralPlatformSettings = ({ settings, onUpdate, isUpdating }) => {
                 onChange={handleChange}
                 required
                 placeholder="+91 98765 43210"
-                className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
               />
               <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">
                 {t('Customer support phone number for merchant queries')}

@@ -157,7 +157,7 @@ const AdminSecuritySettings = () => {
                       passwordData.newPassword === passwordData.confirmPassword &&
                       passwordData.newPassword.length >= 6
                     ? 'border-green-300 focus:ring-2 focus:ring-[#0D7A57]/20 focus:border-[#0D7A57]'
-                    : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'
+                    : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
                 }`}
               />
               {passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword && (

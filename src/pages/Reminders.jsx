@@ -824,7 +824,7 @@ const Reminders = () => {
                     </label>
                     <textarea
                       {...register('message', { required: 'Message is required' })}
-                      className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:outline-none resize-none bg-white text-[#191E2B] placeholder-[#9AA4B8] shadow-none ${errors.message ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'}`}
+                      className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none resize-none bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] shadow-none ${errors.message ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'}`}
                       rows="4"
                       placeholder={t("Dear customer, your payment of ₹...")}
                     ></textarea>
@@ -847,7 +847,7 @@ const Reminders = () => {
                     <input
                       type="date"
                       {...register('scheduledDate', { required: 'Scheduled date is required' })}
-                      className={`block w-full rounded-lg border px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:outline-none bg-white text-[#191E2B] shadow-none ${errors.scheduledDate ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'}`}
+                      className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none bg-[#FBFBFC] text-[#191E2B] shadow-none ${errors.scheduledDate ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'}`}
                     />
                     {errors.scheduledDate && (
                       <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
@@ -867,7 +867,7 @@ const Reminders = () => {
                     </label>
                     <select
                       {...register('type')}
-                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-white text-[#191E2B] shadow-none"
+                      className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-[#FBFBFC] text-[#191E2B] shadow-none"
                     >
                       <option value="WHATSAPP">WhatsApp</option>
                     </select>

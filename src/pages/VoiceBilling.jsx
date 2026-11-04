@@ -431,7 +431,7 @@ const VoiceBilling = () => {
                   type="text"
                   value={manualText}
                   onChange={(e) => setManualText(e.target.value)}
-                  className="w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-white text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 shadow-none"
+                  className="w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 shadow-none"
                   placeholder="Ankit Singh ko 100 rupya udhar diya"
                   disabled={isProcessing}
                   autoFocus
@@ -538,7 +538,7 @@ const VoiceBilling = () => {
                   name="customerName"
                   value={formData.customerName}
                   onChange={handleFormChange}
-                  className="w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-white text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 shadow-none"
+                  className="w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 shadow-none"
                   placeholder={t('Enter customer name')}
                   required
                 />
@@ -557,7 +557,7 @@ const VoiceBilling = () => {
                   name="amount"
                   value={formData.amount}
                   onChange={handleFormChange}
-                  className="w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-white text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 shadow-none"
+                  className="w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 shadow-none"
                   placeholder={t('Enter amount')}
                   min="0"
                   step="0.01"
@@ -577,7 +577,7 @@ const VoiceBilling = () => {
                   name="intent"
                   value={formData.intent}
                   onChange={handleFormChange}
-                  className="cursor-pointer w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-white text-[#191E2B] transition-colors duration-200 shadow-none"
+                  className="cursor-pointer w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-[#FBFBFC] text-[#191E2B] transition-colors duration-200 shadow-none"
                 >
                   <option value="UDHAR">{t('Udhar (Given)')}</option>
                   <option value="PAYMENT">{t('Payment (Received)')}</option>
@@ -596,7 +596,7 @@ const VoiceBilling = () => {
                   name="paymentMode"
                   value={formData.paymentMode}
                   onChange={handleFormChange}
-                  className="cursor-pointer w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-white text-[#191E2B] transition-colors duration-200 shadow-none"
+                  className="cursor-pointer w-full rounded-lg border border-[#DCE1EA] px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-[#FBFBFC] text-[#191E2B] transition-colors duration-200 shadow-none"
                 >
                   <option value="CASH">{t('Cash')}</option>
                   <option value="UPI">{t('UPI')}</option>

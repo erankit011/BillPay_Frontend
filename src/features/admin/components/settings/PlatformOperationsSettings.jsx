@@ -103,7 +103,7 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
                   min={0}
                   max={90}
                   placeholder="7"
-                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                  className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                 />
                 <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">
                   {t('Free Pro trial granted to new merchants upon signup')}
@@ -125,7 +125,7 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
                   onChange={handleNumberChange}
                   min={0}
                   placeholder="5"
-                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                  className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                 />
                 <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">
                   {t('Maximum bills allowed per month on Free tier')}
@@ -147,7 +147,7 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
                   onChange={handleNumberChange}
                   min={0}
                   placeholder="2"
-                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                  className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                 />
                 <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">
                   {t('Maximum customer profiles allowed on Free tier')}

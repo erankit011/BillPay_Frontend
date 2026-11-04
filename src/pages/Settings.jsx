@@ -652,7 +652,7 @@ const Settings = () => {
                         value={formData.shopName}
                         onChange={handleChange}
                         placeholder="Sharma General Store"
-                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                       />
                     </div>
                     <div>
@@ -663,7 +663,7 @@ const Settings = () => {
                         value={formData.gstNumber}
                         onChange={handleChange}
                         placeholder="23ABCDE0000A1A2"
-                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                       />
                     </div>
                     <div>
@@ -674,7 +674,7 @@ const Settings = () => {
                         value={formData.upiId}
                         onChange={handleChange}
                         placeholder="yourshop@upi"
-                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                       />
                     </div>
                     <div>
@@ -685,7 +685,7 @@ const Settings = () => {
                       value={formData.shopPhone}
                       onChange={handleChange}
                       placeholder="+91 98005 00012"
-                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                      className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                     />
                     <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Shown on invoices, can differ from personal phone')}</p>
                   </div>
@@ -697,7 +697,7 @@ const Settings = () => {
                       value={formData.shopEmail}
                       onChange={handleChange}
                       placeholder="yourshop@gmail.com"
-                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                      className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                     />
                     <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Shown on invoices, can differ from personal email')}</p>
                   </div>
@@ -836,7 +836,7 @@ const Settings = () => {
                       value={formData.invoicePrefix}
                       onChange={handleChange}
                       placeholder="INV"
-                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                      className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                     />
                     <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Used before invoice number, e.g. INV-001')}</p>
                   </div>
@@ -893,7 +893,7 @@ const Settings = () => {
                         value={formData.defaultPaymentTerms}
                         onChange={handleChange}
                         min="0"
-                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                       />
                       <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Default due period for invoices')}</p>
                     </div>
@@ -944,7 +944,7 @@ const Settings = () => {
                         value={formData.defaultCreditLimit}
                         onChange={handleChange}
                         min="0"
-                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                       />
                       <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('0 means unlimited credit')}</p>
                     </div>
@@ -1021,7 +1021,7 @@ const Settings = () => {
                             min="0"
                             max="100"
                             step="0.1"
-                            className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                            className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                           />
                           <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Applied to all new invoices')}</p>
                         </div>
@@ -1294,7 +1294,7 @@ const Settings = () => {
                           value={formData.lowStockThreshold}
                           onChange={handleChange}
                           min="1"
-                          className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                          className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                         />
                         <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Products below this quantity will be flagged')}</p>
                       </div>
@@ -1368,7 +1368,7 @@ const Settings = () => {
                         className={`block w-full rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none ${
                           passwordData.currentPassword.length > 0 && passwordData.currentPassword.length < 6
                             ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
-                            : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'
+                            : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
                         }`}
                       />
                     </div>
@@ -1383,7 +1383,7 @@ const Settings = () => {
                         className={`block w-full rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none ${
                           passwordData.newPassword.length > 0 && (passwordData.newPassword.length < 6 || passwordData.newPassword === passwordData.currentPassword)
                             ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
-                            : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'
+                            : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
                         }`}
                       />
                       {passwordData.newPassword.length > 0 && passwordData.newPassword.length < 6 && (
@@ -1406,7 +1406,7 @@ const Settings = () => {
                             ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
                             : (passwordData.confirmPassword && passwordData.newPassword === passwordData.confirmPassword && passwordData.newPassword.length >= 6)
                               ? 'border-[#0D7A57] focus:ring-2 focus:ring-[#0D7A57]/20 focus:border-[#0D7A57]'
-                              : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'
+                              : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
                         }`}
                       />
                       {passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword && (
@@ -1633,7 +1633,7 @@ const Settings = () => {
                       value={deleteAccountData.password}
                       onChange={handleDeleteAccountChange}
                       placeholder={t('Current password')}
-                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                      className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                     />
                   </div>
                     ) : (
@@ -1645,7 +1645,7 @@ const Settings = () => {
                           value={deleteAccountData.confirmationText}
                           onChange={handleDeleteAccountChange}
                           placeholder="DELETE MY ACCOUNT"
-                          className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                          className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                         />
                         <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium"><>{t('Since you logged in with Google, please type')} <span className="font-semibold text-[#191E2B]">DELETE MY ACCOUNT</span> {t('to confirm.')}</></p>
                       </div>
