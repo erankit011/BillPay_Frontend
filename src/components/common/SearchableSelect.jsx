@@ -82,17 +82,17 @@ const SearchableSelect = ({ options, value, onChange, placeholder, searchPlaceho
     <div
       id="searchable-select-dropdown"
       style={dropdownStyle}
-      className="bg-white border border-gray-200 rounded-lg flex flex-col overflow-hidden"
+      className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg flex flex-col overflow-hidden shadow-none"
     >
       {/**
        * In-Menu Search Input
        * Filters dropdown items dynamically with instant keyword matching
        */}
-      <div className="p-2 border-b border-gray-100 flex-shrink-0 relative">
-        <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+      <div className="p-2 border-b border-[#E8ECF2] flex-shrink-0 relative">
+        <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#757F94] pointer-events-none" />
         <input
           type="text"
-          className="w-full pl-8 pr-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#093C5D] focus:border-[#093C5D]"
+          className="w-full pl-8 pr-3 py-2 text-sm bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg text-[#191E2B] placeholder-[#9AA4B8] focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors duration-200 shadow-none"
           placeholder={searchPlaceholder}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -105,12 +105,12 @@ const SearchableSelect = ({ options, value, onChange, placeholder, searchPlaceho
        */}
       <div className="overflow-y-auto max-h-48">
         {filteredOptions.length === 0 ? (
-          <div className="p-4 text-sm text-center text-gray-500 font-medium">{t("No results found")}</div>
+          <div className="p-4 text-sm text-center text-[#757F94] font-medium">{t("No results found")}</div>
         ) : (
           filteredOptions.map(opt => (
             <div
               key={opt.value}
-              className={`px-3 py-2.5 text-sm cursor-pointer hover:bg-gray-50 transition-colors ${opt.value === value ? 'bg-[#093C5D]/5 text-[#093C5D] font-semibold' : 'text-gray-700 font-medium'}`}
+              className={`px-3 py-2.5 text-sm cursor-pointer hover:bg-[#F0F2F6] transition-colors ${opt.value === value ? 'bg-[#EEF0FB] text-[#4338CA] font-semibold' : 'text-[#4E5668] font-medium'}`}
               onMouseDown={(e) => {
                 e.preventDefault();
                 onChange(opt.value);
@@ -133,13 +133,13 @@ const SearchableSelect = ({ options, value, onChange, placeholder, searchPlaceho
        */}
       <div
         ref={triggerRef}
-        className="cursor-pointer w-full h-[42px] font-medium rounded-lg border border-gray-300 px-3 text-sm transition-all flex justify-between items-center bg-white hover:border-gray-400 select-none"
+        className="cursor-pointer w-full h-[42px] font-medium rounded-lg border border-[#DCE1EA] px-3 text-sm transition-all flex justify-between items-center bg-[#FBFBFC] hover:border-[#CBD5E1] shadow-none select-none"
         onClick={() => isOpen ? closeDropdown() : openDropdown()}
       >
-        <span className={`truncate pr-2 ${selectedOption ? 'text-gray-900' : 'text-gray-400'}`}>
+        <span className={`truncate pr-2 ${selectedOption ? 'text-[#191E2B]' : 'text-[#757F94]'}`}>
           {selectedOption ? selectedOption.label : placeholder}
         </span>
-        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-4 h-4 text-[#757F94] transition-transform shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
       </div>
 
       {/**

@@ -76,8 +76,8 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-gray-50">
-        <SwirlingLoader className="w-12 h-12 text-[#093C5D]" />
+      <div className="flex h-screen items-center justify-center bg-[#F0F2F6]">
+        <SwirlingLoader className="w-12 h-12 text-[#4338CA]" />
       </div>
     );
   }
@@ -115,8 +115,8 @@ const PublicRoute = ({ children }) => {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-gray-50">
-        <SwirlingLoader className="w-12 h-12 text-[#093C5D]" />
+      <div className="flex h-screen items-center justify-center bg-[#F0F2F6]">
+        <SwirlingLoader className="w-12 h-12 text-[#4338CA]" />
       </div>
     );
   }
@@ -148,8 +148,8 @@ const SettingsRoute = () => {
 const AppRoutes = () => {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <SwirlingLoader className="w-12 h-12 text-[#093C5D]" />
+      <div className="min-h-screen bg-[#F0F2F6] flex items-center justify-center">
+        <SwirlingLoader className="w-12 h-12 text-[#4338CA]" />
       </div>
     }>
       <Routes>

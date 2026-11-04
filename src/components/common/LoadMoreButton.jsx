@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 /**
  * LoadMoreButton
- * Clean, production-level pagination component styled to match the app theme (#093C5D).
+ * Clean, production-level pagination component styled to match the app theme (#4338CA).
  * Automatically hides when all data fits in a single page (totalCount <= pageSize && !hasNextPage).
  */
 const LoadMoreButton = ({
@@ -35,25 +35,25 @@ const LoadMoreButton = ({
 
   return (
     <div
-      className={`flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3 sm:py-3.5 border-t border-gray-100 bg-white ${className}`}
+      className={`flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3 sm:py-3.5 border-t border-[#E8ECF2] bg-[#FBFBFC] shadow-none ${className}`}
     >
       {/**
        * Records Metrics Counter
        * Outlines current window position versus grand total
        */}
-      <div className="text-xs sm:text-sm text-gray-500 font-medium">
+      <div className="text-xs sm:text-sm text-[#757F94] font-medium">
         {hasNextPage ? (
           <>
             {t('Showing')}{' '}
-            <span className="font-semibold text-gray-900">{currentCount}</span>{' '}
+            <span className="font-semibold text-[#191E2B]">{currentCount}</span>{' '}
             {t('of')}{' '}
-            <span className="font-semibold text-gray-900">{totalCount}</span>{' '}
+            <span className="font-semibold text-[#191E2B]">{totalCount}</span>{' '}
             {label}
           </>
         ) : (
           <>
             {t('Showing all')}{' '}
-            <span className="font-semibold text-gray-900">{totalCount}</span>{' '}
+            <span className="font-semibold text-[#191E2B]">{totalCount}</span>{' '}
             {label}
           </>
         )}
@@ -70,8 +70,8 @@ const LoadMoreButton = ({
             onClick={() => !isFetchingNextPage && fetchNextPage()}
             disabled={isFetchingNextPage}
             className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2 text-xs sm:text-sm font-medium rounded-lg 
-                       bg-[#093C5D] hover:bg-[#082a42] text-white 
-                       active:scale-95 transition-all duration-150 shadow-xs 
+                       bg-[#4338CA] hover:bg-[#3730A3] text-white 
+                       active:scale-95 transition-all duration-150 shadow-none 
                        disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
           >
             {isFetchingNextPage ? (
@@ -87,8 +87,8 @@ const LoadMoreButton = ({
             )}
           </button>
         ) : (
-          <span className="inline-flex items-center gap-1.5 text-xs text-gray-400 font-medium py-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+          <span className="inline-flex items-center gap-1.5 text-xs text-[#757F94] font-medium py-1">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#0D7A57]" />
             {t('All {{label}} loaded', { label })}
           </span>
         )}

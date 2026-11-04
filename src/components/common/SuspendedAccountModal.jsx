@@ -46,7 +46,7 @@ const SuspendedAccountModal = ({ isOpen, reason, onLogout }) => {
        * Blocks user interaction with underlying workspace
        */}
       <div
-        className="fixed inset-0 bg-gray-950/75 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-[#191E2B]/60 backdrop-blur-xs transition-opacity"
         onWheel={(e) => e.preventDefault()}
         onTouchMove={(e) => e.preventDefault()}
       />
@@ -55,11 +55,11 @@ const SuspendedAccountModal = ({ isOpen, reason, onLogout }) => {
        * Suspension Notice Card
        * Central dialog window presenting administrative reason and appeals route
        */}
-      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-rose-200 overflow-hidden z-10 animate-modal-content">
+      <div className="relative w-full max-w-lg bg-[#FBFBFC] rounded-2xl shadow-none border border-[#DCE1EA] overflow-hidden z-10 animate-modal-content">
         {/**
          * Warning Color Accent Bar
          */}
-        <div className="h-1.5 w-full bg-gradient-to-r from-rose-500 via-red-500 to-amber-500" />
+        <div className="h-1.5 w-full bg-[#B91C1C]" />
 
         <div className="p-6 sm:p-7 text-left space-y-5">
           {/**
@@ -67,25 +67,25 @@ const SuspendedAccountModal = ({ isOpen, reason, onLogout }) => {
            */}
           <div className="flex items-start gap-4">
             <div className="relative shrink-0">
-              <div className="w-12 h-12 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-[#FDF2F2] border border-[#F9D4D4] text-[#B91C1C] flex items-center justify-center shadow-none">
                 <ShieldAlert className="w-6 h-6" strokeWidth={2.2} />
               </div>
               <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-rose-600 border-2 border-white" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#F87171] opacity-75" />
+                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#B91C1C] border-2 border-white" />
               </span>
             </div>
 
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-lg sm:text-xl font-bold text-gray-900 tracking-tight">
+                <h3 className="text-lg sm:text-xl font-bold text-[#191E2B] tracking-tight">
                   {t('Store Account Suspended')}
                 </h3>
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-200">
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#FDF2F2] text-[#B91C1C] border border-[#F9D4D4]">
                   {t('Action Required')}
                 </span>
               </div>
-              <p className="text-xs sm:text-sm text-gray-500 mt-1 leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#757F94] mt-1 leading-relaxed">
                 {t('Your merchant shop account access has been restricted by the platform administration.')}
               </p>
             </div>
@@ -95,12 +95,12 @@ const SuspendedAccountModal = ({ isOpen, reason, onLogout }) => {
            * Administrative Reason Box
            * Surfaces specific suspension reasoning recorded by system operators
            */}
-          <div className="p-4 rounded-xl bg-rose-50/60 border border-rose-200/90 space-y-1.5">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-rose-800 uppercase tracking-wider">
-              <AlertOctagon className="w-3.5 h-3.5 text-rose-600" />
+          <div className="p-4 rounded-xl bg-[#FDF2F2] border border-[#F9D4D4] space-y-1.5">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-[#B91C1C] uppercase tracking-wider">
+              <AlertOctagon className="w-3.5 h-3.5 text-[#B91C1C]" />
               <span>{t('Suspension Reason')}</span>
             </div>
-            <p className="text-sm font-medium text-rose-950 leading-relaxed break-words bg-white/70 p-2.5 rounded-lg border border-rose-100">
+            <p className="text-sm font-medium text-[#191E2B] leading-relaxed break-words bg-[#FBFBFC] p-2.5 rounded-lg border border-[#F9D4D4]">
               "{displayReason}"
             </p>
           </div>
@@ -109,8 +109,8 @@ const SuspendedAccountModal = ({ isOpen, reason, onLogout }) => {
            * Operational Impact Clarification
            * Informs merchant that tenant database assets remain intact
            */}
-          <div className="text-xs text-gray-600 leading-relaxed space-y-1 bg-gray-50 p-3.5 rounded-xl border border-gray-200/80">
-            <p className="font-semibold text-gray-800">
+          <div className="text-xs text-[#4E5668] leading-relaxed space-y-1 bg-[#F0F2F6] p-3.5 rounded-xl border border-[#DCE1EA]">
+            <p className="font-semibold text-[#191E2B]">
               {t('What does this mean for your store?')}
             </p>
             <p>
@@ -124,16 +124,16 @@ const SuspendedAccountModal = ({ isOpen, reason, onLogout }) => {
           <div className="pt-2 flex flex-col sm:flex-row items-center gap-2.5">
             <a
               href="mailto:support@udharpay.com?subject=Appeal%20Store%20Suspension"
-              className="w-full sm:w-1/2 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 text-xs sm:text-sm font-semibold transition-colors shadow-sm"
+              className="w-full sm:w-1/2 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-[#DCE1EA] text-[#4E5668] bg-[#FBFBFC] hover:bg-[#F0F2F6] hover:text-[#191E2B] text-xs sm:text-sm font-semibold transition-colors shadow-none active:scale-95"
             >
-              <Mail className="w-4 h-4 text-gray-500" />
+              <Mail className="w-4 h-4 text-[#757F94]" />
               <span>{t('Contact Support')}</span>
             </a>
 
             <button
               type="button"
               onClick={onLogout}
-              className="w-full sm:w-1/2 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs sm:text-sm font-semibold transition-colors shadow-sm hover:shadow"
+              className="w-full sm:w-1/2 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#B91C1C] hover:bg-[#991B1B] text-white text-xs sm:text-sm font-semibold transition-colors shadow-none active:scale-95"
             >
               <LogOut className="w-4 h-4" />
               <span>{t('Sign Out Securely')}</span>
