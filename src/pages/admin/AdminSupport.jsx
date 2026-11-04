@@ -3,9 +3,9 @@
  * Resolves merchant support tickets, updates priority queues, and maintains staff resolution audit notes.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import {
   LifeBuoy,
   Search,
@@ -18,8 +18,6 @@ import {
   User,
   Mail,
   Store,
-  ChevronLeft,
-  ChevronRight,
   ExternalLink,
   MessageCircle,
   RotateCcw,
@@ -28,6 +26,7 @@ import {
 import toast from 'react-hot-toast';
 import { formatShortDate } from '../../utils/dateUtils';
 import { getInitials } from '../../utils/stringUtils';
+import LoadMoreButton from '../../components/common/LoadMoreButton';
 import {
   getAdminTickets,
   getAdminTicketStats,
@@ -93,7 +92,7 @@ const AdminSupport = () => {
         const next = new URLSearchParams(prev);
         if (searchTerm) next.set('search', searchTerm);
         else next.delete('search');
-        next.set('page', '1');
+        next.delete('page');
         return next;
       }, { replace: true });
     }, 450);
@@ -112,17 +111,9 @@ const AdminSupport = () => {
       const next = new URLSearchParams(prev);
       if (value === 'ALL') next.delete(key);
       else next.set(key, value);
-      next.set('page', '1');
+      next.delete('page');
       return next;
     }, { replace: true });
-  };
-
-  const handlePageChange = (newPage) => {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.set('page', String(newPage));
-      return next;
-    });
   };
 
   /**
@@ -144,29 +135,40 @@ const AdminSupport = () => {
   };
 
   /**
-   * Support Tickets Query
-   * Fetches paginated support tickets filtered by search, status, priority, and category.
+   * Infinite Support Tickets Stream Query
+   * Fetches tickets filtered by search, status, priority, and category with LoadMore capability.
    */
-  const { data: ticketsData, isLoading: loading } = useQuery({
-    queryKey: ['adminTickets', debouncedSearch, urlStatus, urlPriority, urlCategory, urlPage],
-    queryFn: () =>
+  const {
+    data,
+    isLoading: loading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery({
+    queryKey: ['adminTickets', debouncedSearch, urlStatus, urlPriority, urlCategory],
+    queryFn: ({ pageParam = 1 }) =>
       getAdminTickets({
-        page: urlPage,
-        limit: 10,
+        page: pageParam,
+        limit: 15,
         search: debouncedSearch || undefined,
         status: urlStatus !== 'ALL' ? urlStatus : undefined,
         priority: urlPriority !== 'ALL' ? urlPriority : undefined,
         category: urlCategory !== 'ALL' ? urlCategory : undefined,
       }),
+    getNextPageParam: (lastPage) => {
+      const p = lastPage?.pagination;
+      return p && p.page < p.totalPages ? p.page + 1 : undefined;
+    },
     staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
   });
 
-  const tickets = ticketsData?.tickets || [];
-  const pagination = {
-    page: ticketsData?.pagination?.page || urlPage,
-    total: ticketsData?.pagination?.total ?? tickets.length,
-    totalPages: ticketsData?.pagination?.totalPages || 1,
-  };
+  const tickets = useMemo(() => {
+    return data?.pages ? data.pages.flatMap((p) => p?.tickets || []) : [];
+  }, [data]);
+
+  const totalCount = data?.pages?.[0]?.pagination?.total ?? tickets.length;
 
   const handleUpdateTicket = async (ticketId, updateData) => {
     const updated = await updateAdminTicket(ticketId, updateData);
@@ -613,37 +615,18 @@ const AdminSupport = () => {
         )}
 
         {/**
-         * Pagination Controls Bar
-         * Page index summary and previous/next page navigation buttons.
+         * Universal LoadMore Controls Bar (DRY)
+         * Interactive trigger to fetch and append the next page of merchant support tickets
          */}
-        {pagination.totalPages > 1 && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border-t border-[#DCE1EA] bg-[#F0F2F6]/60">
-            <span className="text-xs text-[#757F94] font-medium">
-              Showing page <span className="font-semibold text-[#191E2B]">{pagination.page}</span> of{' '}
-              <span className="font-semibold text-[#191E2B]">{pagination.totalPages}</span> ({pagination.total} tickets total)
-            </span>
-
-            <div className="flex items-center gap-1.5">
-              <button
-                disabled={pagination.page <= 1}
-                onClick={() => handlePageChange(pagination.page - 1)}
-                className="cursor-pointer p-1.5 rounded border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:bg-[#F0F2F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <span className="text-xs font-semibold px-2.5 text-[#4E5668]">
-                {pagination.page} / {pagination.totalPages}
-              </span>
-              <button
-                disabled={pagination.page >= pagination.totalPages}
-                onClick={() => handlePageChange(pagination.page + 1)}
-                className="cursor-pointer p-1.5 rounded border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:bg-[#F0F2F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        )}
+        <LoadMoreButton
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          fetchNextPage={fetchNextPage}
+          currentCount={tickets.length}
+          totalCount={totalCount}
+          pageSize={15}
+          label="tickets"
+        />
       </div>
 
       {/**

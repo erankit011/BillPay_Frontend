@@ -3,9 +3,9 @@
  * Records staff mutations, merchant plan overrides, store suspensions, and configuration change events.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, keepPreviousData } from '@tanstack/react-query';
 import {
   ShieldCheck,
   Search,
@@ -19,8 +19,6 @@ import {
   UserCheck,
   AlertCircle,
   Inbox,
-  ChevronLeft,
-  ChevronRight,
   Clock,
   Laptop,
   RotateCcw,
@@ -33,6 +31,7 @@ import {
   exportAdminAuditLogs,
 } from '../../features/admin/api/adminApi';
 import AuditCategoryBadge from '../../features/admin/components/audit/AuditCategoryBadge';
+import LoadMoreButton from '../../components/common/LoadMoreButton';
 import AuditDetailsModal from '../../features/admin/components/audit/AuditDetailsModal';
 import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
@@ -82,7 +81,7 @@ const AdminAuditLogs = () => {
         const next = new URLSearchParams(prev);
         if (searchTerm) next.set('search', searchTerm);
         else next.delete('search');
-        next.set('page', '1');
+        next.delete('page');
         return next;
       }, { replace: true });
     }, 450);
@@ -101,17 +100,9 @@ const AdminAuditLogs = () => {
       const next = new URLSearchParams(prev);
       if (value === 'ALL') next.delete(key);
       else next.set(key, value);
-      next.set('page', '1');
+      next.delete('page');
       return next;
     }, { replace: true });
-  };
-
-  const handlePageChange = (newPage) => {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.set('page', String(newPage));
-      return next;
-    });
   };
 
   /**
@@ -132,27 +123,38 @@ const AdminAuditLogs = () => {
   };
 
   /**
-   * Paginated Audit Logs Stream Query
-   * Fetches filtered log records matching search keyword, category, and page index.
+   * Infinite Audit Logs Stream Query
+   * Fetches filtered log records matching search keyword, category, and appends next pages.
    */
-  const { data: logsData, isLoading: loading } = useQuery({
-    queryKey: ['adminAuditLogs', debouncedSearch, urlCategory, urlPage],
-    queryFn: () =>
+  const {
+    data,
+    isLoading: loading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery({
+    queryKey: ['adminAuditLogs', debouncedSearch, urlCategory],
+    queryFn: ({ pageParam = 1 }) =>
       getAdminAuditLogs({
-        page: urlPage,
+        page: pageParam,
         limit: 15,
         search: debouncedSearch || undefined,
         actionCategory: urlCategory !== 'ALL' ? urlCategory : undefined,
       }),
+    getNextPageParam: (lastPage) => {
+      const p = lastPage?.pagination;
+      return p && p.page < p.totalPages ? p.page + 1 : undefined;
+    },
     staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
   });
 
-  const logs = logsData?.logs || [];
-  const pagination = {
-    page: logsData?.pagination?.page || urlPage,
-    total: logsData?.pagination?.total ?? logs.length,
-    totalPages: logsData?.pagination?.totalPages || logsData?.pagination?.pages || 1,
-  };
+  const logs = useMemo(() => {
+    return data?.pages ? data.pages.flatMap((p) => p?.logs || []) : [];
+  }, [data]);
+
+  const totalCount = data?.pages?.[0]?.pagination?.total ?? logs.length;
 
   /**
    * Audit Logs CSV Export Handler
@@ -589,37 +591,18 @@ const AdminAuditLogs = () => {
         )}
 
         {/**
-         * Pagination Navigation Toolbar
-         * Previous/next page pagination with total recorded event count.
+         * Universal LoadMore Controls Toolbar (DRY)
+         * Interactive trigger to fetch and append the next page of audit log events
          */}
-        {pagination.total > 0 && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border-t border-[#DCE1EA] bg-[#F0F2F6]/60">
-            <span className="text-xs text-[#757F94] font-medium">
-              Showing page <span className="font-semibold text-[#191E2B]">{pagination.page}</span> of{' '}
-              <span className="font-semibold text-[#191E2B]">{pagination.totalPages}</span> ({pagination.total} total events)
-            </span>
-
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={() => handlePageChange(pagination.page - 1)}
-                disabled={pagination.page <= 1 || loading}
-                className="cursor-pointer p-1.5 rounded border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:bg-[#F0F2F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <span className="text-xs font-semibold px-2.5 text-[#4E5668]">
-                {pagination.page} / {pagination.totalPages}
-              </span>
-              <button
-                onClick={() => handlePageChange(pagination.page + 1)}
-                disabled={pagination.page >= pagination.totalPages || loading}
-                className="cursor-pointer p-1.5 rounded border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:bg-[#F0F2F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        )}
+        <LoadMoreButton
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          fetchNextPage={fetchNextPage}
+          currentCount={logs.length}
+          totalCount={totalCount}
+          pageSize={15}
+          label="events"
+        />
       </div>
 
       {/**

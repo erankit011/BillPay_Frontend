@@ -3,9 +3,9 @@
  * Global billing oversight across all merchants with customer, status, payment mode, and date filters.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, keepPreviousData } from '@tanstack/react-query';
 import {
   FileText,
   Search,
@@ -17,8 +17,6 @@ import {
   Store,
   User,
   X,
-  ChevronLeft,
-  ChevronRight,
   ChevronDown,
   CreditCard,
   RotateCcw,
@@ -26,6 +24,7 @@ import {
 } from 'lucide-react';
 import { getAdminBills } from '../../features/admin/api/adminApi';
 import AdminStatCard from '../../features/admin/components/AdminStatCard';
+import LoadMoreButton from '../../components/common/LoadMoreButton';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 import { formatCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/dateUtils';
@@ -40,7 +39,6 @@ const AdminBills = () => {
   const urlSearch = searchParams.get('search') || '';
   const urlStatus = (searchParams.get('status') || 'ALL').toUpperCase();
   const urlPaymentMode = (searchParams.get('mode') || 'ALL').toUpperCase();
-  const urlPage = Number(searchParams.get('page')) || 1;
 
   const [searchTerm, setSearchTerm] = useState(urlSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(urlSearch);
@@ -53,7 +51,7 @@ const AdminBills = () => {
         const next = new URLSearchParams(prev);
         if (searchTerm) next.set('search', searchTerm);
         else next.delete('search');
-        next.set('page', '1');
+        next.delete('page');
         return next;
       }, { replace: true });
     }, 450);
@@ -73,17 +71,9 @@ const AdminBills = () => {
       const next = new URLSearchParams(prev);
       if (value === 'All' || value === 'ALL') next.delete(key);
       else next.set(key, value.toUpperCase());
-      next.set('page', '1');
+      next.delete('page');
       return next;
     }, { replace: true });
-  };
-
-  const handlePageChange = (newPage) => {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.set('page', String(newPage));
-      return next;
-    });
   };
 
   /**
@@ -108,25 +98,37 @@ const AdminBills = () => {
     };
   }, [selectedBill]);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['adminBills', urlPage, debouncedSearch, urlStatus, urlPaymentMode],
-    queryFn: () =>
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['adminBills', debouncedSearch, urlStatus, urlPaymentMode],
+    queryFn: ({ pageParam = 1 }) =>
       getAdminBills({
-        page: urlPage,
-        limit: 10,
+        page: pageParam,
+        limit: 15,
         search: debouncedSearch || undefined,
         paymentStatus: urlStatus !== 'ALL' && urlStatus !== 'All' ? urlStatus : undefined,
         paymentMode: urlPaymentMode !== 'ALL' && urlPaymentMode !== 'All' ? urlPaymentMode : undefined,
       }),
+    getNextPageParam: (lastPage) => (lastPage?.hasNextPage ? lastPage.currentPage + 1 : undefined),
     staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
   });
 
-  const bills = data?.data || [];
-  const totalCount = data?.totalCount || 0;
-  const totalGMV = data?.totalGMV || 0;
-  const totalPaid = data?.totalPaid || 0;
-  const totalPending = data?.totalPending || 0;
-  const totalPages = data?.totalPages || 1;
+  const bills = useMemo(() => {
+    return data?.pages ? data.pages.flatMap((p) => p?.data || []) : [];
+  }, [data]);
+
+  const firstPage = data?.pages?.[0];
+  const totalCount = firstPage?.totalCount || 0;
+  const totalGMV = firstPage?.totalGMV || 0;
+  const totalPaid = firstPage?.totalPaid || 0;
+  const totalPending = firstPage?.totalPending || 0;
 
   const getStatusBadge = (status) => {
     switch (status) {
@@ -555,35 +557,18 @@ const AdminBills = () => {
         )}
 
         {/**
-         * Pagination Navigation Bar
-         * Displays current page range and next/previous controls.
+         * Universal LoadMore Controls Bar (DRY)
+         * Interactive trigger to fetch and append the next page of billing records
          */}
-        {!isLoading && totalPages > 1 && (
-          <div className="px-4 py-3 border-t border-[#DCE1EA] bg-[#F0F2F6] flex items-center justify-between">
-            <span className="text-xs text-[#4E5668] font-medium">
-              Showing page <span className="font-semibold text-[#191E2B]">{urlPage}</span> of{' '}
-              <span className="font-semibold text-[#191E2B]">{totalPages}</span> ({totalCount} total bills)
-            </span>
-            <div className="flex items-center gap-2">
-              <button
-                disabled={urlPage <= 1}
-                onClick={() => handlePageChange(Math.max(1, urlPage - 1))}
-                className="cursor-pointer disabled:cursor-not-allowed inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-[#4E5668] bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg hover:bg-gray-100 disabled:opacity-40 transition-colors"
-              >
-                <ChevronLeft className="w-3.5 h-3.5" />
-                Previous
-              </button>
-              <button
-                disabled={urlPage >= totalPages}
-                onClick={() => handlePageChange(Math.min(totalPages, urlPage + 1))}
-                className="cursor-pointer disabled:cursor-not-allowed inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-[#4E5668] bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg hover:bg-gray-100 disabled:opacity-40 transition-colors"
-              >
-                Next
-                <ChevronRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-        )}
+        <LoadMoreButton
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          fetchNextPage={fetchNextPage}
+          currentCount={bills.length}
+          totalCount={totalCount}
+          pageSize={15}
+          label="bills"
+        />
       </div>
 
       {/**

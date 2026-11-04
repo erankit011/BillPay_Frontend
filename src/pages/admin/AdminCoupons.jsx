@@ -3,9 +3,9 @@
  * Oversees discount coupon campaigns, redemption quotas, usage logs, and status toggles.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import {
   Tag,
   Plus,
@@ -17,12 +17,11 @@ import {
   Users,
   Coins,
   Inbox,
-  ChevronLeft,
-  ChevronRight,
   RotateCcw,
   X,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import LoadMoreButton from '../../components/common/LoadMoreButton';
 import {
   getAdminCoupons,
   getAdminCouponStats,
@@ -80,7 +79,7 @@ const AdminCoupons = () => {
         const next = new URLSearchParams(prev);
         if (searchTerm) next.set('search', searchTerm);
         else next.delete('search');
-        next.set('page', '1');
+        next.delete('page');
         return next;
       }, { replace: true });
     }, 450);
@@ -99,34 +98,38 @@ const AdminCoupons = () => {
       const next = new URLSearchParams(prev);
       if (value === 'ALL') next.delete(key);
       else next.set(key, value);
-      next.set('page', '1');
+      next.delete('page');
       return next;
     }, { replace: true });
   };
 
-  const handlePageChange = (newPage) => {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.set('page', String(newPage));
-      return next;
-    });
-  };
-
   /**
-   * Paginated Coupons List Query
-   * Fetches discount coupons matching search terms, status filter, and pagination index.
+   * Infinite Coupons List Query
+   * Fetches discount coupons matching search terms, status filter, and appends next pages.
    */
-  const { data: couponsData, isLoading: loading } = useQuery({
-    queryKey: ['adminCoupons', debouncedSearch, urlStatus, urlDiscountType, urlPage],
-    queryFn: () =>
+  const {
+    data,
+    isLoading: loading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery({
+    queryKey: ['adminCoupons', debouncedSearch, urlStatus, urlDiscountType],
+    queryFn: ({ pageParam = 1 }) =>
       getAdminCoupons({
-        page: urlPage,
-        limit: 9,
+        page: pageParam,
+        limit: 12,
         search: debouncedSearch || undefined,
         status: urlStatus !== 'ALL' ? urlStatus : undefined,
         discountType: urlDiscountType !== 'ALL' ? urlDiscountType : undefined,
       }),
+    getNextPageParam: (lastPage) => {
+      const p = lastPage?.pagination;
+      return p && p.page < p.totalPages ? p.page + 1 : undefined;
+    },
     staleTime: 30 * 1000,
+    placeholderData: keepPreviousData,
   });
 
   /**
@@ -139,9 +142,11 @@ const AdminCoupons = () => {
     staleTime: 30 * 1000,
   });
 
-  const coupons = couponsData?.coupons || [];
-  const totalPages = couponsData?.pagination?.totalPages || 1;
-  const totalCount = couponsData?.pagination?.total ?? coupons.length;
+  const coupons = useMemo(() => {
+    return data?.pages ? data.pages.flatMap((p) => p?.coupons || []) : [];
+  }, [data]);
+
+  const totalCount = data?.pages?.[0]?.pagination?.total ?? coupons.length;
   const stats = statsData || { total: 0, active: 0, expired: 0, totalRedemptions: 0, totalDiscountsGiven: 0 };
 
   /**
@@ -422,37 +427,19 @@ const AdminCoupons = () => {
       )}
 
       {/**
-       * Pagination Navigation Controls
-       * Previous/next page buttons with page number indicator and total coupon count.
+       * Universal LoadMore Controls (DRY)
+       * Interactive trigger to fetch and append the next page of promotional coupons
        */}
-      {totalPages > 1 && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3.5 border border-[#DCE1EA] bg-[#F0F2F6]/60 rounded-lg">
-          <span className="text-xs text-[#757F94] font-medium">
-            Showing page <span className="font-semibold text-[#191E2B]">{urlPage}</span> of{' '}
-            <span className="font-semibold text-[#191E2B]">{totalPages}</span> ({totalCount} total promo codes)
-          </span>
-
-          <div className="flex items-center gap-1.5">
-            <button
-              disabled={urlPage <= 1}
-              onClick={() => handlePageChange(urlPage - 1)}
-              className="cursor-pointer p-1.5 rounded border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:bg-[#F0F2F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <span className="text-xs font-semibold px-2.5 text-[#4E5668]">
-              {urlPage} / {totalPages}
-            </span>
-            <button
-              disabled={urlPage >= totalPages}
-              onClick={() => handlePageChange(urlPage + 1)}
-              className="cursor-pointer p-1.5 rounded border border-[#DCE1EA] bg-[#FFFFFF] text-[#4E5668] hover:bg-[#F0F2F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
+      <LoadMoreButton
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        fetchNextPage={fetchNextPage}
+        currentCount={coupons.length}
+        totalCount={totalCount}
+        pageSize={12}
+        label="promo codes"
+        className="rounded-lg border border-[#DCE1EA]"
+      />
 
       {/**
        * Coupon Creation & Edit Dialog Modal
