@@ -552,7 +552,7 @@ const AdminShops = () => {
                             <button
                               type="button"
                               onClick={() => setInspectShop(shop)}
-                              className="cursor-pointer h-8 px-2.5 sm:px-3 text-[#4338CA] font-semibold bg-[#EEF0FB] border border-[#D8DCF5] hover:bg-[#E0E7FF] rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
+                              className="cursor-pointer h-8 px-2.5 sm:px-3 text-[#4338CA] font-semibold bg-[#EEF0FB] border border-[#D8DCF5] hover:bg-[#E0E7FF] rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
                               title="Inspect full shop profile, activity and customer metrics"
                             >
                               <Eye className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
@@ -566,7 +566,7 @@ const AdminShops = () => {
                             <button
                               type="button"
                               onClick={() => setPlanModalShop(shop)}
-                              className="cursor-pointer h-8 px-2.5 sm:px-3 text-[#B45309] font-semibold bg-[#FEF3C7] border border-[#FDE68A] hover:bg-[#FDE68A]/70 rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
+                              className="cursor-pointer h-8 px-2.5 sm:px-3 text-[#B45309] font-semibold bg-[#FEF3C7] border border-[#FDE68A] hover:bg-[#FDE68A]/70 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
                               title="Change, upgrade or extend merchant subscription plan"
                             >
                               <Crown className="w-3.5 h-3.5 shrink-0 text-amber-600" strokeWidth={2} />
@@ -580,7 +580,7 @@ const AdminShops = () => {
                             <button
                               type="button"
                               onClick={() => setNoticeModalShop(shop)}
-                              className="cursor-pointer h-8 px-2.5 sm:px-3 text-[#4338CA] font-semibold bg-[#EEF0FB] border border-[#D8DCF5] hover:bg-[#E0E7FF] rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
+                              className="cursor-pointer h-8 px-2.5 sm:px-3 text-[#4338CA] font-semibold bg-[#EEF0FB] border border-[#D8DCF5] hover:bg-[#E0E7FF] rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
                               title="Send official direct notice to this store"
                             >
                               <BellRing className="w-3.5 h-3.5 shrink-0 text-[#4338CA]" strokeWidth={2} />
@@ -593,7 +593,7 @@ const AdminShops = () => {
                              */}
                             <button
                               onClick={() => setSuspendModalShop(shop)}
-                              className={`cursor-pointer h-8 px-2.5 sm:px-3 font-semibold rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none ${
+                              className={`cursor-pointer h-8 px-2.5 sm:px-3 font-semibold rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none ${
                                 isSuspended
                                   ? 'text-green-700 bg-green-50 border border-green-200 hover:bg-green-100'
                                   : 'text-red-700 bg-red-50 border border-red-200 hover:bg-red-100'
@@ -621,7 +621,7 @@ const AdminShops = () => {
                               type="button"
                               onClick={() => handleOpenLogoutModal(shop)}
                               disabled={forceLogoutMutation.isPending}
-                              className="cursor-pointer h-8 px-2.5 sm:px-3 text-[#4E5668] font-semibold bg-[#F0F2F6] border border-[#DCE1EA] hover:bg-gray-100 rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none disabled:opacity-50"
+                              className="cursor-pointer h-8 px-2.5 sm:px-3 text-[#4E5668] font-semibold bg-[#F0F2F6] border border-[#DCE1EA] hover:bg-[#E0E4FA] rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none disabled:opacity-50"
                               title="Forcibly terminate shopkeeper sessions across all devices"
                             >
                               <LogOut className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
@@ -735,7 +735,7 @@ const AdminShops = () => {
                       <button
                         type="button"
                         onClick={() => setInspectShop(shop)}
-                        className="cursor-pointer w-full h-8.5 text-[#4338CA] font-semibold bg-[#EEF0FB] border border-[#D8DCF5] hover:bg-[#E0E7FF] px-2 rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
+                        className="cursor-pointer w-full h-8.5 text-[#4338CA] font-semibold bg-[#EEF0FB] border border-[#D8DCF5] hover:bg-[#E0E7FF] px-2 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
                       >
                         <Eye className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
                         <span className="leading-none">Inspect</span>
@@ -744,7 +744,7 @@ const AdminShops = () => {
                       <button
                         type="button"
                         onClick={() => setPlanModalShop(shop)}
-                        className="cursor-pointer w-full h-8.5 text-[#B45309] font-semibold bg-[#FEF3C7] border border-[#FDE68A] hover:bg-[#FDE68A]/70 px-2 rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
+                        className="cursor-pointer w-full h-8.5 text-[#B45309] font-semibold bg-[#FEF3C7] border border-[#FDE68A] hover:bg-[#FDE68A]/70 px-2 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
                       >
                         <Crown className="w-3.5 h-3.5 shrink-0 text-amber-600" strokeWidth={2} />
                         <span className="leading-none">Plan</span>
@@ -753,7 +753,7 @@ const AdminShops = () => {
                       <button
                         type="button"
                         onClick={() => setNoticeModalShop(shop)}
-                        className="cursor-pointer w-full h-8.5 text-[#4338CA] font-semibold bg-[#EEF0FB] border border-[#D8DCF5] hover:bg-[#E0E7FF] px-2 rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
+                        className="cursor-pointer w-full h-8.5 text-[#4338CA] font-semibold bg-[#EEF0FB] border border-[#D8DCF5] hover:bg-[#E0E7FF] px-2 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none"
                       >
                         <BellRing className="w-3.5 h-3.5 shrink-0 text-[#4338CA]" strokeWidth={2} />
                         <span className="leading-none">Notice</span>
@@ -762,7 +762,7 @@ const AdminShops = () => {
                       <button
                         type="button"
                         onClick={() => setSuspendModalShop(shop)}
-                        className={`cursor-pointer w-full h-8.5 font-semibold px-2 rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none ${
+                        className={`cursor-pointer w-full h-8.5 font-semibold px-2 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none ${
                           isSuspended
                             ? 'text-green-700 bg-green-50 border border-green-200 hover:bg-green-100'
                             : 'text-red-700 bg-red-50 border border-red-200 hover:bg-red-100'
@@ -785,7 +785,7 @@ const AdminShops = () => {
                         type="button"
                         onClick={() => handleOpenLogoutModal(shop)}
                         disabled={forceLogoutMutation.isPending}
-                        className="cursor-pointer w-full h-8.5 text-[#4E5668] font-semibold bg-[#F0F2F6] border border-[#DCE1EA] hover:bg-gray-100 px-2 rounded inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none disabled:opacity-50 col-span-2 sm:col-span-1"
+                        className="cursor-pointer w-full h-8.5 text-[#4E5668] font-semibold bg-[#F0F2F6] border border-[#DCE1EA] hover:bg-[#E0E4FA] px-2 rounded-lg inline-flex items-center justify-center gap-1.5 transition-all text-xs active:scale-95 whitespace-nowrap shadow-none disabled:opacity-50 col-span-2 sm:col-span-1"
                       >
                         <LogOut className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
                         <span className="leading-none">Logout</span>

@@ -444,7 +444,7 @@ const AdminBroadcasts = () => {
                     type="button"
                     onClick={() => handleToggleStatus(broadcast)}
                     title={broadcast.isActive ? 'Pause Broadcast' : 'Activate Broadcast'}
-                    className={`cursor-pointer px-2.5 py-1 rounded-md text-xs font-semibold border transition-all active:scale-95 inline-flex items-center gap-1.5 ${
+                    className={`cursor-pointer px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all active:scale-95 inline-flex items-center gap-1.5 ${
                       broadcast.isActive
                         ? 'bg-amber-50 hover:bg-amber-100 text-amber-800 border-amber-200'
                         : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'
@@ -457,7 +457,7 @@ const AdminBroadcasts = () => {
                   <button
                     type="button"
                     onClick={() => handleOpenEdit(broadcast)}
-                    className="cursor-pointer px-2.5 py-1 rounded-md text-xs font-semibold bg-[#FBFBFC] hover:bg-[#F0F2F6] text-[#4E5668] border border-[#DCE1EA] transition-all inline-flex items-center gap-1.5 active:scale-95"
+                    className="cursor-pointer px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#FBFBFC] hover:bg-[#F0F2F6] text-[#4E5668] border border-[#DCE1EA] transition-all inline-flex items-center gap-1.5 active:scale-95"
                   >
                     <Edit2 className="w-3.5 h-3.5 text-[#757F94]" />
                     <span>Edit</span>
@@ -466,7 +466,7 @@ const AdminBroadcasts = () => {
                   <button
                     type="button"
                     onClick={() => handleDelete(broadcast)}
-                    className="cursor-pointer p-1.5 rounded-md text-red-600 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-all active:scale-95"
+                    className="cursor-pointer p-1.5 rounded-lg text-red-600 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-all active:scale-95"
                     title="Delete announcement"
                   >
                     <Trash2 className="w-3.5 h-3.5" />

@@ -112,9 +112,9 @@ const ProductViewModal = ({ isOpen, onClose, product }) => {
                 </div>
               </div>
               <h2 className="text-lg sm:text-xl font-semibold text-[#191E2B] text-center leading-tight mb-1">{product.name}</h2>
-              <div className="flex items-center text-xs text-[#757F94] font-medium">
-                <Clock className="w-3.5 h-3.5 mr-1.5" />
-                {updatedDate}
+              <div className="inline-flex items-center gap-1.5 text-xs text-[#757F94] font-medium leading-none">
+                <Clock className="w-3.5 h-3.5 shrink-0 -translate-y-[1px]" />
+                <span>{updatedDate}</span>
               </div>
             </div>
 

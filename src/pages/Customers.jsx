@@ -60,8 +60,8 @@ const CustomerTableRow = React.memo(({
             <span className="text-sm lg:text-[15px] font-semibold text-[#4338CA] truncate block mb-0.5">
               {customer.name}
             </span>
-            <span className="text-[10px] lg:text-[11px] text-[#757F94] font-medium flex items-center whitespace-nowrap gap-1">
-              <Clock className="w-[11px] h-[11px] lg:w-3 lg:h-3 shrink-0 mt-[1px]" />
+            <span className="text-[10px] sm:text-[11px] text-[#757F94] font-medium inline-flex items-center whitespace-nowrap gap-1 leading-none">
+              <Clock className="w-3 h-3 shrink-0 -translate-y-[1px]" />
               <span>{formatDate(customer.createdAt)}</span>
             </span>
           </div>
@@ -171,8 +171,8 @@ const CustomerMobileCard = React.memo(({
             <h3 className="text-sm sm:text-[15px] font-semibold text-[#4338CA] truncate leading-tight mb-0.5">
               {customer.name}
             </h3>
-            <span className="text-[10px] sm:text-[11px] text-[#757F94] font-medium flex items-center whitespace-nowrap gap-1">
-              <Clock className="w-[11px] h-[11px] sm:w-3 sm:h-3 shrink-0 mt-[1px]" />
+            <span className="text-[10px] sm:text-[11px] text-[#757F94] font-medium inline-flex items-center whitespace-nowrap gap-1 leading-none">
+              <Clock className="w-3 h-3 shrink-0 -translate-y-[1px]" />
               <span>{formatDate(customer.createdAt)}</span>
             </span>
           </div>

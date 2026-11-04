@@ -501,7 +501,7 @@ const AdminAuditLogs = () => {
                               e.stopPropagation();
                               openLogDetails(log);
                             }}
-                            className="shrink-0 cursor-pointer text-[#4338CA] font-medium bg-[#EEF0FB] border border-[#4338CA]/15 hover:bg-[#EEF0FB] px-2.5 py-1 rounded-md transition-all text-xs active:scale-95 inline-flex items-center gap-1"
+                            className="shrink-0 cursor-pointer text-[#4338CA] font-medium bg-[#EEF0FB] border border-[#4338CA]/15 hover:bg-[#EEF0FB] px-2.5 py-1 rounded-lg transition-all text-xs active:scale-95 inline-flex items-center gap-1 shadow-none"
                             title="View Full Audit Snapshot"
                           >
                             <Eye className="w-3.5 h-3.5" />
@@ -577,7 +577,7 @@ const AdminAuditLogs = () => {
                           e.stopPropagation();
                           openLogDetails(log);
                         }}
-                        className="shrink-0 cursor-pointer text-[#4338CA] font-medium bg-[#EEF0FB] border border-[#4338CA]/15 hover:bg-[#EEF0FB] px-2.5 py-1 rounded-md transition-all text-xs active:scale-95 inline-flex items-center gap-1"
+                        className="shrink-0 cursor-pointer text-[#4338CA] font-medium bg-[#EEF0FB] border border-[#4338CA]/15 hover:bg-[#EEF0FB] px-2.5 py-1 rounded-lg transition-all text-xs active:scale-95 inline-flex items-center gap-1 shadow-none"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         <span>View</span>
