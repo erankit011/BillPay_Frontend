@@ -37,8 +37,6 @@ const SidebarRailIcon = ({ className = "w-4 h-4", strokeWidth = 1.75 }) => (
 const Header = ({
   toggleSidebarCollapse,
   setMobileDrawerOpen,
-  BreadcrumbIcon,
-  breadcrumbTitle,
   onOpenSearch,
   onOpenLogout,
   user,
@@ -99,24 +97,6 @@ const Header = ({
           >
             <Menu className="w-5 h-5 text-[#4E5668]" strokeWidth={1.75} />
           </button>
-
-          <div className="hidden lg:block w-px h-4 bg-slate-200 shrink-0 mx-0.5" aria-hidden="true" />
-
-          {/**
-            * Contextual Breadcrumb Indicator
-            * Displays active route icon and human-readable page name
-            */}
-          <div aria-label="Breadcrumb" className="flex items-center gap-2 min-w-0 select-none">
-            <span className="inline-flex items-center justify-center text-[#4E5668] shrink-0">
-              <BreadcrumbIcon className="w-4 h-4 text-[#4E5668]" strokeWidth={1.75} />
-            </span>
-            <span className="text-[#9AA4B8] text-xs font-normal select-none shrink-0" aria-hidden="true">
-              /
-            </span>
-            <span className="text-[#191E2B] font-semibold text-sm truncate leading-none">
-              {breadcrumbTitle}
-            </span>
-          </div>
         </div>
 
         {/**

@@ -1,25 +1,9 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
-  Home,
-  Users,
-  FileText,
-  Mic,
-  BarChart2,
-  Settings,
-  Bell,
-  Box,
-  User,
-  AlertCircle,
-  Gem,
-  Activity,
   Store,
-  CreditCard,
-  Megaphone,
-  LifeBuoy,
-  Tag,
-  ShieldCheck,
-  Layers,
+  AlertCircle,
+  Settings,
   ArrowRight,
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -520,68 +504,7 @@ const MainLayout = () => {
     window.location.href = `/login?suspended=true${reasonParam}`;
   }, [dispatch, suspensionData.reason]);
 
-  /**
-   * Dynamic Breadcrumb Label Resolver
-   * Resolves friendly title based on active routing URL path
-   */
-  const breadcrumbTitle = useMemo(() => {
-    const p = location.pathname;
-    if (p.includes('/admin/dashboard') || p === '/admin') return 'Dashboard';
-    if (p.includes('/admin/shops')) return 'Store';
-    if (p.includes('/admin/bills')) return 'Store Bill';
-    if (p.includes('/admin/subscriptions')) return 'Billing Receipts';
-    if (p.includes('/admin/reports')) return 'Store Reports';
-    if (p.includes('/admin/health')) return 'System Health';
-    if (p.includes('/admin/settings')) return 'Platform Settings';
-    if (p.includes('/admin/broadcasts')) return 'Broadcasts';
-    if (p.includes('/admin/support')) return 'Support Desk';
-    if (p.includes('/admin/coupons')) return 'Coupons';
-    if (p.includes('/admin/plans')) return 'Plan Limits & Pricing';
-    if (p.includes('/admin/audit-logs')) return 'Audit Logs';
-    if (p.includes('/dashboard')) return 'Dashboard';
-    if (p.includes('/customers')) return 'Customers';
-    if (p.includes('/products')) return 'Products';
-    if (p.includes('/bills')) return 'Billing';
-    if (p.includes('/reminders')) return 'Reminders';
-    if (p.includes('/voice')) return 'Voice Entry';
-    if (p.includes('/reports')) return 'Reports';
-    if (p.includes('/subscription')) return 'Subscription';
-    if (p.includes('/profile')) return 'Account';
-    if (p.includes('/settings')) return 'Settings';
-    if (p.includes('/notifications')) return 'Notifications';
-    return 'Dashboard';
-  }, [location.pathname]);
-
-  /**
-   * Dynamic Breadcrumb Icon Resolver
-   * Selects matching Lucide icon based on active routing URL path
-   */
-  const BreadcrumbIcon = useMemo(() => {
-    const p = location.pathname;
-    if (p.includes('/admin/dashboard') || p === '/admin') return Home;
-    if (p.includes('/admin/shops')) return Store;
-    if (p.includes('/admin/bills')) return FileText;
-    if (p.includes('/admin/subscriptions')) return CreditCard;
-    if (p.includes('/admin/reports')) return BarChart2;
-    if (p.includes('/admin/health')) return Activity;
-    if (p.includes('/admin/broadcasts')) return Megaphone;
-    if (p.includes('/admin/support')) return LifeBuoy;
-    if (p.includes('/admin/coupons')) return Tag;
-    if (p.includes('/admin/plans')) return Layers;
-    if (p.includes('/admin/audit-logs')) return ShieldCheck;
-    if (p.includes('/dashboard')) return Home;
-    if (p.includes('/customers')) return Users;
-    if (p.includes('/products')) return Box;
-    if (p.includes('/bills')) return FileText;
-    if (p.includes('/reminders')) return Bell;
-    if (p.includes('/voice')) return Mic;
-    if (p.includes('/reports')) return BarChart2;
-    if (p.includes('/subscription')) return Gem;
-    if (p.includes('/profile')) return User;
-    if (p.includes('/settings')) return Settings;
-    if (p.includes('/notifications')) return Bell;
-    return Home;
-  }, [location.pathname]);
+  
 
   return (
     <div className="min-h-screen bg-[#F0F2F6] text-[#191E2B] flex flex-col">
@@ -619,8 +542,6 @@ const MainLayout = () => {
           <Header
             toggleSidebarCollapse={toggleSidebarCollapse}
             setMobileDrawerOpen={setMobileDrawerOpen}
-            BreadcrumbIcon={BreadcrumbIcon}
-            breadcrumbTitle={breadcrumbTitle}
             onOpenSearch={() => setSearchModalOpen(true)}
             onOpenLogout={() => setLogoutModalOpen(true)}
             user={user}
