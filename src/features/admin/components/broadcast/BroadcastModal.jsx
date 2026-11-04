@@ -199,7 +199,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                 required
                 maxLength={150}
                 placeholder="e.g. Scheduled System Upgrade or New Feature Announcement"
-                className="w-full h-10 px-3.5 text-sm bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium"
+                className="w-full h-10 px-3.5 text-sm bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium"
               />
             </div>
 
@@ -219,7 +219,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                 required
                 maxLength={1000}
                 placeholder="Enter clear, concise information for storekeepers..."
-                className="w-full p-3 text-sm bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium leading-relaxed"
+                className="w-full p-3 text-sm bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium leading-relaxed"
               />
             </div>
 
@@ -240,7 +240,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                   name="type"
                   value={formData.type}
                   onChange={handleChange}
-                  className="w-full h-10 px-3 text-sm bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium cursor-pointer"
+                  className="w-full h-10 px-3 text-sm bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium cursor-pointer"
                 >
                   <option value="INFO">Information (Blue)</option>
                   <option value="WARNING">Maintenance / Warning (Amber)</option>
@@ -261,7 +261,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                   name="targetAudience"
                   value={formData.targetAudience}
                   onChange={handleChange}
-                  className="w-full h-10 px-3 text-sm bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium cursor-pointer"
+                  className="w-full h-10 px-3 text-sm bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium cursor-pointer"
                 >
                   <option value="ALL">All Registered Stores</option>
                   <option value="FREE_TRIAL">Free Trial Stores Only</option>
@@ -286,7 +286,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                   onChange={handleChange}
                   maxLength={50}
                   placeholder="e.g. Upgrade Now or Learn More"
-                  className="w-full h-10 px-3.5 text-sm bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium"
+                  className="w-full h-10 px-3.5 text-sm bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium"
                 />
               </div>
 
@@ -301,7 +301,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                     value={formData.actionUrl}
                     onChange={handleChange}
                     placeholder="/subscription or https://..."
-                    className="w-full h-10 pl-9 pr-3.5 text-sm bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium"
+                    className="w-full h-10 pl-9 pr-3.5 text-sm bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium"
                   />
                   <LinkIcon className="w-4 h-4 text-[#757F94] absolute left-3 top-3 pointer-events-none" />
                 </div>
@@ -322,7 +322,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                   name="startsAt"
                   value={formData.startsAt}
                   onChange={handleChange}
-                  className="w-full h-10 px-3.5 text-sm bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium"
+                  className="w-full h-10 px-3.5 text-sm bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium"
                 />
               </div>
 
@@ -335,7 +335,7 @@ const BroadcastModal = ({ isOpen, onClose, broadcastToEdit, onSave, isSaving }) 
                   name="expiresAt"
                   value={formData.expiresAt}
                   onChange={handleChange}
-                  className="w-full h-10 px-3.5 text-sm bg-[#F0F2F6]/70 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium"
+                  className="w-full h-10 px-3.5 text-sm bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-all text-[#191E2B] font-medium"
                 />
               </div>
             </div>

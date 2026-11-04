@@ -30,6 +30,7 @@ import {
 } from '../../features/admin/api/adminApi';
 import BroadcastBanner from '../../features/admin/components/broadcast/BroadcastBanner';
 import BroadcastModal from '../../features/admin/components/broadcast/BroadcastModal';
+import ConfirmModal from '../../components/common/ConfirmModal';
 import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 import { formatDate } from '../../utils/dateUtils';
@@ -50,6 +51,7 @@ const AdminBroadcasts = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingBroadcast, setEditingBroadcast] = useState(null);
+  const [broadcastToDelete, setBroadcastToDelete] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -136,6 +138,7 @@ const AdminBroadcasts = () => {
       queryClient.invalidateQueries({ queryKey: ['adminBroadcasts'] });
       queryClient.invalidateQueries({ queryKey: ['activeBroadcasts'] });
       toast.success('Announcement deleted successfully');
+      setBroadcastToDelete(null);
     },
     onError: (err) => {
       toast.error(err.response?.data?.message || 'Failed to delete broadcast');
@@ -168,9 +171,7 @@ const AdminBroadcasts = () => {
   };
 
   const handleDelete = (broadcast) => {
-    if (window.confirm(`Are you sure you want to delete "${broadcast.title}"?`)) {
-      deleteMutation.mutate(broadcast._id);
-    }
+    setBroadcastToDelete(broadcast);
   };
 
   /**
@@ -324,7 +325,7 @@ const AdminBroadcasts = () => {
             placeholder="Search By Announcement Title & Content & Audience"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-[#FFFFFF] border border-[#DCE1EA] rounded-lg text-[13px] sm:text-sm text-[#191E2B] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors duration-200 shadow-none"
+            className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-10 sm:pr-12 bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg text-[13px] sm:text-sm text-[#191E2B] placeholder-[#9AA4B8] focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors duration-200 shadow-none"
           />
           {searchTerm && (
             <button
@@ -490,6 +491,23 @@ const AdminBroadcasts = () => {
         broadcastToEdit={editingBroadcast}
         onSave={handleSave}
         isSaving={createMutation.isPending || updateMutation.isPending}
+      />
+
+      {/**
+       * Broadcast Deletion Confirmation Modal
+       */}
+      <ConfirmModal
+        isOpen={!!broadcastToDelete}
+        onClose={() => setBroadcastToDelete(null)}
+        onConfirm={() => {
+          if (broadcastToDelete) deleteMutation.mutate(broadcastToDelete._id);
+        }}
+        title="Delete Announcement"
+        message="Are you sure you want to delete announcement"
+        itemName={broadcastToDelete?.title}
+        isLoading={deleteMutation.isPending}
+        confirmText="Yes, Delete"
+        variant="danger"
       />
     </div>
   );

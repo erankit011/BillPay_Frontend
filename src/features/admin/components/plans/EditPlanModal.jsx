@@ -53,7 +53,7 @@ const ThemeCheckbox = ({ checked, onChange, size = 'md', className = '' }) => {
       } flex items-center justify-center transition-all duration-150 shrink-0 border-2 select-none cursor-pointer ${
         checked
           ? 'bg-[#4338CA] border-[#4338CA] text-white shadow-none'
-          : 'bg-[#FFFFFF] border-[#DCE1EA] hover:border-[#4338CA]/70'
+          : 'bg-[#FBFBFC] border-[#DCE1EA] hover:border-[#4338CA]/70'
       } ${className}`}
     >
       <Check
@@ -256,14 +256,14 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
        */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 flex sm:items-center sm:justify-center sm:px-4 sm:py-6 z-50 pointer-events-none overscroll-contain">
         <div
-          className="relative bg-[#FFFFFF] w-full sm:max-w-2xl lg:max-w-3xl rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-none"
+          className="relative bg-[#FBFBFC] w-full sm:max-w-2xl lg:max-w-3xl rounded-t-2xl sm:rounded-xl flex flex-col max-h-[92vh] sm:max-h-[88vh] border border-[#DCE1EA] animate-modal-content overflow-hidden pointer-events-auto shadow-none"
           onClick={(e) => e.stopPropagation()}
         >
           {/**
            * Mobile Drag Pill
            * Visual drag pill indicator displayed on mobile devices.
            */}
-          <div className="sm:hidden flex justify-center pt-2.5 pb-1 flex-shrink-0 bg-[#FFFFFF]">
+          <div className="sm:hidden flex justify-center pt-2.5 pb-1 flex-shrink-0 bg-[#FBFBFC]">
             <div className="w-10 h-1 bg-gray-300 rounded-full" />
           </div>
 
@@ -271,7 +271,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
            * Modal Header Banner
            * Title banner, plan ID badge, and round dismiss button.
            */}
-          <div className="px-5 sm:px-6 py-4 border-b border-[#DCE1EA] flex items-center justify-between bg-[#FFFFFF] flex-shrink-0 gap-3">
+          <div className="px-5 sm:px-6 py-4 border-b border-[#DCE1EA] flex items-center justify-between bg-[#FBFBFC] flex-shrink-0 gap-3">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="w-10 h-10 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center border border-[#4338CA]/20 shrink-0">
                 <Layers className="w-5 h-5 text-[#4338CA]" />
@@ -312,7 +312,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                * Tier Identification Parameters
                * Plan display name, marketing description, and promotional badge text.
                */}
-              <div className="p-4 sm:p-5 rounded-lg border border-[#DCE1EA] bg-[#FFFFFF] space-y-4 shadow-none">
+              <div className="p-4 sm:p-5 rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] space-y-4 shadow-none">
                 <div className="flex items-center gap-2 pb-2.5 border-b border-[#E8ECF2]">
                   <Sparkles className="w-4 h-4 text-[#4338CA]" />
                   <h4 className="text-xs sm:text-sm font-semibold text-[#191E2B]">
@@ -330,7 +330,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Monthly Pro"
-                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                       required
                     />
                   </div>
@@ -344,7 +344,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                       value={badge}
                       onChange={(e) => setBadge(e.target.value)}
                       placeholder={t('Leave empty for no badge')}
-                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                     />
                   </div>
 
@@ -357,7 +357,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       placeholder={t('Short tagline shown below the title')}
-                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                     />
                   </div>
                 </div>
@@ -367,7 +367,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                * Pricing & Duration Settings
                * Base tier price, billing cycle duration in days, and optional free trial period.
                */}
-              <div className="p-4 sm:p-5 rounded-lg border border-[#DCE1EA] bg-[#FFFFFF] space-y-4 shadow-none">
+              <div className="p-4 sm:p-5 rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] space-y-4 shadow-none">
                 <div className="flex items-center gap-2 pb-2.5 border-b border-[#E8ECF2]">
                   <IndianRupee className="w-4 h-4 text-[#4338CA]" />
                   <h4 className="text-xs sm:text-sm font-semibold text-[#191E2B]">
@@ -389,7 +389,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                         min="0"
                         value={price}
                         onChange={(e) => setPrice(Math.max(0, Number(e.target.value)))}
-                        className="block w-full rounded-lg border border-[#DCE1EA] pl-7 pr-3 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-[#191E2B] bg-[#FFFFFF] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] pl-7 pr-3 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-[#191E2B] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                         required
                       />
                     </div>
@@ -405,7 +405,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                         min="1"
                         value={billingCycleDays}
                         onChange={(e) => setBillingCycleDays(Math.max(1, Number(e.target.value)))}
-                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 pr-12 py-2 sm:py-2.5 text-xs sm:text-sm font-medium bg-[#FFFFFF] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 pr-12 py-2 sm:py-2.5 text-xs sm:text-sm font-medium bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                         required
                       />
                       <span className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[#757F94] text-xs font-medium">
@@ -424,7 +424,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                         min="0"
                         value={trialDays}
                         onChange={(e) => setTrialDays(Math.max(0, Number(e.target.value)))}
-                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 pr-12 py-2 sm:py-2.5 text-xs sm:text-sm font-medium bg-[#FFFFFF] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 pr-12 py-2 sm:py-2.5 text-xs sm:text-sm font-medium bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                       />
                       <span className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[#757F94] text-xs font-medium">
                         {t('Days')}
@@ -443,7 +443,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                  * Customer Quota Parameter
                  * Toggle for unlimited customer records or explicit numerical cap.
                  */}
-                <div className="p-4 rounded-lg border border-[#DCE1EA] bg-[#FFFFFF] space-y-3 shadow-none">
+                <div className="p-4 rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] space-y-3 shadow-none">
                   <div className="flex items-center justify-between pb-2 border-b border-[#E8ECF2]">
                     <span className="text-xs sm:text-sm font-semibold text-[#191E2B] flex items-center gap-1.5">
                       <Users className="w-4 h-4 text-[#4338CA]" />
@@ -468,7 +468,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                         min="1"
                         value={maxCustomers}
                         onChange={(e) => setMaxCustomers(Math.max(1, Number(e.target.value)))}
-                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 text-xs sm:text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 text-xs sm:text-sm font-medium bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                         placeholder={t('Max allowed customers')}
                       />
                     </div>
@@ -483,7 +483,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                  * Invoice Billing Quota Parameter
                  * Toggle for unlimited bills or explicit numerical transaction threshold.
                  */}
-                <div className="p-4 rounded-lg border border-[#DCE1EA] bg-[#FFFFFF] space-y-3 shadow-none">
+                <div className="p-4 rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] space-y-3 shadow-none">
                   <div className="flex items-center justify-between pb-2 border-b border-[#E8ECF2]">
                     <span className="text-xs sm:text-sm font-semibold text-[#191E2B] flex items-center gap-1.5">
                       <FileText className="w-4 h-4 text-emerald-600" />
@@ -508,7 +508,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                         min="1"
                         value={maxBills}
                         onChange={(e) => setMaxBills(Math.max(1, Number(e.target.value)))}
-                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 text-xs sm:text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 text-xs sm:text-sm font-medium bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                         placeholder={t('Max allowed bills')}
                       />
                     </div>
@@ -524,7 +524,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                * Feature Entitlement Toggles
                * High-level feature flags for WhatsApp reminders, voice billing, and analytics.
                */}
-              <div className="p-4 sm:p-5 rounded-lg border border-[#DCE1EA] bg-[#FFFFFF] space-y-3.5 shadow-none">
+              <div className="p-4 sm:p-5 rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] space-y-3.5 shadow-none">
                 <div className="flex items-center justify-between pb-2.5 border-b border-[#E8ECF2]">
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4 text-[#4338CA]" />
@@ -547,7 +547,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                     className={`group flex items-start gap-3 p-3.5 rounded-lg border transition-all duration-150 cursor-pointer select-none ${
                       hasWhatsAppReminders
                         ? 'border-[#4338CA] bg-[#4338CA]/[0.05]'
-                        : 'border-[#DCE1EA] bg-[#FFFFFF] hover:border-[#DCE1EA] hover:bg-[#F0F2F6]/60'
+                        : 'border-[#DCE1EA] bg-[#FBFBFC] hover:border-[#DCE1EA] hover:bg-[#F0F2F6]/60'
                     }`}
                   >
                     <ThemeCheckbox checked={hasWhatsAppReminders} />
@@ -573,7 +573,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                     className={`group flex items-start gap-3 p-3.5 rounded-lg border transition-all duration-150 cursor-pointer select-none ${
                       hasVoiceBilling
                         ? 'border-[#4338CA] bg-[#4338CA]/[0.05]'
-                        : 'border-[#DCE1EA] bg-[#FFFFFF] hover:border-[#DCE1EA] hover:bg-[#F0F2F6]/60'
+                        : 'border-[#DCE1EA] bg-[#FBFBFC] hover:border-[#DCE1EA] hover:bg-[#F0F2F6]/60'
                     }`}
                   >
                     <ThemeCheckbox checked={hasVoiceBilling} />
@@ -599,7 +599,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                     className={`group flex items-start gap-3 p-3.5 rounded-lg border transition-all duration-150 cursor-pointer select-none ${
                       hasAdvancedAnalytics
                         ? 'border-[#4338CA] bg-[#4338CA]/[0.05]'
-                        : 'border-[#DCE1EA] bg-[#FFFFFF] hover:border-[#DCE1EA] hover:bg-[#F0F2F6]/60'
+                        : 'border-[#DCE1EA] bg-[#FBFBFC] hover:border-[#DCE1EA] hover:bg-[#F0F2F6]/60'
                     }`}
                   >
                     <ThemeCheckbox checked={hasAdvancedAnalytics} />
@@ -622,7 +622,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                * Support Tier & Visibility Configuration
                * Helpdesk service level agreement, recommended highlight, and public active status.
                */}
-              <div className="p-4 sm:p-5 rounded-lg border border-[#DCE1EA] bg-[#FFFFFF] space-y-4 shadow-none">
+              <div className="p-4 sm:p-5 rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] space-y-4 shadow-none">
                 <div className="flex items-center gap-2 pb-2.5 border-b border-[#E8ECF2]">
                   <Headphones className="w-4 h-4 text-[#4338CA]" />
                   <h4 className="text-xs sm:text-sm font-semibold text-[#191E2B]">
@@ -638,7 +638,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                     <select
                       value={supportTier}
                       onChange={(e) => setSupportTier(e.target.value)}
-                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] appearance-none bg-[#FFFFFF] cursor-pointer"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] appearance-none bg-[#FBFBFC] cursor-pointer"
                       style={{
                         backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
                         backgroundPosition: 'right 0.75rem center',
@@ -668,7 +668,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                       className={`flex items-start gap-3 p-3 rounded-lg border transition-all duration-150 cursor-pointer select-none ${
                         isRecommended
                           ? 'border-[#4338CA] bg-[#4338CA]/[0.05]'
-                          : 'border-[#DCE1EA] bg-[#FFFFFF] hover:border-[#DCE1EA] hover:bg-[#F0F2F6]/60'
+                          : 'border-[#DCE1EA] bg-[#FBFBFC] hover:border-[#DCE1EA] hover:bg-[#F0F2F6]/60'
                       }`}
                     >
                       <ThemeCheckbox checked={isRecommended} />
@@ -692,7 +692,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                       className={`flex items-start gap-3 p-3 rounded-lg border transition-all duration-150 cursor-pointer select-none ${
                         isActive
                           ? 'border-[#4338CA] bg-[#4338CA]/[0.05]'
-                          : 'border-[#DCE1EA] bg-[#FFFFFF] hover:border-[#DCE1EA] hover:bg-[#F0F2F6]/60'
+                          : 'border-[#DCE1EA] bg-[#FBFBFC] hover:border-[#DCE1EA] hover:bg-[#F0F2F6]/60'
                       }`}
                     >
                       <ThemeCheckbox checked={isActive} />
@@ -713,7 +713,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                * Feature Bullets Showcase
                * Configurable list of bullet points presented on public pricing cards.
                */}
-              <div className="p-4 sm:p-5 rounded-lg border border-[#DCE1EA] bg-[#FFFFFF] space-y-3.5 shadow-none">
+              <div className="p-4 sm:p-5 rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] space-y-3.5 shadow-none">
                 <div className="flex items-center justify-between pb-2.5 border-b border-[#E8ECF2]">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-[#4338CA]" />
@@ -738,7 +738,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                       }
                     }}
                     placeholder={t('e.g. Priority WhatsApp Gateway')}
-                    className="flex-1 block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                    className="flex-1 block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                   />
                   <button
                     type="button"
@@ -814,7 +814,7 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                   type="button"
                   onClick={onClose}
                   disabled={saving}
-                  className="cursor-pointer h-10 px-4 sm:px-5 rounded-lg border border-[#DCE1EA] text-[#4E5668] bg-[#FFFFFF] hover:bg-gray-100 text-xs sm:text-sm font-medium transition-all active:scale-95 shadow-none disabled:opacity-50 flex-1 sm:flex-initial inline-flex items-center justify-center"
+                  className="cursor-pointer h-10 px-4 sm:px-5 rounded-lg border border-[#DCE1EA] text-[#4E5668] bg-[#FBFBFC] hover:bg-gray-100 text-xs sm:text-sm font-medium transition-all active:scale-95 shadow-none disabled:opacity-50 flex-1 sm:flex-initial inline-flex items-center justify-center"
                 >
                   {t('Cancel')}
                 </button>

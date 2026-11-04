@@ -185,7 +185,7 @@ const SuspendShopModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                       value={reason}
                       onChange={(e) => setReason(e.target.value)}
                       placeholder="Select an option above or enter custom reason..."
-                      className="w-full text-xs sm:text-sm border border-[#DCE1EA] rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C] shadow-none resize-none"
+                      className="w-full text-xs sm:text-sm border border-[#DCE1EA] rounded-lg p-2.5 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] focus:outline-none focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C] shadow-none resize-none"
                       required
                     />
                   </div>

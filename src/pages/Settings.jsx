@@ -14,6 +14,7 @@ import SwirlingLoader from '../components/common/SwirlingLoader';
 import toast from 'react-hot-toast';
 import { formatShortDate, formatRelativeTime } from '../utils/dateUtils';
 import AppVersionCard from '../components/common/AppVersionCard';
+import ConfirmModal from '../components/common/ConfirmModal';
 
 /**
  * Settings Navigation Item
@@ -549,7 +550,7 @@ const Settings = () => {
   if (fetching) {
     return (
       <div className="flex items-center justify-center min-h-[80vh]">
-        <SwirlingLoader />
+        <SwirlingLoader className="w-10 h-10 md:w-12 md:h-12 text-[#4338CA]" />
       </div>
     );
   }
@@ -739,7 +740,7 @@ const Settings = () => {
                                   value={formData.invoiceLogo}
                                   onChange={handleChange}
                                   placeholder={t('Enter image URL (https://...)')}
-                                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                                 />
                               </div>
                             </div>
@@ -788,7 +789,7 @@ const Settings = () => {
                                     value={formData.signatureImage}
                                     onChange={handleChange}
                                     placeholder={t('Enter signature image URL (https://...)')}
-                                    className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                                    className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                                   />
                                 </div>
                               </div>
@@ -806,7 +807,7 @@ const Settings = () => {
                       onChange={handleChange}
                       placeholder={t('123, MG Road, Near City Mall, Indore, Madhya Pradesh - 110010')}
                       rows={3}
-                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
                     />
                     <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('This address will appear on all invoices')}</p>
                   </div>
@@ -1324,7 +1325,7 @@ const Settings = () => {
                       placeholder={t('Thank you for your business!')}
                       maxLength={500}
                       rows={3}
-                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
                     />
                     <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Max 500 characters')}</p>
                   </div>
@@ -1337,7 +1338,7 @@ const Settings = () => {
                       placeholder={t('Goods once sold will not be returned')}
                       maxLength={1000}
                       rows={3}
-                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] resize-none"
                     />
                     <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Max 1000 characters')}</p>
                   </div>
@@ -1365,7 +1366,7 @@ const Settings = () => {
                         value={passwordData.currentPassword}
                         onChange={handlePasswordChange}
                         placeholder={t('Enter current password')}
-                        className={`block w-full rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none ${
+                        className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none ${
                           passwordData.currentPassword.length > 0 && passwordData.currentPassword.length < 6
                             ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
                             : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
@@ -1380,7 +1381,7 @@ const Settings = () => {
                         value={passwordData.newPassword}
                         onChange={handlePasswordChange}
                         placeholder={t('Enter new password (min 6 characters)')}
-                        className={`block w-full rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none ${
+                        className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none ${
                           passwordData.newPassword.length > 0 && (passwordData.newPassword.length < 6 || passwordData.newPassword === passwordData.currentPassword)
                             ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
                             : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
@@ -1401,7 +1402,7 @@ const Settings = () => {
                         value={passwordData.confirmPassword}
                         onChange={handlePasswordChange}
                         placeholder={t('Confirm new password')}
-                        className={`block w-full rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:outline-none ${
+                        className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none ${
                           passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword
                             ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
                             : (passwordData.confirmPassword && passwordData.newPassword === passwordData.confirmPassword && passwordData.newPassword.length >= 6)
@@ -1706,156 +1707,52 @@ const Settings = () => {
 
       {/**
        * Account Deletion Confirmation Modal
-       * Final safety prompt verifying merchant intent to permanently destroy tenant data
        */}
-      {deleteModalOpen && (
-        <div className="fixed inset-0 z-[100]">
-          {/**
-           * Modal Backdrop Overlay
-           * Dimmed background dismissing dialog when clicked
-           */}
-          <div
-            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
-            onClick={() => setDeleteModalOpen(false)}
-          />
-
-          {/**
-           * Deletion Dialog Content
-           * Destructive confirmation card with warning and action triggers
-           */}
-          <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
-            <div
-              className="bg-[#FBFBFC] rounded-lg shadow-none w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#DCE1EA]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-5 sm:p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-[#FDF2F2] mx-auto flex items-center justify-center mb-4 border border-[#F9D4D4]">
-                  <Trash2 className="w-6 h-6 text-[#B91C1C]" />
-                </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-[#191E2B] mb-2">{t('Delete Account')}</h3>
-                <p className="text-[#757F94] text-sm mb-6 font-medium">
-                  {t('Are you absolutely sure you want to delete your account?')} {t('This action cannot be undone.')}
-                </p>
-
-                <div className="flex gap-2 sm:gap-3 justify-center">
-                  <button
-                    onClick={() => setDeleteModalOpen(false)}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#F0F2F6] hover:bg-[#EBEEF4] text-[#4E5668] rounded-lg font-semibold text-sm transition-colors active:scale-95"
-                  >
-                    {t('Cancel')}
-                  </button>
-                  <button
-                    onClick={executeDeleteAccount}
-                    disabled={deleteAccountLoading}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#B91C1C] hover:bg-[#991B1B] text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 sm:gap-2"
-                  >
-                    {deleteAccountLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-                    {t('Yes, Delete')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmModal
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={executeDeleteAccount}
+        title={t('Delete Account')}
+        message={t('Are you absolutely sure you want to delete your account? This action cannot be undone.')}
+        isLoading={deleteAccountLoading}
+        confirmText={t('Yes, Delete')}
+        variant="danger"
+      />
 
       {/**
        * Single Device Logout Confirmation Modal
-       * Prompts confirmation before terminating a specific remote session
        */}
-      {deviceToLogout && (
-        <div className="fixed inset-0 z-[100]">
-          <div
-            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
-            onClick={() => setDeviceToLogout(null)}
-          />
-          <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
-            <div
-              className="bg-[#FBFBFC] rounded-lg shadow-none w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#DCE1EA]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-5 sm:p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-[#FDF2F2] mx-auto flex items-center justify-center mb-4 border border-[#F9D4D4]">
-                  <LogOut className="w-6 h-6 text-[#B91C1C]" />
-                </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-[#191E2B] mb-2">{t('Log Out Device')}</h3>
-                <p className="text-[#757F94] text-sm mb-3 font-medium">
-                  {t('Are you sure you want to log out this device?')}
-                </p>
-                <div className="text-xs font-semibold text-[#4E5668] bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg p-2.5 mb-5 text-left">
-                  <div className="truncate text-[#191E2B]">{deviceToLogout.device}</div>
-                  <div className="text-[#757F94] font-normal mt-0.5">IP: {deviceToLogout.ip}</div>
-                </div>
-                <div className="flex gap-2 sm:gap-3 justify-center">
-                  <button
-                    type="button"
-                    onClick={() => setDeviceToLogout(null)}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#F0F2F6] hover:bg-[#EBEEF4] text-[#4E5668] rounded-lg font-semibold text-sm transition-colors active:scale-95"
-                  >
-                    {t('Cancel')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => executeLogoutDevice(deviceToLogout)}
-                    disabled={deviceActionLoadingId === deviceToLogout._id}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#B91C1C] hover:bg-[#991B1B] text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
-                  >
-                    {deviceActionLoadingId === deviceToLogout._id && <Loader2 className="w-4 h-4 animate-spin" />}
-                    {t('Log Out')}
-                  </button>
-                </div>
-              </div>
-            </div>
+      <ConfirmModal
+        isOpen={!!deviceToLogout}
+        onClose={() => setDeviceToLogout(null)}
+        onConfirm={() => executeLogoutDevice(deviceToLogout)}
+        title={t('Log Out Device')}
+        message={t('Are you sure you want to log out this device?')}
+        isLoading={deviceActionLoadingId === deviceToLogout?._id}
+        confirmText={t('Log Out')}
+        variant="logout"
+      >
+        {deviceToLogout && (
+          <div className="text-xs font-semibold text-[#4E5668] bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg p-2.5 text-left">
+            <div className="truncate text-[#191E2B]">{deviceToLogout.device}</div>
+            <div className="text-[#757F94] font-normal mt-0.5">IP: {deviceToLogout.ip}</div>
           </div>
-        </div>
-      )}
+        )}
+      </ConfirmModal>
 
       {/**
        * Global Session Revocation Confirmation Modal
-       * Confirms bulk termination of all active sessions except the current device
        */}
-      {confirmLogoutOthersModal && (
-        <div className="fixed inset-0 z-[100]">
-          <div
-            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
-            onClick={() => setConfirmLogoutOthersModal(false)}
-          />
-          <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
-            <div
-              className="bg-[#FBFBFC] rounded-lg shadow-none w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#DCE1EA]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-5 sm:p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-[#FDF2F2] mx-auto flex items-center justify-center mb-4 border border-[#F9D4D4]">
-                  <AlertTriangle className="w-6 h-6 text-[#B91C1C]" />
-                </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-[#191E2B] mb-2">{t('Log Out All Other Devices')}</h3>
-                <p className="text-[#757F94] text-sm mb-6 font-medium">
-                  {t('Are you sure you want to log out all other active devices? Anyone else using your account will be required to log in again.')}
-                </p>
-                <div className="flex gap-2 sm:gap-3 justify-center">
-                  <button
-                    type="button"
-                    onClick={() => setConfirmLogoutOthersModal(false)}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#F0F2F6] hover:bg-[#EBEEF4] text-[#4E5668] rounded-lg font-semibold text-sm transition-colors active:scale-95"
-                  >
-                    {t('Cancel')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={executeLogoutAllOthers}
-                    disabled={loggingOutAllOthers}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#B91C1C] hover:bg-[#991B1B] text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
-                  >
-                    {loggingOutAllOthers && <Loader2 className="w-4 h-4 animate-spin" />}
-                    {t('Log Out All')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmModal
+        isOpen={confirmLogoutOthersModal}
+        onClose={() => setConfirmLogoutOthersModal(false)}
+        onConfirm={executeLogoutAllOthers}
+        title={t('Log Out All Other Devices')}
+        message={t('Are you sure you want to log out all other active devices? Anyone else using your account will be required to log in again.')}
+        isLoading={loggingOutAllOthers}
+        confirmText={t('Log Out All')}
+        variant="warning"
+      />
 
     </div>
   );

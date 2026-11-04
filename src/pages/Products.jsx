@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { generateInventoryPDF } from '../utils/generateInventoryPDF';
 import ProductFormModal from '../components/products/ProductFormModal';
 import ProductViewModal from '../components/products/ProductViewModal';
+import ConfirmModal from '../components/common/ConfirmModal';
 import LoadMoreButton from '../components/common/LoadMoreButton';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import toast from 'react-hot-toast';
@@ -592,64 +593,21 @@ const Products = () => {
 
       {/**
        * Product Deletion Confirmation Modal
-       * Dialog verifying permanent removal of an item from store inventory
        */}
-      {deleteModalOpen && productToDelete && (
-        <div className="fixed inset-0 z-[100]">
-          {/**
-           * Modal Backdrop Overlay
-           * Dark translucent backdrop closing dialog on outside click
-           */}
-          <div
-            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
-            onClick={() => {
-              setDeleteModalOpen(false);
-              setProductToDelete(null);
-            }}
-          />
-
-          {/**
-           * Modal Content Container
-           * Warning prompt and confirmation action buttons
-           */}
-          <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
-            <div
-              className="bg-[#FBFBFC] rounded-lg shadow-none w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#E8ECF2]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-5 sm:p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-[#FFF1F2] mx-auto flex items-center justify-center mb-4 border border-[#FECDD3]">
-                  <Trash2 className="w-6 h-6 text-[#B91C1C]" />
-                </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-[#191E2B] mb-2">{t('Delete Product')}</h3>
-                <p className="text-[#757F94] text-sm mb-6 font-medium">
-                  {t('Are you sure you want to delete')} <span className="font-semibold text-[#191E2B]">{productToDelete.name}</span>? {t('This action cannot be undone.')}
-                </p>
-
-                <div className="flex gap-2 sm:gap-3 justify-center">
-                  <button
-                    onClick={() => {
-                      setDeleteModalOpen(false);
-                      setProductToDelete(null);
-                    }}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#F0F2F6] hover:bg-[#DCE1EA] text-[#4E5668] rounded-lg font-semibold text-sm transition-colors active:scale-95"
-                  >
-                    {t('Cancel')}
-                  </button>
-                  <button
-                    onClick={confirmDelete}
-                    disabled={deleteMutation.isPending}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#B91C1C] hover:bg-[#991B1B] text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 sm:gap-2"
-                  >
-                    {deleteMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-                    {t('Yes, Delete')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmModal
+        isOpen={deleteModalOpen && !!productToDelete}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setProductToDelete(null);
+        }}
+        onConfirm={confirmDelete}
+        title={t('Delete Product')}
+        message={t('Are you sure you want to delete')}
+        itemName={productToDelete?.name}
+        isLoading={deleteMutation.isPending}
+        confirmText={t('Yes, Delete')}
+        variant="danger"
+      />
 
       {/**
        * Mobile Floating Action Button

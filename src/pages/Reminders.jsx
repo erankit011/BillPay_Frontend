@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import LoadMoreButton from '../components/common/LoadMoreButton';
 import SearchableSelect from '../components/common/SearchableSelect';
 import SwirlingLoader from '../components/common/SwirlingLoader';
+import ConfirmModal from '../components/common/ConfirmModal';
 import BusinessSetupModal from '../components/common/BusinessSetupModal';
 import { formatDate } from '../utils/dateUtils';
 import toast from 'react-hot-toast';
@@ -30,7 +31,6 @@ const Reminders = () => {
   const [searchName, setSearchName] = useState(initialSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
   const [reminderToDelete, setReminderToDelete] = useState(null);
-  const [reminderToSend, setReminderToSend] = useState(null);
   const [reminderToView, setReminderToView] = useState(null);
   const [sendingReminderId, setSendingReminderId] = useState(null);
   const [businessSetupModalOpen, setBusinessSetupModalOpen] = useState(false);
@@ -205,13 +205,6 @@ const Reminders = () => {
     }
   };
 
-  /**
-   * Direct Dispatch Handler
-   * Placeholder dispatcher retained for modal interaction compatibility
-   */
-  const confirmSend = () => {
-  };
-
   const handleEdit = (reminder) => {
     setEditingReminder(reminder);
     setIsEditMode(true);
@@ -242,7 +235,7 @@ const Reminders = () => {
     reset();
   };
 
-  const isAnyModalOpen = isModalOpen || !!reminderToDelete || !!reminderToSend || !!reminderToView || businessSetupModalOpen;
+  const isAnyModalOpen = isModalOpen || !!reminderToDelete || !!reminderToView || businessSetupModalOpen;
 
   useEffect(() => {
     if (isAnyModalOpen) {
@@ -895,111 +888,18 @@ const Reminders = () => {
 
       {/**
        * Reminder Deletion Confirmation Dialog
-       * Verifies user intent before removing reminder schedule
        */}
-      {reminderToDelete && (
-        <div className="fixed inset-0 z-[100]">
-          {/**
-           * Modal Backdrop Overlay
-           * Dimmed background dismissing modal when clicked
-           */}
-          <div
-            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
-            onClick={() => setReminderToDelete(null)}
-          />
-
-          {/**
-           * Deletion Confirmation Dialog Content
-           * Warning prompt and destructive confirmation buttons
-           */}
-          <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
-            <div
-              className="bg-[#FBFBFC] rounded-lg shadow-none w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#DCE1EA]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-5 sm:p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-[#FFF1F2] mx-auto flex items-center justify-center mb-4 border border-[#FECDD3]">
-                  <Trash2 className="w-6 h-6 text-[#B91C1C]" />
-                </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-[#191E2B] mb-2">{t('Delete Reminder')}</h3>
-                <p className="text-[#757F94] text-sm mb-6 font-medium">
-                  {t('Are you sure you want to delete this reminder for')} <span className="font-semibold text-[#191E2B]">{reminderToDelete.customerId?.name || t('Unknown Customer')}</span>? {t('This action cannot be undone.')}
-                </p>
-
-                <div className="flex gap-2 sm:gap-3 justify-center">
-                  <button
-                    onClick={() => setReminderToDelete(null)}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#F0F2F6] hover:bg-[#EBEEF4] text-[#4E5668] border border-[#DCE1EA] rounded-lg font-semibold text-sm transition-colors active:scale-95 shadow-none"
-                  >
-                    {t('Cancel')}
-                  </button>
-                  <button
-                    onClick={confirmDelete}
-                    disabled={deleteMutation.isPending}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#B91C1C] hover:bg-[#991B1B] text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 sm:gap-2 shadow-none"
-                  >
-                    {deleteMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-                    {t('Yes, Delete')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/**
-       * Send Confirmation Dialog
-       * Confirms immediate manual dispatch of selected reminder
-       */}
-      {reminderToSend && (
-        <div className="fixed inset-0 z-[100]">
-          {/**
-           * Modal Backdrop Overlay
-           * Dimmed background dismissing modal when clicked
-           */}
-          <div
-            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
-            onClick={() => setReminderToSend(null)}
-          />
-
-          {/**
-           * Send Confirmation Dialog Content
-           * Immediate dispatch prompt and confirmation controls
-           */}
-          <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
-            <div
-              className="bg-[#FBFBFC] rounded-lg shadow-none w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#DCE1EA]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-5 sm:p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-[#ECFDF5] mx-auto flex items-center justify-center mb-4 border border-[#A7F3D0]">
-                  <Send className="w-6 h-6 text-[#0D7A57] -ml-0.5 mt-0.5" />
-                </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-[#191E2B] mb-2">{t('Send Reminder')}</h3>
-                <p className="text-[#757F94] text-sm mb-6 font-medium">
-                  {t('Are you sure you want to send this reminder to')} <span className="font-semibold text-[#191E2B]">{reminderToSend.customerId?.name || t('Unknown Customer')}</span> {t('now?')}
-                </p>
-
-                <div className="flex gap-2 sm:gap-3 justify-center">
-                  <button
-                    onClick={() => setReminderToSend(null)}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#F0F2F6] hover:bg-[#EBEEF4] text-[#4E5668] border border-[#DCE1EA] rounded-lg font-semibold text-sm transition-colors active:scale-95 shadow-none"
-                  >
-                    {t('Cancel')}
-                  </button>
-                  <button
-                    onClick={confirmSend}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#0D7A57] hover:bg-[#065F46] text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 flex items-center justify-center gap-1.5 sm:gap-2 shadow-none"
-                  >
-                    {t('Yes, Send')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmModal
+        isOpen={!!reminderToDelete}
+        onClose={() => setReminderToDelete(null)}
+        onConfirm={confirmDelete}
+        title={t('Delete Reminder')}
+        message={t('Are you sure you want to delete this reminder for')}
+        itemName={reminderToDelete?.customerId?.name || t('Unknown Customer')}
+        isLoading={deleteMutation.isPending}
+        confirmText={t('Yes, Delete')}
+        variant="danger"
+      />
 
       {/**
        * Reminder Message Preview Dialog

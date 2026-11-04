@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import CustomerLedger from '../components/customers/CustomerLedger';
 import CustomerFormModal from '../components/customers/CustomerFormModal';
 import CustomerProfileModal from '../components/customers/CustomerProfileModal';
+import ConfirmModal from '../components/common/ConfirmModal';
 import LoadMoreButton from '../components/common/LoadMoreButton';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import UpgradeModal from '../components/common/UpgradeModal';
@@ -799,64 +800,21 @@ const Customers = () => {
 
       {/**
        * Customer Deletion Confirmation Modal
-       * Prompts user verification before soft-deleting or purging customer profile
        */}
-      {deleteModalOpen && customerToDelete && (
-        <div className="fixed inset-0 z-[100]">
-          {/**
-           * Modal Backdrop Overlay
-           * Dimmed background dismissing modal when clicked
-           */}
-          <div
-            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
-            onClick={() => {
-              setDeleteModalOpen(false);
-              setCustomerToDelete(null);
-            }}
-          />
-
-          {/**
-           * Dialog Content Card
-           * Action confirmation dialog with destructive confirmation controls
-           */}
-          <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
-            <div
-              className="bg-[#FBFBFC] rounded-lg shadow-none w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#E8ECF2]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-5 sm:p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-[#FFF1F2] mx-auto flex items-center justify-center mb-4 border border-[#FECDD3]">
-                  <Trash2 className="w-6 h-6 text-[#B91C1C]" />
-                </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-[#191E2B] mb-2">{t('Delete Customer')}</h3>
-                <p className="text-[#757F94] text-sm mb-6 font-medium">
-                  {t('Are you sure you want to delete')} <span className="font-semibold text-[#191E2B]">{customerToDelete.name}</span>? {t('This action cannot be undone.')}
-                </p>
-
-                <div className="flex gap-2 sm:gap-3 justify-center">
-                  <button
-                    onClick={() => {
-                      setDeleteModalOpen(false);
-                      setCustomerToDelete(null);
-                    }}
-                    className="cursor-pointer flex-1 px-3 py-1.5 sm:px-4 sm:py-2 bg-[#F0F2F6] hover:bg-[#DCE1EA] text-[#4E5668] rounded-lg font-medium text-xs sm:text-[13px] transition-colors active:scale-95"
-                  >
-                    {t('Cancel')}
-                  </button>
-                  <button
-                    onClick={confirmDelete}
-                    disabled={deleteMutation.isPending}
-                    className="cursor-pointer flex-1 px-3 py-1.5 sm:px-4 sm:py-2 bg-[#B91C1C] hover:bg-[#991B1B] text-white rounded-lg font-medium text-xs sm:text-[13px] transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
-                  >
-                    {deleteMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-                    {t('Yes, Delete')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmModal
+        isOpen={deleteModalOpen && !!customerToDelete}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setCustomerToDelete(null);
+        }}
+        onConfirm={confirmDelete}
+        title={t('Delete Customer')}
+        message={t('Are you sure you want to delete')}
+        itemName={customerToDelete?.name}
+        isLoading={deleteMutation.isPending}
+        confirmText={t('Yes, Delete')}
+        variant="danger"
+      />
 
       {activeCustomer && (
         <CustomerLedger

@@ -95,7 +95,7 @@ const AdminSecuritySettings = () => {
                   onChange={handlePasswordChange}
                   required
                   placeholder={t('Enter current password')}
-                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 pr-10 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 pr-10 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                 />
                 <button
                   type="button"
@@ -123,7 +123,7 @@ const AdminSecuritySettings = () => {
                   onChange={handlePasswordChange}
                   required
                   placeholder={t('Min 6 characters')}
-                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 pr-10 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 pr-10 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                 />
                 <button
                   type="button"
@@ -150,13 +150,13 @@ const AdminSecuritySettings = () => {
                 onChange={handlePasswordChange}
                 required
                 placeholder={t('Confirm new password')}
-                className={`block w-full rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${
+                className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none ${
                   passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword
-                    ? 'border-red-300 focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
+                    ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
                     : passwordData.confirmPassword &&
                       passwordData.newPassword === passwordData.confirmPassword &&
                       passwordData.newPassword.length >= 6
-                    ? 'border-green-300 focus:ring-2 focus:ring-[#0D7A57]/20 focus:border-[#0D7A57]'
+                    ? 'border-[#0D7A57] focus:ring-2 focus:ring-[#0D7A57]/20 focus:border-[#0D7A57]'
                     : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
                 }`}
               />

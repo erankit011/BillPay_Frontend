@@ -171,7 +171,7 @@ const Profile = () => {
                   onChange={handleChange}
                   placeholder={t('Enter your full name')}
                   required
-                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder-[#757F94] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                 />
               </div>
 
@@ -186,7 +186,7 @@ const Profile = () => {
                   placeholder={t('Email cannot be changed')}
                   readOnly
                   disabled
-                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder-[#757F94] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] disabled:bg-[#EEF0FB]/40 disabled:cursor-not-allowed disabled:text-[#757F94]"
+                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] disabled:bg-[#EEF0FB]/40 disabled:cursor-not-allowed disabled:text-[#757F94]"
                 />
                 <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('* Cannot be changed')}</p>
               </div>
@@ -202,7 +202,7 @@ const Profile = () => {
                   placeholder={t('Phone number cannot be changed')}
                   readOnly
                   disabled
-                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder-[#757F94] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] disabled:bg-[#EEF0FB]/40 disabled:cursor-not-allowed disabled:text-[#757F94]"
+                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] disabled:bg-[#EEF0FB]/40 disabled:cursor-not-allowed disabled:text-[#757F94]"
                 />
                 <p className="text-red-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('* Cannot be changed')}</p>
               </div>
