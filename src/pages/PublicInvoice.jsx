@@ -47,26 +47,26 @@ const PublicInvoice = () => {
 
   if (loading) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center bg-gray-50 gap-3">
-        <SwirlingLoader className="w-10 h-10 text-[#093C5D]" />
-        <span className="text-gray-500 font-medium text-sm animate-pulse">{t('Loading Secure Invoice...')}</span>
+      <div className="flex h-screen flex-col items-center justify-center bg-[#FBFBFC] gap-3">
+        <SwirlingLoader className="w-10 h-10 text-[#4338CA]" />
+        <span className="text-[#757F94] font-medium text-sm animate-pulse">{t('Loading Secure Invoice...')}</span>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col h-screen items-center justify-center bg-gray-50 text-center p-4 sm:p-6">
-        <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 max-w-sm sm:max-w-md w-full flex flex-col items-center">
-          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-red-50 rounded-full flex items-center justify-center mb-4 sm:mb-6">
-            <ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8 text-red-500" />
+      <div className="flex flex-col h-screen items-center justify-center bg-[#FBFBFC] text-center p-4 sm:p-6">
+        <div className="bg-[#FFFFFF] p-6 sm:p-8 rounded-2xl border border-[#DCE1EA] shadow-none max-w-sm sm:max-w-md w-full flex flex-col items-center">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#FDF2F2] border border-[#F9D4D4] rounded-full flex items-center justify-center mb-4 sm:mb-6">
+            <ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8 text-[#B91C1C]" />
           </div>
 
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-2 sm:mb-3">
+          <h2 className="text-xl sm:text-2xl font-semibold text-[#191E2B] mb-2 sm:mb-3">
             {t('Content Unavailable')}
           </h2>
 
-          <p className="text-gray-500 font-medium text-xs sm:text-sm mb-6 sm:mb-8 leading-relaxed px-2">
+          <p className="text-[#4E5668] font-medium text-xs sm:text-sm mb-6 sm:mb-8 leading-relaxed px-2">
             {error === 'Content not found or access denied.' || error === 'Too many requests. Please try again later.'
               ? t(error)
               : t("The content you are looking for does not exist or you don't have permission to view it.")}
@@ -74,13 +74,13 @@ const PublicInvoice = () => {
 
           <button
             onClick={() => window.open('/contact-support', '_blank')}
-            className="w-full sm:w-auto mb-2 sm:mb-4 flex items-center justify-center gap-2 bg-gray-50 hover:bg-gray-100 text-gray-700 px-5 py-2.5 rounded-lg font-semibold transition-colors active:scale-95 text-[13px] sm:text-sm border border-gray-200 cursor-pointer"
+            className="w-full sm:w-auto mb-2 sm:mb-4 flex items-center justify-center gap-2 bg-[#F0F2F6] hover:bg-[#E8ECF2] text-[#191E2B] px-5 py-2.5 rounded-lg font-medium transition-colors active:scale-95 text-[13px] sm:text-sm border border-[#DCE1EA] shadow-none cursor-pointer"
           >
-            <HelpCircle className="w-4 h-4 text-gray-500" /> {t("Contact Support")}
+            <HelpCircle className="w-4 h-4 text-[#757F94]" /> {t("Contact Support")}
           </button>
 
-          <div className="w-full pt-4 border-t border-gray-100 mt-4 sm:mt-6">
-            <p className="text-[11px] sm:text-xs text-gray-400 font-medium">{t("Powered by UdharPay Business")}</p>
+          <div className="w-full pt-4 border-t border-[#E8ECF2] mt-4 sm:mt-6">
+            <p className="text-[11px] sm:text-xs text-[#757F94] font-medium">{t("Powered by UdharPay Business")}</p>
           </div>
         </div>
       </div>
@@ -88,22 +88,22 @@ const PublicInvoice = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 print:bg-white py-4 sm:py-8 px-2 sm:px-6 lg:px-8 print:p-0 font-sans">
+    <div className="min-h-screen bg-[#FBFBFC] print:bg-white py-4 sm:py-8 px-2 sm:px-6 lg:px-8 print:p-0 font-sans">
       <div className="max-w-3xl mx-auto print:max-w-none">
 
         {/**
          * Top Action Bar
          * Verified badge and print/download button (hidden during print output).
          */}
-        <div className="print:hidden flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 mb-4 sm:mb-6 bg-white p-4 rounded-lg border border-gray-200 hover:border-gray-300 transition-all cursor-default">
+        <div className="print:hidden flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 mb-4 sm:mb-6 bg-[#FFFFFF] p-4 rounded-lg border border-[#DCE1EA] shadow-none transition-all cursor-default">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-green-600" />
-            <span className="text-sm font-semibold text-gray-800">Verified Secure Invoice</span>
+            <ShieldCheck className="w-5 h-5 text-[#0D7A57]" />
+            <span className="text-sm font-semibold text-[#191E2B]">Verified Secure Invoice</span>
           </div>
           <div className="flex gap-2 w-full sm:w-auto mt-3 sm:mt-0">
             <button
               onClick={() => window.print()}
-              className="cursor-pointer flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 bg-[#093C5D] hover:bg-[#082a42] text-white rounded-lg text-[15px] font-medium active:scale-95 transition-all duration-200 shadow-none"
+              className="cursor-pointer flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 bg-[#4338CA] hover:bg-[#3730A3] text-white rounded-lg text-[15px] font-medium active:scale-95 transition-all duration-200 shadow-none"
             >
               <Printer className="w-[18px] h-[18px] sm:w-5 sm:h-5 shrink-0" />
               <span className="leading-none pt-px whitespace-nowrap">Print & Download</span>
@@ -115,35 +115,35 @@ const PublicInvoice = () => {
          * Public Invoice Paper Canvas
          * Customer-facing digital receipt containing store identity, items, and totals.
          */}
-        <div className="bg-white p-5 sm:p-8 rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-default relative group print:shadow-none" id="invoice-content">
+        <div className="bg-[#FFFFFF] p-5 sm:p-8 rounded-lg border border-[#DCE1EA] shadow-none transition-all duration-300 cursor-default relative group print:shadow-none" id="invoice-content">
           {/**
            * Merchant Store Identity
            * Business branding name, support email, phone contact, and physical address.
            */}
-          <div className="flex flex-col items-start text-left border-b border-dashed border-gray-200 pb-3 mb-3 sm:pb-4 sm:mb-4 group-hover:border-gray-300 transition-colors">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 tracking-tight mb-2 sm:mb-3">
+          <div className="flex flex-col items-start text-left border-b border-dashed border-[#DCE1EA] pb-3 mb-3 sm:pb-4 sm:mb-4 transition-colors">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-[#191E2B] tracking-tight mb-2 sm:mb-3">
               {shopSettings?.shopName || bill?.shopId?.name}
             </h1>
 
             <div className="flex flex-col space-y-1.5 sm:space-y-2.5 w-full">
               {shopSettings?.shopEmail && (
                 <div className="flex flex-col">
-                  <span className="text-gray-400 font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Email</span>
-                  <span className="text-gray-800 font-medium text-sm break-all">{shopSettings.shopEmail}</span>
+                  <span className="text-[#757F94] font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Email</span>
+                  <span className="text-[#191E2B] font-medium text-sm break-all">{shopSettings.shopEmail}</span>
                 </div>
               )}
 
               {shopSettings?.shopPhone && (
                 <div className="flex flex-col">
-                  <span className="text-gray-400 font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Phone</span>
-                  <span className="text-gray-800 font-medium text-sm">{shopSettings.shopPhone}</span>
+                  <span className="text-[#757F94] font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Phone</span>
+                  <span className="text-[#191E2B] font-medium text-sm">{shopSettings.shopPhone}</span>
                 </div>
               )}
 
               {shopSettings?.shopAddress && (
                 <div className="flex flex-col">
-                  <span className="text-gray-400 font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Address</span>
-                  <span className="text-gray-800 font-medium text-sm leading-relaxed">{shopSettings.shopAddress}</span>
+                  <span className="text-[#757F94] font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Address</span>
+                  <span className="text-[#191E2B] font-medium text-sm leading-relaxed">{shopSettings.shopAddress}</span>
                 </div>
               )}
             </div>
@@ -160,21 +160,21 @@ const PublicInvoice = () => {
              */}
             <div className="flex flex-col space-y-1.5 sm:space-y-2.5">
               <div className="flex flex-col">
-                <span className="text-gray-400 font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Billed To</span>
-                <span className="font-semibold text-gray-800 text-base sm:text-lg">{bill?.customerId?.name || 'Walk-in Customer'}</span>
+                <span className="text-[#757F94] font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Billed To</span>
+                <span className="font-semibold text-[#191E2B] text-base sm:text-lg">{bill?.customerId?.name || 'Walk-in Customer'}</span>
               </div>
 
               {bill?.customerId?.phone && (
                 <div className="flex flex-col">
-                  <span className="text-gray-400 font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Phone</span>
-                  <span className="font-semibold text-gray-800 text-sm">{bill?.customerId?.phone}</span>
+                  <span className="text-[#757F94] font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Phone</span>
+                  <span className="font-semibold text-[#191E2B] text-sm">{bill?.customerId?.phone}</span>
                 </div>
               )}
 
               {bill?.customerId?.email && (
                 <div className="flex flex-col">
-                  <span className="text-gray-400 font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Email</span>
-                  <span className="font-semibold text-gray-800 text-sm break-all">{bill?.customerId?.email}</span>
+                  <span className="text-[#757F94] font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Email</span>
+                  <span className="font-semibold text-[#191E2B] text-sm break-all">{bill?.customerId?.email}</span>
                 </div>
               )}
             </div>
@@ -185,13 +185,13 @@ const PublicInvoice = () => {
              */}
             <div className="flex flex-col space-y-1.5 sm:space-y-2.5 items-end text-right">
               <div className="flex flex-col items-end">
-                <span className="text-gray-400 font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Invoice No</span>
-                <span className="font-semibold text-gray-800 text-base sm:text-lg">{bill?.invoiceNumber}</span>
+                <span className="text-[#757F94] font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Invoice No</span>
+                <span className="font-semibold text-[#191E2B] text-base sm:text-lg">{bill?.invoiceNumber}</span>
               </div>
 
               <div className="flex flex-col items-end">
-                <span className="text-gray-400 font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Generated At</span>
-                <span className="font-semibold text-gray-800 text-sm">{formatDate(bill?.createdAt)}</span>
+                <span className="text-[#757F94] font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Generated At</span>
+                <span className="font-semibold text-[#191E2B] text-sm">{formatDate(bill?.createdAt)}</span>
               </div>
             </div>
           </div>
@@ -203,20 +203,20 @@ const PublicInvoice = () => {
           <div className="mb-5 sm:mb-6 overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[300px]">
               <thead>
-                <tr className="border-y border-gray-200 text-gray-600 text-xs sm:text-sm">
+                <tr className="border-y border-[#DCE1EA] bg-[#F0F2F6]/60 text-[#4E5668] text-xs sm:text-sm">
                   <th className="py-2 sm:py-3 pr-2 font-semibold w-full">Item</th>
                   <th className="py-2 sm:py-3 px-2 sm:px-3 font-semibold text-right whitespace-nowrap">Qty</th>
                   <th className="py-2 sm:py-3 px-2 sm:px-3 font-semibold text-right whitespace-nowrap">Price</th>
                   <th className="py-2 sm:py-3 pl-2 sm:pl-3 font-semibold text-right whitespace-nowrap">Total</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-[#E8ECF2]">
                 {bill?.products?.map((item, idx) => (
-                  <tr key={idx} className="text-sm hover:bg-gray-50/80 transition-colors cursor-default align-top">
-                    <td className="py-2 sm:py-3 pr-2 font-semibold text-gray-800 leading-tight">{item.name}</td>
-                    <td className="py-2 sm:py-3 px-2 sm:px-3 text-right text-gray-700 font-medium whitespace-nowrap">{item.quantity}</td>
-                    <td className="py-2 sm:py-3 px-2 sm:px-3 text-right text-gray-700 font-medium whitespace-nowrap">₹{item.price}</td>
-                    <td className="py-2 sm:py-3 pl-2 sm:pl-3 text-right font-semibold text-gray-900 whitespace-nowrap">₹{item.total}</td>
+                  <tr key={idx} className="text-sm hover:bg-[#F0F2F6]/50 transition-colors cursor-default align-top">
+                    <td className="py-2 sm:py-3 pr-2 font-semibold text-[#191E2B] leading-tight">{item.name}</td>
+                    <td className="py-2 sm:py-3 px-2 sm:px-3 text-right text-[#4E5668] font-medium whitespace-nowrap">{item.quantity}</td>
+                    <td className="py-2 sm:py-3 px-2 sm:px-3 text-right text-[#4E5668] font-medium whitespace-nowrap">₹{item.price}</td>
+                    <td className="py-2 sm:py-3 pl-2 sm:pl-3 text-right font-semibold text-[#191E2B] whitespace-nowrap">₹{item.total}</td>
                   </tr>
                 ))}
               </tbody>
@@ -227,31 +227,31 @@ const PublicInvoice = () => {
            * Invoice Totals & Balance Summary
            * Subtotal, taxes, discounts, grand total, amount paid, and remaining balance due.
            */}
-          <div className="border-t border-gray-200 pt-4 sm:pt-6 group-hover:border-gray-300 transition-colors">
+          <div className="border-t border-[#DCE1EA] pt-4 sm:pt-6 transition-colors">
             <div className="w-full sm:w-1/2 ml-auto space-y-1.5 sm:space-y-2 text-sm">
-              <div className="flex justify-between text-gray-700 font-medium hover:text-gray-900 transition-colors">
+              <div className="flex justify-between text-[#4E5668] font-medium hover:text-[#191E2B] transition-colors">
                 <span>Subtotal</span>
                 <span>₹{bill?.subtotal}</span>
               </div>
-              <div className="flex justify-between text-gray-700 font-medium hover:text-gray-900 transition-colors">
+              <div className="flex justify-between text-[#4E5668] font-medium hover:text-[#191E2B] transition-colors">
                 <span>Tax</span>
                 <span>₹{bill?.tax || 0}</span>
               </div>
-              <div className="flex justify-between text-gray-700 font-medium hover:text-gray-900 transition-colors">
+              <div className="flex justify-between text-[#4E5668] font-medium hover:text-[#191E2B] transition-colors">
                 <span>Discount</span>
-                <span className="text-green-600">-₹{bill?.discount || 0}</span>
+                <span className="text-[#0D7A57]">-₹{bill?.discount || 0}</span>
               </div>
-              <div className="flex justify-between text-base sm:text-lg font-semibold text-gray-900 pt-2 border-t border-gray-200 mt-1">
+              <div className="flex justify-between text-base sm:text-lg font-semibold text-[#191E2B] pt-2 border-t border-[#DCE1EA] mt-1">
                 <span>Grand Total</span>
                 <span>₹{bill?.grandTotal}</span>
               </div>
 
-              <div className="flex justify-between text-gray-700 font-medium pt-2 border-t border-gray-200 mt-2 hover:text-gray-900 transition-colors">
+              <div className="flex justify-between text-gray-700 font-medium pt-2 border-t border-[#DCE1EA] mt-2 hover:text-[#191E2B] transition-colors">
                 <span>Amount Paid</span>
-                <span className="text-green-600">₹{bill?.amountPaid || 0}</span>
+                <span className="text-[#0D7A57]">₹{bill?.amountPaid || 0}</span>
               </div>
               {(bill?.grandTotal - (bill?.amountPaid || 0)) > 0 && (
-                <div className="flex justify-between text-base font-semibold text-red-600 pt-1 hover:text-red-700 transition-colors">
+                <div className="flex justify-between text-base font-semibold text-[#B91C1C] pt-1 hover:text-[#991B1B] transition-colors">
                   <span>Balance Due</span>
                   <span>₹{bill?.grandTotal - (bill?.amountPaid || 0)}</span>
                 </div>
@@ -262,11 +262,11 @@ const PublicInvoice = () => {
           {/**
            * Terms & Authorized Signature
            */}
-          <div className="mt-8 pt-4 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center sm:items-end gap-6 print:break-inside-avoid">
+          <div className="mt-8 pt-4 border-t border-[#E8ECF2] flex flex-col sm:flex-row justify-between items-center sm:items-end gap-6 print:break-inside-avoid">
             {shopSettings?.termsAndConditions ? (
               <div className="text-left w-full sm:max-w-xs md:max-w-sm">
-                <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">Terms & Conditions</h4>
-                <p className="text-[11px] text-gray-500 whitespace-pre-line leading-relaxed">{shopSettings.termsAndConditions}</p>
+                <h4 className="text-xs font-semibold text-[#4E5668] uppercase tracking-wider mb-1">Terms & Conditions</h4>
+                <p className="text-[11px] text-[#757F94] whitespace-pre-line leading-relaxed">{shopSettings.termsAndConditions}</p>
               </div>
             ) : (
               <div className="hidden sm:block" />
@@ -284,8 +284,8 @@ const PublicInvoice = () => {
               ) : (
                 <div className="h-12 w-40" />
               )}
-              <div className="w-44 border-t border-gray-400 pt-1 text-center">
-                <span className="text-xs font-semibold text-gray-700">Authorized Signatory</span>
+              <div className="w-44 border-t border-[#757F94] pt-1 text-center">
+                <span className="text-xs font-semibold text-[#191E2B]">Authorized Signatory</span>
               </div>
             </div>
           </div>
@@ -294,19 +294,19 @@ const PublicInvoice = () => {
            * Appreciation Banner & Verification Seal
            * Courtesy message from merchant and UdharPay digital verification seal.
            */}
-          <div className="mt-6 sm:mt-8 bg-gray-50 rounded-lg p-3 sm:p-4 border border-gray-100 text-center print:break-inside-avoid">
-            <p className="text-gray-600 font-medium text-[11px] sm:text-xs">
+          <div className="mt-6 sm:mt-8 bg-[#F0F2F6] rounded-lg p-3 sm:p-4 border border-[#DCE1EA] text-center print:break-inside-avoid">
+            <p className="text-[#4E5668] font-medium text-[11px] sm:text-xs">
               Thank you for shopping with {shopSettings?.shopName || bill?.shopId?.name}! We appreciate your business.
             </p>
           </div>
 
-          <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-dashed border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4 print:break-inside-avoid">
-            <div className="inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-1 sm:py-1.5 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-200/60 cursor-default hover:bg-emerald-100/80 transition-colors">
+          <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-dashed border-[#DCE1EA] flex flex-col sm:flex-row items-center justify-between gap-4 print:break-inside-avoid">
+            <div className="inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-1 sm:py-1.5 bg-[#F0FDF4] text-[#0D7A57] rounded-full border border-[#DCFCE7] cursor-default">
               <ShieldCheck className="w-4 h-4 shrink-0" />
               <span className="text-[11.5px] sm:text-xs font-semibold whitespace-nowrap">Digitally Verified</span>
             </div>
-            <p className="text-[11px] sm:text-xs text-gray-400 font-medium tracking-wide">
-              Powered by <span className="font-semibold text-gray-500">UdharPay Business</span>
+            <p className="text-[11px] sm:text-xs text-[#757F94] font-medium tracking-wide">
+              Powered by <span className="font-semibold text-[#4E5668]">UdharPay Business</span>
             </p>
           </div>
         </div>
