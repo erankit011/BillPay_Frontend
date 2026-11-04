@@ -26,6 +26,7 @@ import toast from 'react-hot-toast';
 import { formatDate } from '../../../../utils/dateUtils';
 import TicketStatusBadge from './TicketStatusBadge';
 import TicketPriorityBadge from './TicketPriorityBadge';
+import ConfirmModal from '../../../../components/common/ConfirmModal';
 
 /**
  * Helpdesk Ticket Categories
@@ -53,6 +54,8 @@ const TicketDetailsModal = ({
   const [adminReply, setAdminReply] = useState(ticket?.adminReply || '');
   const [saving, setSaving] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!isOpen || !ticket) return;
@@ -100,19 +103,17 @@ const TicketDetailsModal = ({
     }
   };
 
-  const handleDelete = async () => {
-    if (
-      window.confirm(
-        `Are you sure you want to delete ticket #${ticket.ticketId}? This action cannot be undone.`
-      )
-    ) {
-      try {
-        await onDeleteTicket(ticket._id);
-        toast.success('Ticket deleted');
-        onClose();
-      } catch (err) {
-        toast.error('Failed to delete ticket');
-      }
+  const executeDelete = async () => {
+    try {
+      setDeleting(true);
+      await onDeleteTicket(ticket._id);
+      toast.success('Ticket deleted');
+      setConfirmDeleteOpen(false);
+      onClose();
+    } catch (err) {
+      toast.error('Failed to delete ticket');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -407,7 +408,7 @@ const TicketDetailsModal = ({
         <div className="px-6 py-4 border-t border-[#DCE1EA] bg-[#F0F2F6]/80 flex flex-wrap items-center justify-between gap-3 shrink-0">
           <button
             type="button"
-            onClick={handleDelete}
+            onClick={() => setConfirmDeleteOpen(true)}
             className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-semibold text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-3 py-2 rounded transition-colors border border-transparent hover:border-rose-200"
           >
             <Trash2 className="w-4 h-4" />
@@ -440,6 +441,21 @@ const TicketDetailsModal = ({
         </div>
       </div>
     </div>
+
+    {/**
+     * Ticket Deletion Confirmation Modal
+     */}
+    <ConfirmModal
+      isOpen={confirmDeleteOpen}
+      onClose={() => setConfirmDeleteOpen(false)}
+      onConfirm={executeDelete}
+      title="Delete Support Ticket"
+      message="Are you sure you want to delete ticket"
+      itemName={ticket ? `#${ticket.ticketId}` : ''}
+      isLoading={deleting}
+      confirmText="Yes, Delete"
+      variant="danger"
+    />
   </div>
 );
 };

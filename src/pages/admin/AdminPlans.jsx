@@ -23,6 +23,7 @@ import PlanCard from '../../features/admin/components/plans/PlanCard';
 import EditPlanModal from '../../features/admin/components/plans/EditPlanModal';
 import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
+import ConfirmModal from '../../components/common/ConfirmModal';
 
 /**
  * AdminPlans Component
@@ -187,70 +188,19 @@ const AdminPlans = () => {
       />
 
       {/**
-       * Reset Factory Defaults Confirmation Dialog
-       * Confirms restoration of default subscription tiers and pricing models.
+       * Reset Factory Defaults Confirmation Modal
        */}
-      {confirmResetModal && (
-        <div className="fixed inset-0 z-50 overscroll-contain">
-          {/**
-           * Modal Backdrop Overlay
-           * Semi-transparent overlay blocking interaction with background.
-           */}
-          <div
-            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
-            onClick={() => !resetting && setConfirmResetModal(false)}
-          />
-
-          {/**
-           * Confirmation Modal Dialog Body
-           * Warning alert icon, prompt text, and action buttons.
-           */}
-          <div className="fixed inset-0 flex items-center justify-center p-4 z-50 pointer-events-none">
-            <div
-              className="bg-[#FFFFFF] rounded-lg w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#DCE1EA] shadow-none"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-5 sm:p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-rose-50 mx-auto flex items-center justify-center mb-3.5 border border-rose-100">
-                  <RotateCcw className="w-6 h-6 text-rose-600" />
-                </div>
-                <h3 className="text-base sm:text-lg font-semibold text-[#191E2B] mb-1.5">
-                  {t('Reset All Plan Tiers?')}
-                </h3>
-                <p className="text-[#757F94] text-xs sm:text-sm mb-6 font-medium leading-relaxed">
-                  {t('Are you sure you want to reset all 4 plan tiers to platform factory default quotas and pricing? This will overwrite custom limits.')}
-                </p>
-
-                <div className="flex gap-2.5 sm:gap-3 justify-center">
-                  <button
-                    type="button"
-                    onClick={() => setConfirmResetModal(false)}
-                    disabled={resetting}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-[#4E5668] rounded-lg font-medium text-xs sm:text-sm transition-colors active:scale-95 disabled:opacity-50"
-                  >
-                    {t('No, Cancel')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={executeResetDefaults}
-                    disabled={resetting}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-medium text-xs sm:text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
-                  >
-                    {resetting ? (
-                      <>
-                        <RotateCcw className="w-4 h-4 animate-spin" />
-                        <span>{t('Resetting...')}</span>
-                      </>
-                    ) : (
-                      <span>{t('Yes, Reset')}</span>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmModal
+        isOpen={confirmResetModal}
+        onClose={() => setConfirmResetModal(false)}
+        onConfirm={executeResetDefaults}
+        title={t('Reset All Plan Tiers?')}
+        message={t('Are you sure you want to reset all 4 plan tiers to platform factory default quotas and pricing? This will overwrite custom limits.')}
+        isLoading={resetting}
+        confirmText={t('Yes, Reset')}
+        cancelText={t('No, Cancel')}
+        variant="danger"
+      />
     </div>
   );
 };

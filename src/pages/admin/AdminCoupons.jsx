@@ -33,6 +33,7 @@ import {
 } from '../../features/admin/api/adminApi';
 import CouponCard from '../../features/admin/components/coupons/CouponCard';
 import CouponModal from '../../features/admin/components/coupons/CouponModal';
+import ConfirmModal from '../../components/common/ConfirmModal';
 import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 
@@ -66,6 +67,7 @@ const AdminCoupons = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState(null);
+  const [couponToDelete, setCouponToDelete] = useState(null);
 
   /**
    * Search Debounce & URL Synchronization
@@ -190,6 +192,7 @@ const AdminCoupons = () => {
       queryClient.invalidateQueries({ queryKey: ['adminCoupons'] });
       queryClient.invalidateQueries({ queryKey: ['adminCouponStats'] });
       toast.success('Coupon deleted successfully');
+      setCouponToDelete(null);
     },
     onError: (err) => {
       toast.error(err.response?.data?.message || 'Failed to delete coupon');
@@ -209,9 +212,7 @@ const AdminCoupons = () => {
   };
 
   const handleDeleteCoupon = (id, code) => {
-    if (window.confirm(`Are you sure you want to delete coupon '${code}'?`)) {
-      deleteMutation.mutate(id);
-    }
+    setCouponToDelete({ id, code });
   };
 
   const handleOpenCreate = () => {
@@ -462,6 +463,23 @@ const AdminCoupons = () => {
         coupon={editingCoupon}
         onClose={() => setModalOpen(false)}
         onSave={handleSaveCoupon}
+      />
+
+      {/**
+       * Coupon Deletion Confirmation Modal
+       */}
+      <ConfirmModal
+        isOpen={!!couponToDelete}
+        onClose={() => setCouponToDelete(null)}
+        onConfirm={() => {
+          if (couponToDelete) deleteMutation.mutate(couponToDelete.id);
+        }}
+        title="Delete Coupon"
+        message="Are you sure you want to delete coupon"
+        itemName={couponToDelete?.code}
+        isLoading={deleteMutation.isPending}
+        confirmText="Yes, Delete"
+        variant="danger"
       />
     </div>
   );

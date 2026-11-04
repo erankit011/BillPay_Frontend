@@ -30,6 +30,7 @@ import {
 } from '../../features/admin/api/adminApi';
 import BroadcastBanner from '../../features/admin/components/broadcast/BroadcastBanner';
 import BroadcastModal from '../../features/admin/components/broadcast/BroadcastModal';
+import ConfirmModal from '../../components/common/ConfirmModal';
 import AdminStatCard from '../../features/admin/components/AdminStatCard';
 import SwirlingLoader from '../../components/common/SwirlingLoader';
 import { formatDate } from '../../utils/dateUtils';
@@ -50,6 +51,7 @@ const AdminBroadcasts = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingBroadcast, setEditingBroadcast] = useState(null);
+  const [broadcastToDelete, setBroadcastToDelete] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -136,6 +138,7 @@ const AdminBroadcasts = () => {
       queryClient.invalidateQueries({ queryKey: ['adminBroadcasts'] });
       queryClient.invalidateQueries({ queryKey: ['activeBroadcasts'] });
       toast.success('Announcement deleted successfully');
+      setBroadcastToDelete(null);
     },
     onError: (err) => {
       toast.error(err.response?.data?.message || 'Failed to delete broadcast');
@@ -168,9 +171,7 @@ const AdminBroadcasts = () => {
   };
 
   const handleDelete = (broadcast) => {
-    if (window.confirm(`Are you sure you want to delete "${broadcast.title}"?`)) {
-      deleteMutation.mutate(broadcast._id);
-    }
+    setBroadcastToDelete(broadcast);
   };
 
   /**
@@ -490,6 +491,23 @@ const AdminBroadcasts = () => {
         broadcastToEdit={editingBroadcast}
         onSave={handleSave}
         isSaving={createMutation.isPending || updateMutation.isPending}
+      />
+
+      {/**
+       * Broadcast Deletion Confirmation Modal
+       */}
+      <ConfirmModal
+        isOpen={!!broadcastToDelete}
+        onClose={() => setBroadcastToDelete(null)}
+        onConfirm={() => {
+          if (broadcastToDelete) deleteMutation.mutate(broadcastToDelete._id);
+        }}
+        title="Delete Announcement"
+        message="Are you sure you want to delete announcement"
+        itemName={broadcastToDelete?.title}
+        isLoading={deleteMutation.isPending}
+        confirmText="Yes, Delete"
+        variant="danger"
       />
     </div>
   );
