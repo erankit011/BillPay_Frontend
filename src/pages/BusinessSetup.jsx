@@ -196,7 +196,7 @@ const BusinessSetup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 font-sans flex flex-col justify-center">
+    <div className="min-h-screen bg-[#F0F2F6] pb-20 md:pb-0 font-sans flex flex-col justify-center">
       <div className="mx-auto max-w-4xl w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
 
         {/**
@@ -204,10 +204,10 @@ const BusinessSetup = () => {
          * Greets new merchant and explains purpose of profile completion
          */}
         <div className="mb-6">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-[#191E2B] tracking-tight">
             {t('Welcome to UdharPay!')}
           </h2>
-          <p className="mt-1 text-sm text-gray-600 font-medium max-w-2xl leading-relaxed">
+          <p className="mt-1 text-sm text-[#4E5668] font-medium max-w-2xl leading-relaxed">
             {t("Let's set up your business profile. This information will be used on your invoices, receipts, and reports.")}
           </p>
         </div>
@@ -217,15 +217,15 @@ const BusinessSetup = () => {
            * Business Details Form Container
            * Card housing business identity, billing, and address fields
            */}
-          <section className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <section className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] overflow-hidden">
 
-            <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+            <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2] flex justify-between items-center">
               <div>
-                <h2 className="text-base md:text-lg font-semibold text-gray-900 flex items-center gap-2">
-                  <Store className="w-5 h-5 text-[#093C5D]" />
+                <h2 className="text-base md:text-lg font-semibold text-[#191E2B] flex items-center gap-2">
+                  <Store className="w-5 h-5 text-[#4338CA]" />
                   {t('Business Information')}
                 </h2>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-xs text-[#757F94] mt-0.5">
                   {t('Details shown on your invoices and receipts')}
                 </p>
               </div>
@@ -251,7 +251,7 @@ const BusinessSetup = () => {
                  * Primary merchant identification used on invoices
                  */}
                 <div className="md:col-span-2">
-                  <label htmlFor="shopName" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                  <label htmlFor="shopName" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
                     {t('Business / Shop Name')} <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -260,7 +260,7 @@ const BusinessSetup = () => {
                     type="text"
                     value={formData.shopName}
                     onChange={handleChange}
-                    className={`block w-full rounded-lg border ${errors.shopName ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                    className={`block w-full rounded-lg border ${errors.shopName ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
                     placeholder={t('Enter Business / Shop Name')}
                   />
                   {errors.shopName && <p className="text-red-500 text-xs mt-1 font-medium">{errors.shopName}</p>}
@@ -271,14 +271,14 @@ const BusinessSetup = () => {
                  * Optional tax registration identifier for GST invoices
                  */}
                 <div>
-                  <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('GST Number')}</label>
+                  <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('GST Number')}</label>
                   <input
                     type="text"
                     name="gstNumber"
                     value={formData.gstNumber}
                     onChange={handleChange}
                     placeholder="23ABCDE0000A1A2"
-                    className={`block w-full rounded-lg border ${errors.gstNumber ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                    className={`block w-full rounded-lg border ${errors.gstNumber ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
                   />
                   {errors.gstNumber && <p className="text-red-500 text-xs mt-1 font-medium">{errors.gstNumber}</p>}
                 </div>
@@ -288,14 +288,14 @@ const BusinessSetup = () => {
                  * Merchant UPI ID printed on invoices for direct customer payments
                  */}
                 <div>
-                  <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('UPI Id')}</label>
+                  <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('UPI Id')}</label>
                   <input
                     type="text"
                     name="upiId"
                     value={formData.upiId}
                     onChange={handleChange}
                     placeholder="yourshop@upi"
-                    className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                    className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
                   />
                 </div>
 
@@ -304,7 +304,7 @@ const BusinessSetup = () => {
                  * Public store telephone number displayed to customers
                  */}
                 <div>
-                  <label htmlFor="shopPhone" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                  <label htmlFor="shopPhone" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
                     {t('Business Phone')} <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -313,13 +313,13 @@ const BusinessSetup = () => {
                     type="tel"
                     value={formData.shopPhone}
                     onChange={handleChange}
-                    className={`block w-full rounded-lg border ${errors.shopPhone ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                    className={`block w-full rounded-lg border ${errors.shopPhone ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
                     placeholder={t('+91 98005 00012')}
                   />
                   {errors.shopPhone ? (
                     <p className="text-red-500 text-xs mt-1 font-medium">{errors.shopPhone}</p>
                   ) : (
-                    <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Shown on invoices, can differ from personal phone')}</p>
+                    <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Shown on invoices, can differ from personal phone')}</p>
                   )}
                 </div>
 
@@ -328,7 +328,7 @@ const BusinessSetup = () => {
                  * Official support email printed on transaction receipts
                  */}
                 <div>
-                  <label htmlFor="shopEmail" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                  <label htmlFor="shopEmail" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
                     {t('Business Email')}
                   </label>
                   <input
@@ -337,13 +337,13 @@ const BusinessSetup = () => {
                     type="email"
                     value={formData.shopEmail}
                     onChange={handleChange}
-                    className={`block w-full rounded-lg border ${errors.shopEmail ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
+                    className={`block w-full rounded-lg border ${errors.shopEmail ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none`}
                     placeholder={t('yourshop@gmail.com')}
                   />
                   {errors.shopEmail ? (
                     <p className="text-red-500 text-xs mt-1 font-medium">{errors.shopEmail}</p>
                   ) : (
-                    <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Shown on invoices, can differ from personal email')}</p>
+                    <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Shown on invoices, can differ from personal email')}</p>
                   )}
                 </div>
 
@@ -352,48 +352,48 @@ const BusinessSetup = () => {
                  * Image uploader and URL input for customized invoice header branding
                  */}
                 <div className="md:col-span-2">
-                  <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Invoice Logo')}</label>
+                  <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Invoice Logo')}</label>
 
                   <div className="flex flex-col items-start gap-4">
                     {formData.invoiceLogo ? (
                       <div className="flex items-center gap-3">
-                        <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-white border border-gray-300 rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
+                        <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
                           <img src={formData.invoiceLogo} alt="Logo" className="w-full h-full object-contain" />
                           <button
                             type="button"
                             onClick={() => setFormData(prev => ({ ...prev, invoiceLogo: '' }))}
-                            className="absolute top-1.5 right-1.5 cursor-pointer bg-[#093C5D] text-white hover:bg-[#072d46] w-6 h-6 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[24px] !min-w-[24px] !p-0 shadow-none z-10"
+                            className="absolute top-1.5 right-1.5 cursor-pointer bg-[#4338CA] text-white hover:bg-[#3730A3] w-6 h-6 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[24px] !min-w-[24px] !p-0 shadow-none z-10"
                             title={t('Remove Logo')}
                           >
                             <X className="w-3.5 h-3.5" />
                           </button>
                         </div>
                         <div className="flex flex-col items-start justify-center">
-                          <span className="text-[13px] sm:text-sm font-semibold text-gray-800">{t('Logo Uploaded')}</span>
+                          <span className="text-[13px] sm:text-sm font-semibold text-[#191E2B]">{t('Logo Uploaded')}</span>
                         </div>
                       </div>
                     ) : (
                       <div className="flex-1 w-full space-y-3">
                         <div className="flex flex-col md:flex-row items-start md:items-center gap-3 w-full">
-                          <label className={`cursor-pointer w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 md:py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium text-xs md:text-sm transition-colors ${uploadingLogo ? 'opacity-50' : 'hover:bg-gray-50 hover:text-gray-900 active:bg-gray-100'}`}>
-                            {uploadingLogo ? <Loader2 className="w-4 h-4 animate-spin text-[#093C5D]" /> : <Upload className="w-4 h-4 text-gray-500" />}
+                          <label className={`cursor-pointer w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 md:py-2.5 rounded-lg border border-[#DCE1EA] text-[#4E5668] font-medium text-xs md:text-sm transition-colors ${uploadingLogo ? 'opacity-50' : 'hover:bg-[#F0F2F6] hover:text-[#191E2B] active:bg-[#EBEEF4]'}`}>
+                            {uploadingLogo ? <Loader2 className="w-4 h-4 animate-spin text-[#4338CA]" /> : <Upload className="w-4 h-4 text-[#757F94]" />}
                             <span>{uploadingLogo ? t('Uploading...') : t('Upload New Logo')}</span>
                             <input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} disabled={uploadingLogo} />
                           </label>
 
                           <div className="flex-1 w-full flex items-center gap-2">
-                            <span className="text-gray-400 font-medium text-xs md:text-sm hidden md:inline-block">{t('Or')}</span>
+                            <span className="text-[#757F94] font-medium text-xs md:text-sm hidden md:inline-block">{t('Or')}</span>
                             <input
                               type="url"
                               name="invoiceLogo"
                               value={formData.invoiceLogo}
                               onChange={handleChange}
                               placeholder={t('Enter image URL (https://...)')}
-                              className="block w-full rounded-lg border border-gray-300 px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-gray-900 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                              className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
                             />
                           </div>
                         </div>
-                        <p className="text-gray-500 text-[11px] sm:text-xs font-medium">{t('Upload from your device or paste an image URL. Recommended size: 400x150px. Max 5MB.')}</p>
+                        <p className="text-[#757F94] text-[11px] sm:text-xs font-medium">{t('Upload from your device or paste an image URL. Recommended size: 400x150px. Max 5MB.')}</p>
                       </div>
                     )}
                   </div>
@@ -404,53 +404,53 @@ const BusinessSetup = () => {
                  * Image uploader and URL input for customized invoice signatory branding
                  */}
                 <div className="md:col-span-2">
-                  <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                  <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
                     {t('Authorized Signature')} <span className="text-red-500">*</span>
                   </label>
 
                   <div className="flex flex-col items-start gap-4">
                     {formData.signatureImage ? (
                       <div className="flex items-center gap-3">
-                        <div className="w-28 h-16 sm:w-32 sm:h-20 shrink-0 bg-white border border-gray-300 rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
+                        <div className="w-28 h-16 sm:w-32 sm:h-20 shrink-0 bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
                           <img src={formData.signatureImage} alt="Signature" className="w-full h-full object-contain" />
                           <button
                             type="button"
                             onClick={() => setFormData(prev => ({ ...prev, signatureImage: '' }))}
-                            className="absolute top-1.5 right-1.5 cursor-pointer bg-[#093C5D] text-white hover:bg-[#072d46] w-6 h-6 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[24px] !min-w-[24px] !p-0 shadow-none z-10"
+                            className="absolute top-1.5 right-1.5 cursor-pointer bg-[#4338CA] text-white hover:bg-[#3730A3] w-6 h-6 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[24px] !min-w-[24px] !p-0 shadow-none z-10"
                             title={t('Remove Signature')}
                           >
                             <X className="w-3.5 h-3.5" />
                           </button>
                         </div>
                         <div className="flex flex-col items-start justify-center">
-                          <span className="text-[13px] sm:text-sm font-semibold text-gray-800">{t('Signature Uploaded')}</span>
+                          <span className="text-[13px] sm:text-sm font-semibold text-[#191E2B]">{t('Signature Uploaded')}</span>
                         </div>
                       </div>
                     ) : (
                       <div className="flex-1 w-full space-y-3">
                         <div className="flex flex-col md:flex-row items-start md:items-center gap-3 w-full">
-                          <label className={`cursor-pointer w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 md:py-2.5 rounded-lg border ${errors.signatureImage ? 'border-red-400' : 'border-gray-300'} text-gray-700 font-medium text-xs md:text-sm transition-colors ${uploadingSignature ? 'opacity-50' : 'hover:bg-gray-50 hover:text-gray-900 active:bg-gray-100'}`}>
-                            {uploadingSignature ? <Loader2 className="w-4 h-4 animate-spin text-[#093C5D]" /> : <Upload className="w-4 h-4 text-gray-500" />}
+                          <label className={`cursor-pointer w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 md:py-2.5 rounded-lg border ${errors.signatureImage ? 'border-red-400' : 'border-[#DCE1EA]'} text-[#4E5668] font-medium text-xs md:text-sm transition-colors ${uploadingSignature ? 'opacity-50' : 'hover:bg-[#F0F2F6] hover:text-[#191E2B] active:bg-[#EBEEF4]'}`}>
+                            {uploadingSignature ? <Loader2 className="w-4 h-4 animate-spin text-[#4338CA]" /> : <Upload className="w-4 h-4 text-[#757F94]" />}
                             <span>{uploadingSignature ? t('Uploading...') : t('Upload Signature')}</span>
                             <input type="file" className="hidden" accept="image/*" onChange={handleSignatureUpload} disabled={uploadingSignature} />
                           </label>
 
                           <div className="flex-1 w-full flex items-center gap-2">
-                            <span className="text-gray-400 font-medium text-xs md:text-sm hidden md:inline-block">{t('Or')}</span>
+                            <span className="text-[#757F94] font-medium text-xs md:text-sm hidden md:inline-block">{t('Or')}</span>
                             <input
                               type="url"
                               name="signatureImage"
                               value={formData.signatureImage}
                               onChange={handleChange}
                               placeholder={t('Enter signature image URL (https://...)')}
-                              className={`block w-full rounded-lg border ${errors.signatureImage ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'} px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-gray-900 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]`}
+                              className={`block w-full rounded-lg border ${errors.signatureImage ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]`}
                             />
                           </div>
                         </div>
                         {errors.signatureImage && (
                           <p className="text-red-500 text-xs mt-1 font-medium">{errors.signatureImage}</p>
                         )}
-                        <p className="text-gray-500 text-[11px] sm:text-xs font-medium">{t('Upload from your device or paste an image URL. Recommended size: 300x100px. Max 5MB.')}</p>
+                        <p className="text-[#757F94] text-[11px] sm:text-xs font-medium">{t('Upload from your device or paste an image URL. Recommended size: 300x100px. Max 5MB.')}</p>
                       </div>
                     )}
                   </div>
@@ -461,7 +461,7 @@ const BusinessSetup = () => {
                  * Specifies default currency symbol and formatting for billing
                  */}
                 <div>
-                  <label htmlFor="currency" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                  <label htmlFor="currency" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
                     {t('Default Currency')}
                   </label>
                   <select
@@ -469,7 +469,7 @@ const BusinessSetup = () => {
                     name="currency"
                     value={formData.currency}
                     onChange={handleChange}
-                    className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] appearance-none bg-white cursor-pointer"
+                    className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA] appearance-none bg-[#FBFBFC] cursor-pointer"
                     style={{
                       backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
                       backgroundPosition: 'right 0.75rem center',
@@ -488,7 +488,7 @@ const BusinessSetup = () => {
                  * Complete postal address rendered on billings and receipts
                  */}
                 <div className="md:col-span-2">
-                  <label htmlFor="shopAddress" className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                  <label htmlFor="shopAddress" className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
                     {t('Shop Address')} <span className="text-red-500">*</span>
                   </label>
                   <textarea
@@ -497,7 +497,7 @@ const BusinessSetup = () => {
                     rows={3}
                     value={formData.shopAddress}
                     onChange={handleChange}
-                    className={`block w-full rounded-lg border ${errors.shopAddress ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none resize-none`}
+                    className={`block w-full rounded-lg border ${errors.shopAddress ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'} px-3 py-2.5 text-sm md:text-base font-medium transition-colors duration-200 focus:ring-1 focus:outline-none resize-none`}
                     placeholder={t('Enter full business address (Building, Street, City, State, PIN)')}
                   />
                   {errors.shopAddress && <p className="text-red-500 text-xs mt-1 font-medium">{errors.shopAddress}</p>}
@@ -511,10 +511,10 @@ const BusinessSetup = () => {
            * Submit button and status indicator anchored at the viewport base
            */}
           <div className="sticky bottom-4 z-20 mt-8">
-            <div className="bg-white border border-gray-200 p-2 sm:px-4 sm:py-2.5 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 w-full shadow-none">
+            <div className="bg-[#FBFBFC] border border-[#DCE1EA] p-2 sm:px-4 sm:py-2.5 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 w-full shadow-none">
               <div className="flex items-center gap-2 text-sm ml-1">
                 <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                <span className="text-gray-500 font-medium text-xs sm:text-sm">
+                <span className="text-[#757F94] font-medium text-xs sm:text-sm">
                   {t('Please complete setup to proceed')}
                 </span>
               </div>
@@ -522,7 +522,7 @@ const BusinessSetup = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`cursor-pointer bg-[#093C5D] text-white px-8 py-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold text-sm w-full sm:w-auto active:scale-[0.98] transition-colors duration-300 shadow-none ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#072d46]'}`}
+                  className={`cursor-pointer bg-[#4338CA] text-white px-8 py-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold text-sm w-full sm:w-auto active:scale-[0.98] transition-colors duration-300 shadow-none ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#3730A3]'}`}
                 >
                   {loading ? (
                     <>

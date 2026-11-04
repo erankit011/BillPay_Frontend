@@ -23,8 +23,8 @@ const SectionNavItem = ({ icon: Icon, label, sectionId, activeSection, onClick }
     type="button"
     onClick={() => onClick(sectionId)}
     className={`cursor-pointer w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 text-left ${activeSection === sectionId
-        ? 'bg-[#093C5D]/5 text-[#093C5D] border border-[#093C5D]/15'
-        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 border border-transparent'
+        ? 'bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5]'
+        : 'text-[#4E5668] hover:text-[#191E2B] hover:bg-[#F0F2F6] border border-transparent'
       }`}
   >
     <Icon className="w-4 h-4 shrink-0" />
@@ -38,21 +38,21 @@ const SectionNavItem = ({ icon: Icon, label, sectionId, activeSection, onClick }
  * Reusable accessible boolean toggle control with label and description
  */
 const ToggleSwitch = ({ name, checked, onChange, label, description }) => (
-  <div className="flex items-center justify-between gap-4 py-3 border-b border-gray-100 last:border-b-0">
+  <div className="flex items-center justify-between gap-4 py-3 border-b border-[#E8ECF2] last:border-b-0">
     <div className="min-w-0 flex-1">
-      <p className="text-sm font-medium text-gray-900">{label}</p>
-      {description && <p className="text-xs text-gray-500 mt-0.5">{description}</p>}
+      <p className="text-sm font-medium text-[#191E2B]">{label}</p>
+      {description && <p className="text-xs text-[#757F94] mt-0.5">{description}</p>}
     </div>
     <div
       role="switch"
       aria-checked={checked}
       onClick={() => onChange({ target: { name, type: 'checkbox', checked: !checked } })}
-      className={`cursor-pointer relative inline-flex items-center shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${checked ? 'bg-[#093C5D]' : 'bg-gray-300'
+      className={`cursor-pointer relative inline-flex items-center shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${checked ? 'bg-[#4338CA]' : 'bg-[#DCE1EA]'
         }`}
       style={{ width: '36px', height: '20px', minWidth: '36px', minHeight: '20px', padding: 0 }}
     >
       <span
-        className={`pointer-events-none inline-block rounded-full bg-white transition-transform duration-200 shadow-sm ${checked ? 'translate-x-4' : 'translate-x-0'
+        className={`pointer-events-none inline-block rounded-full bg-white transition-transform duration-200 shadow-none border border-[#DCE1EA] ${checked ? 'translate-x-4' : 'translate-x-0'
           }`}
         style={{ width: '16px', height: '16px', minWidth: '16px', minHeight: '16px' }}
       />
@@ -561,8 +561,8 @@ const Settings = () => {
        * Title and descriptive subtitle for shop settings
        */}
       <div>
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">{t('Settings')}</h1>
-        <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B]">{t('Settings')}</h1>
+        <p className="text-[#4E5668] text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed">
           {t('Manage your shop preferences and profile')}
         </p>
       </div>
@@ -588,7 +588,7 @@ const Settings = () => {
              * App Version Metadata Card
              * Desktop sidebar badge displaying release version and build info
              */}
-            <div className="pt-4 border-t border-gray-100 mt-4">
+            <div className="pt-4 border-t border-[#E8ECF2] mt-4">
               <AppVersionCard variant="sidebar" />
             </div>
           </nav>
@@ -614,8 +614,8 @@ const Settings = () => {
               key={id}
               onClick={() => scrollToSection(id)}
               className={`cursor-pointer flex items-center justify-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-semibold whitespace-nowrap border transition-colors shrink-0 ${activeSection === id
-                  ? 'bg-[#093C5D]/5 text-[#093C5D] border-[#093C5D]/15'
-                  : 'text-gray-600 hover:text-gray-900 border-gray-200 hover:bg-gray-50'
+                  ? 'bg-[#EEF0FB] text-[#4338CA] border-[#D8DCF5]'
+                  : 'text-[#4E5668] hover:text-[#191E2B] border-[#DCE1EA] hover:bg-[#F0F2F6]'
                 }`}
             >
               <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -637,178 +637,178 @@ const Settings = () => {
              * Commercial identity details, GSTIN, UPI ID, logo asset, and official address
              */}
             {activeSection === 'business' && (
-              <section id="section-business" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
-                  <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Business Information')}</h2>
-                  <p className="text-xs text-gray-500 mt-0.5">{t('Details shown on your invoices and receipts')}</p>
+              <section id="section-business" className="bg-white rounded-lg border border-[#DCE1EA] overflow-hidden">
+                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2]">
+                  <h2 className="text-base md:text-lg font-semibold text-[#191E2B]">{t('Business Information')}</h2>
+                  <p className="text-xs text-[#757F94] mt-0.5">{t('Details shown on your invoices and receipts')}</p>
                 </div>
                 <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
                     <div className="md:col-span-2">
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Business / Shop Name')} <span className="text-red-500">*</span></label>
+                      <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Business / Shop Name')} <span className="text-red-500">*</span></label>
                       <input
                         type="text"
                         name="shopName"
                         value={formData.shopName}
                         onChange={handleChange}
                         placeholder="Sharma General Store"
-                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('GST Number')}</label>
+                      <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('GST Number')}</label>
                       <input
                         type="text"
                         name="gstNumber"
                         value={formData.gstNumber}
                         onChange={handleChange}
                         placeholder="23ABCDE0000A1A2"
-                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('UPI Id')}</label>
+                      <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('UPI Id')}</label>
                       <input
                         type="text"
                         name="upiId"
                         value={formData.upiId}
                         onChange={handleChange}
                         placeholder="yourshop@upi"
-                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
                       />
                     </div>
                     <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Business Phone')}</label>
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Business Phone')}</label>
                     <input
                       type="text"
                       name="shopPhone"
                       value={formData.shopPhone}
                       onChange={handleChange}
                       placeholder="+91 98005 00012"
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
                     />
-                    <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Shown on invoices, can differ from personal phone')}</p>
+                    <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Shown on invoices, can differ from personal phone')}</p>
                   </div>
                     <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Business Email')}</label>
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Business Email')}</label>
                     <input
                       type="email"
                       name="shopEmail"
                       value={formData.shopEmail}
                       onChange={handleChange}
                       placeholder="yourshop@gmail.com"
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
                     />
-                    <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Shown on invoices, can differ from personal email')}</p>
+                    <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Shown on invoices, can differ from personal email')}</p>
                   </div>
                     <div className="md:col-span-2">
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Invoice Logo')}</label>
+                      <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Invoice Logo')}</label>
                       
                       <div className="flex flex-col items-start gap-4">
                         {formData.invoiceLogo ? (
                           <div className="flex items-center gap-3">
-                            <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-white border border-gray-300 rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
+                            <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-white border border-[#DCE1EA] rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
                               <img src={formData.invoiceLogo} alt="Logo" className="w-full h-full object-contain" />
                               <button
                                 type="button"
                                 onClick={() => setFormData(prev => ({ ...prev, invoiceLogo: '' }))}
-                                className="absolute top-1.5 right-1.5 cursor-pointer bg-[#093C5D] text-white hover:bg-[#072d46] w-6 h-6 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[24px] !min-w-[24px] !p-0 shadow-none z-10"
+                                className="absolute top-1.5 right-1.5 cursor-pointer bg-[#4338CA] text-white hover:bg-[#3730A3] w-6 h-6 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[24px] !min-w-[24px] !p-0 shadow-none z-10"
                                 title={t('Remove Logo')}
                               >
                                 <X className="w-3.5 h-3.5" />
                               </button>
                             </div>
                             <div className="flex flex-col items-start justify-center">
-                              <span className="text-[13px] sm:text-sm font-semibold text-gray-800">{t('Logo Uploaded')}</span>
+                              <span className="text-[13px] sm:text-sm font-semibold text-[#191E2B]">{t('Logo Uploaded')}</span>
                             </div>
                           </div>
                         ) : (
                           <div className="flex-1 w-full space-y-3">
                             <div className="flex flex-col md:flex-row items-start md:items-center gap-3 w-full">
-                              <label className={`cursor-pointer w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 md:py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium text-xs md:text-sm transition-colors ${uploadingLogo ? 'opacity-50' : 'hover:bg-gray-50 hover:text-gray-900 active:bg-gray-100'}`}>
-                                {uploadingLogo ? <Loader2 className="w-4 h-4 animate-spin text-[#093C5D]" /> : <Upload className="w-4 h-4 text-gray-500" />}
+                              <label className={`cursor-pointer w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 md:py-2.5 rounded-lg border border-[#DCE1EA] text-[#4E5668] font-medium text-xs md:text-sm transition-colors ${uploadingLogo ? 'opacity-50' : 'hover:bg-[#F0F2F6] hover:text-[#191E2B] active:bg-[#EBEEF4]'}`}>
+                                {uploadingLogo ? <Loader2 className="w-4 h-4 animate-spin text-[#4338CA]" /> : <Upload className="w-4 h-4 text-[#757F94]" />}
                                 <span>{uploadingLogo ? t('Uploading...') : t('Upload New Logo')}</span>
                                 <input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} disabled={uploadingLogo} />
                               </label>
                               
                               <div className="flex-1 w-full flex items-center gap-2">
-                                <span className="text-gray-400 font-medium text-xs md:text-sm hidden md:inline-block">{t('Or')}</span>
+                                <span className="text-[#757F94] font-medium text-xs md:text-sm hidden md:inline-block">{t('Or')}</span>
                                 <input
                                   type="url"
                                   name="invoiceLogo"
                                   value={formData.invoiceLogo}
                                   onChange={handleChange}
                                   placeholder={t('Enter image URL (https://...)')}
-                                  className="block w-full rounded-lg border border-gray-300 px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-gray-900 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                                  className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
                                 />
                               </div>
                             </div>
-                            <p className="text-gray-500 text-[11px] sm:text-xs font-medium">{t('Upload from your device or paste an image URL. Recommended size: 400x150px. Max 5MB.')}</p>
+                            <p className="text-[#757F94] text-[11px] sm:text-xs font-medium">{t('Upload from your device or paste an image URL. Recommended size: 400x150px. Max 5MB.')}</p>
                           </div>
                         )}
                       </div>
                       
                       <div className="mt-5">
-                        <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">
+                        <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
                           {t('Authorized Signature')} <span className="text-red-500">*</span>
                         </label>
                         
                         <div className="flex flex-col items-start gap-4">
                           {formData.signatureImage ? (
                             <div className="flex items-center gap-3">
-                              <div className="w-28 h-16 sm:w-32 sm:h-20 shrink-0 bg-white border border-gray-300 rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
+                              <div className="w-28 h-16 sm:w-32 sm:h-20 shrink-0 bg-white border border-[#DCE1EA] rounded-lg flex items-center justify-center p-2 relative group overflow-hidden shadow-none">
                                 <img src={formData.signatureImage} alt="Signature" className="w-full h-full object-contain" />
                                 <button
                                   type="button"
                                   onClick={() => setFormData(prev => ({ ...prev, signatureImage: '' }))}
-                                  className="absolute top-1.5 right-1.5 cursor-pointer bg-[#093C5D] text-white hover:bg-[#072d46] w-6 h-6 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[24px] !min-w-[24px] !p-0 shadow-none z-10"
+                                  className="absolute top-1.5 right-1.5 cursor-pointer bg-[#4338CA] text-white hover:bg-[#3730A3] w-6 h-6 flex items-center justify-center rounded-full transition-all active:scale-95 flex-shrink-0 !min-h-[24px] !min-w-[24px] !p-0 shadow-none z-10"
                                   title={t('Remove Signature')}
                                 >
                                   <X className="w-3.5 h-3.5" />
                                 </button>
                               </div>
                               <div className="flex flex-col items-start justify-center">
-                                <span className="text-[13px] sm:text-sm font-semibold text-gray-800">{t('Signature Uploaded')}</span>
+                                <span className="text-[13px] sm:text-sm font-semibold text-[#191E2B]">{t('Signature Uploaded')}</span>
                               </div>
                             </div>
                           ) : (
                             <div className="flex-1 w-full space-y-3">
                               <div className="flex flex-col md:flex-row items-start md:items-center gap-3 w-full">
-                                <label className={`cursor-pointer w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 md:py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium text-xs md:text-sm transition-colors ${uploadingSignature ? 'opacity-50' : 'hover:bg-gray-50 hover:text-gray-900 active:bg-gray-100'}`}>
-                                  {uploadingSignature ? <Loader2 className="w-4 h-4 animate-spin text-[#093C5D]" /> : <Upload className="w-4 h-4 text-gray-500" />}
+                                <label className={`cursor-pointer w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 md:py-2.5 rounded-lg border border-[#DCE1EA] text-[#4E5668] font-medium text-xs md:text-sm transition-colors ${uploadingSignature ? 'opacity-50' : 'hover:bg-[#F0F2F6] hover:text-[#191E2B] active:bg-[#EBEEF4]'}`}>
+                                  {uploadingSignature ? <Loader2 className="w-4 h-4 animate-spin text-[#4338CA]" /> : <Upload className="w-4 h-4 text-[#757F94]" />}
                                   <span>{uploadingSignature ? t('Uploading...') : t('Upload Signature')}</span>
                                   <input type="file" className="hidden" accept="image/*" onChange={handleSignatureUpload} disabled={uploadingSignature} />
                                 </label>
                                 
                                 <div className="flex-1 w-full flex items-center gap-2">
-                                  <span className="text-gray-400 font-medium text-xs md:text-sm hidden md:inline-block">{t('Or')}</span>
+                                  <span className="text-[#757F94] font-medium text-xs md:text-sm hidden md:inline-block">{t('Or')}</span>
                                   <input
                                     type="url"
                                     name="signatureImage"
                                     value={formData.signatureImage}
                                     onChange={handleChange}
                                     placeholder={t('Enter signature image URL (https://...)')}
-                                    className="block w-full rounded-lg border border-gray-300 px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-gray-900 transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                                    className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 md:py-2.5 text-xs md:text-sm font-medium text-[#191E2B] transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
                                   />
                                 </div>
                               </div>
-                              <p className="text-gray-500 text-[11px] sm:text-xs font-medium">{t('Upload from your device or paste an image URL. Recommended size: 300x100px. Max 5MB.')}</p>
+                              <p className="text-[#757F94] text-[11px] sm:text-xs font-medium">{t('Upload from your device or paste an image URL. Recommended size: 300x100px. Max 5MB.')}</p>
                             </div>
                           )}
                         </div>
                       </div>
 
                       <div className="mt-5">
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Shop Address')}</label>
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Shop Address')}</label>
                     <textarea
                       name="shopAddress"
                       value={formData.shopAddress}
                       onChange={handleChange}
                       placeholder={t('123, MG Road, Near City Mall, Indore, Madhya Pradesh - 110010')}
                       rows={3}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] resize-none"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA] resize-none"
                     />
-                    <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('This address will appear on all invoices')}</p>
+                    <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('This address will appear on all invoices')}</p>
                   </div>
                     </div>
                   </div>
@@ -821,32 +821,32 @@ const Settings = () => {
              * Serial numbering, currency, payment modes, print formats, and tax rules
              */}
             {activeSection === 'billing' && (
-              <section id="section-billing" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
-                  <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Billing & Invoice')}</h2>
-                  <p className="text-xs text-gray-500 mt-0.5">{t('Configure how your invoices are generated')}</p>
+              <section id="section-billing" className="bg-white rounded-lg border border-[#DCE1EA] overflow-hidden">
+                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2]">
+                  <h2 className="text-base md:text-lg font-semibold text-[#191E2B]">{t('Billing & Invoice')}</h2>
+                  <p className="text-xs text-[#757F94] mt-0.5">{t('Configure how your invoices are generated')}</p>
                 </div>
                 <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
                     <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Invoice Prefix')}</label>
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Invoice Prefix')}</label>
                     <input
                       type="text"
                       name="invoicePrefix"
                       value={formData.invoicePrefix}
                       onChange={handleChange}
                       placeholder="INV"
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
                     />
-                    <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Used before invoice number, e.g. INV-001')}</p>
+                    <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Used before invoice number, e.g. INV-001')}</p>
                   </div>
                     <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Currency')}</label>
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Currency')}</label>
                     <select
                       name="currency"
                       value={formData.currency}
                       onChange={handleChange}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] appearance-none bg-white cursor-pointer"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA] appearance-none bg-white cursor-pointer"
                       style={{
                         backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
                         backgroundPosition: 'right 0.75rem center',
@@ -862,12 +862,12 @@ const Settings = () => {
                     </select>
                   </div>
                     <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Default Payment Mode')}</label>
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Default Payment Mode')}</label>
                     <select
                       name="defaultPaymentMode"
                       value={formData.defaultPaymentMode}
                       onChange={handleChange}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] appearance-none bg-white cursor-pointer"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA] appearance-none bg-white cursor-pointer"
                       style={{
                         backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
                         backgroundPosition: 'right 0.75rem center',
@@ -886,24 +886,24 @@ const Settings = () => {
                     </select>
                   </div>
                     <div>
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Payment Terms in Days')}</label>
+                      <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Payment Terms in Days')}</label>
                       <input
                         type="number"
                         name="defaultPaymentTerms"
                         value={formData.defaultPaymentTerms}
                         onChange={handleChange}
                         min="0"
-                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
                       />
-                      <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Default due period for invoices')}</p>
+                      <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Default due period for invoices')}</p>
                     </div>
                     <div>
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Printer Type')}</label>
+                      <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Printer Type')}</label>
                       <select
                         name="printerType"
                         value={formData.printerType}
                         onChange={handleChange}
-                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] appearance-none bg-white cursor-pointer"
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA] appearance-none bg-white cursor-pointer"
                         style={{
                           backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
                           backgroundPosition: 'right 0.75rem center',
@@ -918,12 +918,12 @@ const Settings = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Discount Type')}</label>
+                      <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Discount Type')}</label>
                       <select
                         name="discountType"
                         value={formData.discountType}
                         onChange={handleChange}
-                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] appearance-none bg-white cursor-pointer"
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA] appearance-none bg-white cursor-pointer"
                         style={{
                           backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
                           backgroundPosition: 'right 0.75rem center',
@@ -937,24 +937,24 @@ const Settings = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Default Udhaar Limit')}</label>
+                      <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Default Udhaar Limit')}</label>
                       <input
                         type="number"
                         name="defaultCreditLimit"
                         value={formData.defaultCreditLimit}
                         onChange={handleChange}
                         min="0"
-                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
                       />
-                      <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('0 means unlimited credit')}</p>
+                      <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('0 means unlimited credit')}</p>
                     </div>
                     <div>
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Voice Billing Language')}</label>
+                      <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Voice Billing Language')}</label>
                       <select
                         name="voiceLanguage"
                         value={formData.voiceLanguage}
                         onChange={handleChange}
-                        className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] appearance-none bg-white cursor-pointer"
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA] appearance-none bg-white cursor-pointer"
                         style={{
                           backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
                           backgroundPosition: 'right 0.75rem center',
@@ -973,7 +973,7 @@ const Settings = () => {
                    * Automation Preferences
                    * Automated WhatsApp dispatch and direct print triggers
                    */}
-                  <div className="mt-6 pt-5 border-t border-gray-100 space-y-4">
+                  <div className="mt-6 pt-5 border-t border-[#E8ECF2] space-y-4">
                     <ToggleSwitch
                       name="autoSendInvoices"
                       checked={formData.autoSendInvoices}
@@ -994,7 +994,7 @@ const Settings = () => {
                    * Tax & GST Calculations
                    * Tax enablement, CGST/SGST split display, and percentage rates
                    */}
-                  <div className="mt-6 pt-5 border-t border-gray-100">
+                  <div className="mt-6 pt-5 border-t border-[#E8ECF2]">
                     <ToggleSwitch
                       name="taxEnabled"
                       checked={formData.taxEnabled}
@@ -1012,7 +1012,7 @@ const Settings = () => {
                           description={t('Show CGST and SGST separately on invoices')}
                         />
                         <div>
-                          <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Tax Rate in %')}</label>
+                          <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Tax Rate in %')}</label>
                           <input
                             type="number"
                             name="taxRate"
@@ -1021,9 +1021,9 @@ const Settings = () => {
                             min="0"
                             max="100"
                             step="0.1"
-                            className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                            className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
                           />
-                          <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Applied to all new invoices')}</p>
+                          <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Applied to all new invoices')}</p>
                         </div>
                       </div>
                     )}
@@ -1037,11 +1037,11 @@ const Settings = () => {
              * Subscription history, payment receipts, and plan auto-renewal status
              */}
             {activeSection === 'platform-invoices' && (
-              <section id="section-platform-invoices" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <section id="section-platform-invoices" className="bg-white rounded-lg border border-[#DCE1EA] overflow-hidden">
+                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2] flex items-center justify-between">
                   <div>
-                    <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Platform Invoices')}</h2>
-                    <p className="text-xs text-gray-500 mt-0.5">{t('Your UdharPay subscription billing history')}</p>
+                    <h2 className="text-base md:text-lg font-semibold text-[#191E2B]">{t('Platform Invoices')}</h2>
+                    <p className="text-xs text-[#757F94] mt-0.5">{t('Your UdharPay subscription billing history')}</p>
                   </div>
                 </div>
 
@@ -1049,15 +1049,15 @@ const Settings = () => {
                  * Subscription Status Banner
                  * Active tier indicator, renewal dates, and plan management link
                  */}
-                <div className="m-4 sm:m-6 bg-gradient-to-r from-[#093C5D]/5 via-white to-blue-50/50 border border-[#093C5D]/15 rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="m-4 sm:m-6 bg-[#EEF0FB] border border-[#D8DCF5] rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-3.5 min-w-0">
-                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#093C5D]/10 text-[#093C5D] flex items-center justify-center shrink-0 border border-[#093C5D]/15">
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#FBFBFC] text-[#4338CA] flex items-center justify-center shrink-0 border border-[#D8DCF5]">
                       <Gem className="w-5 h-5" />
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs text-gray-500 font-medium">{t('Active Membership')}:</span>
-                        <strong className="text-sm font-bold text-[#093C5D] uppercase tracking-wide">{user?.subscriptionPlan || 'FREE'}</strong>
+                        <span className="text-xs text-[#757F94] font-medium">{t('Active Membership')}:</span>
+                        <strong className="text-sm font-bold text-[#4338CA] uppercase tracking-wide">{user?.subscriptionPlan || 'FREE'}</strong>
                         {user?.subscriptionStatus === 'active' && user?.subscriptionPlan !== 'FREE' && (
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -1070,14 +1070,14 @@ const Settings = () => {
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-gray-500 mt-0.5 truncate">
+                      <p className="text-xs text-[#757F94] mt-0.5 truncate">
                         {user?.currentPeriodEnd ? `${t('Valid until')} ${formatShortDate(user.currentPeriodEnd)}` : t('7-Day Free Trial')}
                       </p>
                     </div>
                   </div>
                   <Link
                     to="/subscription"
-                    className="cursor-pointer shrink-0 inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-white bg-[#093C5D] hover:bg-[#072C44] px-4 py-2.5 rounded-lg transition-colors w-full sm:w-auto shadow-xs active:scale-95"
+                    className="cursor-pointer shrink-0 inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] px-4 py-2.5 rounded-lg transition-colors w-full sm:w-auto shadow-xs active:scale-95"
                   >
                     <span>{t('Manage Plan & Auto-Pay')}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -1086,7 +1086,7 @@ const Settings = () => {
 
                 <div className="px-0 py-0">
                   {platformInvoices.length === 0 ? (
-                    <div className="p-8 text-center text-gray-500 text-sm">
+                    <div className="p-8 text-center text-[#757F94] text-sm">
                       {t('No billing history found. Upgrade your plan to see invoices here.')}
                     </div>
                   ) : (
@@ -1098,7 +1098,7 @@ const Settings = () => {
                       <div className="hidden lg:block overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                           <thead>
-                            <tr className="bg-gray-50 border-b border-gray-200 text-xs text-gray-500 uppercase tracking-wider">
+                            <tr className="bg-[#F0F2F6] border-b border-[#DCE1EA] text-xs text-[#757F94] uppercase tracking-wider">
                               <th className="px-6 py-3 font-medium">{t('Date')}</th>
                               <th className="px-6 py-3 font-medium">{t('Transaction ID')}</th>
                               <th className="px-6 py-3 font-medium">{t('Plan')}</th>
@@ -1110,24 +1110,24 @@ const Settings = () => {
                           </thead>
                           <tbody className="divide-y divide-gray-100">
                             {platformInvoices.map((inv) => (
-                              <tr key={inv._id} className="hover:bg-gray-50/50 transition-colors">
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                              <tr key={inv._id} className="hover:bg-[#F0F2F6]/50 transition-colors">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-[#191E2B]">
                                   {formatShortDate(inv.createdAt)}
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-gray-500 font-mono text-xs">
+                                <td className="px-6 py-4 whitespace-nowrap text-[#757F94] font-mono text-xs">
                                   {inv.razorpayPaymentId || '-'}
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-[#191E2B] font-medium">
                                   {inv.planName}
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-[#4E5668]">
                                   <div className="flex items-center gap-1.5">
                                     <span>{formatShortDate(inv.billingPeriodStart)}</span>
-                                    <span className="text-gray-400">&rarr;</span>
+                                    <span className="text-[#757F94]">&rarr;</span>
                                     <span>{formatShortDate(inv.billingPeriodEnd)}</span>
                                   </div>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-[#191E2B] font-medium">
                                   ₹{inv.amount}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
@@ -1143,7 +1143,7 @@ const Settings = () => {
                                       href={inv.receiptUrl} 
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="inline-flex items-center gap-1.5 text-[#093C5D] hover:text-[#072d46] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 py-1.5 rounded-md transition-colors"
+                                      className="inline-flex items-center gap-1.5 text-[#4338CA] hover:text-[#3730A3] bg-[#EEF0FB] hover:bg-[#E0E4F9] px-3 py-1.5 rounded-md transition-colors"
                                     >
                                       <Download className="w-3.5 h-3.5" />
                                       <span>{t('Invoice')}</span>
@@ -1153,7 +1153,7 @@ const Settings = () => {
                                       to={`/platform-receipt/${inv._id}`} 
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="inline-flex items-center gap-1.5 text-[#093C5D] hover:text-[#072d46] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 py-1.5 rounded-md transition-colors"
+                                      className="inline-flex items-center gap-1.5 text-[#4338CA] hover:text-[#3730A3] bg-[#EEF0FB] hover:bg-[#E0E4F9] px-3 py-1.5 rounded-md transition-colors"
                                     >
                                       <Download className="w-3.5 h-3.5" />
                                       <span>{t('Invoice')}</span>
@@ -1172,11 +1172,11 @@ const Settings = () => {
                        */}
                       <div className="block lg:hidden space-y-3 p-1">
                         {platformInvoices.map((inv) => (
-                          <div key={`card-${inv._id}`} className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 active:bg-gray-50 transition-colors duration-200">
+                          <div key={`card-${inv._id}`} className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg p-3 sm:p-4 active:bg-[#F0F2F6] transition-colors duration-200">
                             <div className="flex justify-between items-start gap-2 mb-3">
                               <div className="min-w-0">
-                                <h3 className="text-sm sm:text-[15px] font-semibold text-[#093C5D] truncate leading-tight mb-0.5">{inv.planName} Subscription</h3>
-                                <div className="text-[10px] sm:text-[11px] text-gray-500 font-medium font-mono truncate">#{inv.razorpayPaymentId || '-'}</div>
+                                <h3 className="text-sm sm:text-[15px] font-semibold text-[#191E2B] truncate leading-tight mb-0.5">{inv.planName} Subscription</h3>
+                                <div className="text-[10px] sm:text-[11px] text-[#757F94] font-medium font-mono truncate">#{inv.razorpayPaymentId || '-'}</div>
                               </div>
                               <span className={`shrink-0 inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-xs font-semibold uppercase tracking-wider ${
                                 inv.status === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'
@@ -1185,20 +1185,20 @@ const Settings = () => {
                               </span>
                             </div>
                             
-                            <div className="grid grid-cols-2 gap-3 text-sm bg-gray-50/50 p-2.5 sm:p-3 rounded-lg border border-gray-100 mb-3">
+                            <div className="grid grid-cols-2 gap-3 text-sm bg-[#F0F2F6]/50 p-2.5 sm:p-3 rounded-lg border border-[#E8ECF2] mb-3">
                               <div>
-                                <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Date')}</span>
-                                <div className="mt-0.5 text-gray-900 font-medium text-xs sm:text-sm">{formatShortDate(inv.createdAt)}</div>
+                                <span className="text-[10px] sm:text-xs font-semibold text-[#757F94] uppercase tracking-wider">{t('Date')}</span>
+                                <div className="mt-0.5 text-[#191E2B] font-medium text-xs sm:text-sm">{formatShortDate(inv.createdAt)}</div>
                               </div>
                               <div>
-                                <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Amount')}</span>
-                                <div className="mt-0.5 text-gray-900 font-semibold text-sm sm:text-[15px]">₹{inv.amount}</div>
+                                <span className="text-[10px] sm:text-xs font-semibold text-[#757F94] uppercase tracking-wider">{t('Amount')}</span>
+                                <div className="mt-0.5 text-[#191E2B] font-semibold text-sm sm:text-[15px]">₹{inv.amount}</div>
                               </div>
                               <div className="col-span-2">
-                                <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Validity')}</span>
-                                <div className="mt-0.5 text-gray-700 font-medium flex items-center gap-1.5 text-xs sm:text-sm">
+                                <span className="text-[10px] sm:text-xs font-semibold text-[#757F94] uppercase tracking-wider">{t('Validity')}</span>
+                                <div className="mt-0.5 text-[#4E5668] font-medium flex items-center gap-1.5 text-xs sm:text-sm">
                                   <span>{formatShortDate(inv.billingPeriodStart)}</span>
-                                  <span className="text-gray-400">&rarr;</span>
+                                  <span className="text-[#757F94]">&rarr;</span>
                                   <span>{formatShortDate(inv.billingPeriodEnd)}</span>
                                 </div>
                               </div>
@@ -1210,7 +1210,7 @@ const Settings = () => {
                                   href={inv.receiptUrl} 
                                   target="_blank" 
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-center justify-center gap-1.5 text-[#093C5D] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 sm:px-4 py-1.5 sm:py-2 rounded-md transition-colors text-xs sm:text-sm font-semibold w-full sm:w-auto border border-[#093C5D]/10 active:scale-95"
+                                  className="inline-flex items-center justify-center gap-1.5 text-[#4338CA] bg-[#EEF0FB] hover:bg-[#E0E4F9] px-3 sm:px-4 py-1.5 sm:py-2 rounded-md transition-colors text-xs sm:text-sm font-semibold w-full sm:w-auto border border-[#D8DCF5] active:scale-95"
                                 >
                                   <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                                   <span>{t('View & Download Invoice')}</span>
@@ -1220,7 +1220,7 @@ const Settings = () => {
                                   to={`/platform-receipt/${inv._id}`} 
                                   target="_blank" 
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-center justify-center gap-1.5 text-[#093C5D] bg-[#093C5D]/5 hover:bg-[#093C5D]/10 px-3 sm:px-4 py-1.5 sm:py-2 rounded-md transition-colors text-xs sm:text-sm font-semibold w-full sm:w-auto border border-[#093C5D]/10 active:scale-95"
+                                  className="inline-flex items-center justify-center gap-1.5 text-[#4338CA] bg-[#EEF0FB] hover:bg-[#E0E4F9] px-3 sm:px-4 py-1.5 sm:py-2 rounded-md transition-colors text-xs sm:text-sm font-semibold w-full sm:w-auto border border-[#D8DCF5] active:scale-95"
                                 >
                                   <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                                   <span>{t('View & Download Invoice')}</span>
@@ -1241,10 +1241,10 @@ const Settings = () => {
              * Automated customer dispatches and administrative email notifications
              */}
             {activeSection === 'notifications' && (
-              <section id="section-notifications" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
-                  <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Notifications & Automation')}</h2>
-                  <p className="text-xs text-gray-500 mt-0.5">{t('Control automatic messages and alerts')}</p>
+              <section id="section-notifications" className="bg-white rounded-lg border border-[#DCE1EA] overflow-hidden">
+                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2]">
+                  <h2 className="text-base md:text-lg font-semibold text-[#191E2B]">{t('Notifications & Automation')}</h2>
+                  <p className="text-xs text-[#757F94] mt-0.5">{t('Control automatic messages and alerts')}</p>
                 </div>
                 <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6 space-y-0">
                   <ToggleSwitch
@@ -1271,10 +1271,10 @@ const Settings = () => {
              * Low stock quantity thresholds and automated merchant notifications
              */}
             {activeSection === 'product' && (
-              <section id="section-product" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
-                  <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Product Settings')}</h2>
-                  <p className="text-xs text-gray-500 mt-0.5">{t('Configure stock management alerts')}</p>
+              <section id="section-product" className="bg-white rounded-lg border border-[#DCE1EA] overflow-hidden">
+                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2]">
+                  <h2 className="text-base md:text-lg font-semibold text-[#191E2B]">{t('Product Settings')}</h2>
+                  <p className="text-xs text-[#757F94] mt-0.5">{t('Configure stock management alerts')}</p>
                 </div>
                 <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
                   <ToggleSwitch
@@ -1287,16 +1287,16 @@ const Settings = () => {
                   {formData.lowStockAlert && (
                     <div className="pt-3">
                       <div>
-                        <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Low Stock Threshold')}</label>
+                        <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Low Stock Threshold')}</label>
                         <input
                           type="number"
                           name="lowStockThreshold"
                           value={formData.lowStockThreshold}
                           onChange={handleChange}
                           min="1"
-                          className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                          className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
                         />
-                        <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Products below this quantity will be flagged')}</p>
+                        <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Products below this quantity will be flagged')}</p>
                       </div>
                     </div>
                   )}
@@ -1309,14 +1309,14 @@ const Settings = () => {
              * Customizable footer greetings and terms of service printed on merchant bills
              */}
             {activeSection === 'notes' && (
-              <section id="section-notes" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
-                  <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Invoice Notes')}</h2>
-                  <p className="text-xs text-gray-500 mt-0.5">{t('Custom text printed on your invoices')}</p>
+              <section id="section-notes" className="bg-white rounded-lg border border-[#DCE1EA] overflow-hidden">
+                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2]">
+                  <h2 className="text-base md:text-lg font-semibold text-[#191E2B]">{t('Invoice Notes')}</h2>
+                  <p className="text-xs text-[#757F94] mt-0.5">{t('Custom text printed on your invoices')}</p>
                 </div>
                 <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6 space-y-5">
                   <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Invoice Footer Note')}</label>
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Invoice Footer Note')}</label>
                     <textarea
                       name="invoiceFooterNote"
                       value={formData.invoiceFooterNote}
@@ -1324,12 +1324,12 @@ const Settings = () => {
                       placeholder={t('Thank you for your business!')}
                       maxLength={500}
                       rows={3}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] resize-none"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA] resize-none"
                     />
-                    <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Max 500 characters')}</p>
+                    <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Max 500 characters')}</p>
                   </div>
                   <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Terms & Conditions')}</label>
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Terms & Conditions')}</label>
                     <textarea
                       name="termsAndConditions"
                       value={formData.termsAndConditions}
@@ -1337,9 +1337,9 @@ const Settings = () => {
                       placeholder={t('Goods once sold will not be returned')}
                       maxLength={1000}
                       rows={3}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D] resize-none"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA] resize-none"
                     />
-                    <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium">{t('Max 1000 characters')}</p>
+                    <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Max 1000 characters')}</p>
                   </div>
                 </div>
               </section>
@@ -1350,15 +1350,15 @@ const Settings = () => {
              * Password rotation form protected by current credential verification
              */}
             {activeSection === 'security' && userHasPassword && (
-              <section id="section-security" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100">
-                  <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Change Password')}</h2>
-                  <p className="text-xs text-gray-500 mt-0.5">{t('Update your account password for security')}</p>
+              <section id="section-security" className="bg-white rounded-lg border border-[#DCE1EA] overflow-hidden">
+                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2]">
+                  <h2 className="text-base md:text-lg font-semibold text-[#191E2B]">{t('Change Password')}</h2>
+                  <p className="text-xs text-[#757F94] mt-0.5">{t('Update your account password for security')}</p>
                 </div>
                 <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
                   <div className="space-y-5 max-w-md">
                     <div>
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Current Password')}</label>
+                      <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Current Password')}</label>
                       <input
                         type="password"
                         name="currentPassword"
@@ -1368,12 +1368,12 @@ const Settings = () => {
                         className={`block w-full rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${
                           passwordData.currentPassword.length > 0 && passwordData.currentPassword.length < 6
                             ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                            : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'
+                            : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'
                         }`}
                       />
                     </div>
                     <div>
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('New Password')}</label>
+                      <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('New Password')}</label>
                       <input
                         type="password"
                         name="newPassword"
@@ -1383,7 +1383,7 @@ const Settings = () => {
                         className={`block w-full rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none ${
                           passwordData.newPassword.length > 0 && (passwordData.newPassword.length < 6 || passwordData.newPassword === passwordData.currentPassword)
                             ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                            : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'
+                            : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'
                         }`}
                       />
                       {passwordData.newPassword.length > 0 && passwordData.newPassword.length < 6 && (
@@ -1394,7 +1394,7 @@ const Settings = () => {
                       )}
                     </div>
                     <div>
-                      <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Confirm New Password')}</label>
+                      <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Confirm New Password')}</label>
                       <input
                         type="password"
                         name="confirmPassword"
@@ -1406,7 +1406,7 @@ const Settings = () => {
                             ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
                             : (passwordData.confirmPassword && passwordData.newPassword === passwordData.confirmPassword && passwordData.newPassword.length >= 6)
                               ? 'border-green-300 focus:ring-green-500 focus:border-green-500'
-                              : 'border-gray-300 focus:ring-[#093C5D] focus:border-[#093C5D]'
+                              : 'border-[#DCE1EA] focus:ring-[#4338CA] focus:border-[#4338CA]'
                         }`}
                       />
                       {passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword && (
@@ -1428,10 +1428,10 @@ const Settings = () => {
                           !passwordData.confirmPassword || 
                           passwordData.newPassword !== passwordData.confirmPassword
                         }
-                        className={`cursor-pointer bg-[#093C5D] text-white px-8 py-2 sm:py-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold text-sm w-full sm:w-auto active:scale-[0.98] transition-colors duration-300 ${
+                        className={`cursor-pointer bg-[#4338CA] text-white hover:bg-[#3730A3] px-8 py-2 sm:py-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold text-sm w-full sm:w-auto active:scale-[0.98] transition-colors duration-300 shadow-none ${
                           (passwordLoading || !passwordData.currentPassword || passwordData.newPassword.length < 6 || passwordData.newPassword === passwordData.currentPassword || !passwordData.confirmPassword || passwordData.newPassword !== passwordData.confirmPassword) 
                             ? 'opacity-50 cursor-not-allowed' 
-                            : 'hover:bg-[#072d46]'
+                            : 'hover:bg-[#3730A3]'
                         }`}
                       >
                         <Lock className="w-4 h-4 shrink-0" />
@@ -1448,18 +1448,18 @@ const Settings = () => {
              * Device fingerprinting, session activity tracking, and remote logout controls
              */}
             {activeSection === 'devices' && (
-              <section id="section-devices" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+              <section id="section-devices" className="bg-white rounded-lg border border-[#DCE1EA] overflow-hidden">
                 {/**
                  * Device Section Header
                  * Section title, description, and global session refresh/terminate controls
                  */}
-                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
                     <div className="flex items-center gap-2">
-                      <Laptop className="w-5 h-5 text-[#093C5D] shrink-0" />
-                      <h2 className="text-base md:text-lg font-semibold text-gray-900">{t('Active Devices & Sessions')}</h2>
+                      <Laptop className="w-5 h-5 text-[#4338CA] shrink-0" />
+                      <h2 className="text-base md:text-lg font-semibold text-[#191E2B]">{t('Active Devices & Sessions')}</h2>
                     </div>
-                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('Manage and review devices where your account is currently signed in.')}</p>
+                    <p className="text-xs text-[#757F94] mt-0.5 leading-relaxed">{t('Manage and review devices where your account is currently signed in.')}</p>
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
@@ -1467,10 +1467,10 @@ const Settings = () => {
                       type="button"
                       onClick={fetchDevices}
                       disabled={devicesLoading}
-                      className="cursor-pointer !min-h-0 !min-w-0 h-[30px] sm:h-[34px] px-3.5 sm:px-4 rounded-lg border border-gray-200 bg-white text-gray-700 hover:text-gray-900 hover:bg-gray-50 text-xs font-semibold whitespace-nowrap transition-colors shrink-0 flex items-center justify-center gap-1.5 active:scale-95"
+                      className="cursor-pointer !min-h-0 !min-w-0 h-[30px] sm:h-[34px] px-3.5 sm:px-4 rounded-lg border border-[#DCE1EA] bg-white text-[#4E5668] hover:text-[#191E2B] hover:bg-[#F0F2F6] text-xs font-semibold whitespace-nowrap transition-colors shrink-0 flex items-center justify-center gap-1.5 active:scale-95"
                       title={t('Refresh devices')}
                     >
-                      <RefreshCw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${devicesLoading ? 'animate-spin text-[#093C5D]' : ''}`} />
+                      <RefreshCw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${devicesLoading ? 'animate-spin text-[#4338CA]' : ''}`} />
                       <span>{t('Refresh')}</span>
                     </button>
                     {devices.filter(d => !d.isCurrentDevice).length > 0 && (
@@ -1494,13 +1494,13 @@ const Settings = () => {
                  */}
                 <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
                   {devicesLoading && devices.length === 0 ? (
-                    <div className="py-12 flex flex-col items-center justify-center text-gray-500 gap-3">
-                      <Loader2 className="w-6 h-6 animate-spin text-[#093C5D]" />
+                    <div className="py-12 flex flex-col items-center justify-center text-[#757F94] gap-3">
+                      <Loader2 className="w-6 h-6 animate-spin text-[#4338CA]" />
                       <p className="text-xs font-medium">{t('Loading')}...</p>
                     </div>
                   ) : devices.length === 0 ? (
-                    <div className="py-10 text-center text-gray-500">
-                      <Laptop className="w-8 h-8 mx-auto text-gray-300 mb-2" />
+                    <div className="py-10 text-center text-[#757F94]">
+                      <Laptop className="w-8 h-8 mx-auto text-[#DCE1EA] mb-2" />
                       <p className="text-sm font-medium">{t('No active devices found')}</p>
                     </div>
                   ) : (
@@ -1512,8 +1512,8 @@ const Settings = () => {
                             key={device._id}
                             className={`p-3 sm:p-4 rounded-lg border transition-all ${
                               device.isCurrentDevice
-                                ? 'border-[#093C5D]/30 bg-white'
-                                : 'border-gray-200 bg-white hover:border-gray-300'
+                                ? 'border-[#4338CA] bg-[#FBFBFC]'
+                                : 'border-[#DCE1EA] bg-white hover:border-[#DCE1EA]'
                             }`}
                           >
                             {/**
@@ -1525,14 +1525,14 @@ const Settings = () => {
                                 <div
                                   className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0 ${
                                     device.isCurrentDevice
-                                      ? 'bg-[#093C5D]/10 text-[#093C5D] border border-[#093C5D]/20'
-                                      : 'bg-gray-50 text-gray-600 border border-gray-200'
+                                      ? 'bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5]'
+                                      : 'bg-[#F0F2F6] text-[#4E5668] border border-[#DCE1EA]'
                                   }`}
                                 >
                                   <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                 </div>
 
-                                <h3 className="text-xs sm:text-sm font-semibold text-gray-900 leading-snug whitespace-nowrap truncate" title={getDeviceTitle(device)}>
+                                <h3 className="text-xs sm:text-sm font-semibold text-[#191E2B] leading-snug whitespace-nowrap truncate" title={getDeviceTitle(device)}>
                                   {getDeviceTitle(device)}
                                 </h3>
                               </div>
@@ -1564,19 +1564,19 @@ const Settings = () => {
                              * Connection Metadata
                              * Browser agent and network IP address details
                              */}
-                            <div className="text-[11px] sm:text-xs text-gray-500 font-medium mb-2.5 flex items-center gap-1.5 flex-wrap">
-                              <span className="text-gray-700 font-medium">{device.browser || 'Browser'}</span>
-                              <span className="text-gray-300">•</span>
-                              <span>IP: <span className="font-mono text-gray-700">{device.ip}</span></span>
+                            <div className="text-[11px] sm:text-xs text-[#757F94] font-medium mb-2.5 flex items-center gap-1.5 flex-wrap">
+                              <span className="text-[#4E5668] font-medium">{device.browser || 'Browser'}</span>
+                              <span className="text-[#DCE1EA]">•</span>
+                              <span>IP: <span className="font-mono text-[#4E5668]">{device.ip}</span></span>
                             </div>
 
                             {/**
                              * Session Activity Times
                              * Live activity status and initial sign-in timestamp
                              */}
-                            <div className="grid grid-cols-2 gap-2 sm:gap-3 bg-gray-50/80 px-2.5 sm:px-3 py-2 sm:py-2.5 rounded-lg border border-gray-100">
+                            <div className="grid grid-cols-2 gap-2 sm:gap-3 bg-[#F0F2F6]/80 px-2.5 sm:px-3 py-2 sm:py-2.5 rounded-lg border border-[#E8ECF2]">
                               <div className="min-w-0 text-left">
-                                <span className="text-[10px] sm:text-[11px] font-semibold text-gray-500 uppercase tracking-wider block leading-tight">
+                                <span className="text-[10px] sm:text-[11px] font-semibold text-[#757F94] uppercase tracking-wider block leading-tight">
                                   {t('Last active')}
                                 </span>
                                 <div className="mt-1 flex items-center h-5 text-[11px] sm:text-xs md:text-[13px] truncate">
@@ -1586,16 +1586,16 @@ const Settings = () => {
                                       <span className="leading-none">{t('Active Now')}</span>
                                     </span>
                                   ) : (
-                                    <span className="text-gray-800 font-medium leading-none truncate">{formatDeviceTime(device.lastActive)}</span>
+                                    <span className="text-[#191E2B] font-medium leading-none truncate">{formatDeviceTime(device.lastActive)}</span>
                                   )}
                                 </div>
                               </div>
 
                               <div className="min-w-0 text-right">
-                                <span className="text-[10px] sm:text-[11px] font-semibold text-gray-500 uppercase tracking-wider block leading-tight">
+                                <span className="text-[10px] sm:text-[11px] font-semibold text-[#757F94] uppercase tracking-wider block leading-tight">
                                   {t('First signed in')}
                                 </span>
-                                <div className="mt-1 flex items-center justify-end h-5 text-[11px] sm:text-xs md:text-[13px] text-gray-800 font-medium truncate leading-none">
+                                <div className="mt-1 flex items-center justify-end h-5 text-[11px] sm:text-xs md:text-[13px] text-[#191E2B] font-medium truncate leading-none">
                                   {formatDeviceDate(device.createdAt)}
                                 </div>
                               </div>
@@ -1617,37 +1617,37 @@ const Settings = () => {
               <section id="section-account" className="bg-white rounded-lg border border-red-200 overflow-hidden">
                 <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-red-100 bg-red-50/50">
                   <div className="flex items-center gap-2">
-                    <AlertTriangle className="w-5 h-5 text-red-600" />
+                    <AlertTriangle className="w-5 h-5 text-[#B91C1C]" />
                     <h2 className="text-base md:text-lg font-semibold text-red-700">{t('Delete Account')}</h2>
                   </div>
-                  <p className="text-xs text-red-600/80 mt-1">{t('Warning: Deleting your account is permanent and cannot be undone.')}</p>
+                  <p className="text-xs text-[#B91C1C]/80 mt-1">{t('Warning: Deleting your account is permanent and cannot be undone.')}</p>
                 </div>
                 <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6">
                   <div className="max-w-md space-y-4">
                     {userHasPassword ? (
                       <div>
-                    <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5">{t('Enter your password to confirm')}</label>
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Enter your password to confirm')}</label>
                     <input
                       type="password"
                       name="password"
                       value={deleteAccountData.password}
                       onChange={handleDeleteAccountChange}
                       placeholder={t('Current password')}
-                      className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                      className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
                     />
                   </div>
                     ) : (
                       <div>
-                        <label className="block text-xs sm:text-[13px] font-medium text-gray-700 mb-1.5"><>{t('Type')} <span className="font-semibold text-gray-900">DELETE MY ACCOUNT</span> {t('to confirm')}</></label>
+                        <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5"><>{t('Type')} <span className="font-semibold text-[#191E2B]">DELETE MY ACCOUNT</span> {t('to confirm')}</></label>
                         <input
                           type="text"
                           name="confirmationText"
                           value={deleteAccountData.confirmationText}
                           onChange={handleDeleteAccountChange}
                           placeholder="DELETE MY ACCOUNT"
-                          className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#093C5D] focus:border-[#093C5D]"
+                          className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2.5 text-sm font-medium transition-colors duration-200 focus:ring-1 focus:outline-none focus:ring-[#4338CA] focus:border-[#4338CA]"
                         />
-                        <p className="text-gray-500 text-[11px] sm:text-xs mt-1.5 font-medium"><>{t('Since you logged in with Google, please type')} <span className="font-semibold text-gray-900">DELETE MY ACCOUNT</span> {t('to confirm.')}</></p>
+                        <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium"><>{t('Since you logged in with Google, please type')} <span className="font-semibold text-[#191E2B]">DELETE MY ACCOUNT</span> {t('to confirm.')}</></p>
                       </div>
                     )}
 
@@ -1673,17 +1673,17 @@ const Settings = () => {
              */}
             {activeSection !== 'security' && activeSection !== 'account' && activeSection !== 'platform-invoices' && activeSection !== 'devices' && (
               <div className="sticky bottom-16 lg:bottom-4 z-20 mt-8 pt-4 pb-4 lg:pb-0">
-                <div className="bg-white border border-gray-200 p-2 sm:px-4 sm:py-2.5 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 w-full">
+                <div className="bg-[#FBFBFC] border border-[#DCE1EA] p-2 sm:px-4 sm:py-2.5 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 w-full">
                   <div className="hidden sm:flex items-center gap-2 text-sm ml-1">
                     <div className={`w-2 h-2 rounded-full ${hasChanges ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'}`}></div>
-                    <span className={hasChanges ? 'text-amber-700 font-medium' : 'text-gray-500 font-medium'}>
+                    <span className={hasChanges ? 'text-amber-700 font-medium' : 'text-[#757F94] font-medium'}>
                       {hasChanges ? t('You have unsaved changes') : t('All changes saved')}
                     </span>
                   </div>
                   <button
                     type="submit"
                     disabled={loading || !hasChanges}
-                    className={`cursor-pointer bg-[#093C5D] text-white px-8 py-2 sm:py-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold text-sm w-full sm:w-auto active:scale-[0.98] transition-colors duration-300 ${(!hasChanges || loading) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#072d46]'}`}
+                    className={`cursor-pointer bg-[#4338CA] text-white hover:bg-[#3730A3] px-8 py-2 sm:py-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold text-sm w-full sm:w-auto active:scale-[0.98] transition-colors duration-300 shadow-none ${(!hasChanges || loading) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#3730A3]'}`}
                   >
                     <Save className="w-4 h-4 shrink-0" />
                     <span className="tracking-wide">{loading ? t('Saving...') : t('Save Settings')}</span>
@@ -1715,7 +1715,7 @@ const Settings = () => {
            * Dimmed background dismissing dialog when clicked
            */}
           <div
-            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
             onClick={() => setDeleteModalOpen(false)}
           />
 
@@ -1725,29 +1725,29 @@ const Settings = () => {
            */}
           <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
             <div
-              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
+              className="bg-[#FBFBFC] rounded-lg shadow-none w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#DCE1EA]"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-5 sm:p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-red-50 mx-auto flex items-center justify-center mb-4 border border-red-100">
-                  <Trash2 className="w-6 h-6 text-red-600" />
+                <div className="w-12 h-12 rounded-full bg-[#FDF2F2] mx-auto flex items-center justify-center mb-4 border border-[#F9D4D4]">
+                  <Trash2 className="w-6 h-6 text-[#B91C1C]" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{t('Delete Account')}</h3>
-                <p className="text-gray-500 text-sm mb-6 font-medium">
+                <h3 className="text-lg sm:text-xl font-semibold text-[#191E2B] mb-2">{t('Delete Account')}</h3>
+                <p className="text-[#757F94] text-sm mb-6 font-medium">
                   {t('Are you absolutely sure you want to delete your account?')} {t('This action cannot be undone.')}
                 </p>
 
                 <div className="flex gap-2 sm:gap-3 justify-center">
                   <button
                     onClick={() => setDeleteModalOpen(false)}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-sm transition-colors active:scale-95"
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#F0F2F6] hover:bg-[#EBEEF4] text-[#4E5668] rounded-lg font-semibold text-sm transition-colors active:scale-95"
                   >
                     {t('Cancel')}
                   </button>
                   <button
                     onClick={executeDeleteAccount}
                     disabled={deleteAccountLoading}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 sm:gap-2"
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#B91C1C] hover:bg-[#991B1B] text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 sm:gap-2"
                   >
                     {deleteAccountLoading && <Loader2 className="w-4 h-4 animate-spin" />}
                     {t('Yes, Delete')}
@@ -1766,31 +1766,31 @@ const Settings = () => {
       {deviceToLogout && (
         <div className="fixed inset-0 z-[100]">
           <div
-            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
             onClick={() => setDeviceToLogout(null)}
           />
           <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
             <div
-              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
+              className="bg-[#FBFBFC] rounded-lg shadow-none w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#DCE1EA]"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-5 sm:p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-red-50 mx-auto flex items-center justify-center mb-4 border border-red-100">
-                  <LogOut className="w-6 h-6 text-red-600" />
+                <div className="w-12 h-12 rounded-full bg-[#FDF2F2] mx-auto flex items-center justify-center mb-4 border border-[#F9D4D4]">
+                  <LogOut className="w-6 h-6 text-[#B91C1C]" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{t('Log Out Device')}</h3>
-                <p className="text-gray-500 text-sm mb-3 font-medium">
+                <h3 className="text-lg sm:text-xl font-semibold text-[#191E2B] mb-2">{t('Log Out Device')}</h3>
+                <p className="text-[#757F94] text-sm mb-3 font-medium">
                   {t('Are you sure you want to log out this device?')}
                 </p>
-                <div className="text-xs font-semibold text-gray-700 bg-gray-50 border border-gray-200 rounded-lg p-2.5 mb-5 text-left">
-                  <div className="truncate text-gray-900">{deviceToLogout.device}</div>
-                  <div className="text-gray-500 font-normal mt-0.5">IP: {deviceToLogout.ip}</div>
+                <div className="text-xs font-semibold text-[#4E5668] bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg p-2.5 mb-5 text-left">
+                  <div className="truncate text-[#191E2B]">{deviceToLogout.device}</div>
+                  <div className="text-[#757F94] font-normal mt-0.5">IP: {deviceToLogout.ip}</div>
                 </div>
                 <div className="flex gap-2 sm:gap-3 justify-center">
                   <button
                     type="button"
                     onClick={() => setDeviceToLogout(null)}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-sm transition-colors active:scale-95"
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#F0F2F6] hover:bg-[#EBEEF4] text-[#4E5668] rounded-lg font-semibold text-sm transition-colors active:scale-95"
                   >
                     {t('Cancel')}
                   </button>
@@ -1798,7 +1798,7 @@ const Settings = () => {
                     type="button"
                     onClick={() => executeLogoutDevice(deviceToLogout)}
                     disabled={deviceActionLoadingId === deviceToLogout._id}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#B91C1C] hover:bg-[#991B1B] text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
                   >
                     {deviceActionLoadingId === deviceToLogout._id && <Loader2 className="w-4 h-4 animate-spin" />}
                     {t('Log Out')}
@@ -1817,27 +1817,27 @@ const Settings = () => {
       {confirmLogoutOthersModal && (
         <div className="fixed inset-0 z-[100]">
           <div
-            className="fixed inset-0 bg-gray-900/60 transition-opacity animate-modal-overlay"
+            className="fixed inset-0 bg-[#191E2B]/50 transition-opacity animate-modal-overlay"
             onClick={() => setConfirmLogoutOthersModal(false)}
           />
           <div className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none">
             <div
-              className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-gray-100"
+              className="bg-[#FBFBFC] rounded-lg shadow-none w-full max-w-sm overflow-hidden animate-scale-in pointer-events-auto border border-[#DCE1EA]"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-5 sm:p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-red-50 mx-auto flex items-center justify-center mb-4 border border-red-100">
-                  <AlertTriangle className="w-6 h-6 text-red-600" />
+                <div className="w-12 h-12 rounded-full bg-[#FDF2F2] mx-auto flex items-center justify-center mb-4 border border-[#F9D4D4]">
+                  <AlertTriangle className="w-6 h-6 text-[#B91C1C]" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{t('Log Out All Other Devices')}</h3>
-                <p className="text-gray-500 text-sm mb-6 font-medium">
+                <h3 className="text-lg sm:text-xl font-semibold text-[#191E2B] mb-2">{t('Log Out All Other Devices')}</h3>
+                <p className="text-[#757F94] text-sm mb-6 font-medium">
                   {t('Are you sure you want to log out all other active devices? Anyone else using your account will be required to log in again.')}
                 </p>
                 <div className="flex gap-2 sm:gap-3 justify-center">
                   <button
                     type="button"
                     onClick={() => setConfirmLogoutOthersModal(false)}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold text-sm transition-colors active:scale-95"
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#F0F2F6] hover:bg-[#EBEEF4] text-[#4E5668] rounded-lg font-semibold text-sm transition-colors active:scale-95"
                   >
                     {t('Cancel')}
                   </button>
@@ -1845,7 +1845,7 @@ const Settings = () => {
                     type="button"
                     onClick={executeLogoutAllOthers}
                     disabled={loggingOutAllOthers}
-                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
+                    className="cursor-pointer flex-1 px-4 py-2 sm:px-5 sm:py-2.5 bg-[#B91C1C] hover:bg-[#991B1B] text-white rounded-lg font-semibold text-sm transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
                   >
                     {loggingOutAllOthers && <Loader2 className="w-4 h-4 animate-spin" />}
                     {t('Log Out All')}
