@@ -38,10 +38,11 @@ import {
   ArrowUpRight,
   CheckCircle2,
   FileText,
+  ChevronRight,
   AlertCircle,
   Calendar,
-  CalendarRange,
-  Sparkles,
+  TrendingUp,
+  Trophy,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SwirlingLoader from '../components/common/SwirlingLoader';
@@ -304,13 +305,13 @@ const Dashboard = () => {
               <Link
                 key={action.to}
                 to={action.to}
-                className="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-2 sm:py-2.5 bg-[#FBFBFC] hover:bg-white border border-[#DCE1EA] hover:border-[#4338CA]/30 rounded-lg shadow-none hover:shadow-none transition-all duration-150 group text-left cursor-pointer min-w-0"
+                className="flex items-center gap-1.5 xl:gap-2 px-2 sm:px-2.5 xl:px-3 py-2 sm:py-2.5 bg-[#FBFBFC] hover:bg-white border border-[#DCE1EA] hover:border-[#4338CA]/30 rounded-lg shadow-none hover:shadow-none transition-all duration-150 group text-left cursor-pointer min-w-0"
               >
-                <div className="w-8 h-8 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0 border border-[#D8DCF5] shadow-none">
-                  <Icon className="w-4 h-4" />
+                <div className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0 border border-[#D8DCF5] shadow-none">
+                  <Icon className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
                 </div>
                 <span
-                  className={`text-xs xl:text-sm font-semibold truncate transition-colors ${
+                  className={`text-[11px] sm:text-xs xl:text-sm font-semibold truncate transition-colors ${
                     action.primary
                       ? 'text-[#4338CA]'
                       : 'text-[#191E2B] group-hover:text-[#4338CA]'
@@ -318,6 +319,7 @@ const Dashboard = () => {
                 >
                   {t(action.label)}
                 </span>
+                <ChevronRight className="w-3.5 h-3.5 text-[#9AA4B8] group-hover:text-[#4338CA] group-hover:translate-x-0.5 transition-all ml-auto shrink-0 opacity-40 group-hover:opacity-100" />
               </Link>
             );
           })}
@@ -325,8 +327,9 @@ const Dashboard = () => {
       </motion.div>
 
       {/**
-       * Historical Performance Comparison Strip (Matching Image 4)
-       * Clean 4-card metric strip with top-left label, top-right icon, large currency, and descriptive subtitle
+       * Historical Performance Comparison Strip (Streamlined & Compact)
+       * Compact 4-card metric strip with tight vertical spacing, rounded-md icon containers,
+       * human-friendly metric subtitles, and zero excessive dead space.
        */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
@@ -344,49 +347,49 @@ const Dashboard = () => {
               label: 'Yesterday',
               value: data?.yesterdaySales ?? 0,
               icon: Clock,
-              subtitle: 'Previous day sales',
+              subtitle: "Yesterday's sales",
             },
             {
               key: 'thisWeek',
               label: 'This Week',
               value: data?.weeklySales ?? 0,
               icon: Calendar,
-              subtitle: 'Rolling 7-day volume',
+              subtitle: 'Last 7 days sales',
             },
             {
               key: 'thisMonth',
               label: 'This Month',
               value: data?.monthlySales ?? 0,
-              icon: CalendarRange,
-              subtitle: 'Month-to-date turnover',
+              icon: TrendingUp,
+              subtitle: "This month's sales",
             },
             {
               key: 'lifetime',
               label: 'Lifetime',
               value: data?.lifetimeSales ?? 0,
-              icon: Sparkles,
-              subtitle: 'All-time total sales',
+              icon: Trophy,
+              subtitle: 'All-time sales',
             },
           ].map((card) => {
             const Icon = card.icon;
             return (
               <div
                 key={card.key}
-                className="bg-[#FBFBFC] hover:bg-white rounded-lg p-3 sm:p-3.5 md:p-4 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-150 shadow-none hover:shadow-none min-w-0 cursor-default flex flex-col justify-between"
+                className="bg-[#FBFBFC] hover:bg-white rounded-lg p-3 sm:p-3.5 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-150 shadow-none hover:shadow-none min-w-0 cursor-default"
               >
-                <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <p className="text-[10px] sm:text-xs text-[#4E5668] font-semibold uppercase tracking-wider truncate">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-[10px] sm:text-xs text-[#64748B] font-semibold uppercase tracking-wider truncate">
                     {t(card.label)}
                   </p>
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0 shadow-none">
-                    <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#4338CA]" />
+                  <div className="w-7 h-7 rounded-md bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5]/70 flex items-center justify-center shrink-0 shadow-none">
+                    <Icon className="w-3.5 h-3.5 text-[#4338CA]" />
                   </div>
                 </div>
-                <div>
-                  <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#191E2B] tracking-tight truncate">
+                <div className="mt-2 sm:mt-2.5">
+                  <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#191E2B] tracking-tight truncate leading-tight">
                     {formatCurrency(card.value)}
                   </p>
-                  <p className="text-[11px] sm:text-xs text-[#757F94] font-medium mt-0.5 truncate">
+                  <p className="text-[11px] sm:text-xs text-[#757F94] font-medium mt-1 truncate">
                     {t(card.subtitle)}
                   </p>
                 </div>
