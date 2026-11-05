@@ -4,7 +4,7 @@
  * quick action shortcuts, recent invoices, and pending udhar watchlists.
  */
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useQuery } from '@tanstack/react-query';
@@ -20,7 +20,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
 } from 'recharts';
 import {
   Wallet,
@@ -38,10 +37,11 @@ import {
   ArrowUpRight,
   CheckCircle2,
   FileText,
+  ChevronRight,
   AlertCircle,
   Calendar,
-  CalendarRange,
-  Sparkles,
+  TrendingUp,
+  Trophy,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SwirlingLoader from '../components/common/SwirlingLoader';
@@ -50,13 +50,35 @@ import { formatDate } from '../utils/dateUtils';
 import { getInitials } from '../utils/stringUtils';
 
 /**
+ * Compact Rupee Currency Formatter for Chart Axes (DRY)
+ * Strips unnatural decimals like .0k while preserving clean integers (e.g. ₹12k, ₹9k, ₹0)
+ */
+const formatAxisRupee = (val) => {
+  if (!val || val === 0) return '₹0';
+  const num = Math.abs(val);
+  const sign = val < 0 ? '-' : '';
+  if (num >= 10000000) {
+    const cr = num / 10000000;
+    return `${sign}₹${cr % 1 === 0 ? cr : Number(cr.toFixed(1))}Cr`;
+  }
+  if (num >= 100000) {
+    const lk = num / 100000;
+    return `${sign}₹${lk % 1 === 0 ? lk : Number(lk.toFixed(1))}L`;
+  }
+  if (num >= 1000) {
+    const k = num / 1000;
+    return `${sign}₹${k % 1 === 0 ? k : Number(k.toFixed(1))}k`;
+  }
+  return `${sign}₹${num}`;
+};
+
+/**
  * Dashboard Component
  */
 const Dashboard = () => {
   const { t } = useTranslation();
   const user = useSelector((state) => state.auth?.user);
   const shopName = user?.businessName || user?.name || 'UdharPay';
-  const [chartTimeframe, setChartTimeframe] = useState('This Week');
 
   /**
    * Primary Merchant Analytics Data
@@ -138,7 +160,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="w-full space-y-4 sm:space-y-5 md:space-y-6 pb-24 lg:pb-0">
+    <div className="w-full space-y-3.5 sm:space-y-4 md:space-y-5 pb-24 lg:pb-0">
       {/**
        * Dashboard Header Section
        * Displays primary overview title and performance tagline
@@ -163,7 +185,7 @@ const Dashboard = () => {
        * Business Metrics Top 4 KPI Cards (Untouched Layout & Positioning)
        * Four-card summary grid tracking daily sales, collections, pending debts, and merchant customers
        */}
-      <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
+      <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4">
         {/**
          * Today's Sales Metric Card
          * Sum of revenue earned on current day
@@ -292,7 +314,7 @@ const Dashboard = () => {
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-2.5">
           {[
-            { to: '/bills', label: 'Create Bill', icon: Receipt, primary: true },
+            { to: '/bills', label: 'Create Bill', icon: Receipt },
             { to: '/customers', label: 'Add Customer', icon: UserPlus },
             { to: '/products', label: 'Add Product', icon: PackagePlus },
             { to: '/reminders', label: 'Reminders', icon: BellRing },
@@ -304,20 +326,15 @@ const Dashboard = () => {
               <Link
                 key={action.to}
                 to={action.to}
-                className="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-2 sm:py-2.5 bg-[#FBFBFC] hover:bg-white border border-[#DCE1EA] hover:border-[#4338CA]/30 rounded-lg shadow-none hover:shadow-none transition-all duration-150 group text-left cursor-pointer min-w-0"
+                className="flex items-center gap-1.5 xl:gap-2 px-2 sm:px-2.5 xl:px-3 py-2 sm:py-2.5 bg-[#FBFBFC] hover:bg-white border border-[#DCE1EA] hover:border-[#4338CA]/30 rounded-lg shadow-none hover:shadow-none transition-all duration-150 group text-left cursor-pointer min-w-0"
               >
-                <div className="w-8 h-8 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0 border border-[#D8DCF5] shadow-none">
-                  <Icon className="w-4 h-4" />
+                <div className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0 border border-[#D8DCF5] shadow-none">
+                  <Icon className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
                 </div>
-                <span
-                  className={`text-xs xl:text-sm font-semibold truncate transition-colors ${
-                    action.primary
-                      ? 'text-[#4338CA]'
-                      : 'text-[#191E2B] group-hover:text-[#4338CA]'
-                  }`}
-                >
+                <span className="text-[11px] sm:text-xs xl:text-sm font-semibold truncate text-[#4338CA] group-hover:text-[#3730A3] transition-colors">
                   {t(action.label)}
                 </span>
+                <ChevronRight className="w-3.5 h-3.5 text-[#9AA4B8] group-hover:text-[#4338CA] group-hover:translate-x-0.5 transition-all ml-auto shrink-0 opacity-40 group-hover:opacity-100" />
               </Link>
             );
           })}
@@ -325,8 +342,9 @@ const Dashboard = () => {
       </motion.div>
 
       {/**
-       * Historical Performance Comparison Strip (Matching Image 4)
-       * Clean 4-card metric strip with top-left label, top-right icon, large currency, and descriptive subtitle
+       * Historical Performance Comparison Strip (Streamlined & Compact)
+       * Compact 4-card metric strip with tight vertical spacing, rounded-md icon containers,
+       * human-friendly metric subtitles, and zero excessive dead space.
        */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
@@ -344,49 +362,49 @@ const Dashboard = () => {
               label: 'Yesterday',
               value: data?.yesterdaySales ?? 0,
               icon: Clock,
-              subtitle: 'Previous day sales',
+              subtitle: "Yesterday's sales",
             },
             {
               key: 'thisWeek',
               label: 'This Week',
               value: data?.weeklySales ?? 0,
               icon: Calendar,
-              subtitle: 'Rolling 7-day volume',
+              subtitle: 'Last 7 days sales',
             },
             {
               key: 'thisMonth',
               label: 'This Month',
               value: data?.monthlySales ?? 0,
-              icon: CalendarRange,
-              subtitle: 'Month-to-date turnover',
+              icon: TrendingUp,
+              subtitle: "This month's sales",
             },
             {
               key: 'lifetime',
               label: 'Lifetime',
               value: data?.lifetimeSales ?? 0,
-              icon: Sparkles,
-              subtitle: 'All-time total sales',
+              icon: Trophy,
+              subtitle: 'All-time sales',
             },
           ].map((card) => {
             const Icon = card.icon;
             return (
               <div
                 key={card.key}
-                className="bg-[#FBFBFC] hover:bg-white rounded-lg p-3 sm:p-3.5 md:p-4 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-150 shadow-none hover:shadow-none min-w-0 cursor-default flex flex-col justify-between"
+                className="bg-[#FBFBFC] hover:bg-white rounded-lg p-3 sm:p-3.5 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-150 shadow-none hover:shadow-none min-w-0 cursor-default"
               >
-                <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <p className="text-[10px] sm:text-xs text-[#4E5668] font-semibold uppercase tracking-wider truncate">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-[10px] sm:text-xs text-[#64748B] font-semibold uppercase tracking-wider truncate">
                     {t(card.label)}
                   </p>
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0 shadow-none">
-                    <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#4338CA]" />
+                  <div className="w-7 h-7 rounded-md bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5]/70 flex items-center justify-center shrink-0 shadow-none">
+                    <Icon className="w-3.5 h-3.5 text-[#4338CA]" />
                   </div>
                 </div>
-                <div>
-                  <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#191E2B] tracking-tight truncate">
+                <div className="mt-2 sm:mt-2.5">
+                  <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#191E2B] tracking-tight truncate leading-tight">
                     {formatCurrency(card.value)}
                   </p>
-                  <p className="text-[11px] sm:text-xs text-[#757F94] font-medium mt-0.5 truncate">
+                  <p className="text-[11px] sm:text-xs text-[#757F94] font-medium mt-1 truncate">
                     {t(card.subtitle)}
                   </p>
                 </div>
@@ -404,54 +422,56 @@ const Dashboard = () => {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.35 }}
-        className="bg-[#FBFBFC] rounded-lg p-4 md:p-5 border border-[#DCE1EA]"
+        className="bg-[#FBFBFC] rounded-lg p-3.5 sm:p-4 border border-[#DCE1EA]"
       >
-        <div className="flex flex-row justify-between items-center gap-3 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 sm:mb-2.5">
           <div>
-            <h3 className="text-base sm:text-lg md:text-xl font-semibold text-[#191E2B]">
+            <h3 className="text-base sm:text-lg font-semibold text-[#191E2B]">
               {t('Revenue vs Collections')}
             </h3>
             <p className="text-xs sm:text-sm font-medium text-[#4E5668]">
               {t('Weekly performance chart')}
             </p>
           </div>
-          <select
-            aria-label="Filter Revenue vs Collections time period"
-            value={chartTimeframe}
-            onChange={(e) => setChartTimeframe(e.target.value)}
-            className="cursor-pointer bg-[#FBFBFC] rounded-lg text-xs sm:text-sm border border-[#DCE1EA] hover:border-[#C2C9D6] px-3 py-1.5 sm:px-4 sm:py-2 text-[#191E2B] font-medium outline-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors"
-          >
-            <option>{t('This Week')}</option>
-            <option>{t('This Month')}</option>
-            <option>{t('This Year')}</option>
-          </select>
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            <div className="flex items-center gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#4338CA]"></div>
+              <span className="text-xs font-medium text-[#4E5668]">{t('Sales')}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#0D7A57]"></div>
+              <span className="text-xs font-medium text-[#4E5668]">{t('Collections')}</span>
+            </div>
+          </div>
         </div>
 
-        <div className="w-full h-[240px] md:h-[280px] lg:h-[320px] pt-2">
+        <div className="w-full h-[250px] sm:h-[270px] md:h-[290px]">
           {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <BarChart
                 data={chartData}
-                margin={{ top: 15, right: 15, left: 0, bottom: 5 }}
+                barGap={4}
+                margin={{ top: 8, right: 8, left: -4, bottom: 0 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#DCE1EA" strokeOpacity={0.6} vertical={false} />
                 <XAxis
                   dataKey="date"
                   stroke="#757F94"
-                  style={{ fontSize: '11px', fontWeight: '600' }}
+                  style={{ fontSize: '11px', fontWeight: '500' }}
                   axisLine={false}
                   tickLine={false}
-                  padding={{ left: 20, right: 20 }}
+                  padding={{ left: 8, right: 8 }}
                 />
                 <YAxis
                   stroke="#757F94"
-                  width={45}
-                  style={{ fontSize: '11px', fontWeight: '600' }}
-                  tickFormatter={(value) => `₹${value >= 1000 ? (value / 1000).toFixed(1) + 'k' : value}`}
+                  width={48}
+                  style={{ fontSize: '11px', fontWeight: '500' }}
+                  tickFormatter={formatAxisRupee}
                   axisLine={false}
                   tickLine={false}
                 />
                 <Tooltip
+                  itemSorter={(item) => (item.dataKey === 'sales' ? -1 : 1)}
                   contentStyle={{
                     backgroundColor: '#ffffff',
                     border: '1px solid #DCE1EA',
@@ -472,29 +492,24 @@ const Dashboard = () => {
                     fontWeight: '500',
                   }}
                   formatter={(value, name) => {
-                    const label = name === 'Collections' ? t('Collections') : t('Sales');
+                    const label = name === 'Sales' ? t('Sales') : t('Collections');
                     return [`₹${value.toLocaleString('en-IN')}`, label];
                   }}
                   cursor={{ fill: '#EEF0FB' }}
                 />
-                <Legend
-                  wrapperStyle={{ paddingTop: '10px', fontSize: '12px', fontWeight: '600' }}
-                  iconType="circle"
-                  iconSize={8}
+                <Bar
+                  dataKey="sales"
+                  fill="#4338CA"
+                  radius={[4, 4, 0, 0]}
+                  name={t('Sales')}
+                  maxBarSize={38}
                 />
                 <Bar
                   dataKey="collections"
-                  fill="#4338CA"
-                  radius={[6, 6, 0, 0]}
+                  fill="#0D7A57"
+                  radius={[4, 4, 0, 0]}
                   name={t('Collections')}
-                  maxBarSize={32}
-                />
-                <Bar
-                  dataKey="sales"
-                  fill="#818CF8"
-                  radius={[6, 6, 0, 0]}
-                  name={t('Sales')}
-                  maxBarSize={32}
+                  maxBarSize={38}
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -510,7 +525,7 @@ const Dashboard = () => {
        * Trend Analysis Area Charts (Matching Image 3)
        * Dual charts for 7-day sales curve and cash collection volume
        */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-3.5 md:gap-4">
         {/**
          * Weekly Sales Trend Chart
          */}
@@ -518,21 +533,21 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-[#FBFBFC] rounded-lg p-4 md:p-5 border border-[#DCE1EA]"
+          className="bg-[#FBFBFC] hover:bg-white rounded-lg p-3.5 sm:p-4 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-150 shadow-none hover:shadow-none"
         >
-          <div className="mb-3.5">
-            <h3 className="text-base sm:text-lg font-semibold text-[#191E2B] mb-0.5">
+          <div className="flex items-center justify-between gap-2 mb-2 sm:mb-2.5">
+            <h3 className="text-base sm:text-lg font-semibold text-[#191E2B]">
               {t('Sales Trend')}
             </h3>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#4338CA]"></div>
-              <span className="text-xs md:text-sm text-[#4E5668] font-medium">{t('Sales')}</span>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#4338CA]"></div>
+              <span className="text-xs font-medium text-[#4E5668]">{t('Sales')}</span>
             </div>
           </div>
 
-          <div className="w-full h-[200px] md:h-[220px]">
+          <div className="w-full h-[200px] sm:h-[220px]">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-              <AreaChart data={salesData} margin={{ top: 15, right: 15, left: -15, bottom: 5 }}>
+              <AreaChart data={salesData} margin={{ top: 8, right: 8, left: -4, bottom: 0 }}>
                 <defs>
                   <linearGradient id="salesGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#4338CA" stopOpacity={0.25} />
@@ -544,15 +559,15 @@ const Dashboard = () => {
                   dataKey="name"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#757F94', fontSize: 10, fontWeight: 600 }}
-                  padding={{ left: 20, right: 20 }}
+                  tick={{ fill: '#757F94', fontSize: 11, fontWeight: 500 }}
+                  padding={{ left: 8, right: 8 }}
                 />
                 <YAxis
                   axisLine={false}
-                  width={45}
+                  width={48}
                   tickLine={false}
-                  tick={{ fill: '#757F94', fontSize: 10, fontWeight: 600 }}
-                  tickFormatter={(val) => `₹${val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val}`}
+                  tick={{ fill: '#757F94', fontSize: 11, fontWeight: 500 }}
+                  tickFormatter={formatAxisRupee}
                 />
                 <Tooltip
                   contentStyle={{
@@ -595,21 +610,21 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.45 }}
-          className="bg-[#FBFBFC] rounded-lg p-4 md:p-5 border border-[#DCE1EA]"
+          className="bg-[#FBFBFC] hover:bg-white rounded-lg p-3.5 sm:p-4 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-150 shadow-none hover:shadow-none"
         >
-          <div className="mb-3.5">
-            <h3 className="text-base sm:text-lg font-semibold text-[#191E2B] mb-0.5">
+          <div className="flex items-center justify-between gap-2 mb-2 sm:mb-2.5">
+            <h3 className="text-base sm:text-lg font-semibold text-[#191E2B]">
               {t('Revenue Growth')}
             </h3>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#0D7A57]"></div>
-              <span className="text-xs md:text-sm text-[#4E5668] font-medium">{t('Collections')}</span>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#0D7A57]"></div>
+              <span className="text-xs font-medium text-[#4E5668]">{t('Collections')}</span>
             </div>
           </div>
 
-          <div className="w-full h-[200px] md:h-[220px]">
+          <div className="w-full h-[200px] sm:h-[220px]">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-              <AreaChart data={salesData} margin={{ top: 15, right: 15, left: -15, bottom: 5 }}>
+              <AreaChart data={salesData} margin={{ top: 8, right: 8, left: -4, bottom: 0 }}>
                 <defs>
                   <linearGradient id="collectionsGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#0D7A57" stopOpacity={0.25} />
@@ -621,15 +636,15 @@ const Dashboard = () => {
                   dataKey="name"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#757F94', fontSize: 10, fontWeight: 600 }}
-                  padding={{ left: 20, right: 20 }}
+                  tick={{ fill: '#757F94', fontSize: 11, fontWeight: 500 }}
+                  padding={{ left: 8, right: 8 }}
                 />
                 <YAxis
                   axisLine={false}
-                  width={45}
+                  width={48}
                   tickLine={false}
-                  tick={{ fill: '#757F94', fontSize: 10, fontWeight: 600 }}
-                  tickFormatter={(val) => `₹${val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val}`}
+                  tick={{ fill: '#757F94', fontSize: 11, fontWeight: 500 }}
+                  tickFormatter={formatAxisRupee}
                 />
                 <Tooltip
                   contentStyle={{
@@ -670,7 +685,7 @@ const Dashboard = () => {
        * Operational Hub: Recent Invoices & Pending Udhar Watchlist (Matching Image 3)
        * Dual widgets with clean lists, transaction badges, and 1-click reminders
        */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-3.5 md:gap-4">
         {/**
          * Widget 1: Recent Invoices & Bills Activity (Matching Image 3)
          */}
@@ -678,10 +693,10 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-[#FBFBFC] hover:bg-white rounded-xl p-4 md:p-5 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-150 shadow-none hover:shadow-none flex flex-col justify-between"
+          className="bg-[#FBFBFC] hover:bg-white rounded-xl p-3.5 sm:p-4 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-150 shadow-none hover:shadow-none flex flex-col justify-between"
         >
           <div>
-            <div className="flex items-center justify-between gap-2.5 mb-3.5 pb-3 border-b border-[#DCE1EA]">
+            <div className="flex items-center justify-between gap-2.5 mb-2.5 pb-2.5 border-b border-[#DCE1EA]">
               <div>
                 <h3 className="text-sm sm:text-base font-semibold text-[#191E2B]">
                   {t('Recent Invoices & Bills')}
@@ -710,7 +725,7 @@ const Dashboard = () => {
                     <Link
                       key={bill._id}
                       to="/bills"
-                      className="py-2.5 flex items-center justify-between gap-3 hover:bg-[#F3F5F9]/80 rounded-lg px-2 transition-colors group cursor-pointer"
+                      className="py-2 flex items-center justify-between gap-3 hover:bg-[#F3F5F9]/80 rounded-lg px-2 transition-colors group cursor-pointer"
                     >
                       <div className="min-w-0 flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded-lg bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center text-xs font-semibold shrink-0">
@@ -766,10 +781,10 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55 }}
-          className="bg-[#FBFBFC] hover:bg-white rounded-xl p-4 md:p-5 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-150 shadow-none hover:shadow-none flex flex-col justify-between"
+          className="bg-[#FBFBFC] hover:bg-white rounded-xl p-3.5 sm:p-4 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-150 shadow-none hover:shadow-none flex flex-col justify-between"
         >
           <div>
-            <div className="flex items-center justify-between mb-3.5 pb-3 border-b border-[#DCE1EA]">
+            <div className="flex items-center justify-between mb-2.5 pb-2.5 border-b border-[#DCE1EA]">
               <div>
                 <h3 className="text-sm sm:text-base font-semibold text-[#191E2B]">
                   {t('Pending Udhar Watchlist')}
@@ -799,7 +814,7 @@ const Dashboard = () => {
                   return (
                     <div
                       key={customer._id}
-                      className="py-2.5 flex items-center justify-between gap-3 hover:bg-[#F3F5F9]/80 rounded-lg px-2 transition-colors group"
+                      className="py-2 flex items-center justify-between gap-3 hover:bg-[#F3F5F9]/80 rounded-lg px-2 transition-colors group"
                     >
                       <div className="min-w-0 flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded-lg bg-[#FFF1F2] text-[#B91C1C] border border-[#FECDD3] flex items-center justify-center text-xs font-semibold shrink-0">
