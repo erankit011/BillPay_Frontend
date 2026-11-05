@@ -38,16 +38,10 @@ import {
   ArrowUpRight,
   CheckCircle2,
   FileText,
-  ChevronRight,
   AlertCircle,
   Calendar,
   CalendarRange,
   Sparkles,
-  MessageCircle,
-  Phone,
-  Banknote,
-  QrCode,
-  CreditCard,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import SwirlingLoader from '../components/common/SwirlingLoader';
@@ -63,7 +57,6 @@ const Dashboard = () => {
   const user = useSelector((state) => state.auth?.user);
   const shopName = user?.businessName || user?.name || 'UdharPay';
   const [chartTimeframe, setChartTimeframe] = useState('This Week');
-  const [billFilter, setBillFilter] = useState('ALL');
 
   /**
    * Primary Merchant Analytics Data
@@ -107,20 +100,6 @@ const Dashboard = () => {
   const recentBills = Array.isArray(recentBillsData) ? recentBillsData : [];
   const topDebtors = Array.isArray(topDebtorsData) ? topDebtorsData : [];
 
-  const filteredBills = useMemo(() => {
-    if (billFilter === 'UNPAID') {
-      return recentBills.filter((b) => b.paymentStatus !== 'PAID');
-    }
-    if (billFilter === 'PAID') {
-      return recentBills.filter((b) => b.paymentStatus === 'PAID');
-    }
-    return recentBills;
-  }, [recentBills, billFilter]);
-
-  const totalPendingAtRisk = useMemo(() => {
-    return topDebtors.reduce((acc, curr) => acc + (Number(curr.balance) || 0), 0);
-  }, [topDebtors]);
-
   /**
    * Chart Dataset Initialization
    * Retrieves aggregated analytics or defaults to an empty dataset
@@ -147,30 +126,6 @@ const Dashboard = () => {
         return 'bg-[#FEF3C7] text-[#B45309] border-[#FDE68A]';
       default:
         return 'bg-[#FFF1F2] text-[#B91C1C] border-[#FECDD3]';
-    }
-  };
-
-  const getPaymentMethodBadge = (method) => {
-    switch (method?.toUpperCase()) {
-      case 'CASH':
-        return {
-          label: 'Cash',
-          icon: Banknote,
-          color: 'text-[#0D7A57] bg-[#ECFDF5] border-[#A7F3D0]',
-        };
-      case 'ONLINE':
-      case 'UPI':
-        return {
-          label: 'UPI',
-          icon: QrCode,
-          color: 'text-[#4338CA] bg-[#EEF0FB] border-[#D8DCF5]',
-        };
-      default:
-        return {
-          label: 'Udhar',
-          icon: CreditCard,
-          color: 'text-[#B91C1C] bg-[#FFF1F2] border-[#FECDD3]',
-        };
     }
   };
 
@@ -323,8 +278,8 @@ const Dashboard = () => {
       </div>
 
       {/**
-       * Quick Actions Hub (Streamlined, Left-Aligned with rounded-lg Outer & Inner Harmony)
-       * Zero inner hover border, consistent rounded-lg radius, and clean micro-interactions
+       * Quick Action Command Center (Matching Image 1)
+       * Streamlined shortcuts with rounded-lg buttons, soft indigo icons, and zero truncation
        */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
@@ -337,7 +292,7 @@ const Dashboard = () => {
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-2.5">
           {[
-            { to: '/bills', label: 'Create Bill', icon: Receipt },
+            { to: '/bills', label: 'Create Bill', icon: Receipt, primary: true },
             { to: '/customers', label: 'Add Customer', icon: UserPlus },
             { to: '/products', label: 'Add Product', icon: PackagePlus },
             { to: '/reminders', label: 'Reminders', icon: BellRing },
@@ -349,15 +304,20 @@ const Dashboard = () => {
               <Link
                 key={action.to}
                 to={action.to}
-                className="flex items-center gap-1.5 sm:gap-2 xl:gap-2.5 px-2 sm:px-2.5 xl:px-3 py-2 sm:py-2.5 bg-[#FBFBFC] hover:bg-white border border-[#DCE1EA] hover:border-[#4338CA]/30 rounded-lg shadow-none hover:shadow-none transition-all duration-150 group text-left cursor-pointer min-w-0"
+                className="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-2 sm:py-2.5 bg-[#FBFBFC] hover:bg-white border border-[#DCE1EA] hover:border-[#4338CA]/30 rounded-lg shadow-none hover:shadow-none transition-all duration-150 group text-left cursor-pointer min-w-0"
               >
                 <div className="w-8 h-8 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0 border border-[#D8DCF5] shadow-none">
                   <Icon className="w-4 h-4" />
                 </div>
-                <span className="text-xs xl:text-sm font-semibold text-[#191E2B] group-hover:text-[#4338CA] transition-colors truncate">
+                <span
+                  className={`text-xs xl:text-sm font-semibold truncate transition-colors ${
+                    action.primary
+                      ? 'text-[#4338CA]'
+                      : 'text-[#191E2B] group-hover:text-[#4338CA]'
+                  }`}
+                >
                   {t(action.label)}
                 </span>
-                <ChevronRight className="w-3.5 h-3.5 text-[#9AA4B8] group-hover:text-[#4338CA] group-hover:translate-x-0.5 transition-all ml-auto shrink-0 opacity-50 group-hover:opacity-100" />
               </Link>
             );
           })}
@@ -365,60 +325,69 @@ const Dashboard = () => {
       </motion.div>
 
       {/**
-       * Historical Performance Comparison Strip (Streamlined & Theme-Aligned)
-       * Matching rounded-lg outer & inner, zero inner hover border, and clean typography
+       * Historical Performance Comparison Strip (Matching Image 4)
+       * Clean 4-card metric strip with top-left label, top-right icon, large currency, and descriptive subtitle
        */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="space-y-2"
+        className="space-y-2.5"
       >
         <p className="text-xs md:text-sm font-semibold text-[#4E5668] uppercase tracking-wide">
           {t('Historical Sales')}
         </p>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-2.5 md:gap-3">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4">
           {[
             {
               key: 'yesterday',
               label: 'Yesterday',
               value: data?.yesterdaySales ?? 0,
               icon: Clock,
+              subtitle: 'Previous day sales',
             },
             {
               key: 'thisWeek',
               label: 'This Week',
               value: data?.weeklySales ?? 0,
               icon: Calendar,
+              subtitle: 'Rolling 7-day volume',
             },
             {
               key: 'thisMonth',
               label: 'This Month',
               value: data?.monthlySales ?? 0,
               icon: CalendarRange,
+              subtitle: 'Month-to-date turnover',
             },
             {
               key: 'lifetime',
               label: 'Lifetime',
               value: data?.lifetimeSales ?? 0,
               icon: Sparkles,
+              subtitle: 'All-time total sales',
             },
           ].map((card) => {
             const Icon = card.icon;
             return (
               <div
                 key={card.key}
-                className="flex items-center gap-2.5 sm:gap-3 px-3 py-2 sm:py-2.5 bg-[#FBFBFC] hover:bg-white border border-[#DCE1EA] hover:border-[#4338CA]/30 rounded-lg shadow-none hover:shadow-none transition-all duration-150 group cursor-default min-w-0"
+                className="bg-[#FBFBFC] hover:bg-white rounded-lg p-3 sm:p-3.5 md:p-4 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-150 shadow-none hover:shadow-none min-w-0 cursor-default flex flex-col justify-between"
               >
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0 border border-[#D8DCF5] shadow-none">
-                  <Icon className="w-4 h-4" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] sm:text-[11px] text-[#757F94] font-semibold uppercase tracking-wider truncate">
+                <div className="flex items-center justify-between gap-2 mb-1.5">
+                  <p className="text-[10px] sm:text-xs text-[#4E5668] font-semibold uppercase tracking-wider truncate">
                     {t(card.label)}
                   </p>
-                  <p className="text-xs sm:text-sm md:text-base font-bold text-[#191E2B] group-hover:text-[#4338CA] transition-colors truncate mt-0.5">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0 shadow-none">
+                    <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#4338CA]" />
+                  </div>
+                </div>
+                <div>
+                  <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#191E2B] tracking-tight truncate">
                     {formatCurrency(card.value)}
+                  </p>
+                  <p className="text-[11px] sm:text-xs text-[#757F94] font-medium mt-0.5 truncate">
+                    {t(card.subtitle)}
                   </p>
                 </div>
               </div>
@@ -698,13 +667,12 @@ const Dashboard = () => {
       </div>
 
       {/**
-       * Operational Data Hub (Industry-Grade Commercial Activity & Credit Engine)
-       * Left: Interactive Invoices & Bills Hub with Real-Time Status Filtering and Payment Tags
-       * Right: Smart Udhar Recovery Engine with 1-Click WhatsApp Reminders, Direct Call & Urgency Badges
+       * Operational Hub: Recent Invoices & Pending Udhar Watchlist (Matching Image 3)
+       * Dual widgets with clean lists, transaction badges, and 1-click reminders
        */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-5">
         {/**
-         * Widget 1: Recent Invoices & Bills Activity
+         * Widget 1: Recent Invoices & Bills Activity (Matching Image 3)
          */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -713,7 +681,7 @@ const Dashboard = () => {
           className="bg-[#FBFBFC] hover:bg-white rounded-xl p-4 md:p-5 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-150 shadow-none hover:shadow-none flex flex-col justify-between"
         >
           <div>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3.5 pb-3 border-b border-[#DCE1EA]">
+            <div className="flex items-center justify-between gap-2.5 mb-3.5 pb-3 border-b border-[#DCE1EA]">
               <div>
                 <h3 className="text-sm sm:text-base font-semibold text-[#191E2B]">
                   {t('Recent Invoices & Bills')}
@@ -723,47 +691,20 @@ const Dashboard = () => {
                 </p>
               </div>
 
-              <div className="flex items-center justify-between sm:justify-end gap-2.5">
-                {/* Segmented Filter Pills */}
-                <div className="inline-flex items-center bg-[#F0F2F6] p-0.5 rounded-lg border border-[#DCE1EA]">
-                  {[
-                    { id: 'ALL', label: 'All' },
-                    { id: 'UNPAID', label: 'Udhar' },
-                    { id: 'PAID', label: 'Paid' },
-                  ].map((filter) => (
-                    <button
-                      key={filter.id}
-                      type="button"
-                      onClick={() => setBillFilter(filter.id)}
-                      className={`px-2 py-0.5 text-[10px] sm:text-xs font-semibold rounded-md transition-colors cursor-pointer ${
-                        billFilter === filter.id
-                          ? 'bg-white text-[#4338CA] border border-[#D8DCF5] shadow-none'
-                          : 'text-[#757F94] hover:text-[#191E2B]'
-                      }`}
-                    >
-                      {t(filter.label)}
-                    </button>
-                  ))}
-                </div>
-
-                <Link
-                  to="/bills"
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#4338CA] hover:text-[#3730A3] transition-colors shrink-0"
-                >
-                  <span>{t('View All')}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
+              <Link
+                to="/bills"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#4338CA] hover:text-[#3730A3] transition-colors shrink-0"
+              >
+                <span>{t('View All')}</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
 
-            {filteredBills.length > 0 ? (
+            {recentBills.length > 0 ? (
               <div className="divide-y divide-[#E8ECF2]">
-                {filteredBills.slice(0, 5).map((bill) => {
+                {recentBills.slice(0, 5).map((bill) => {
                   const customerName = bill.customerId?.name || bill.customer?.name || bill.customerName || t('Walk-in Customer');
-                  const invoiceNum = bill.invoiceNumber || (bill._id ? `#${bill._id.slice(-6).toUpperCase()}` : '');
                   const status = bill.paymentStatus || 'UNPAID';
-                  const methodBadge = getPaymentMethodBadge(bill.paymentMethod || (status === 'PAID' ? 'CASH' : 'CREDIT'));
-                  const MethodIcon = methodBadge.icon;
 
                   return (
                     <Link
@@ -776,25 +717,12 @@ const Dashboard = () => {
                           {getInitials(customerName)}
                         </div>
                         <div className="min-w-0">
-                          <div className="flex items-center gap-1.5 min-w-0">
-                            <p className="text-xs sm:text-sm font-semibold text-[#191E2B] group-hover:text-[#4338CA] truncate transition-colors">
-                              {customerName}
-                            </p>
-                            {invoiceNum && (
-                              <span className="text-[10px] text-[#757F94] font-medium bg-[#F0F2F6] px-1.5 py-0.2 rounded border border-[#DCE1EA] shrink-0">
-                                {invoiceNum}
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-[#757F94] font-medium mt-0.5">
-                            <span className="inline-flex items-center whitespace-nowrap gap-1 leading-none">
-                              <Clock className="w-3 h-3 shrink-0 -translate-y-[1px]" />
-                              <span>{formatDate(bill.createdAt)}</span>
-                            </span>
-                            <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[9px] font-semibold uppercase border ${methodBadge.color}`}>
-                              <MethodIcon className="w-2.5 h-2.5" />
-                              <span>{t(methodBadge.label)}</span>
-                            </span>
+                          <p className="text-xs sm:text-sm font-semibold text-[#191E2B] group-hover:text-[#4338CA] truncate transition-colors">
+                            {customerName}
+                          </p>
+                          <div className="flex items-center gap-1 text-[10px] sm:text-xs text-[#757F94] font-medium mt-0.5">
+                            <Clock className="w-3 h-3 shrink-0 text-[#757F94]" />
+                            <span>{formatDate(bill.createdAt)}</span>
                           </div>
                         </div>
                       </div>
@@ -804,7 +732,7 @@ const Dashboard = () => {
                           {formatCurrency(bill.grandTotal)}
                         </span>
                         <span
-                          className={`inline-block px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider border ${getBillStatusBadge(
+                          className={`inline-block px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider border ${getBillStatusBadge(
                             status
                           )}`}
                         >
@@ -818,7 +746,7 @@ const Dashboard = () => {
             ) : (
               <div className="py-8 text-center">
                 <FileText className="w-8 h-8 text-[#9AA4B8] mx-auto mb-1.5" />
-                <p className="text-xs text-[#757F94] font-medium">{t('No bills match selected filter')}</p>
+                <p className="text-xs text-[#757F94] font-medium">{t('No bills recorded yet')}</p>
                 <Link
                   to="/bills"
                   className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#4338CA] hover:underline"
@@ -832,7 +760,7 @@ const Dashboard = () => {
         </motion.div>
 
         {/**
-         * Widget 2: Smart Udhar Recovery Engine (Action Watchlist)
+         * Widget 2: Pending Udhar Watchlist (Matching Image 3)
          */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -843,18 +771,11 @@ const Dashboard = () => {
           <div>
             <div className="flex items-center justify-between mb-3.5 pb-3 border-b border-[#DCE1EA]">
               <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="text-sm sm:text-base font-semibold text-[#191E2B]">
-                    {t('Pending Udhar Watchlist')}
-                  </h3>
-                  {totalPendingAtRisk > 0 && (
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-[#FFF1F2] text-[#B91C1C] border border-[#FECDD3]">
-                      {formatCurrency(totalPendingAtRisk)} {t('Pending')}
-                    </span>
-                  )}
-                </div>
+                <h3 className="text-sm sm:text-base font-semibold text-[#191E2B]">
+                  {t('Pending Udhar Watchlist')}
+                </h3>
                 <p className="text-xs text-[#757F94] font-medium mt-0.5">
-                  {t('High-priority customer credit')}
+                  {t('Top outstanding customer credit')}
                 </p>
               </div>
               <Link
@@ -891,20 +812,15 @@ const Dashboard = () => {
                           >
                             {customer.name}
                           </Link>
-                          <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-[#757F94] font-medium mt-0.5">
-                            <span>{customer.phone ? `+91 ${customer.phone}` : t('No phone')}</span>
-                            {customer.balance > 2500 && (
-                              <span className="text-[9px] font-bold uppercase text-[#B91C1C] bg-[#FFF1F2] px-1 py-0.2 rounded border border-[#FECDD3]">
-                                {t('High')}
-                              </span>
-                            )}
-                          </div>
+                          <p className="text-[10px] sm:text-xs text-[#757F94] font-medium mt-0.5 truncate">
+                            {customer.phone ? `+91 ${customer.phone}` : t('No phone')}
+                          </p>
                         </div>
                       </div>
 
-                      <div className="text-right shrink-0 flex items-center gap-2 sm:gap-2.5">
+                      <div className="text-right shrink-0 flex items-center gap-2 sm:gap-3">
                         <div>
-                          <span className="text-xs sm:text-sm font-bold text-[#B91C1C] block">
+                          <span className="text-xs sm:text-sm font-semibold text-[#191E2B] block">
                             {formatCurrency(customer.balance)}
                           </span>
                           <span className="text-[10px] text-[#757F94] font-medium block">
@@ -912,29 +828,28 @@ const Dashboard = () => {
                           </span>
                         </div>
 
-                        {/* 1-Click WhatsApp & Phone Actions */}
-                        <div className="flex items-center gap-1">
-                          {waUrl && (
-                            <a
-                              href={waUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="p-1.5 rounded-lg text-[#0D7A57] bg-[#ECFDF5] hover:bg-[#D1FAE5] border border-[#A7F3D0] transition-colors shrink-0"
-                              title={t('Send 1-Click WhatsApp Reminder')}
-                            >
-                              <MessageCircle className="w-3.5 h-3.5" />
-                            </a>
-                          )}
-                          {cleanPhone && (
-                            <a
-                              href={`tel:+91${cleanPhone}`}
-                              className="p-1.5 rounded-lg text-[#4E5668] bg-[#F0F2F6] hover:bg-[#E2E8F0] border border-[#DCE1EA] transition-colors shrink-0"
-                              title={t('Call Customer')}
-                            >
-                              <Phone className="w-3.5 h-3.5" />
-                            </a>
-                          )}
-                        </div>
+                        {/* Reminder Bell Action */}
+                        {waUrl ? (
+                          <a
+                            href={waUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`Send reminder to ${customer.name}`}
+                            className="w-8 h-8 rounded-lg bg-[#FFF1F2] hover:bg-[#FFE4E6] text-[#B91C1C] border border-[#FECDD3] flex items-center justify-center transition-colors cursor-pointer shrink-0 ml-1 sm:ml-2"
+                            title={t('Send WhatsApp Reminder')}
+                          >
+                            <BellRing className="w-4 h-4" />
+                          </a>
+                        ) : (
+                          <Link
+                            to="/reminders"
+                            aria-label={`Send reminder to ${customer.name}`}
+                            className="w-8 h-8 rounded-lg bg-[#FFF1F2] hover:bg-[#FFE4E6] text-[#B91C1C] border border-[#FECDD3] flex items-center justify-center transition-colors cursor-pointer shrink-0 ml-1 sm:ml-2"
+                            title={t('Open Reminders')}
+                          >
+                            <BellRing className="w-4 h-4" />
+                          </Link>
+                        )}
                       </div>
                     </div>
                   );
