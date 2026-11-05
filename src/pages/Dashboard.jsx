@@ -314,7 +314,7 @@ const Dashboard = () => {
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-2.5">
           {[
-            { to: '/bills', label: 'Create Bill', icon: Receipt, primary: true },
+            { to: '/bills', label: 'Create Bill', icon: Receipt },
             { to: '/customers', label: 'Add Customer', icon: UserPlus },
             { to: '/products', label: 'Add Product', icon: PackagePlus },
             { to: '/reminders', label: 'Reminders', icon: BellRing },
@@ -331,13 +331,7 @@ const Dashboard = () => {
                 <div className="w-7 h-7 xl:w-8 xl:h-8 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0 border border-[#D8DCF5] shadow-none">
                   <Icon className="w-3.5 h-3.5 xl:w-4 xl:h-4" />
                 </div>
-                <span
-                  className={`text-[11px] sm:text-xs xl:text-sm font-semibold truncate transition-colors ${
-                    action.primary
-                      ? 'text-[#4338CA]'
-                      : 'text-[#191E2B] group-hover:text-[#4338CA]'
-                  }`}
-                >
+                <span className="text-[11px] sm:text-xs xl:text-sm font-semibold truncate text-[#4338CA] group-hover:text-[#3730A3] transition-colors">
                   {t(action.label)}
                 </span>
                 <ChevronRight className="w-3.5 h-3.5 text-[#9AA4B8] group-hover:text-[#4338CA] group-hover:translate-x-0.5 transition-all ml-auto shrink-0 opacity-40 group-hover:opacity-100" />
