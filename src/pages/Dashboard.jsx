@@ -129,37 +129,59 @@ const Dashboard = () => {
 
   /**
    * Sales Performance Metrics Dataset (This Week, This Month, This Year)
-   * Defaults to This Week (index 0) on load or refresh
+   * Defaults to This Week (index 0) on load or refresh.
+   * Provides contextual benchmarks & percentages for a clean, pro-level detail card.
    */
   const salesPerformanceData = useMemo(() => {
     const weekly = Number(data?.weeklySales) || 0;
     const monthly = Number(data?.monthlySales) || 0;
     const yearly = Number(data?.yearlySales) || 0;
 
+    const weekPct =
+      monthly > 0
+        ? ((weekly / monthly) * 100).toFixed(1)
+        : yearly > 0
+        ? ((weekly / yearly) * 100).toFixed(1)
+        : '0';
+    const monthPct = yearly > 0 ? ((monthly / yearly) * 100).toFixed(1) : '0';
+
     return [
       {
         key: 'thisWeek',
         label: 'This Week',
+        badge: 'Last 7 Days',
         value: weekly,
+        percentage: Number(weekPct),
+        benchmarkText: monthly > 0 ? 'of this month' : 'of annual sales',
         color: '#4338CA', // Theme Indigo
         icon: Calendar,
       },
       {
         key: 'thisMonth',
         label: 'This Month',
+        badge: 'Month-to-Date',
         value: monthly,
+        percentage: Number(monthPct),
+        benchmarkText: 'of annual sales',
         color: '#0D7A57', // Emerald Green
         icon: TrendingUp,
       },
       {
         key: 'thisYear',
         label: 'This Year',
+        badge: 'Year-to-Date',
         value: yearly,
+        percentage: 100,
+        benchmarkText: 'annual benchmark',
         color: '#6366F1', // Light Indigo
         icon: Trophy,
       },
     ];
   }, [data]);
+
+  const yearlySalesTotal = useMemo(() => {
+    return Number(data?.yearlySales) || salesPerformanceData.reduce((acc, curr) => Math.max(acc, curr.value), 0);
+  }, [data, salesPerformanceData]);
 
   /**
    * Donut Chart Data Series
@@ -415,13 +437,13 @@ const Dashboard = () => {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="bg-[#FBFBFC] rounded-lg p-3.5 sm:p-4 md:p-5 border border-[#DCE1EA] shadow-none"
+        className="bg-[#FBFBFC] rounded-lg p-3 sm:p-4 border border-[#DCE1EA] shadow-none"
       >
         {/* Card Header: Icon + Title */}
-        <div className="flex items-center justify-between gap-3 pb-3 border-b border-[#DCE1EA]">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0 border border-[#D8DCF5] shadow-none">
-              <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+        <div className="flex items-center justify-between gap-2.5 pb-2.5 border-b border-[#DCE1EA]">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-7 h-7 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0 border border-[#D8DCF5] shadow-none">
+              <TrendingUp className="w-3.5 h-3.5" />
             </div>
             <div className="min-w-0">
               <h3 className="text-sm sm:text-base font-semibold text-[#191E2B] truncate">
@@ -434,10 +456,10 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* 2-Column Responsive Layout with SVG Pipeline Bridge */}
-        <div className="flex flex-col md:flex-row items-center gap-0 md:gap-2 my-3 sm:my-4">
-          {/* Left: Interactive Donut Chart with ONLY Label & Amount inside */}
-          <div className="relative w-[210px] sm:w-[230px] h-[210px] sm:h-[230px] shrink-0 flex items-center justify-center">
+        {/* Centered Compact Widget Layout: Donut + Pipeline Bridge + Detail Card */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-0 md:gap-4 my-2 sm:my-3 max-w-2xl mx-auto w-full">
+          {/* Left: Interactive Donut Chart with Total Sales in Center (Never duplicates active item) */}
+          <div className="relative w-[170px] sm:w-[185px] h-[170px] sm:h-[185px] shrink-0 flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                 {/* Background Full Track Ring */}
@@ -445,8 +467,8 @@ const Dashboard = () => {
                   data={[{ value: 1 }]}
                   cx="50%"
                   cy="50%"
-                  innerRadius={68}
-                  outerRadius={88}
+                  innerRadius={54}
+                  outerRadius={74}
                   startAngle={90}
                   endAngle={-270}
                   dataKey="value"
@@ -460,12 +482,12 @@ const Dashboard = () => {
                   data={donutChartData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={68}
-                  outerRadius={88}
+                  innerRadius={54}
+                  outerRadius={74}
                   startAngle={90}
                   endAngle={-270}
                   dataKey="value"
-                  cornerRadius={6}
+                  cornerRadius={5}
                   paddingAngle={donutChartData.length > 1 ? 4 : 0}
                   minAngle={24}
                   stroke="none"
@@ -492,51 +514,54 @@ const Dashboard = () => {
               </PieChart>
             </ResponsiveContainer>
 
-            {/* Center Dynamic Label & Value Overlay (Clean: ONLY Label and Amount) */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center px-4">
-              <span className="text-xs sm:text-sm font-medium text-[#757F94] truncate max-w-[130px]">
-                {t(activeDonutItem.label)}
+            {/* Center Dynamic Total Sales Overlay (Clean & Professional: NO Week/Month duplicate) */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center px-2">
+              <span className="text-[10px] sm:text-[11px] font-medium text-[#757F94] uppercase tracking-wider">
+                {t('Total Sales')}
               </span>
-              <span className="text-xl sm:text-2xl font-semibold text-[#191E2B] tracking-tight my-0.5 truncate max-w-[160px]">
-                {formatCurrency(activeDonutItem.value)}
+              <span className="text-base sm:text-lg font-semibold text-[#191E2B] tracking-tight my-0.5 truncate max-w-[125px]">
+                {formatCurrency(yearlySalesTotal)}
+              </span>
+              <span className="text-[10px] font-medium text-[#4338CA] bg-[#EEF0FB] px-2 py-0.5 rounded-full border border-[#D8DCF5]">
+                {t('Annual')}
               </span>
             </div>
           </div>
 
           {/* Middle: SVG Pipeline Connector Line (Desktop) */}
-          <div className="hidden md:flex items-center shrink-0 w-10 sm:w-14 h-[210px] sm:h-[230px]">
-            <svg className="w-full h-full overflow-visible" viewBox="0 0 56 230" fill="none">
+          <div className="hidden md:flex items-center shrink-0 w-12 sm:w-14 h-[170px] sm:h-[185px]">
+            <svg className="w-full h-full overflow-visible" viewBox="0 0 56 185" fill="none">
               {/* Subtle guide lines for slices */}
               <path
-                d="M 0 45 C 28 45, 28 115, 56 115"
+                d="M 0 42 C 28 42, 28 92, 56 92"
                 stroke="#E2E8F0"
                 strokeWidth="1.5"
                 strokeDasharray="3 3"
-                opacity={activeDonutIndex === 0 ? 0 : 0.7}
+                opacity={activeDonutIndex === 0 ? 0 : 0.6}
               />
               <path
-                d="M 0 75 C 28 75, 28 115, 56 115"
+                d="M 0 72 C 28 72, 28 92, 56 92"
                 stroke="#E2E8F0"
                 strokeWidth="1.5"
                 strokeDasharray="3 3"
-                opacity={activeDonutIndex === 1 ? 0 : 0.7}
+                opacity={activeDonutIndex === 1 ? 0 : 0.6}
               />
               <path
-                d="M 0 145 C 28 145, 28 115, 56 115"
+                d="M 0 130 C 28 130, 28 92, 56 92"
                 stroke="#E2E8F0"
                 strokeWidth="1.5"
                 strokeDasharray="3 3"
-                opacity={activeDonutIndex === 2 ? 0 : 0.7}
+                opacity={activeDonutIndex === 2 ? 0 : 0.6}
               />
 
               {/* Dynamic Active Pipeline Line */}
               <path
                 d={
                   activeDonutIndex === 0
-                    ? 'M 0 45 C 28 45, 28 115, 56 115'
+                    ? 'M 0 42 C 28 42, 28 92, 56 92'
                     : activeDonutIndex === 1
-                    ? 'M 0 75 C 28 75, 28 115, 56 115'
-                    : 'M 0 145 C 28 145, 28 115, 56 115'
+                    ? 'M 0 72 C 28 72, 28 92, 56 92'
+                    : 'M 0 130 C 28 130, 28 92, 56 92'
                 }
                 stroke={activeDonutItem.color}
                 strokeWidth="2.5"
@@ -546,7 +571,7 @@ const Dashboard = () => {
               {/* Origin Node on Circle */}
               <circle
                 cx="0"
-                cy={activeDonutIndex === 0 ? 45 : activeDonutIndex === 1 ? 75 : 145}
+                cy={activeDonutIndex === 0 ? 42 : activeDonutIndex === 1 ? 72 : 130}
                 r="3.5"
                 fill={activeDonutItem.color}
                 className="transition-all duration-300"
@@ -554,7 +579,7 @@ const Dashboard = () => {
               {/* Destination Node entering Card */}
               <circle
                 cx="56"
-                cy="115"
+                cy="92"
                 r="3.5"
                 fill={activeDonutItem.color}
                 className="transition-all duration-300"
@@ -563,32 +588,65 @@ const Dashboard = () => {
           </div>
 
           {/* Middle: Vertical Connector for Mobile Screens */}
-          <div className="flex md:hidden items-center justify-center w-full h-5 my-1">
+          <div className="flex md:hidden items-center justify-center w-full h-6 my-1">
             <div className="w-0.5 h-full bg-[#DCE1EA] relative flex items-center justify-center">
               <span
-                className="w-2.5 h-2.5 rounded-full absolute"
+                className="w-2.5 h-2.5 rounded-full absolute transition-all duration-300"
                 style={{ backgroundColor: activeDonutItem.color }}
               />
             </div>
           </div>
 
-          {/* Right: Single Clean Detail Card for Active Period */}
-          <div className="flex-1 w-full min-w-0">
-            <div className="bg-white rounded-lg p-5 sm:p-6 border border-[#DCE1EA] shadow-none flex flex-col justify-center h-[210px] sm:h-[230px] transition-all duration-200">
-              <div className="flex items-center gap-2.5 min-w-0 mb-3">
+          {/* Right: Single Clean Detail Card for Active Period (Pro-Level Polish) */}
+          <div className="w-full md:w-[280px] lg:w-[320px] shrink-0">
+            <div className="bg-white rounded-lg p-4 sm:p-5 border border-[#DCE1EA] shadow-none flex flex-col justify-between h-[170px] sm:h-[185px] transition-all duration-200">
+              {/* Top Row: Period Indicator & Badge */}
+              <div className="flex items-center justify-between gap-2 min-w-0">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span
+                    className="w-2.5 h-2.5 rounded-full shrink-0 transition-colors"
+                    style={{ backgroundColor: activeDonutItem.color }}
+                  />
+                  <h4 className="text-sm sm:text-base font-semibold text-[#191E2B] leading-tight truncate">
+                    {t(activeDonutItem.label)}
+                  </h4>
+                </div>
                 <span
-                  className="w-3.5 h-3.5 rounded-full shrink-0 transition-colors"
-                  style={{ backgroundColor: activeDonutItem.color }}
-                />
-                <h4 className="text-base sm:text-lg font-semibold text-[#191E2B] leading-tight truncate">
-                  {t(activeDonutItem.label)}
-                </h4>
+                  className="text-[10px] sm:text-[11px] font-medium px-2 py-0.5 rounded-full shrink-0 border"
+                  style={{
+                    backgroundColor: `${activeDonutItem.color}12`,
+                    color: activeDonutItem.color,
+                    borderColor: `${activeDonutItem.color}35`,
+                  }}
+                >
+                  {t(activeDonutItem.badge)}
+                </span>
               </div>
 
+              {/* Main Metric Value */}
               <div>
-                <p className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-[#191E2B] tracking-tight leading-none">
+                <p className="text-2xl sm:text-3xl font-semibold text-[#191E2B] tracking-tight leading-none">
                   {formatCurrency(activeDonutItem.value)}
                 </p>
+              </div>
+
+              {/* Bottom Benchmark & Progress Indicator */}
+              <div>
+                <div className="w-full bg-[#EEF1F6] h-1.5 rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${Math.min(100, Math.max(activeDonutItem.value > 0 ? 3 : 0, activeDonutItem.percentage))}%`,
+                      backgroundColor: activeDonutItem.color,
+                    }}
+                  />
+                </div>
+                <div className="flex items-center justify-between text-[11px] font-medium text-[#757F94] mt-1.5">
+                  <span className="truncate">{t(activeDonutItem.benchmarkText)}</span>
+                  <span className="font-semibold shrink-0 ml-2" style={{ color: activeDonutItem.color }}>
+                    {activeDonutItem.percentage}%
+                  </span>
+                </div>
               </div>
             </div>
           </div>
