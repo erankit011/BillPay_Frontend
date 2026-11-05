@@ -140,27 +140,21 @@ const Dashboard = () => {
       {
         key: 'thisWeek',
         label: 'This Week',
-        periodTag: 'Last 7 Days',
         value: weekly,
-        subtitle: 'Last 7 days sales',
         color: '#4338CA', // Theme Indigo
         icon: Calendar,
       },
       {
         key: 'thisMonth',
         label: 'This Month',
-        periodTag: 'Month-to-Date',
         value: monthly,
-        subtitle: "This month's sales",
         color: '#0D7A57', // Emerald Green
         icon: TrendingUp,
       },
       {
         key: 'thisYear',
         label: 'This Year',
-        periodTag: 'Year-to-Date',
         value: yearly,
-        subtitle: 'All-time annual sales',
         color: '#6366F1', // Light Indigo
         icon: Trophy,
       },
@@ -580,34 +574,19 @@ const Dashboard = () => {
 
           {/* Right: Single Clean Detail Card for Active Period */}
           <div className="flex-1 w-full min-w-0">
-            <div className="bg-white rounded-lg p-5 sm:p-6 border border-[#DCE1EA] shadow-none flex flex-col justify-center min-h-[170px] sm:min-h-[190px] transition-all duration-200">
-              {/* Card Top: Indicator Dot + Title + Period Tag Pill */}
-              <div className="flex items-center justify-between gap-3 pb-3 border-b border-[#E8ECF2]">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <span
-                    className="w-3.5 h-3.5 rounded-full shrink-0 transition-colors"
-                    style={{ backgroundColor: activeDonutItem.color }}
-                  />
-                  <div className="min-w-0">
-                    <h4 className="text-base sm:text-lg font-semibold text-[#191E2B] leading-tight truncate">
-                      {t(activeDonutItem.label)}
-                    </h4>
-                    <p className="text-xs text-[#757F94] font-medium mt-0.5 truncate">
-                      {t(activeDonutItem.subtitle)}
-                    </p>
-                  </div>
-                </div>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] shrink-0">
-                  {t(activeDonutItem.periodTag)}
-                </span>
+            <div className="bg-white rounded-lg p-5 sm:p-6 border border-[#DCE1EA] shadow-none flex flex-col justify-center h-[210px] sm:h-[230px] transition-all duration-200">
+              <div className="flex items-center gap-2.5 min-w-0 mb-3">
+                <span
+                  className="w-3.5 h-3.5 rounded-full shrink-0 transition-colors"
+                  style={{ backgroundColor: activeDonutItem.color }}
+                />
+                <h4 className="text-base sm:text-lg font-semibold text-[#191E2B] leading-tight truncate">
+                  {t(activeDonutItem.label)}
+                </h4>
               </div>
 
-              {/* Card Metric: Clean Total Turnover Amount */}
-              <div className="pt-4 sm:pt-5">
-                <span className="text-[11px] font-semibold text-[#757F94] uppercase tracking-wider block mb-1.5">
-                  {t('Total Turnover')}
-                </span>
-                <p className="text-3xl sm:text-4xl font-semibold text-[#191E2B] tracking-tight leading-none">
+              <div>
+                <p className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-[#191E2B] tracking-tight leading-none">
                   {formatCurrency(activeDonutItem.value)}
                 </p>
               </div>
