@@ -4,7 +4,7 @@
  * quick action shortcuts, recent invoices, and pending udhar watchlists.
  */
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useQuery } from '@tanstack/react-query';
@@ -51,13 +51,35 @@ import { formatDate } from '../utils/dateUtils';
 import { getInitials } from '../utils/stringUtils';
 
 /**
+ * Compact Rupee Currency Formatter for Chart Axes (DRY)
+ * Strips unnatural decimals like .0k while preserving clean integers (e.g. ₹12k, ₹9k, ₹0)
+ */
+const formatAxisRupee = (val) => {
+  if (!val || val === 0) return '₹0';
+  const num = Math.abs(val);
+  const sign = val < 0 ? '-' : '';
+  if (num >= 10000000) {
+    const cr = num / 10000000;
+    return `${sign}₹${cr % 1 === 0 ? cr : Number(cr.toFixed(1))}Cr`;
+  }
+  if (num >= 100000) {
+    const lk = num / 100000;
+    return `${sign}₹${lk % 1 === 0 ? lk : Number(lk.toFixed(1))}L`;
+  }
+  if (num >= 1000) {
+    const k = num / 1000;
+    return `${sign}₹${k % 1 === 0 ? k : Number(k.toFixed(1))}k`;
+  }
+  return `${sign}₹${num}`;
+};
+
+/**
  * Dashboard Component
  */
 const Dashboard = () => {
   const { t } = useTranslation();
   const user = useSelector((state) => state.auth?.user);
   const shopName = user?.businessName || user?.name || 'UdharPay';
-  const [chartTimeframe, setChartTimeframe] = useState('This Week');
 
   /**
    * Primary Merchant Analytics Data
@@ -409,28 +431,28 @@ const Dashboard = () => {
         transition={{ delay: 0.35 }}
         className="bg-[#FBFBFC] rounded-lg p-4 md:p-5 border border-[#DCE1EA]"
       >
-        <div className="flex flex-row justify-between items-center gap-3 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4">
           <div>
-            <h3 className="text-base sm:text-lg md:text-xl font-semibold text-[#191E2B]">
+            <h3 className="text-base sm:text-lg font-semibold text-[#191E2B]">
               {t('Revenue vs Collections')}
             </h3>
             <p className="text-xs sm:text-sm font-medium text-[#4E5668]">
               {t('Weekly performance chart')}
             </p>
           </div>
-          <select
-            aria-label="Filter Revenue vs Collections time period"
-            value={chartTimeframe}
-            onChange={(e) => setChartTimeframe(e.target.value)}
-            className="cursor-pointer bg-[#FBFBFC] rounded-lg text-xs sm:text-sm border border-[#DCE1EA] hover:border-[#C2C9D6] px-3 py-1.5 sm:px-4 sm:py-2 text-[#191E2B] font-medium outline-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors"
-          >
-            <option>{t('This Week')}</option>
-            <option>{t('This Month')}</option>
-            <option>{t('This Year')}</option>
-          </select>
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            <div className="flex items-center gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#4338CA]"></div>
+              <span className="text-xs font-medium text-[#4E5668]">{t('Sales')}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#0D7A57]"></div>
+              <span className="text-xs font-medium text-[#4E5668]">{t('Collections')}</span>
+            </div>
+          </div>
         </div>
 
-        <div className="w-full h-[240px] md:h-[280px] lg:h-[320px] pt-2">
+        <div className="w-full h-[250px] sm:h-[280px] md:h-[320px] pt-2">
           {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <BarChart
@@ -441,16 +463,16 @@ const Dashboard = () => {
                 <XAxis
                   dataKey="date"
                   stroke="#757F94"
-                  style={{ fontSize: '11px', fontWeight: '600' }}
+                  style={{ fontSize: '11px', fontWeight: '500' }}
                   axisLine={false}
                   tickLine={false}
-                  padding={{ left: 20, right: 20 }}
+                  padding={{ left: 15, right: 15 }}
                 />
                 <YAxis
                   stroke="#757F94"
-                  width={45}
-                  style={{ fontSize: '11px', fontWeight: '600' }}
-                  tickFormatter={(value) => `₹${value >= 1000 ? (value / 1000).toFixed(1) + 'k' : value}`}
+                  width={48}
+                  style={{ fontSize: '11px', fontWeight: '500' }}
+                  tickFormatter={formatAxisRupee}
                   axisLine={false}
                   tickLine={false}
                 />
@@ -475,29 +497,29 @@ const Dashboard = () => {
                     fontWeight: '500',
                   }}
                   formatter={(value, name) => {
-                    const label = name === 'Collections' ? t('Collections') : t('Sales');
+                    const label = name === 'Sales' ? t('Sales') : t('Collections');
                     return [`₹${value.toLocaleString('en-IN')}`, label];
                   }}
                   cursor={{ fill: '#EEF0FB' }}
                 />
                 <Legend
-                  wrapperStyle={{ paddingTop: '10px', fontSize: '12px', fontWeight: '600' }}
+                  wrapperStyle={{ paddingTop: '12px', fontSize: '12px', fontWeight: '500' }}
                   iconType="circle"
                   iconSize={8}
                 />
                 <Bar
-                  dataKey="collections"
+                  dataKey="sales"
                   fill="#4338CA"
-                  radius={[6, 6, 0, 0]}
-                  name={t('Collections')}
-                  maxBarSize={32}
+                  radius={[4, 4, 0, 0]}
+                  name={t('Sales')}
+                  maxBarSize={28}
                 />
                 <Bar
-                  dataKey="sales"
-                  fill="#818CF8"
-                  radius={[6, 6, 0, 0]}
-                  name={t('Sales')}
-                  maxBarSize={32}
+                  dataKey="collections"
+                  fill="#0D7A57"
+                  radius={[4, 4, 0, 0]}
+                  name={t('Collections')}
+                  maxBarSize={28}
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -521,7 +543,7 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-[#FBFBFC] rounded-lg p-4 md:p-5 border border-[#DCE1EA]"
+          className="bg-[#FBFBFC] hover:bg-white rounded-lg p-4 md:p-5 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-150 shadow-none hover:shadow-none"
         >
           <div className="mb-3.5">
             <h3 className="text-base sm:text-lg font-semibold text-[#191E2B] mb-0.5">
@@ -535,7 +557,7 @@ const Dashboard = () => {
 
           <div className="w-full h-[200px] md:h-[220px]">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-              <AreaChart data={salesData} margin={{ top: 15, right: 15, left: -15, bottom: 5 }}>
+              <AreaChart data={salesData} margin={{ top: 15, right: 15, left: 0, bottom: 5 }}>
                 <defs>
                   <linearGradient id="salesGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#4338CA" stopOpacity={0.25} />
@@ -547,15 +569,15 @@ const Dashboard = () => {
                   dataKey="name"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#757F94', fontSize: 10, fontWeight: 600 }}
-                  padding={{ left: 20, right: 20 }}
+                  tick={{ fill: '#757F94', fontSize: 11, fontWeight: 500 }}
+                  padding={{ left: 15, right: 15 }}
                 />
                 <YAxis
                   axisLine={false}
-                  width={45}
+                  width={48}
                   tickLine={false}
-                  tick={{ fill: '#757F94', fontSize: 10, fontWeight: 600 }}
-                  tickFormatter={(val) => `₹${val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val}`}
+                  tick={{ fill: '#757F94', fontSize: 11, fontWeight: 500 }}
+                  tickFormatter={formatAxisRupee}
                 />
                 <Tooltip
                   contentStyle={{
@@ -598,7 +620,7 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.45 }}
-          className="bg-[#FBFBFC] rounded-lg p-4 md:p-5 border border-[#DCE1EA]"
+          className="bg-[#FBFBFC] hover:bg-white rounded-lg p-4 md:p-5 border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-150 shadow-none hover:shadow-none"
         >
           <div className="mb-3.5">
             <h3 className="text-base sm:text-lg font-semibold text-[#191E2B] mb-0.5">
@@ -612,7 +634,7 @@ const Dashboard = () => {
 
           <div className="w-full h-[200px] md:h-[220px]">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-              <AreaChart data={salesData} margin={{ top: 15, right: 15, left: -15, bottom: 5 }}>
+              <AreaChart data={salesData} margin={{ top: 15, right: 15, left: 0, bottom: 5 }}>
                 <defs>
                   <linearGradient id="collectionsGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#0D7A57" stopOpacity={0.25} />
@@ -624,15 +646,15 @@ const Dashboard = () => {
                   dataKey="name"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fill: '#757F94', fontSize: 10, fontWeight: 600 }}
-                  padding={{ left: 20, right: 20 }}
+                  tick={{ fill: '#757F94', fontSize: 11, fontWeight: 500 }}
+                  padding={{ left: 15, right: 15 }}
                 />
                 <YAxis
                   axisLine={false}
-                  width={45}
+                  width={48}
                   tickLine={false}
-                  tick={{ fill: '#757F94', fontSize: 10, fontWeight: 600 }}
-                  tickFormatter={(val) => `₹${val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val}`}
+                  tick={{ fill: '#757F94', fontSize: 11, fontWeight: 500 }}
+                  tickFormatter={formatAxisRupee}
                 />
                 <Tooltip
                   contentStyle={{
