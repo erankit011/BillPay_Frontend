@@ -14,9 +14,7 @@ import {
   Percent,
   X,
   Sparkles,
-  RefreshCw,
   AlertTriangle,
-  CreditCard,
   CheckCircle2,
   Lock,
   FileText,
@@ -28,7 +26,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../redux/slices/authSlice';
 import toast from 'react-hot-toast';
 import { validateSubscriptionCoupon, getPublicPlans, cancelSubscription } from '../features/admin/api/adminApi';
-import { getDaysRemaining, getTrialEndDate, formatDate } from '../utils/dateUtils';
+import { getDaysRemaining, getTrialEndDate, formatDateOnly } from '../utils/dateUtils';
 
 /**
  * Fallback Subscription Tiers
@@ -378,49 +376,49 @@ const Subscription = () => {
        * Current Plan Status Overview
        * Highlights active subscription tier, auto-pay status, and validity period
        */}
-      <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 md:p-5 transition-colors duration-200 shadow-none">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5 sm:gap-4">
+      <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 transition-colors duration-200 shadow-none">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
           <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
-            <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center shrink-0 border ${
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border ${
               user?.subscriptionStatus === 'active' ? 'bg-[#ECFDF5] text-[#0D7A57] border-[#A7F3D0]' : 'bg-[#EEF0FB] text-[#4338CA] border-[#D8DCF5]'
             }`}>
               <Shield className="w-5 h-5" />
             </div>
             <div className="flex flex-col justify-center min-w-0">
-              <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                <span className="font-medium text-[#757F94] text-xs sm:text-sm">{t('Current Plan')}: </span>
-                <span className="font-semibold text-[#4338CA] uppercase tracking-wide text-sm sm:text-base">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-medium text-[#757F94] text-xs sm:text-sm">{t('Current Plan')}:</span>
+                <span className="font-semibold text-[#4338CA] uppercase tracking-wide text-xs sm:text-sm">
                   {user?.subscriptionPlan || 'FREE'}
                 </span>
                 {isPaidPlan && user?.subscriptionStatus === 'active' && (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#ECFDF5] text-[#0D7A57] border border-[#A7F3D0]">
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[#ECFDF5] text-[#0D7A57] border border-[#A7F3D0]">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#0D7A57] animate-pulse" />
                     {t('Auto-Pay Active')}
                   </span>
                 )}
                 {isPaidPlan && user?.subscriptionStatus === 'cancelled' && (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#FFFBEB] text-[#B45309] border border-[#FDE68A]">
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[#FFFBEB] text-[#B45309] border border-[#FDE68A]">
                     {t('Auto-Pay Cancelled')}
                   </span>
                 )}
               </div>
 
               {user?.subscriptionStatus === 'active' && user?.currentPeriodEnd ? (
-                <p className="text-xs sm:text-sm text-[#757F94] font-medium flex items-center gap-1.5 flex-wrap">
+                <div className="text-xs text-[#757F94] font-medium flex items-center gap-1.5 flex-wrap mt-0.5">
                   <Clock className="w-3.5 h-3.5 text-[#757F94] shrink-0" />
                   <span>{t('Expires in')} <strong className="font-semibold text-[#191E2B]">{getDaysRemaining(user.currentPeriodEnd)} {t('days')}</strong></span>
-                  <span className="text-xs text-[#757F94] font-normal">({formatDate(user.currentPeriodEnd)})</span>
-                </p>
+                  <span>({formatDateOnly(user.currentPeriodEnd)})</span>
+                </div>
               ) : isPaidPlan && user?.subscriptionStatus === 'cancelled' ? (
-                <p className="text-xs sm:text-sm text-[#B45309] font-medium flex items-center gap-1.5 flex-wrap">
+                <div className="text-xs text-[#B45309] font-medium flex items-center gap-1.5 flex-wrap mt-0.5">
                   <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                  <span>{t('Pro access remains active until')} <strong className="font-semibold text-[#191E2B]">{user?.currentPeriodEnd ? formatDate(user.currentPeriodEnd) : 'billing period end'}</strong></span>
-                </p>
+                  <span>{t('Pro access remains active until')} <strong className="font-semibold text-[#191E2B]">{user?.currentPeriodEnd ? formatDateOnly(user.currentPeriodEnd) : 'billing period end'}</strong></span>
+                </div>
               ) : (
-                <p className="text-xs sm:text-sm text-[#757F94] font-medium flex items-center gap-1.5 flex-wrap">
+                <div className="text-xs text-[#757F94] font-medium flex items-center gap-1.5 flex-wrap mt-0.5">
                   <Clock className="w-3.5 h-3.5 text-[#757F94] shrink-0" />
                   <span>{t('Free trial expires in')} <strong className="font-semibold text-[#191E2B]">{getDaysRemaining(trialEndDate)} {t('days')}</strong></span>
-                </p>
+                </div>
               )}
             </div>
           </div>
@@ -433,7 +431,7 @@ const Subscription = () => {
             <Link
               to="/settings"
               onClick={() => localStorage.setItem('udharpay_settings_tab', 'platform-invoices')}
-              className="cursor-pointer inline-flex items-center justify-center gap-1.5 text-xs sm:text-[13px] font-semibold text-[#4E5668] bg-white hover:bg-[#F0F2F6] border border-[#DCE1EA] px-3.5 py-2 rounded-lg transition-all active:scale-95 whitespace-nowrap shadow-none"
+              className="h-9 px-3.5 rounded-lg border border-[#DCE1EA] bg-white hover:bg-[#F0F2F6] text-[#4E5668] text-xs sm:text-[13px] font-semibold inline-flex items-center justify-center gap-1.5 transition-all active:scale-95 whitespace-nowrap shadow-none flex-1 sm:flex-initial"
             >
               <FileText className="w-4 h-4 text-[#757F94]" />
               <span>{t('Billing Receipts')}</span>
@@ -443,7 +441,7 @@ const Subscription = () => {
               <button
                 type="button"
                 onClick={() => setShowCancelModal(true)}
-                className="cursor-pointer inline-flex items-center justify-center gap-1.5 text-xs sm:text-[13px] font-semibold text-[#B91C1C] bg-[#FFF1F2] hover:bg-[#FFE4E6] border border-[#FECDD3] px-3.5 py-2 rounded-lg transition-all active:scale-95 whitespace-nowrap shadow-none"
+                className="h-9 px-3.5 rounded-lg border border-[#FECDD3] bg-[#FFF1F2] hover:bg-[#FFE4E6] text-[#B91C1C] text-xs sm:text-[13px] font-semibold inline-flex items-center justify-center gap-1.5 transition-all active:scale-95 whitespace-nowrap shadow-none flex-1 sm:flex-initial cursor-pointer"
               >
                 <span>{t('Cancel Auto-Pay')}</span>
               </button>
@@ -453,80 +451,38 @@ const Subscription = () => {
       </div>
 
       {/**
-       * Auto-Pay Benefits Strip
-       * Displays trust guarantees, RBI compliance, and invoice download perks
-       */}
-      <div className="bg-[#EEF0FB]/40 border border-[#D8DCF5] rounded-lg p-3.5 sm:p-4 md:p-5 shadow-none">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4 md:gap-5">
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0 shadow-none">
-              <RefreshCw className="w-4 h-4" />
-            </div>
-            <div className="min-w-0">
-              <h4 className="font-semibold text-[#191E2B] text-xs sm:text-sm mb-0.5">{t('Hassle-Free Auto-Pay')}</h4>
-              <p className="text-[#4E5668] font-medium text-xs leading-relaxed">
-                {t('UPI Autopay (GPay, PhonePe, Paytm), Cards & Netbanking mandates.')}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0 shadow-none">
-              <CreditCard className="w-4 h-4" />
-            </div>
-            <div className="min-w-0">
-              <h4 className="font-semibold text-[#191E2B] text-xs sm:text-sm mb-0.5">{t('Instant Platform Tax Receipts')}</h4>
-              <p className="text-[#4E5668] font-medium text-xs leading-relaxed">
-                {t('Downloadable cloud PDF invoices generated automatically on each renewal.')}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0 shadow-none">
-              <Shield className="w-4 h-4" />
-            </div>
-            <div className="min-w-0">
-              <h4 className="font-semibold text-[#191E2B] text-xs sm:text-sm mb-0.5">{t('100% RBI e-Mandate Compliant')}</h4>
-              <p className="text-[#4E5668] font-medium text-xs leading-relaxed">
-                {t('Pre-debit notifications before each cycle. Cancel recurring anytime with 1 click.')}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/**
        * Promotional Coupon Section
-       * Discount input field or active coupon tag with removal trigger
+       * Compact discount coupon input bar with instant validation
        */}
-      <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 md:p-5 shadow-none">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5 sm:gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0">
-              <Tag className="w-4 h-4 sm:w-5 sm:h-5" />
+      <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 shadow-none">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-lg bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0">
+              <Tag className="w-4 h-4" />
             </div>
-            <div>
-              <h3 className="text-sm font-semibold text-[#191E2B] tracking-tight flex items-center gap-1.5">
+            <div className="min-w-0">
+              <p className="text-xs sm:text-sm font-semibold text-[#191E2B] flex items-center gap-1.5">
                 <span>{t('Have a Promo / Discount Code?')}</span>
                 <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              </h3>
-              <p className="text-xs text-[#757F94] font-medium mt-0.5">
+              </p>
+              <p className="text-[11px] sm:text-xs text-[#757F94] font-medium mt-0.5">
                 {t('Enter your coupon to unlock extra savings on Pro subscriptions')}
               </p>
             </div>
           </div>
 
           {appliedCoupon ? (
-            <div className="flex items-center gap-2 bg-[#ECFDF5] border border-[#A7F3D0] text-[#0D7A57] px-3.5 py-1.5 rounded-lg text-xs font-semibold shadow-none">
-              <Check className="w-3.5 h-3.5 text-emerald-600" />
-              <span>
-                Code <strong className="font-mono">{appliedCoupon.code}</strong> applied ({appliedCoupon.discountType === 'PERCENTAGE' ? `${appliedCoupon.discountValue}% OFF` : `₹${appliedCoupon.discountValue} FLAT`})
-              </span>
+            <div className="h-9 flex items-center justify-between sm:justify-start gap-2 bg-[#ECFDF5] border border-[#A7F3D0] text-[#0D7A57] px-3.5 rounded-lg text-xs font-semibold w-full sm:w-auto shadow-none">
+              <div className="flex items-center gap-1.5">
+                <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>
+                  Code <strong className="font-mono">{appliedCoupon.code}</strong> applied ({appliedCoupon.discountType === 'PERCENTAGE' ? `${appliedCoupon.discountValue}% OFF` : `₹${appliedCoupon.discountValue} FLAT`})
+                </span>
+              </div>
               <button
                 type="button"
                 onClick={handleRemoveCoupon}
-                className="cursor-pointer ml-1 text-emerald-600 hover:text-emerald-900 p-0.5 rounded transition-colors"
+                className="cursor-pointer text-emerald-600 hover:text-emerald-900 p-0.5 rounded transition-colors ml-1"
                 title="Remove Coupon"
               >
                 <X className="w-3.5 h-3.5" />
@@ -539,12 +495,12 @@ const Subscription = () => {
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                 placeholder={t('Enter Promo Code')}
-                className="w-full sm:w-52 md:w-60 text-xs sm:text-sm font-semibold tracking-wider px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none uppercase placeholder:font-medium placeholder:normal-case placeholder:text-[#9AA4B8] bg-white text-[#191E2B] transition-colors shadow-none"
+                className="h-9 flex-1 sm:w-48 md:w-56 text-xs sm:text-sm font-semibold tracking-wider px-3.5 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none uppercase placeholder:font-medium placeholder:normal-case placeholder:text-[#9AA4B8] bg-white text-[#191E2B] transition-colors shadow-none"
               />
               <button
                 type="submit"
-                disabled={validatingCoupon}
-                className="cursor-pointer px-4 sm:px-5 py-2 bg-[#4338CA] text-white rounded-lg text-xs sm:text-sm font-semibold hover:bg-[#3730A3] active:scale-95 transition-all whitespace-nowrap disabled:opacity-50 shadow-none"
+                disabled={validatingCoupon || !couponCode.trim()}
+                className="h-9 cursor-pointer px-4 sm:px-5 bg-[#4338CA] text-white rounded-lg text-xs sm:text-sm font-semibold hover:bg-[#3730A3] active:scale-95 transition-all whitespace-nowrap disabled:opacity-50 shadow-none flex items-center justify-center"
               >
                 {validatingCoupon ? t('Checking...') : t('Apply')}
               </button>
@@ -691,7 +647,7 @@ const Subscription = () => {
                 <h3 className="text-base sm:text-lg font-semibold text-[#191E2B]">Cancel Auto-Pay Subscription?</h3>
                 <p className="text-xs sm:text-sm text-[#4E5668] mt-1 leading-relaxed font-medium">
                   Your Auto-Pay mandate will be stopped and Razorpay will not auto-debit on the next cycle. You will keep complete access to all your Pro features until{' '}
-                  <strong className="text-[#191E2B] font-semibold">{user?.currentPeriodEnd ? formatDate(user.currentPeriodEnd) : 'the end of your paid billing period'}</strong>.
+                  <strong className="text-[#191E2B] font-semibold">{user?.currentPeriodEnd ? formatDateOnly(user.currentPeriodEnd) : 'the end of your paid billing period'}</strong>.
                 </p>
               </div>
             </div>
