@@ -360,15 +360,15 @@ const Subscription = () => {
   const isPaidPlan = user?.subscriptionPlan && user?.subscriptionPlan !== 'FREE';
 
   return (
-    <div className="w-full min-w-0 space-y-6 md:space-y-8 lg:space-y-10 xl:space-y-12 pb-24 lg:pb-0">
+    <div className="w-full min-w-0 space-y-4 sm:space-y-5 md:space-y-6 pb-24 lg:pb-8">
       {/**
        * Subscription Header Section
        * Displays title and description of plan management portal
        */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B]">{t('Subscription')}</h1>
-          <p className="text-[#4E5668] text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B] tracking-tight">{t('Subscription')}</h1>
+          <p className="text-[#4E5668] text-xs sm:text-sm mt-0.5 sm:mt-1 font-medium leading-relaxed">
             {t('Manage your plan, billing, and recurring Auto-Pay mandates')}
           </p>
         </div>
@@ -378,18 +378,18 @@ const Subscription = () => {
        * Current Plan Status Overview
        * Highlights active subscription tier, auto-pay status, and validity period
        */}
-      <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-4 sm:p-5 md:p-6 transition-colors duration-200 shadow-none">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5 sm:gap-4 min-w-0">
-            <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center shrink-0 border ${
+      <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 md:p-5 transition-colors duration-200 shadow-none">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5 sm:gap-4">
+          <div className="flex items-center gap-3 sm:gap-3.5 min-w-0">
+            <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center shrink-0 border ${
               user?.subscriptionStatus === 'active' ? 'bg-[#ECFDF5] text-[#0D7A57] border-[#A7F3D0]' : 'bg-[#EEF0FB] text-[#4338CA] border-[#D8DCF5]'
             }`}>
-              <Shield className="w-5 h-5 sm:w-6 sm:h-6" />
+              <Shield className="w-5 h-5" />
             </div>
             <div className="flex flex-col justify-center min-w-0">
-              <div className="flex items-center gap-2 flex-wrap mb-1">
+              <div className="flex items-center gap-2 flex-wrap mb-0.5">
                 <span className="font-medium text-[#757F94] text-xs sm:text-sm">{t('Current Plan')}: </span>
-                <span className="font-semibold text-[#4338CA] uppercase tracking-wide text-base sm:text-lg">
+                <span className="font-semibold text-[#4338CA] uppercase tracking-wide text-sm sm:text-base">
                   {user?.subscriptionPlan || 'FREE'}
                 </span>
                 {isPaidPlan && user?.subscriptionStatus === 'active' && (
@@ -407,18 +407,18 @@ const Subscription = () => {
 
               {user?.subscriptionStatus === 'active' && user?.currentPeriodEnd ? (
                 <p className="text-xs sm:text-sm text-[#757F94] font-medium flex items-center gap-1.5 flex-wrap">
-                  <Clock className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                  <Clock className="w-3.5 h-3.5 text-[#757F94] shrink-0" />
                   <span>{t('Expires in')} <strong className="font-semibold text-[#191E2B]">{getDaysRemaining(user.currentPeriodEnd)} {t('days')}</strong></span>
-                  <span className="text-xs text-gray-400 font-normal">({formatDate(user.currentPeriodEnd)})</span>
+                  <span className="text-xs text-[#757F94] font-normal">({formatDate(user.currentPeriodEnd)})</span>
                 </p>
               ) : isPaidPlan && user?.subscriptionStatus === 'cancelled' ? (
                 <p className="text-xs sm:text-sm text-[#B45309] font-medium flex items-center gap-1.5 flex-wrap">
-                  <Clock className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                  <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                   <span>{t('Pro access remains active until')} <strong className="font-semibold text-[#191E2B]">{user?.currentPeriodEnd ? formatDate(user.currentPeriodEnd) : 'billing period end'}</strong></span>
                 </p>
               ) : (
                 <p className="text-xs sm:text-sm text-[#757F94] font-medium flex items-center gap-1.5 flex-wrap">
-                  <Clock className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                  <Clock className="w-3.5 h-3.5 text-[#757F94] shrink-0" />
                   <span>{t('Free trial expires in')} <strong className="font-semibold text-[#191E2B]">{getDaysRemaining(trialEndDate)} {t('days')}</strong></span>
                 </p>
               )}
@@ -429,13 +429,13 @@ const Subscription = () => {
            * Subscription Action Controls
            * Quick navigation to platform invoices or mandate cancellation modal
            */}
-          <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end pt-3 sm:pt-0 border-t sm:border-t-0 border-[#E8ECF2]">
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-end pt-3 sm:pt-0 border-t sm:border-t-0 border-[#E8ECF2]">
             <Link
               to="/settings"
               onClick={() => localStorage.setItem('udharpay_settings_tab', 'platform-invoices')}
-              className="cursor-pointer inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-semibold text-[#4E5668] bg-[#FBFBFC] hover:bg-[#F0F2F6] border border-[#DCE1EA] px-3.5 py-2 rounded-lg transition-all active:scale-95 whitespace-nowrap shadow-none"
+              className="cursor-pointer inline-flex items-center justify-center gap-1.5 text-xs sm:text-[13px] font-semibold text-[#4E5668] bg-white hover:bg-[#F0F2F6] border border-[#DCE1EA] px-3.5 py-2 rounded-lg transition-all active:scale-95 whitespace-nowrap shadow-none"
             >
-              <FileText className="w-4 h-4 text-gray-500" />
+              <FileText className="w-4 h-4 text-[#757F94]" />
               <span>{t('Billing Receipts')}</span>
             </Link>
 
@@ -443,7 +443,7 @@ const Subscription = () => {
               <button
                 type="button"
                 onClick={() => setShowCancelModal(true)}
-                className="cursor-pointer inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-semibold text-[#B91C1C] bg-[#FFF1F2] hover:bg-[#FFE4E6] border border-[#FECDD3] px-3.5 py-2 rounded-lg transition-all active:scale-95 whitespace-nowrap shadow-none"
+                className="cursor-pointer inline-flex items-center justify-center gap-1.5 text-xs sm:text-[13px] font-semibold text-[#B91C1C] bg-[#FFF1F2] hover:bg-[#FFE4E6] border border-[#FECDD3] px-3.5 py-2 rounded-lg transition-all active:scale-95 whitespace-nowrap shadow-none"
               >
                 <span>{t('Cancel Auto-Pay')}</span>
               </button>
@@ -456,10 +456,10 @@ const Subscription = () => {
        * Auto-Pay Benefits Strip
        * Displays trust guarantees, RBI compliance, and invoice download perks
        */}
-      <div className="bg-[#EEF0FB]/40 border border-[#D8DCF5] rounded-lg p-4 sm:p-5 shadow-none">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+      <div className="bg-[#EEF0FB]/40 border border-[#D8DCF5] rounded-lg p-3.5 sm:p-4 md:p-5 shadow-none">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4 md:gap-5">
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#FBFBFC] text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0 shadow-none">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0 shadow-none">
               <RefreshCw className="w-4 h-4" />
             </div>
             <div className="min-w-0">
@@ -471,7 +471,7 @@ const Subscription = () => {
           </div>
 
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#FBFBFC] text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0 shadow-none">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0 shadow-none">
               <CreditCard className="w-4 h-4" />
             </div>
             <div className="min-w-0">
@@ -483,7 +483,7 @@ const Subscription = () => {
           </div>
 
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#FBFBFC] text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0 shadow-none">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0 shadow-none">
               <Shield className="w-4 h-4" />
             </div>
             <div className="min-w-0">
@@ -500,18 +500,18 @@ const Subscription = () => {
        * Promotional Coupon Section
        * Discount input field or active coupon tag with removal trigger
        */}
-      <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-4 sm:p-5 shadow-none">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="bg-[#FBFBFC] rounded-lg border border-[#DCE1EA] p-3.5 sm:p-4 md:p-5 shadow-none">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5 sm:gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0">
-              <Tag className="w-5 h-5" />
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] flex items-center justify-center shrink-0">
+              <Tag className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
               <h3 className="text-sm font-semibold text-[#191E2B] tracking-tight flex items-center gap-1.5">
                 <span>{t('Have a Promo / Discount Code?')}</span>
                 <Sparkles className="w-3.5 h-3.5 text-amber-500" />
               </h3>
-              <p className="text-xs text-[#757F94] font-medium">
+              <p className="text-xs text-[#757F94] font-medium mt-0.5">
                 {t('Enter your coupon to unlock extra savings on Pro subscriptions')}
               </p>
             </div>
@@ -539,7 +539,7 @@ const Subscription = () => {
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                 placeholder={t('Enter Promo Code')}
-                className="w-full sm:w-48 text-xs sm:text-sm font-semibold tracking-wider px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none uppercase placeholder:font-medium placeholder:normal-case placeholder:text-[#9AA4B8] bg-white text-[#191E2B] transition-colors shadow-none"
+                className="w-full sm:w-52 md:w-60 text-xs sm:text-sm font-semibold tracking-wider px-3.5 py-2 border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none uppercase placeholder:font-medium placeholder:normal-case placeholder:text-[#9AA4B8] bg-white text-[#191E2B] transition-colors shadow-none"
               />
               <button
                 type="submit"
@@ -557,34 +557,49 @@ const Subscription = () => {
        * Subscription Pricing Matrix
        * Comparison grid displaying free trial, monthly, quarterly, and yearly tiers
        */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 lg:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5 sm:gap-4 md:gap-5">
         {plans.map((plan) => {
           const discountedPrice = getDiscountedPrice(plan);
+          const isCurrentActive = user?.subscriptionPlan === plan.id;
 
           return (
             <div
               key={plan.id}
-              className={`relative flex flex-col bg-[#FBFBFC] rounded-lg border p-5 md:p-6 transition-colors shadow-none ${plan.id === 'YEARLY' ? 'border-[#4338CA]' : 'border-[#DCE1EA] hover:border-[#C2C9D6]'}`}
+              className={`relative flex flex-col bg-[#FBFBFC] rounded-lg border p-4 sm:p-5 md:p-6 transition-all duration-200 shadow-none ${
+                plan.id === 'YEARLY'
+                  ? 'border-2 border-[#4338CA] bg-white'
+                  : isCurrentActive
+                  ? 'border-[#0D7A57]'
+                  : 'border-[#DCE1EA] hover:border-[#C2C9D6]'
+              }`}
             >
               {plan.id === 'YEARLY' && (
-                <div className="absolute -top-3 right-4 sm:right-6 bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A] text-[10px] md:text-xs font-semibold uppercase tracking-wider py-1 px-3 rounded-lg shadow-none">
-                  {t('Best Value')}
+                <div className="absolute -top-3 right-4 sm:right-5 bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] text-[10px] sm:text-xs font-semibold uppercase tracking-wider py-0.5 px-2.5 rounded-full shadow-none flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-[#4338CA]" />
+                  <span>{t('Best Value')}</span>
                 </div>
               )}
 
-              <div className="mb-5">
-                <h3 className="text-base md:text-lg font-semibold text-[#191E2B]">{plan.name}</h3>
-                <div className="mt-2 md:mt-3 flex items-baseline gap-1.5 flex-wrap">
+              {isCurrentActive && plan.id !== 'YEARLY' && (
+                <div className="absolute -top-3 right-4 sm:right-5 bg-[#ECFDF5] text-[#0D7A57] border border-[#A7F3D0] text-[10px] sm:text-xs font-semibold uppercase tracking-wider py-0.5 px-2.5 rounded-full shadow-none flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3 text-[#0D7A57]" />
+                  <span>{t('Active Plan')}</span>
+                </div>
+              )}
+
+              <div className="mb-4 sm:mb-5">
+                <h3 className="text-base sm:text-lg font-semibold text-[#191E2B]">{plan.name}</h3>
+                <div className="mt-2 flex items-baseline gap-1.5 flex-wrap">
                   {discountedPrice !== null ? (
                     <>
-                      <span className="text-2xl md:text-3xl font-bold text-[#0D7A57]">₹{discountedPrice}</span>
-                      <span className="text-sm text-gray-400 line-through">₹{plan.price}</span>
+                      <span className="text-2xl sm:text-3xl font-semibold text-[#0D7A57]">₹{discountedPrice}</span>
+                      <span className="text-xs sm:text-sm text-[#757F94] line-through font-medium">₹{plan.price}</span>
                       <span className="text-xs text-[#757F94] font-medium">/{plan.duration}</span>
                     </>
                   ) : (
                     <>
-                      <span className="text-2xl md:text-3xl font-semibold text-[#191E2B]">₹{plan.price}</span>
-                      <span className="text-xs md:text-sm text-[#757F94] font-medium">/{plan.duration}</span>
+                      <span className="text-2xl sm:text-3xl font-semibold text-[#191E2B]">₹{plan.price}</span>
+                      <span className="text-xs sm:text-sm text-[#757F94] font-medium">/{plan.duration}</span>
                     </>
                   )}
                 </div>
@@ -595,22 +610,22 @@ const Subscription = () => {
                 )}
               </div>
 
-              <div className="flex-1 space-y-3.5 md:space-y-4 mb-6">
+              <div className="flex-1 space-y-2.5 sm:space-y-3 mb-5 sm:mb-6">
                 {plan.features.map((feature, idx) => (
                   <div key={idx} className="flex items-start gap-2.5">
-                    <div className="bg-[#ECFDF5] rounded-full p-1 mt-0.5 shrink-0 flex items-center justify-center border border-[#A7F3D0]">
-                      <Check className="w-3 h-3 md:w-3.5 md:h-3.5 text-[#0D7A57]" />
+                    <div className="w-4 h-4 rounded-full bg-[#ECFDF5] text-[#0D7A57] border border-[#A7F3D0] flex items-center justify-center shrink-0 mt-0.5">
+                      <Check className="w-2.5 h-2.5" />
                     </div>
-                    <span className="text-xs md:text-sm text-[#4E5668] font-medium">{feature}</span>
+                    <span className="text-xs sm:text-[13px] text-[#4E5668] font-medium leading-snug">{feature}</span>
                   </div>
                 ))}
               </div>
 
               <button
                 onClick={() => handleUpgrade(plan)}
-                disabled={plan.id === 'FREE' || loadingPlan === plan.id || user?.subscriptionPlan === plan.id}
-                className={`w-full py-2.5 md:py-3 px-4 rounded-lg font-semibold text-xs md:text-sm transition-all flex items-center justify-center
-                  ${plan.id === 'FREE' || user?.subscriptionPlan === plan.id
+                disabled={plan.id === 'FREE' || loadingPlan === plan.id || isCurrentActive}
+                className={`w-full py-2.5 sm:py-3 px-4 rounded-lg font-semibold text-xs sm:text-sm transition-all flex items-center justify-center mt-auto
+                  ${plan.id === 'FREE' || isCurrentActive
                     ? 'bg-[#F0F2F6] text-[#757F94] cursor-default'
                     : plan.id === 'YEARLY'
                       ? 'bg-[#4338CA] text-white hover:bg-[#3730A3] active:scale-95 cursor-pointer shadow-none'
@@ -620,7 +635,7 @@ const Subscription = () => {
               >
                 {loadingPlan === plan.id ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
-                ) : user?.subscriptionPlan === plan.id ? (
+                ) : isCurrentActive ? (
                   t('Active Plan')
                 ) : (
                   plan.buttonText
@@ -629,6 +644,28 @@ const Subscription = () => {
             </div>
           );
         })}
+      </div>
+
+      {/**
+       * Trust & Security Assurance Strip
+       */}
+      <div className="flex items-center justify-center gap-4 sm:gap-8 flex-wrap pt-2 pb-1 text-xs text-[#757F94] font-medium">
+        <div className="flex items-center gap-1.5">
+          <Lock className="w-3.5 h-3.5 text-[#0D7A57]" />
+          <span>256-Bit SSL Encrypted</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <Shield className="w-3.5 h-3.5 text-[#4338CA]" />
+          <span>RBI & NPCI Compliant</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <CheckCircle2 className="w-3.5 h-3.5 text-[#0D7A57]" />
+          <span>1-Click Anytime Cancellation</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <FileText className="w-3.5 h-3.5 text-[#4338CA]" />
+          <span>GST Platform Invoices</span>
+        </div>
       </div>
 
       {/**
