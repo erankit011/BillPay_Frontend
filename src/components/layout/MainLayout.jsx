@@ -297,9 +297,13 @@ const MainLayout = () => {
         socket.on('new_notification', (newNotif) => {
           if (!isMounted) return;
           setNotificationCount((prev) => prev + 1);
-          setNotifications((prev) => [{ ...newNotif, read: false }, ...prev.slice(0, 4)]);
+          setNotifications((prev) => [{ ...newNotif, read: false, isRead: false }, ...prev.slice(0, 4)]);
           queryClient.invalidateQueries({ queryKey: ['directOfficialNotices'] });
-          toast(newNotif.title + ': ' + newNotif.message, {
+          queryClient.invalidateQueries({ queryKey: ['notifications'] });
+          queryClient.invalidateQueries({ queryKey: ['unread-notifications'] });
+          const notifTitle = newNotif?.title || t('Notification');
+          const safeMessage = (newNotif?.message || '').replace(/₹undefined/g, '₹—').replace(/₹NaN/g, '₹0').replace(/undefined/g, '—');
+          toast(notifTitle + ': ' + safeMessage, {
             duration: 4000,
           });
         });
@@ -404,6 +408,23 @@ const MainLayout = () => {
             }
           }
         });
+
+        /**
+         * 12. Shop Business Settings Synchronization
+         * Reflects live merchant profile modifications and cache invalidation across all open tabs
+         */
+        socket.on('shop_settings_updated', (updatedSettings) => {
+          if (!isMounted) return;
+          queryClient.invalidateQueries({ queryKey: ['shopSettings'] });
+          queryClient.invalidateQueries({ queryKey: ['settings'] });
+          if (updatedSettings?.shopName) {
+            dispatch(setUser({
+              ...(user || {}),
+              businessName: updatedSettings.shopName,
+              shopName: updatedSettings.shopName,
+            }));
+          }
+        });
       } catch (err) {
         /**
          * Socket Connection Fallback Handler
@@ -430,6 +451,9 @@ const MainLayout = () => {
           read: notif.isRead,
         }))
       );
+      if (typeof res.data?.data?.unreadCount === 'number') {
+        setNotificationCount(res.data.data.unreadCount);
+      }
     } catch (error) {
       setNotifications([]);
     }
@@ -452,6 +476,8 @@ const MainLayout = () => {
         );
         setNotificationCount((prev) => Math.max(0, prev - 1));
         queryClient.invalidateQueries({ queryKey: ['directOfficialNotices'] });
+        queryClient.invalidateQueries({ queryKey: ['notifications'] });
+        queryClient.invalidateQueries({ queryKey: ['unread-notifications'] });
       } catch (error) {
         if (import.meta.env.DEV) {
           console.error(error);
@@ -467,6 +493,8 @@ const MainLayout = () => {
       setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
       setNotificationCount(0);
       queryClient.invalidateQueries({ queryKey: ['directOfficialNotices'] });
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+      queryClient.invalidateQueries({ queryKey: ['unread-notifications'] });
     } catch (error) {
       if (import.meta.env.DEV) {
         console.error(error);

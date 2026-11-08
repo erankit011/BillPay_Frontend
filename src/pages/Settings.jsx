@@ -229,13 +229,36 @@ const Settings = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.shopName || !formData.shopName.trim()) {
+      setActiveSection('business');
       toast.error(t('Business / Shop Name is required'));
       return;
     }
     if (!formData.signatureImage || !formData.signatureImage.trim()) {
+      setActiveSection('business');
       toast.error(t('Authorized Signature is required'));
       return;
     }
+    if (formData.invoiceLogo && !/^https?:\/\//i.test(formData.invoiceLogo.trim())) {
+      setActiveSection('business');
+      toast.error(t('Invoice logo URL must start with http:// or https://'));
+      return;
+    }
+    if (formData.signatureImage && !/^https?:\/\//i.test(formData.signatureImage.trim())) {
+      setActiveSection('business');
+      toast.error(t('Signature image URL must start with http:// or https://'));
+      return;
+    }
+    if (formData.shopEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.shopEmail.trim())) {
+      setActiveSection('business');
+      toast.error(t('Please provide a valid business email address'));
+      return;
+    }
+    if (formData.shopPhone && !/^(?:\+?91[\-\s]?)?[0]?(?:\d[\-\s]?){10}$/.test(formData.shopPhone.trim())) {
+      setActiveSection('business');
+      toast.error(t('Please provide a valid 10-digit Indian phone number'));
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await api.put('/settings', formData);
@@ -271,6 +294,12 @@ const Settings = () => {
         };
         setFormData(savedSettings);
         setInitialData(savedSettings);
+
+        // Keep global Redux auth state in sync with updated business identity
+        if (s.shopName && user) {
+          dispatch(setUser({ ...user, businessName: s.shopName, shopName: s.shopName }));
+        }
+
         toast.success(t('Settings updated successfully'));
       }
     } catch (error) {
@@ -1058,7 +1087,7 @@ const Settings = () => {
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-xs text-[#757F94] font-medium">{t('Active Membership')}:</span>
-                        <strong className="text-sm font-bold text-[#4338CA] uppercase tracking-wide">{user?.subscriptionPlan || 'FREE'}</strong>
+                        <strong className="text-sm font-semibold text-[#4338CA] uppercase tracking-wide">{user?.subscriptionPlan || 'FREE'}</strong>
                         {user?.subscriptionStatus === 'active' && user?.subscriptionPlan !== 'FREE' && (
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -1239,30 +1268,70 @@ const Settings = () => {
 
             {/**
              * Notifications & Alerts Section
-             * Automated customer dispatches and administrative email notifications
+             * Automated customer dispatches, inventory warnings, and administrative email notifications
              */}
             {activeSection === 'notifications' && (
               <section id="section-notifications" className="bg-white rounded-lg border border-[#DCE1EA] overflow-hidden">
                 <div className="px-4 sm:px-5 md:px-6 py-4 border-b border-[#E8ECF2]">
                   <h2 className="text-base md:text-lg font-semibold text-[#191E2B]">{t('Notifications & Automation')}</h2>
-                  <p className="text-xs text-[#757F94] mt-0.5">{t('Control automatic messages and alerts')}</p>
+                  <p className="text-xs text-[#757F94] mt-0.5">{t('Control automatic messages, alerts, and customer receipts')}</p>
                 </div>
-                <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6 space-y-0">
-                  <ToggleSwitch
-                    name="autoSendInvoices"
-                    checked={formData.autoSendInvoices}
-                    onChange={handleChange}
-                    label={t('Auto-send Invoices')}
-                    description={t('Send invoice when a bill is created')}
-                  />
-                  <ToggleSwitch
-                    name="emailNotifications"
-                    checked={formData.emailNotifications}
-                    onChange={handleChange}
-                    label={t('Email Notifications')}
-                    description={t('Receive email alerts for payments & reminders')}
-                  />
+                <div className="px-4 sm:px-5 md:px-6 py-5 md:py-6 space-y-4">
+                  <div className="space-y-0">
+                    <ToggleSwitch
+                      name="autoSendInvoices"
+                      checked={formData.autoSendInvoices}
+                      onChange={handleChange}
+                      label={t('Auto-send WhatsApp Invoices')}
+                      description={t('Automatically send digital invoice link to customer via WhatsApp when a bill is created')}
+                    />
+                    <ToggleSwitch
+                      name="lowStockAlert"
+                      checked={formData.lowStockAlert}
+                      onChange={handleChange}
+                      label={t('Low Stock In-App Alerts')}
+                      description={t('Receive real-time notifications in your workspace when product inventory drops below threshold')}
+                    />
+                    {formData.lowStockAlert && (
+                      <div className="py-3 px-3.5 bg-[#FBFBFC] rounded-lg border border-[#E8ECF2] my-2">
+                        <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">{t('Low Stock Alert Threshold')}</label>
+                        <input
+                          type="number"
+                          name="lowStockThreshold"
+                          value={formData.lowStockThreshold}
+                          onChange={handleChange}
+                          min="1"
+                          max="100000"
+                          className="block w-full max-w-xs rounded-lg border border-[#DCE1EA] bg-white px-3 py-2 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        />
+                        <p className="text-[#757F94] text-[11px] sm:text-xs mt-1 font-medium">{t('Products with remaining stock at or below this value will trigger alerts')}</p>
+                      </div>
+                    )}
+                    <ToggleSwitch
+                      name="emailNotifications"
+                      checked={formData.emailNotifications}
+                      onChange={handleChange}
+                      label={t('Email Notifications')}
+                      description={t('Receive email updates for subscription receipts, security alerts, and statements')}
+                    />
+                  </div>
 
+                  {/**
+                   * Link to Central Notification Center
+                   */}
+                  <div className="mt-6 p-4 rounded-xl bg-[#EEF0FB]/60 border border-[#D8DCF5] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div>
+                      <h4 className="text-sm font-semibold text-[#191E2B]">{t('Workspace Notification Center')}</h4>
+                      <p className="text-xs text-[#4E5668] mt-0.5">{t('Browse all unread alerts, payment receipts, stock warnings, and official announcements.')}</p>
+                    </div>
+                    <Link
+                      to="/notifications"
+                      className="cursor-pointer inline-flex items-center gap-1.5 bg-[#4338CA] hover:bg-[#3730A3] text-white px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors"
+                    >
+                      <Bell className="w-3.5 h-3.5" />
+                      <span>{t('Open Notifications Feed')}</span>
+                    </Link>
+                  </div>
                 </div>
               </section>
             )}
