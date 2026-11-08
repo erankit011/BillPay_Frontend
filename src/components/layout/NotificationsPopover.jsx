@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Bell, CheckCheck, ExternalLink, ArrowRight } from 'lucide-react';
+import { Bell, CheckCheck, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { formatRelativeTime } from '../../utils/dateUtils';
 
@@ -39,6 +39,11 @@ const NotificationsPopover = ({
     }
   };
 
+  const sanitizeMessage = (msg) => {
+    if (!msg) return '';
+    return msg.replace(/₹undefined/g, '₹—').replace(/₹NaN/g, '₹0').replace(/undefined/g, '—');
+  };
+
   const getTypeBadge = (type) => {
     switch (type) {
       case 'ADMIN_NOTICE':
@@ -75,6 +80,24 @@ const NotificationsPopover = ({
         return (
           <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0] shrink-0">
             {t('Payment')}
+          </span>
+        );
+      case 'REMINDER':
+        return (
+          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#FEF3C7] text-[#D97706] border border-[#FDE68A] shrink-0">
+            {t('Reminder')}
+          </span>
+        );
+      case 'CUSTOMER':
+        return (
+          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#F0F9FF] text-[#0369A1] border border-[#BAE6FD] shrink-0">
+            {t('Customer')}
+          </span>
+        );
+      case 'SYSTEM':
+        return (
+          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#F1F5F9] text-[#475569] border border-[#CBD5E1] shrink-0">
+            {t('System')}
           </span>
         );
       default:
@@ -159,11 +182,11 @@ const NotificationsPopover = ({
                           <span className="w-2 h-2 rounded-full bg-[#4338CA] shrink-0 mt-1" />
                         )}
                         {notif.link && (
-                          <ExternalLink className="w-3 h-3 text-[#757F94] hover:text-[#4338CA]" />
+                          <ArrowRight className="w-3 h-3 text-[#757F94] hover:text-[#4338CA] transition-transform" />
                         )}
                       </div>
                     </div>
-                    <p className="text-xs text-[#4E5668] mt-0.5 line-clamp-2">{notif.message}</p>
+                    <p className="text-xs text-[#4E5668] mt-0.5 line-clamp-2">{sanitizeMessage(notif.message)}</p>
                     {notif.createdAt && (
                       <p className="text-[10px] text-[#757F94] mt-1 font-medium">
                         {formatRelativeTime(notif.createdAt, t)}

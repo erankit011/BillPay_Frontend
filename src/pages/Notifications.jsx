@@ -12,7 +12,6 @@ import {
   CheckCheck, 
   Trash2, 
   Loader2, 
-  ExternalLink, 
   AlertTriangle,
   Receipt,
   CreditCard,
@@ -20,7 +19,8 @@ import {
   ShieldAlert,
   Headphones,
   Sparkles,
-  Inbox
+  Inbox,
+  ArrowRight
 } from 'lucide-react';
 import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
@@ -38,6 +38,8 @@ const FILTER_TABS = [
   { id: 'ADMIN_NOTICE', label: 'Official Notices' },
   { id: 'BILL', label: 'Bills' },
   { id: 'PAYMENT', label: 'Payments' },
+  { id: 'REMINDER', label: 'Reminders' },
+  { id: 'CUSTOMER', label: 'Customers' },
   { id: 'LOW_STOCK', label: 'Stock Alerts' },
   { id: 'SUBSCRIPTION', label: 'Subscription' },
   { id: 'SUPPORT', label: 'Support' },
@@ -197,6 +199,35 @@ const Notifications = () => {
     }
   };
 
+  const sanitizeNotificationMessage = (msg) => {
+    if (!msg) return '';
+    return msg.replace(/₹undefined/g, '₹—').replace(/₹NaN/g, '₹0').replace(/undefined/g, '—');
+  };
+
+  const getActionLabel = (notif) => {
+    if (notif.actionText) return t(notif.actionText);
+    switch (notif.type) {
+      case 'BILL':
+        return t('View Bill');
+      case 'PAYMENT':
+        return t('View Details');
+      case 'REMINDER':
+        return t('View Reminder');
+      case 'CUSTOMER':
+        return t('View Customer');
+      case 'LOW_STOCK':
+        return t('View Stock');
+      case 'SUBSCRIPTION':
+        return t('Manage Plan');
+      case 'SUPPORT':
+        return t('View Ticket');
+      case 'ADMIN_NOTICE':
+        return t('View Notice');
+      default:
+        return t('Inspect');
+    }
+  };
+
   const getBadgeStyle = (type) => {
     switch (type) {
       case 'ADMIN_NOTICE':
@@ -207,12 +238,16 @@ const Notifications = () => {
         return 'bg-[#F0F2F6] text-[#4E5668] border-[#DCE1EA]';
       case 'PAYMENT':
         return 'bg-[#ECFDF5] text-[#047857] border-[#A7F3D0]';
+      case 'REMINDER':
+        return 'bg-[#FEF3C7] text-[#D97706] border-[#FDE68A]';
       case 'CUSTOMER':
         return 'bg-[#F0F9FF] text-[#0369A1] border-[#BAE6FD]';
       case 'SUBSCRIPTION':
         return 'bg-[#F5F3FF] text-[#7C3AED] border-[#DDD6FE]';
       case 'SUPPORT':
         return 'bg-[#EFF6FF] text-[#2563EB] border-[#BFDBFE]';
+      case 'SYSTEM':
+        return 'bg-[#F1F5F9] text-[#475569] border-[#CBD5E1]';
       default:
         return 'bg-[#F0F2F6] text-[#4E5668] border-[#DCE1EA]';
     }
@@ -367,6 +402,20 @@ const Notifications = () => {
                             ? t('Official Notice')
                             : notification.type === 'LOW_STOCK'
                             ? t('Stock Warning')
+                            : notification.type === 'BILL'
+                            ? t('Bill')
+                            : notification.type === 'PAYMENT'
+                            ? t('Payment')
+                            : notification.type === 'REMINDER'
+                            ? t('Reminder')
+                            : notification.type === 'CUSTOMER'
+                            ? t('Customer')
+                            : notification.type === 'SUBSCRIPTION'
+                            ? t('Subscription')
+                            : notification.type === 'SUPPORT'
+                            ? t('Support')
+                            : notification.type === 'SYSTEM'
+                            ? t('System')
                             : notification.type}
                         </span>
 
@@ -395,13 +444,46 @@ const Notifications = () => {
                       </h3>
 
                       <p className="text-xs sm:text-sm text-[#4E5668] mt-1 leading-relaxed font-medium">
-                        {notification.message}
+                        {sanitizeNotificationMessage(notification.message)}
                       </p>
 
+                      {notification.metadata && (notification.metadata.invoiceNumber || notification.metadata.amount != null || notification.metadata.paymentStatus) && (
+                        <div className="mt-2.5 flex items-center gap-2 flex-wrap">
+                          {notification.metadata.invoiceNumber && (
+                            <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-[#F0F2F6] text-[#191E2B] border border-[#DCE1EA]">
+                              #{notification.metadata.invoiceNumber}
+                            </span>
+                          )}
+                          {notification.metadata.amount != null && (
+                            <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                              ₹{notification.metadata.amount}
+                            </span>
+                          )}
+                          {notification.metadata.paymentStatus && (
+                            <span
+                              className={`text-[10px] font-semibold px-2 py-0.5 rounded uppercase border ${
+                                notification.metadata.paymentStatus === 'PAID'
+                                  ? 'bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]'
+                                  : notification.metadata.paymentStatus === 'UNPAID'
+                                  ? 'bg-[#FEF2F2] text-[#991B1B] border-[#FECACA]'
+                                  : 'bg-[#FEF3C7] text-[#92400E] border-[#FDE68A]'
+                              }`}
+                            >
+                              {notification.metadata.paymentStatus}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
                       {notification.link && (
-                        <div className="mt-2.5 inline-flex items-center gap-1 text-xs font-semibold text-[#4338CA] hover:text-[#3730A3]">
-                          <span>{t('View details')}</span>
-                          <ExternalLink className="w-3.5 h-3.5" />
+                        <div className="mt-3.5 pt-2.5 border-t border-[#E8ECF2] flex items-center justify-between">
+                          <span className="text-[11px] text-[#757F94] font-medium hidden sm:inline">
+                            {t('Click to open and manage')}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4338CA] group-hover:text-[#3730A3] transition-colors ml-auto sm:ml-0">
+                            <span>{getActionLabel(notification)}</span>
+                            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                          </span>
                         </div>
                       )}
                     </div>
