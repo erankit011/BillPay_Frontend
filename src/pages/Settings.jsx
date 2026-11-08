@@ -229,13 +229,36 @@ const Settings = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.shopName || !formData.shopName.trim()) {
+      setActiveSection('business');
       toast.error(t('Business / Shop Name is required'));
       return;
     }
     if (!formData.signatureImage || !formData.signatureImage.trim()) {
+      setActiveSection('business');
       toast.error(t('Authorized Signature is required'));
       return;
     }
+    if (formData.invoiceLogo && !/^https?:\/\//i.test(formData.invoiceLogo.trim())) {
+      setActiveSection('business');
+      toast.error(t('Invoice logo URL must start with http:// or https://'));
+      return;
+    }
+    if (formData.signatureImage && !/^https?:\/\//i.test(formData.signatureImage.trim())) {
+      setActiveSection('business');
+      toast.error(t('Signature image URL must start with http:// or https://'));
+      return;
+    }
+    if (formData.shopEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.shopEmail.trim())) {
+      setActiveSection('business');
+      toast.error(t('Please provide a valid business email address'));
+      return;
+    }
+    if (formData.shopPhone && !/^(?:\+?91[\-\s]?)?[0]?(?:\d[\-\s]?){10}$/.test(formData.shopPhone.trim())) {
+      setActiveSection('business');
+      toast.error(t('Please provide a valid 10-digit Indian phone number'));
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await api.put('/settings', formData);
@@ -271,6 +294,12 @@ const Settings = () => {
         };
         setFormData(savedSettings);
         setInitialData(savedSettings);
+
+        // Keep global Redux auth state in sync with updated business identity
+        if (s.shopName && user) {
+          dispatch(setUser({ ...user, businessName: s.shopName, shopName: s.shopName }));
+        }
+
         toast.success(t('Settings updated successfully'));
       }
     } catch (error) {
@@ -1058,7 +1087,7 @@ const Settings = () => {
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-xs text-[#757F94] font-medium">{t('Active Membership')}:</span>
-                        <strong className="text-sm font-bold text-[#4338CA] uppercase tracking-wide">{user?.subscriptionPlan || 'FREE'}</strong>
+                        <strong className="text-sm font-semibold text-[#4338CA] uppercase tracking-wide">{user?.subscriptionPlan || 'FREE'}</strong>
                         {user?.subscriptionStatus === 'active' && user?.subscriptionPlan !== 'FREE' && (
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />

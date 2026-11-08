@@ -404,6 +404,23 @@ const MainLayout = () => {
             }
           }
         });
+
+        /**
+         * 12. Shop Business Settings Synchronization
+         * Reflects live merchant profile modifications and cache invalidation across all open tabs
+         */
+        socket.on('shop_settings_updated', (updatedSettings) => {
+          if (!isMounted) return;
+          queryClient.invalidateQueries({ queryKey: ['shopSettings'] });
+          queryClient.invalidateQueries({ queryKey: ['settings'] });
+          if (updatedSettings?.shopName) {
+            dispatch(setUser({
+              ...(user || {}),
+              businessName: updatedSettings.shopName,
+              shopName: updatedSettings.shopName,
+            }));
+          }
+        });
       } catch (err) {
         /**
          * Socket Connection Fallback Handler
