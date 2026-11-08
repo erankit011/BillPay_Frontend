@@ -1,10 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Bell } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Bell, CheckCheck, ExternalLink, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { formatRelativeTime } from '../../utils/dateUtils';
 
 /**
  * Topbar Notification Bell & Dropdown Popover
+ * Displays real-time alerts, unread counter badges, and quick-action links
  */
 const NotificationsPopover = ({
   notificationCount = 0,
@@ -13,10 +15,72 @@ const NotificationsPopover = ({
   onToggle,
   onClose,
   onMarkAsRead,
+  markAsRead,
   onMarkAllAsRead,
+  markAllAsRead,
   menuRef,
 }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const handleMarkAsRead = onMarkAsRead || markAsRead;
+  const handleMarkAllAsRead = onMarkAllAsRead || markAllAsRead;
+
+  const hasUnread = notifications.some((n) => !(n.isRead ?? n.read));
+
+  const handleItemClick = (notif) => {
+    const isUnread = !(notif.isRead ?? notif.read);
+    if (isUnread && typeof handleMarkAsRead === 'function') {
+      handleMarkAsRead(notif._id);
+    }
+    if (notif.link) {
+      if (typeof onClose === 'function') onClose();
+      navigate(notif.link);
+    }
+  };
+
+  const getTypeBadge = (type) => {
+    switch (type) {
+      case 'ADMIN_NOTICE':
+        return (
+          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] shrink-0">
+            {t('Official')}
+          </span>
+        );
+      case 'LOW_STOCK':
+        return (
+          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#FEF3C7] text-[#B45309] border border-[#FDE68A] shrink-0">
+            {t('Low Stock')}
+          </span>
+        );
+      case 'SUBSCRIPTION':
+        return (
+          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#ECFDF5] text-[#047857] border border-[#A7F3D0] shrink-0">
+            {t('Plan')}
+          </span>
+        );
+      case 'SUPPORT':
+        return (
+          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#F5F3FF] text-[#6D28D9] border border-[#DDD6FE] shrink-0">
+            {t('Support')}
+          </span>
+        );
+      case 'BILL':
+        return (
+          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#F0F2F6] text-[#4E5668] border border-[#DCE1EA] shrink-0">
+            {t('Bill')}
+          </span>
+        );
+      case 'PAYMENT':
+        return (
+          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0] shrink-0">
+            {t('Payment')}
+          </span>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="relative flex items-center justify-center" ref={menuRef}>
@@ -56,12 +120,13 @@ const NotificationsPopover = ({
                 </span>
               )}
             </div>
-            {notifications.some((n) => !n.read) && (
+            {hasUnread && typeof handleMarkAllAsRead === 'function' && (
               <button
                 type="button"
-                onClick={onMarkAllAsRead}
-                className="text-xs font-semibold text-[#4338CA] hover:text-[#3730A3] hover:underline cursor-pointer"
+                onClick={handleMarkAllAsRead}
+                className="text-xs font-semibold text-[#4338CA] hover:text-[#3730A3] hover:underline cursor-pointer flex items-center gap-1"
               >
+                <CheckCheck className="w-3.5 h-3.5" />
                 {t('Mark all read')}
               </button>
             )}
@@ -74,30 +139,39 @@ const NotificationsPopover = ({
                 <p className="font-medium">{t('No new notifications')}</p>
               </div>
             ) : (
-              notifications.map((notif) => (
-                <div
-                  key={notif._id}
-                  onClick={() => !notif.read && onMarkAsRead(notif._id)}
-                  className={`p-3.5 hover:bg-[#F0F2F6] transition-colors cursor-pointer ${
-                    !notif.read ? 'bg-[#EEF0FB]/60' : ''
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      {notif.type === 'ADMIN_NOTICE' && (
-                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#F0F2F6] text-[#4E5668] border border-[#DCE1EA] shrink-0">
-                          Official
-                        </span>
-                      )}
-                      <p className="text-xs font-semibold text-[#191E2B] truncate">{notif.title}</p>
+              notifications.map((notif) => {
+                const isUnread = !(notif.isRead ?? notif.read);
+                return (
+                  <div
+                    key={notif._id}
+                    onClick={() => handleItemClick(notif)}
+                    className={`p-3.5 hover:bg-[#F0F2F6] transition-colors cursor-pointer ${
+                      isUnread ? 'bg-[#EEF0FB]/60' : ''
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        {getTypeBadge(notif.type)}
+                        <p className="text-xs font-semibold text-[#191E2B] truncate">{notif.title}</p>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        {isUnread && (
+                          <span className="w-2 h-2 rounded-full bg-[#4338CA] shrink-0 mt-1" />
+                        )}
+                        {notif.link && (
+                          <ExternalLink className="w-3 h-3 text-[#757F94] hover:text-[#4338CA]" />
+                        )}
+                      </div>
                     </div>
-                    {!notif.read && (
-                      <span className="w-2 h-2 rounded-full bg-[#4338CA] shrink-0 mt-1" />
+                    <p className="text-xs text-[#4E5668] mt-0.5 line-clamp-2">{notif.message}</p>
+                    {notif.createdAt && (
+                      <p className="text-[10px] text-[#757F94] mt-1 font-medium">
+                        {formatRelativeTime(notif.createdAt, t)}
+                      </p>
                     )}
                   </div>
-                  <p className="text-xs text-[#4E5668] mt-0.5 line-clamp-2">{notif.message}</p>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
 
@@ -105,9 +179,10 @@ const NotificationsPopover = ({
             <Link
               to="/notifications"
               onClick={onClose}
-              className="text-xs font-semibold text-[#4338CA] hover:text-[#3730A3] hover:underline"
+              className="text-xs font-semibold text-[#4338CA] hover:text-[#3730A3] hover:underline inline-flex items-center gap-1"
             >
-              {t('View all notifications →')}
+              <span>{t('View all notifications')}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>
@@ -117,4 +192,3 @@ const NotificationsPopover = ({
 };
 
 export default React.memo(NotificationsPopover);
-
