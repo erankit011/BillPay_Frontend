@@ -1,26 +1,30 @@
 /**
  * Merchant & Administrator Notifications Center Page
- * Paginated infinite-scroll activity feed of billing alerts, customer udhar events, stock warnings, and official broadcasts.
+ * Paginated activity feed of billing alerts, customer udhar events, stock warnings, and official broadcasts.
+ * Fully aligned with UdharPay design system, KPI cards, and Settings navigation pattern.
  */
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { 
   Bell, 
-  Check, 
+  BellRing,
   CheckCheck, 
   Trash2, 
   Loader2, 
   AlertTriangle,
-  Receipt,
+  FileText,
   CreditCard,
-  User,
+  Users,
   ShieldAlert,
   Headphones,
-  Sparkles,
+  Gem,
   Inbox,
-  ArrowRight
+  ArrowRight,
+  Clock,
+  Search,
+  X
 } from 'lucide-react';
 import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
@@ -31,18 +35,19 @@ import toast from 'react-hot-toast';
 
 /**
  * Filter Categories for Notification Feed
+ * Optimized icons and font hierarchy matching Settings.jsx navigation
  */
 const FILTER_TABS = [
-  { id: 'ALL', label: 'All Alerts' },
-  { id: 'UNREAD', label: 'Unread' },
-  { id: 'ADMIN_NOTICE', label: 'Official Notices' },
-  { id: 'BILL', label: 'Bills' },
-  { id: 'PAYMENT', label: 'Payments' },
-  { id: 'REMINDER', label: 'Reminders' },
-  { id: 'CUSTOMER', label: 'Customers' },
-  { id: 'LOW_STOCK', label: 'Stock Alerts' },
-  { id: 'SUBSCRIPTION', label: 'Subscription' },
-  { id: 'SUPPORT', label: 'Support' },
+  { id: 'ALL', label: 'All Alerts', icon: Bell },
+  { id: 'UNREAD', label: 'Unread', icon: Inbox },
+  { id: 'ADMIN_NOTICE', label: 'Official Notices', icon: ShieldAlert },
+  { id: 'BILL', label: 'Bills', icon: FileText },
+  { id: 'PAYMENT', label: 'Payments', icon: CreditCard },
+  { id: 'REMINDER', label: 'Reminders', icon: Clock },
+  { id: 'CUSTOMER', label: 'Customers', icon: Users },
+  { id: 'LOW_STOCK', label: 'Stock Alerts', icon: AlertTriangle },
+  { id: 'SUBSCRIPTION', label: 'Subscription', icon: Gem },
+  { id: 'SUPPORT', label: 'Support', icon: Headphones },
 ];
 
 /**
@@ -53,6 +58,7 @@ const Notifications = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('ALL');
+  const [searchTerm, setSearchTerm] = useState('');
 
   /**
    * Paginated Infinite Query Scoped to Active Filter
@@ -81,10 +87,26 @@ const Notifications = () => {
     gcTime: 5 * 60 * 1000,
   });
 
-  const notifications = data?.pages?.flatMap((page) => page?.data || []) || [];
+  const notifications = useMemo(() => data?.pages?.flatMap((page) => page?.data || []) || [], [data?.pages]);
   const firstPage = data?.pages?.[0];
   const totalCount = firstPage?.totalCount || 0;
   const unreadCount = firstPage?.unreadCount ?? notifications.filter((n) => !n.isRead).length;
+
+  /**
+   * Filtered Notifications via Client Search
+   */
+  const filteredNotifications = useMemo(() => {
+    if (!searchTerm.trim()) return notifications;
+    const term = searchTerm.toLowerCase().trim();
+    return notifications.filter((notif) => {
+      const titleMatch = notif.title?.toLowerCase().includes(term);
+      const messageMatch = notif.message?.toLowerCase().includes(term);
+      const invMatch = notif.metadata?.invoiceNumber?.toString().toLowerCase().includes(term);
+      const amountMatch = notif.metadata?.amount?.toString().includes(term);
+      const typeMatch = notif.type?.toLowerCase().includes(term);
+      return titleMatch || messageMatch || invMatch || amountMatch || typeMatch;
+    });
+  }, [notifications, searchTerm]);
 
   /**
    * Mark Single Notification Read Mutation
@@ -183,17 +205,17 @@ const Notifications = () => {
       case 'LOW_STOCK':
         return <AlertTriangle className="w-5 h-5 text-[#B45309]" />;
       case 'BILL':
-        return <Receipt className="w-5 h-5 text-[#4E5668]" />;
+        return <FileText className="w-5 h-5 text-[#4E5668]" />;
       case 'PAYMENT':
         return <CreditCard className="w-5 h-5 text-[#047857]" />;
       case 'CUSTOMER':
-        return <User className="w-5 h-5 text-[#0369A1]" />;
+        return <Users className="w-5 h-5 text-[#0369A1]" />;
       case 'SUBSCRIPTION':
-        return <Sparkles className="w-5 h-5 text-[#7C3AED]" />;
+        return <Gem className="w-5 h-5 text-[#7C3AED]" />;
       case 'SUPPORT':
         return <Headphones className="w-5 h-5 text-[#2563EB]" />;
       case 'REMINDER':
-        return <Bell className="w-5 h-5 text-[#D97706]" />;
+        return <Clock className="w-5 h-5 text-[#D97706]" />;
       default:
         return <Bell className="w-5 h-5 text-[#757F94]" />;
     }
@@ -253,23 +275,49 @@ const Notifications = () => {
     }
   };
 
+  const getTypeLabel = (type) => {
+    switch (type) {
+      case 'ADMIN_NOTICE':
+        return t('Official Notice');
+      case 'LOW_STOCK':
+        return t('Stock Warning');
+      case 'BILL':
+        return t('Bill');
+      case 'PAYMENT':
+        return t('Payment');
+      case 'REMINDER':
+        return t('Reminder');
+      case 'CUSTOMER':
+        return t('Customer');
+      case 'SUBSCRIPTION':
+        return t('Subscription');
+      case 'SUPPORT':
+        return t('Support');
+      case 'SYSTEM':
+        return t('System');
+      default:
+        return type;
+    }
+  };
+
   return (
     <div className="w-full min-w-0 space-y-6 md:space-y-8 pb-24 lg:pb-0">
       {/**
-       * Header Strip & Global Inbox Actions
+       * Page Header Section
+       * Aligned with Customers page layout and responsive button strip
        */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B] flex items-center gap-2">
-            {t('Notifications Center')}
+            <span>{t('Notifications Center')}</span>
             {unreadCount > 0 && (
               <span className="bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] text-xs sm:text-sm font-semibold px-2.5 py-0.5 rounded-lg">
                 {unreadCount} {t('unread')}
               </span>
             )}
           </h1>
-          <p className="text-[#4E5668] text-xs sm:text-sm mt-1 sm:mt-1.5 font-medium">
-            {totalCount} {t('total alerts and events')}
+          <p className="text-[#4E5668] text-xs sm:text-sm mt-1 sm:mt-1.5 leading-relaxed font-medium">
+            {t('Review activity alerts, billing events, and system broadcasts')}
           </p>
         </div>
 
@@ -295,7 +343,7 @@ const Notifications = () => {
               type="button"
               onClick={() => clearReadMutation.mutate()}
               disabled={clearReadMutation.isPending}
-              className="cursor-pointer inline-flex items-center justify-center gap-1.5 bg-white hover:bg-[#F0F2F6] text-[#4E5668] hover:text-[#191E2B] border border-[#DCE1EA] px-3 py-2 rounded-lg font-semibold text-xs sm:text-sm active:scale-95 transition-all disabled:opacity-50"
+              className="cursor-pointer inline-flex items-center justify-center gap-1.5 bg-white hover:bg-[#F0F2F6] text-[#4E5668] hover:text-[#191E2B] border border-[#DCE1EA] px-3.5 sm:px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm active:scale-95 transition-all disabled:opacity-50"
               title={t('Clear all read notifications')}
             >
               {clearReadMutation.isPending ? (
@@ -303,38 +351,171 @@ const Notifications = () => {
               ) : (
                 <Trash2 className="w-4 h-4" />
               )}
-              <span className="hidden sm:inline">{t('Clear Read')}</span>
+              <span>{t('Clear Read')}</span>
             </button>
           )}
         </div>
       </div>
 
       {/**
-       * Category Filter Bar (Horizontally scrollable on mobile)
+       * KPI Overview Cards
+       * 4-card overview aligned with Customers.jsx metrics dashboard
+       */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
+        {/**
+         * Total Alerts Metric
+         */}
+        <div className="bg-[#FBFBFC] rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden cursor-default">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#EEF0FB] flex items-center justify-center text-[#4338CA] border border-[#D8DCF5]">
+              <Bell className="w-4 h-4 md:w-5 md:h-5" />
+            </div>
+          </div>
+          <div className="mt-auto pt-2 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-[#4E5668] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
+              {t('Total Alerts')}
+            </p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#191E2B] truncate">
+              {firstPage?.stats?.total ?? totalCount}
+            </p>
+            <p className="text-[10px] md:text-xs text-[#757F94] font-medium truncate mt-0.5">
+              {t('All Events & Notices')}
+            </p>
+          </div>
+        </div>
+
+        {/**
+         * Unread Alerts Metric
+         */}
+        <div className={`bg-[#FBFBFC] rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] ${
+          unreadCount > 0 ? 'border-l-4 border-l-[#E11D48]' : ''
+        } border-t border-t-[#DCE1EA] border-r border-r-[#DCE1EA] border-b border-b-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden cursor-default`}>
+          <div className="flex justify-between items-start gap-1">
+            <div className={`w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg flex items-center justify-center ${
+              unreadCount > 0
+                ? 'bg-[#FFF1F2] text-[#B91C1C] border border-[#FECDD3]'
+                : 'bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5]'
+            }`}>
+              <BellRing className="w-4 h-4 md:w-5 md:h-5" />
+            </div>
+          </div>
+          <div className="mt-auto pt-2 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-[#4E5668] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
+              {t('Unread Alerts')}
+            </p>
+            <p className={`text-base md:text-lg xl:text-2xl font-semibold truncate ${
+              unreadCount > 0 ? 'text-[#B91C1C]' : 'text-[#191E2B]'
+            }`}>
+              {firstPage?.stats?.unread ?? unreadCount}
+            </p>
+            <p className="text-[10px] md:text-xs text-[#757F94] font-medium truncate mt-0.5">
+              {unreadCount > 0 ? t('Requires Attention') : t('All Caught Up')}
+            </p>
+          </div>
+        </div>
+
+        {/**
+         * Bills & Payments Metric
+         */}
+        <div className="bg-[#FBFBFC] rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden cursor-default">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#ECFDF5] flex items-center justify-center text-[#0D7A57] border border-[#A7F3D0]">
+              <FileText className="w-4 h-4 md:w-5 md:h-5" />
+            </div>
+          </div>
+          <div className="mt-auto pt-2 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-[#4E5668] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
+              {t('Bills & Payments')}
+            </p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#0D7A57] truncate">
+              {firstPage?.stats?.billsAndPayments ?? 0}
+            </p>
+            <p className="text-[10px] md:text-xs text-[#757F94] font-medium truncate mt-0.5">
+              {t('Transactional Alerts')}
+            </p>
+          </div>
+        </div>
+
+        {/**
+         * Official Notices Metric
+         */}
+        <div className="bg-[#FBFBFC] rounded-lg p-3 md:p-4 xl:p-5 flex flex-col justify-between min-h-[7.5rem] sm:min-h-[8rem] md:min-h-[9rem] border border-[#DCE1EA] hover:border-[#C2C9D6] transition-all duration-200 overflow-hidden cursor-default">
+          <div className="flex justify-between items-start gap-1">
+            <div className="w-9 h-9 md:w-11 md:h-11 xl:w-12 xl:h-12 shrink-0 rounded-lg bg-[#F5F3FF] flex items-center justify-center text-[#7C3AED] border border-[#DDD6FE]">
+              <ShieldAlert className="w-4 h-4 md:w-5 md:h-5" />
+            </div>
+          </div>
+          <div className="mt-auto pt-2 min-w-0">
+            <p className="text-[10px] md:text-xs xl:text-sm text-[#4E5668] mb-0.5 md:mb-1 font-semibold uppercase tracking-wide truncate">
+              {t('Official Notices')}
+            </p>
+            <p className="text-base md:text-lg xl:text-2xl font-semibold text-[#7C3AED] truncate">
+              {firstPage?.stats?.officialNotices ?? 0}
+            </p>
+            <p className="text-[10px] md:text-xs text-[#757F94] font-medium truncate mt-0.5">
+              {t('Platform Broadcasts')}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/**
+       * Category Filter Bar
+       * Styled identically to Settings.jsx mobile navigation pill bar with exact colors, padding, and icons
        */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide">
         {FILTER_TABS.map((tab) => {
+          const Icon = tab.icon;
           const isActive = activeTab === tab.id;
           return (
             <button
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id)}
-              className={`cursor-pointer flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap border transition-colors shrink-0 ${
+              className={`cursor-pointer flex items-center justify-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-semibold whitespace-nowrap border transition-colors shrink-0 ${
                 isActive
                   ? 'bg-[#EEF0FB] text-[#4338CA] border-[#D8DCF5]'
-                  : 'text-[#4E5668] hover:text-[#191E2B] border-[#DCE1EA] bg-white hover:bg-[#F0F2F6]'
+                  : 'text-[#4E5668] hover:text-[#191E2B] border-[#DCE1EA] hover:bg-[#F0F2F6]'
               }`}
             >
+              <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               <span>{t(tab.label)}</span>
               {tab.id === 'UNREAD' && unreadCount > 0 && (
-                <span className="text-[10px] font-semibold px-1.5 py-0.2 rounded-full bg-[#4338CA] text-white">
+                <span className={`text-[10px] font-semibold px-1.5 py-0.2 rounded-full ${
+                  isActive ? 'bg-[#4338CA] text-white' : 'bg-[#EEF0FB] text-[#4338CA]'
+                }`}>
                   {unreadCount}
                 </span>
               )}
             </button>
           );
         })}
+      </div>
+
+      {/**
+       * Search Bar (Matching Customers.jsx & Bills.jsx)
+       */}
+      <div className="relative w-full">
+        <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+          <Search className="h-4 w-4 sm:h-5 sm:w-5 text-[#757F94]" />
+        </div>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder={t('Search alerts by title, invoice #, customer or amount...')}
+          className="block w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-9 sm:pr-10 bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg text-xs sm:text-sm text-[#191E2B] placeholder-[#757F94] focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] transition-colors duration-200"
+        />
+        {searchTerm && (
+          <button
+            type="button"
+            onClick={() => setSearchTerm('')}
+            className="cursor-pointer absolute inset-y-0 right-0 pr-3 flex items-center text-[#757F94] hover:text-[#191E2B]"
+            title={t('Clear search')}
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
       {/**
@@ -349,78 +530,69 @@ const Notifications = () => {
           <div className="bg-[#FBFBFC] border border-[#F9D4D4] rounded-xl p-8 text-center text-[#B91C1C]">
             <p className="font-semibold text-sm">{t('Failed to load notifications.')}</p>
           </div>
-        ) : notifications.length === 0 ? (
+        ) : filteredNotifications.length === 0 ? (
           <div className="bg-[#FBFBFC] rounded-xl p-8 md:p-12 text-center border border-[#DCE1EA]">
             <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-4 rounded-xl bg-[#F0F2F6] flex items-center justify-center border border-[#DCE1EA]">
               <Inbox className="w-7 h-7 md:w-8 md:h-8 text-[#757F94]" />
             </div>
             <p className="text-base md:text-lg text-[#191E2B] font-semibold mb-1">
-              {activeTab === 'UNREAD' ? t('No unread notifications') : t('No notifications found')}
+              {searchTerm
+                ? t('No matching notifications found')
+                : activeTab === 'UNREAD'
+                ? t('No unread notifications')
+                : t('No notifications found')}
             </p>
             <p className="text-[#757F94] text-xs sm:text-sm font-medium">
-              {activeTab === 'UNREAD'
+              {searchTerm
+                ? t('Try adjusting your search query or switching filter tabs.')
+                : activeTab === 'UNREAD'
                 ? t("You're all caught up! New alerts will show up here.")
                 : t('Activity alerts for your workspace will appear here.')}
             </p>
           </div>
         ) : (
           <div className="space-y-3">
-            {notifications.map((notification, index) => {
+            {filteredNotifications.map((notification, index) => {
               const isUnread = !notification.isRead;
               return (
                 <div
                   key={notification._id}
                   onClick={() => handleCardClick(notification)}
-                  className={`group relative rounded-xl p-4 md:p-5 border transition-all duration-150 ${
-                    notification.link ? 'cursor-pointer' : isUnread ? 'cursor-pointer' : 'cursor-default'
+                  className={`group relative rounded-xl p-3.5 sm:p-5 border transition-all duration-200 ${
+                    notification.link || isUnread ? 'cursor-pointer' : 'cursor-default'
                   } ${
                     isUnread
-                      ? 'border-[#D8DCF5] hover:border-[#4338CA]/40 bg-[#EEF0FB]/40'
-                      : 'bg-white border-[#DCE1EA] hover:border-[#CBD5E1]'
+                      ? 'border-[#D8DCF5] hover:border-[#4338CA]/40 bg-[#EEF0FB]/35 shadow-xs'
+                      : 'bg-white border-[#DCE1EA] hover:border-[#CBD5E1] hover:shadow-xs'
                   }`}
-                  style={{ animationDelay: `${index * 30}ms` }}
+                  style={{ animationDelay: `${index * 25}ms` }}
                 >
                   <div className="flex items-start gap-3 sm:gap-4">
                     {/**
                      * Type Icon
                      */}
-                    <div className="shrink-0 w-10 h-10 rounded-xl bg-[#F0F2F6] flex items-center justify-center border border-[#DCE1EA]">
+                    <div className="shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-[#F0F2F6] flex items-center justify-center border border-[#DCE1EA]">
                       {getNotificationIcon(notification.type)}
                     </div>
 
                     {/**
                      * Notification Details
                      */}
-                    <div className="flex-1 min-w-0 pr-8 sm:pr-12">
-                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                    <div className="flex-1 min-w-0">
+                      {/**
+                       * Header Row: Type Badge + Priority + Unread Pill + Time + Actions
+                       */}
+                      <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                         <span
-                          className={`text-[11px] font-semibold px-2 py-0.5 rounded border uppercase tracking-wider ${getBadgeStyle(
+                          className={`text-[10px] sm:text-[11px] font-semibold px-2 py-0.5 rounded border uppercase tracking-wider ${getBadgeStyle(
                             notification.type
                           )}`}
                         >
-                          {notification.type === 'ADMIN_NOTICE'
-                            ? t('Official Notice')
-                            : notification.type === 'LOW_STOCK'
-                            ? t('Stock Warning')
-                            : notification.type === 'BILL'
-                            ? t('Bill')
-                            : notification.type === 'PAYMENT'
-                            ? t('Payment')
-                            : notification.type === 'REMINDER'
-                            ? t('Reminder')
-                            : notification.type === 'CUSTOMER'
-                            ? t('Customer')
-                            : notification.type === 'SUBSCRIPTION'
-                            ? t('Subscription')
-                            : notification.type === 'SUPPORT'
-                            ? t('Support')
-                            : notification.type === 'SYSTEM'
-                            ? t('System')
-                            : notification.type}
+                          {getTypeLabel(notification.type)}
                         </span>
 
                         {notification.priority === 'URGENT' && (
-                          <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#FDF2F2] text-[#B91C1C] border border-[#F9D4D4]">
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#FFF1F2] text-[#B91C1C] border border-[#FECDD3]">
                             {t('Urgent')}
                           </span>
                         )}
@@ -430,14 +602,38 @@ const Notifications = () => {
                           </span>
                         )}
 
-                        <span className="text-[11px] text-[#757F94] font-medium ml-auto">
-                          {formatRelativeTime(notification.createdAt)}
-                        </span>
+                        {isUnread && (
+                          <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-semibold text-[#4338CA] bg-[#EEF0FB] px-1.5 py-0.5 rounded border border-[#D8DCF5]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#4338CA] animate-pulse" />
+                            {t('New')}
+                          </span>
+                        )}
+
+                        <div className="flex items-center gap-1.5 sm:gap-2 ml-auto shrink-0">
+                          <span className="text-[11px] sm:text-xs text-[#757F94] font-medium inline-flex items-center gap-1 whitespace-nowrap">
+                            <Clock className="w-3 h-3 text-[#757F94] shrink-0" />
+                            <span>{formatRelativeTime(notification.createdAt)}</span>
+                          </span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteMutation.mutate(notification._id);
+                            }}
+                            className="cursor-pointer text-[#757F94] hover:text-[#B91C1C] p-1 rounded-md hover:bg-[#F0F2F6] transition-colors ml-1"
+                            title={t('Dismiss')}
+                          >
+                            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          </button>
+                        </div>
                       </div>
 
+                      {/**
+                       * Title & Content
+                       */}
                       <h3
-                        className={`text-sm md:text-base font-semibold leading-snug mt-1 ${
-                          isUnread ? 'text-[#191E2B]' : 'text-[#4E5668]'
+                        className={`text-sm sm:text-[15px] font-semibold leading-snug mt-1.5 ${
+                          isUnread ? 'text-[#191E2B]' : 'text-[#333D4F]'
                         }`}
                       >
                         {notification.title}
@@ -447,21 +643,24 @@ const Notifications = () => {
                         {sanitizeNotificationMessage(notification.message)}
                       </p>
 
+                      {/**
+                       * Entity Metadata Badges
+                       */}
                       {notification.metadata && (notification.metadata.invoiceNumber || notification.metadata.amount != null || notification.metadata.paymentStatus) && (
                         <div className="mt-2.5 flex items-center gap-2 flex-wrap">
                           {notification.metadata.invoiceNumber && (
-                            <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-[#F0F2F6] text-[#191E2B] border border-[#DCE1EA]">
+                            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-[#F0F2F6] text-[#191E2B] border border-[#DCE1EA]">
                               #{notification.metadata.invoiceNumber}
                             </span>
                           )}
                           {notification.metadata.amount != null && (
-                            <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
                               ₹{notification.metadata.amount}
                             </span>
                           )}
                           {notification.metadata.paymentStatus && (
                             <span
-                              className={`text-[10px] font-semibold px-2 py-0.5 rounded uppercase border ${
+                              className={`text-[10px] font-semibold px-2 py-0.5 rounded-md uppercase border ${
                                 notification.metadata.paymentStatus === 'PAID'
                                   ? 'bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]'
                                   : notification.metadata.paymentStatus === 'UNPAID'
@@ -475,40 +674,27 @@ const Notifications = () => {
                         </div>
                       )}
 
+                      {/**
+                       * Action Button Strip (Perfect Icon + Text Alignment)
+                       */}
                       {notification.link && (
-                        <div className="mt-3.5 pt-2.5 border-t border-[#E8ECF2] flex items-center justify-between">
-                          <span className="text-[11px] text-[#757F94] font-medium hidden sm:inline">
-                            {t('Click to open and manage')}
+                        <div className="mt-3.5 pt-3 border-t border-[#E8ECF2] flex items-center justify-between gap-2">
+                          <span className="text-[11px] sm:text-xs text-[#757F94] font-medium hidden sm:inline">
+                            {t('Click to open and manage in your workspace')}
                           </span>
-                          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4338CA] group-hover:text-[#3730A3] transition-colors ml-auto sm:ml-0">
-                            <span>{getActionLabel(notification)}</span>
-                            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                          </span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCardClick(notification);
+                            }}
+                            className="cursor-pointer inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] hover:bg-[#E0E4FA] active:scale-95 transition-all ml-auto sm:ml-0"
+                          >
+                            <span className="leading-none">{getActionLabel(notification)}</span>
+                            <ArrowRight className="w-3.5 h-3.5 shrink-0 transition-transform group-hover:translate-x-0.5" />
+                          </button>
                         </div>
                       )}
-                    </div>
-
-                    {/**
-                     * Status indicator & Dismiss Action
-                     */}
-                    <div className="absolute top-4 right-4 flex items-center gap-1.5">
-                      {isUnread && (
-                        <span
-                          className="w-2.5 h-2.5 rounded-full bg-[#4338CA] block"
-                          title={t('Unread')}
-                        />
-                      )}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteMutation.mutate(notification._id);
-                        }}
-                        className="cursor-pointer text-[#757F94] hover:text-[#B91C1C] p-1 rounded hover:bg-[#F0F2F6] transition-colors"
-                        title={t('Dismiss')}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -518,14 +704,16 @@ const Notifications = () => {
             {/**
              * Pagination Load More Trigger
              */}
-            <LoadMoreButton
-              hasNextPage={hasNextPage}
-              isFetchingNextPage={isFetchingNextPage}
-              fetchNextPage={fetchNextPage}
-              currentCount={notifications.length}
-              totalCount={totalCount}
-              label={t('notifications')}
-            />
+            {!searchTerm && (
+              <LoadMoreButton
+                hasNextPage={hasNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+                fetchNextPage={fetchNextPage}
+                currentCount={notifications.length}
+                totalCount={totalCount}
+                label={t('notifications')}
+              />
+            )}
           </div>
         )}
       </div>
