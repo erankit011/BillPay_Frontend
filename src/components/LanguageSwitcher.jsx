@@ -99,7 +99,7 @@ const LanguageSwitcher = ({ variant = 'default' }) => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-center gap-1.5 px-3 h-9 text-sm font-semibold text-[#4E5668] hover:text-[#191E2B] bg-[#FBFBFC] border border-[#DCE1EA] rounded-md transition-colors cursor-pointer"
-        aria-label="Change language"
+        aria-label={`Change language (${currentLanguage.code.toUpperCase()})`}
       >
         <span className="uppercase">{currentLanguage.code}</span>
         <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
