@@ -156,7 +156,7 @@ const Landing = () => {
               </button>
             </div>
             
-            <p className="text-xs sm:text-sm text-[#757F94] mt-6 sm:mt-8 font-medium flex items-center justify-center gap-1.5 flex-wrap">
+            <p className="text-xs sm:text-sm text-[#4E5668] mt-6 sm:mt-8 font-medium flex items-center justify-center gap-1.5 flex-wrap">
               {t('Trusted by 10,000+ Shopkeepers')} <span className="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-gray-300 mx-1"></span><span className="sm:hidden w-full h-0"></span> {t('No credit card required')}
             </p>
           </div>
@@ -169,7 +169,7 @@ const Landing = () => {
             <h2 className="text-2xl sm:text-3xl font-semibold text-[#191E2B] mb-3 tracking-tight">
               {t('A dashboard designed for simplicity')}
             </h2>
-            <p className="text-sm sm:text-medium text-[#757F94] mb-10 sm:mb-12 max-w-xl mx-auto">
+            <p className="text-sm sm:text-medium text-[#4E5668] mb-10 sm:mb-12 max-w-xl mx-auto">
               {t('Get a complete overview of your sales, outstanding balances, and recent activities without the clutter. Visualizing your business has never been this easy.')}
             </p>
 
@@ -368,15 +368,15 @@ const Landing = () => {
         <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full ">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center max-w-4xl mx-auto border-y border-[#DCE1EA] border hover:border-[#D8DCF5] sm:border sm:border-[#DCE1EA] bg-[#FBFBFC] sm:rounded-2xl rounded-2xl py-8 sm:py-10 shadow-none">
             <div className="p-2 sm:p-4">
-              <h3 className="text-3xl sm:text-4xl font-bold text-[#4338CA] mb-1">10K+</h3>
+              <h3 className="text-3xl sm:text-4xl font-semibold text-[#4338CA] mb-1">10K+</h3>
               <p className="text-sm text-[#4E5668] font-medium">{t('Active Shops')}</p>
             </div>
             <div className="p-2 sm:p-4 border-t sm:border-t-0 sm:border-l border-[#DCE1EA] pt-6 sm:pt-4">
-              <h3 className="text-3xl sm:text-4xl font-bold text-[#4338CA] mb-1">₹50Cr</h3>
+              <h3 className="text-3xl sm:text-4xl font-semibold text-[#4338CA] mb-1">₹50Cr</h3>
               <p className="text-sm text-[#4E5668] font-medium">{t('Transactions')}</p>
             </div>
             <div className="p-2 sm:p-4 border-t sm:border-t-0 sm:border-l border-[#DCE1EA] pt-6 sm:pt-4">
-              <h3 className="text-3xl sm:text-4xl font-bold text-[#4338CA] mb-1">4.9</h3>
+              <h3 className="text-3xl sm:text-4xl font-semibold text-[#4338CA] mb-1">4.9</h3>
               <p className="text-sm text-[#4E5668] font-medium">{t('Store Rating')}</p>
             </div>
           </div>
@@ -388,7 +388,7 @@ const Landing = () => {
          */}
         <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
           <div className="bg-[#1E1B4B] border border-[#312E81] rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center flex flex-col items-center shadow-none">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-3 sm:mb-4">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight mb-3 sm:mb-4">
               {t('Ready to digitize your shop?')}
             </h2>
             <p className="text-sm sm:text-base text-[#F5F5F5] opacity-90 mb-8 sm:mb-10 max-w-xl">
@@ -423,12 +423,12 @@ const Landing = () => {
           </div>
           
           <div className="mt-8 md:mt-10 pt-6 md:pt-8 border-t border-[#DCE1EA] flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 text-center">
-            <p className="text-sm text-[#757F94] font-medium order-3 md:order-1 mt-2 md:mt-0">
+            <p className="text-sm text-[#4E5668] font-medium order-3 md:order-1 mt-2 md:mt-0">
               {t(`© ${new Date().getFullYear()} UdharPay. All rights reserved.`)}
             </p>
             
             <p className="text-sm text-[#4E5668] font-medium flex items-center justify-center gap-1.5 order-1 md:order-2">
-              {t('Developer:')} <span className="font-medium text-[#191E2B] tracking-wide">Developed with ❤️ by</span> <span className="text-[#4338CA] font-semibold animate-pulse">ANKIT</span>
+              {t('Developer:')} <span className="font-medium text-[#191E2B] tracking-wide">Developed with ❤️ by</span> <span className="text-[#4338CA] font-semibold">ANKIT</span>
             </p>
 
           </div>
