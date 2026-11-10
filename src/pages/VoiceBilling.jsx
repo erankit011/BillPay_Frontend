@@ -501,17 +501,21 @@ const VoiceBilling = () => {
   };
 
   const handleQuantityChange = (index, newQuantity) => {
-    const parsedQty = Math.max(1, parseInt(newQuantity, 10) || 1);
+    const qtyVal = newQuantity === '' ? '' : Math.max(1, parseInt(newQuantity, 10) || 1);
+    const calcQty = Number(qtyVal) || 1;
     setDraftBill((prev) => {
       const nextProducts = [...prev.products];
       const price = Number(nextProducts[index].price) || 0;
       nextProducts[index] = {
         ...nextProducts[index],
-        quantity: parsedQty,
-        total: price * parsedQty,
+        quantity: qtyVal,
+        total: price * calcQty,
       };
 
-      const newSubtotal = nextProducts.reduce((sum, it) => sum + it.total, 0);
+      const newSubtotal = nextProducts.reduce(
+        (sum, it) => sum + (Number(it.price) || 0) * (Number(it.quantity) || 1),
+        0
+      );
       return {
         ...prev,
         products: nextProducts,
@@ -624,6 +628,10 @@ const VoiceBilling = () => {
         toast.success(t('Bill created successfully!'));
         setCreatedBill(res.data.data);
         setDraftBill(null);
+
+        if (shopSettings?.autoPrint && res.data?.data) {
+          generateInvoicePDF(res.data.data, user, 'print', t, shopSettings);
+        }
 
         // Invalidate caches across app
         queryClient.invalidateQueries({ queryKey: ['bills'] });
@@ -1200,8 +1208,14 @@ const VoiceBilling = () => {
                             </button>
                             <input
                               type="number"
-                              value={item.quantity || 1}
+                              value={item.quantity !== undefined && item.quantity !== null ? item.quantity : 1}
                               onChange={(e) => handleQuantityChange(index, e.target.value)}
+                              onBlur={() => {
+                                if (!item.quantity || Number(item.quantity) < 1) {
+                                  handleQuantityChange(index, 1);
+                                }
+                              }}
+                              onFocus={(e) => e.target.select()}
                               className="w-10 sm:w-12 h-full text-center text-sm font-semibold text-[#191E2B] bg-white border-x border-[#DCE1EA] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                               min="1"
                             />
@@ -1312,11 +1326,9 @@ const VoiceBilling = () => {
                   value={draftBill.paymentMode}
                   onChange={(e) => {
                     const mode = e.target.value;
-                    const isCredit = mode === 'CREDIT';
                     setDraftBill((prev) => ({
                       ...prev,
                       paymentMode: mode,
-                      ...(isCredit ? { amountPaid: 0 } : {}),
                     }));
                   }}
                   className={inputCls}
@@ -1454,7 +1466,17 @@ const VoiceBilling = () => {
                 <input
                   type="text"
                   value={draftTransaction.customerName}
-                  onChange={(e) => setDraftTransaction((prev) => ({ ...prev, customerName: e.target.value }))}
+                  onChange={(e) => {
+                    const newName = e.target.value;
+                    const matchedCust = customersData.find(
+                      (c) => c.name.toLowerCase() === newName.trim().toLowerCase()
+                    );
+                    setDraftTransaction((prev) => ({
+                      ...prev,
+                      customerName: newName,
+                      customerId: matchedCust ? matchedCust._id : '',
+                    }));
+                  }}
                   required
                   placeholder={t('Enter customer name')}
                   className={inputCls}
@@ -1471,6 +1493,9 @@ const VoiceBilling = () => {
                   step="0.01"
                   value={draftTransaction.amount}
                   onChange={(e) => setDraftTransaction((prev) => ({ ...prev, amount: e.target.value }))}
+                  onFocus={(e) => {
+                    if (e.target.value === '0') e.target.select();
+                  }}
                   required
                   placeholder="0"
                   className={inputCls}
