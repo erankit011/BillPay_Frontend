@@ -11,6 +11,7 @@ import {
   Loader2,
   CheckCircle2,
   Keyboard,
+  Minus,
   Plus,
   FileText,
   Printer,
@@ -108,7 +109,7 @@ const VoiceBilling = () => {
   // Memoized options for SearchableSelect
   const customerOptions = useMemo(() => {
     const list = [
-      { value: 'WALKIN', label: `📦 ${t('Counter Sale')}` },
+      { value: 'WALKIN', label: t('Counter Sale') },
       ...customersData.map((c) => ({
         value: String(c._id),
         label: `${c.name} +91 ${c.phone}`,
@@ -119,7 +120,7 @@ const VoiceBilling = () => {
     if (draftBill?.isNewSpokenCustomer && draftBill?.customerName) {
       list.splice(1, 0, {
         value: 'NEW_SPOKEN_CUSTOMER',
-        label: `✨ ${draftBill.customerName} (${t('New Customer')})`,
+        label: `${draftBill.customerName} (${t('New Customer')})`,
       });
     }
 
@@ -420,11 +421,11 @@ const VoiceBilling = () => {
             isNewSpokenCustomer: isRealSpokenCustomer && !matchedCustomerObj,
             products: initialProducts,
             paymentMode: isCredit ? 'CREDIT' : paymentMode,
-            discountInput: 0,
+            discountInput: '',
             discountType: shopSettings?.discountType || 'PERCENTAGE',
             subtotal: computedSubtotal,
             grandTotal: computedSubtotal,
-            amountPaid: isCredit ? 0 : computedSubtotal,
+            amountPaid: 0,
           });
         } else {
           // Pre-populate single Khata transaction
@@ -500,17 +501,21 @@ const VoiceBilling = () => {
   };
 
   const handleQuantityChange = (index, newQuantity) => {
-    const parsedQty = Math.max(1, parseInt(newQuantity, 10) || 1);
+    const qtyVal = newQuantity === '' ? '' : Math.max(1, parseInt(newQuantity, 10) || 1);
+    const calcQty = Number(qtyVal) || 1;
     setDraftBill((prev) => {
       const nextProducts = [...prev.products];
       const price = Number(nextProducts[index].price) || 0;
       nextProducts[index] = {
         ...nextProducts[index],
-        quantity: parsedQty,
-        total: price * parsedQty,
+        quantity: qtyVal,
+        total: price * calcQty,
       };
 
-      const newSubtotal = nextProducts.reduce((sum, it) => sum + it.total, 0);
+      const newSubtotal = nextProducts.reduce(
+        (sum, it) => sum + (Number(it.price) || 0) * (Number(it.quantity) || 1),
+        0
+      );
       return {
         ...prev,
         products: nextProducts,
@@ -550,27 +555,14 @@ const VoiceBilling = () => {
   const taxAmount = shopSettings?.taxEnabled ? Math.round(((subtotal - discountAmount) * taxRate) / 100) : 0;
   const totalAmount = Math.max(0, Math.round(subtotal - discountAmount + taxAmount));
 
-  // Sync amountPaid and grandTotal when subtotal/discounts update
+  // Sync grandTotal with totalAmount without overriding user's manual amountPaid
   useEffect(() => {
-    if (draftBill) {
-      setDraftBill((prev) => {
-        if (!prev) return prev;
-        const shouldBeZero = prev.paymentMode === 'CREDIT';
-        const isFullPayment = prev.amountPaid === prev.grandTotal || prev.amountPaid === undefined;
-        const nextAmountPaid = shouldBeZero
-          ? 0
-          : isFullPayment
-          ? totalAmount
-          : Math.min(Number(prev.amountPaid) || 0, totalAmount);
-        return {
-          ...prev,
-          grandTotal: totalAmount,
-          amountPaid: nextAmountPaid,
-        };
-      });
+    if (draftBill && draftBill.grandTotal !== totalAmount) {
+      setDraftBill((prev) => (prev ? { ...prev, grandTotal: totalAmount } : prev));
     }
   }, [totalAmount]);
 
+  const creditLimit = shopSettings?.defaultCreditLimit || 0;
   const selectedCustomer = customersData.find((c) => c._id === draftBill?.customerId);
   const isWalkin = draftBill?.customerId === 'WALKIN';
   const isNewSpokenCustomer = draftBill?.customerId === 'NEW_SPOKEN_CUSTOMER';
@@ -578,6 +570,7 @@ const VoiceBilling = () => {
   const newPending = totalAmount - amountPaid;
   const currentBalance = (selectedCustomer?.balance || 0) > 0 ? selectedCustomer.balance : 0;
   const newTotalBalance = currentBalance + newPending;
+  const isCreditLimitExceeded = creditLimit > 0 && newTotalBalance > creditLimit && !isWalkin;
 
   /**
    * Finalize Retail Bill Dispatch
@@ -600,7 +593,12 @@ const VoiceBilling = () => {
     }
 
     if ((isWalkin || isNewSpokenCustomer) && newPending > 0) {
-      toast.error(t('Udhaar is not allowed for Counter Sale or unsaved customers. Please save customer to Khata first.'));
+      toast.error(t('Udhaar is not allowed for Counter Sale or unsaved customers. Please enter full amount paid.'));
+      return;
+    }
+
+    if (isCreditLimitExceeded && !isWalkin) {
+      toast.error(`${t('Credit Limit Exceeded! Max udhaar allowed is ₹')}${creditLimit}`);
       return;
     }
 
@@ -630,6 +628,10 @@ const VoiceBilling = () => {
         toast.success(t('Bill created successfully!'));
         setCreatedBill(res.data.data);
         setDraftBill(null);
+
+        if (shopSettings?.autoPrint && res.data?.data) {
+          generateInvoicePDF(res.data.data, user, 'print', t, shopSettings);
+        }
 
         // Invalidate caches across app
         queryClient.invalidateQueries({ queryKey: ['bills'] });
@@ -1058,7 +1060,7 @@ const VoiceBilling = () => {
                   <div className="text-[#92400E] font-medium flex items-center gap-1.5 min-w-0">
                     <Sparkles className="w-3.5 h-3.5 text-[#B45309] shrink-0" />
                     <span className="leading-snug break-words">
-                      ⚠️ {t('Spoken name')}: <strong className="font-semibold text-[#78350F]">{draftBill.customerName}</strong> ({t('Not in contacts')})
+                      {t('Spoken name')}: <strong className="font-semibold text-[#78350F]">{draftBill.customerName}</strong> ({t('Not in contacts')})
                     </span>
                   </div>
                   <button
@@ -1157,7 +1159,7 @@ const VoiceBilling = () => {
                   return (
                     <div
                       key={index}
-                      className="bg-white p-3 sm:p-3.5 rounded-lg border border-[#DCE1EA] hover:border-[#CBD5E1] transition-all space-y-2.5 shadow-none"
+                      className="bg-white p-3 sm:p-3.5 rounded-xl border border-[#DCE1EA] hover:border-[#CBD5E1] transition-all space-y-2.5 shadow-none"
                     >
                       {/** If unmapped spoken item, show warning alert */}
                       {!isMapped && item.name && (
@@ -1167,90 +1169,76 @@ const VoiceBilling = () => {
                         </div>
                       )}
 
-                      {/** Tier 1: Full-width Product Selector */}
-                      <div>
-                        <SearchableSelect
-                          options={productOptions}
-                          value={item.productId}
-                          onChange={(prodId) => handleProductSelect(index, prodId)}
-                          placeholder={
-                            item.name
-                              ? `${item.name}${item.price ? ` - ₹${item.price}` : ''}`
-                              : t('Choose Product from Store...')
-                          }
-                          searchPlaceholder={t('Search by product name...')}
-                        />
-                      </div>
+                      {/** If selected product is out of stock, show warning badge */}
+                      {isMapped && isOutOfStock && (
+                        <div className="text-[11px] font-semibold text-[#B91C1C] bg-[#FEF2F2] px-2.5 py-1 rounded-md border border-[#FECDD3] flex items-center gap-1.5 w-fit">
+                          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                          <span>{t('Out of Stock')} (0)</span>
+                        </div>
+                      )}
 
-                      {/** Tier 2: Stock Badge & Price (Left) + Stepper & Line Total + Trash (Right) */}
-                      <div className="flex items-center justify-between gap-2 pt-0.5">
-                        {/** Left: Stock Badge & Unit Price */}
-                        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-wrap">
-                          {isMapped ? (
-                            <>
-                              {isOutOfStock ? (
-                                <span className="text-[10px] sm:text-[11px] font-semibold text-[#B91C1C] bg-[#FEF2F2] px-2 py-0.5 rounded-md border border-[#FECDD3] whitespace-nowrap">
-                                  {t('Out of Stock')} (0)
-                                </span>
-                              ) : (
-                                <span className="text-[10px] sm:text-[11px] font-semibold text-[#0D7A57] bg-[#ECFDF5] px-2 py-0.5 rounded-md border border-[#A7F3D0] whitespace-nowrap">
-                                  ✓ {t('In Stock')}: {stockVal ?? 0}
-                                </span>
-                              )}
-                              <span className="text-xs font-semibold text-[#4E5668] whitespace-nowrap">
-                                ₹{item.price} / PCS
-                              </span>
-                            </>
-                          ) : (
-                            <span className="text-[11px] font-medium text-[#757F94] italic whitespace-nowrap">
-                              {t('Select product above')}
-                            </span>
-                          )}
+                      {/** Responsive Line Item Row: Full width dropdown on mobile, single flex row on desktop */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                        {/** Product Selector */}
+                        <div className="flex-1 min-w-0">
+                          <SearchableSelect
+                            options={productOptions}
+                            value={item.productId}
+                            onChange={(prodId) => handleProductSelect(index, prodId)}
+                            placeholder={
+                              item.name
+                                ? `${item.name}${item.price ? ` - ₹${item.price}` : ''}`
+                                : t('Choose Product from Store...')
+                            }
+                            searchPlaceholder={t('Search by product name...')}
+                          />
                         </div>
 
-                        {/** Right: Stepper [-] [Qty] [+] + Line Total + Trash */}
-                        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-                          {/** Stepper */}
-                          <div className="flex items-center border border-[#DCE1EA] rounded-lg bg-[#FBFBFC] h-8 sm:h-9 overflow-hidden">
+                        {/** Controls: Stepper & Rounded Delete Button (Height precisely matched to SearchableSelect 42px) */}
+                        <div className="flex items-center justify-end gap-2 sm:gap-2.5 shrink-0">
+                          {/** Stepper [-] [Qty] [+] with distinct background & exact 42px height */}
+                          <div className="flex items-center border border-[#DCE1EA] rounded-lg bg-[#F0F2F6] h-[42px] overflow-hidden shrink-0">
                             <button
                               type="button"
                               onClick={() => handleQuantityChange(index, item.quantity - 1)}
-                              className="cursor-pointer w-7 sm:w-8 h-full flex items-center justify-center text-xs font-semibold text-[#4E5668] hover:bg-[#F0F2F6] active:bg-[#E4E7ED] select-none"
+                              className="cursor-pointer w-8 sm:w-9 h-full flex items-center justify-center text-[#4E5668] bg-[#F0F2F6] hover:bg-[#E4E7ED] hover:text-[#191E2B] active:bg-[#DCE1EA] transition-colors select-none"
                               aria-label="Decrease quantity"
                             >
-                              -
+                              <Minus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                             </button>
                             <input
                               type="number"
-                              value={item.quantity || 1}
+                              value={item.quantity !== undefined && item.quantity !== null ? item.quantity : 1}
                               onChange={(e) => handleQuantityChange(index, e.target.value)}
-                              className="w-8 sm:w-9 h-full text-center text-xs sm:text-sm font-semibold text-[#191E2B] bg-white border-x border-[#DCE1EA] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                              onBlur={() => {
+                                if (!item.quantity || Number(item.quantity) < 1) {
+                                  handleQuantityChange(index, 1);
+                                }
+                              }}
+                              onFocus={(e) => e.target.select()}
+                              className="w-10 sm:w-12 h-full text-center text-sm font-semibold text-[#191E2B] bg-white border-x border-[#DCE1EA] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                               min="1"
                             />
                             <button
                               type="button"
                               onClick={() => handleQuantityChange(index, item.quantity + 1)}
-                              className="cursor-pointer w-7 sm:w-8 h-full flex items-center justify-center text-xs font-semibold text-[#4E5668] hover:bg-[#F0F2F6] active:bg-[#E4E7ED] select-none"
+                              className="cursor-pointer w-8 sm:w-9 h-full flex items-center justify-center text-[#4E5668] bg-[#F0F2F6] hover:bg-[#E4E7ED] hover:text-[#191E2B] active:bg-[#DCE1EA] transition-colors select-none"
                               aria-label="Increase quantity"
                             >
-                              +
+                              <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                             </button>
                           </div>
 
-                          {/** Line Total */}
-                          <span className="text-xs sm:text-sm font-semibold text-[#191E2B] min-w-[48px] sm:min-w-[56px] text-right">
-                            ₹{item.total.toLocaleString('en-IN')}
-                          </span>
-
+                          {/** Rounded Delete Button matching CreateBillModal with exact 42px height */}
                           {draftBill.products.length > 1 && (
                             <button
                               type="button"
                               onClick={() => handleRemoveItem(index)}
-                              className="cursor-pointer text-[#757F94] hover:text-[#B91C1C] hover:bg-[#FFF1F2] w-8 h-8 rounded-lg flex items-center justify-center transition-all border border-transparent hover:border-[#FECDD3] shrink-0"
+                              className="cursor-pointer text-[#B91C1C] bg-[#FFF1F2] hover:bg-[#FFE4E6] hover:text-[#991B1B] w-[42px] h-[42px] flex items-center justify-center rounded-full transition-all active:scale-95 shrink-0 border border-[#FECDD3]"
                               aria-label={t('Remove item')}
                               title={t('Remove item')}
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <Trash2 className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
                             </button>
                           )}
                         </div>
@@ -1286,13 +1274,17 @@ const VoiceBilling = () => {
                   <span className="text-sm font-medium text-[#3730A3]">{isPercentage ? '%' : '₹'}</span>
                   <input
                     type="number"
-                    value={draftBill.discountInput || ''}
-                    onChange={(e) =>
+                    value={draftBill.discountInput !== undefined && draftBill.discountInput !== null ? draftBill.discountInput : ''}
+                    onChange={(e) => {
+                      const val = e.target.value;
                       setDraftBill((prev) => ({
                         ...prev,
-                        discountInput: Math.max(0, parseFloat(e.target.value) || 0),
-                      }))
-                    }
+                        discountInput: val === '' ? '' : Math.max(0, parseFloat(val) || 0),
+                      }));
+                    }}
+                    onFocus={(e) => {
+                      if (e.target.value === '0') e.target.select();
+                    }}
                     className="w-20 rounded-md border border-[#DCE1EA] px-2 py-1 text-sm font-medium text-right text-[#191E2B] bg-white focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                     placeholder="0"
                     min="0"
@@ -1334,11 +1326,9 @@ const VoiceBilling = () => {
                   value={draftBill.paymentMode}
                   onChange={(e) => {
                     const mode = e.target.value;
-                    const isCredit = mode === 'CREDIT';
                     setDraftBill((prev) => ({
                       ...prev,
                       paymentMode: mode,
-                      amountPaid: isCredit ? 0 : totalAmount,
                     }));
                   }}
                   className={inputCls}
@@ -1352,18 +1342,33 @@ const VoiceBilling = () => {
               </div>
 
               <div>
-                <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-0.5">
-                  {t('Amount Paid')} <span className="text-[#B91C1C]">*</span>
-                </label>
+                <div className="flex items-center justify-between mb-0.5">
+                  <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668]">
+                    {t('Amount Paid')} <span className="text-[#B91C1C]">*</span>
+                  </label>
+                  {totalAmount > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setDraftBill((prev) => ({ ...prev, amountPaid: totalAmount }))}
+                      className="cursor-pointer text-[11px] font-semibold text-[#4338CA] hover:underline"
+                    >
+                      {t('Full Amount')} (₹{totalAmount})
+                    </button>
+                  )}
+                </div>
                 <input
                   type="number"
-                  value={draftBill.amountPaid ?? ''}
-                  onChange={(e) =>
+                  value={draftBill.amountPaid !== undefined && draftBill.amountPaid !== null ? draftBill.amountPaid : ''}
+                  onChange={(e) => {
+                    const val = e.target.value;
                     setDraftBill((prev) => ({
                       ...prev,
-                      amountPaid: Math.max(0, parseFloat(e.target.value) || 0),
-                    }))
-                  }
+                      amountPaid: val === '' ? '' : Math.max(0, parseFloat(val) || 0),
+                    }));
+                  }}
+                  onFocus={(e) => {
+                    if (e.target.value === '0') e.target.select();
+                  }}
                   className={inputCls}
                   placeholder="0"
                   min="0"
@@ -1388,6 +1393,18 @@ const VoiceBilling = () => {
               <div className="bg-[#FEF2F2] border border-[#FECDD3] rounded-lg p-3 text-xs text-[#B91C1C] font-semibold flex items-center gap-1.5">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{t('Udhaar is not allowed for Counter Sale. Please enter full amount paid or select a customer.')}</span>
+              </div>
+            )}
+
+            {isCreditLimitExceeded && (
+              <div className="bg-[#FFF1F2] border-l-[3px] border-[#B91C1C] p-2.5 sm:p-3 rounded-r-md flex items-start gap-2 sm:gap-2.5 animate-fade-in shadow-none">
+                <AlertCircle className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-[#B91C1C] shrink-0 mt-[1px] sm:mt-[2px]" />
+                <div>
+                  <h4 className="text-[13px] sm:text-sm font-semibold text-[#991B1B] leading-none mb-1">{t('Credit Limit Exceeded')}</h4>
+                  <p className="text-[11px] sm:text-xs font-medium text-[#B91C1C] leading-snug">
+                    {t('This bill will increase the customer\'s pending balance to')} ₹{newTotalBalance.toLocaleString('en-IN')}, {t('which exceeds the limit of')} ₹{creditLimit.toLocaleString('en-IN')}.
+                  </p>
+                </div>
               </div>
             )}
 
@@ -1449,7 +1466,17 @@ const VoiceBilling = () => {
                 <input
                   type="text"
                   value={draftTransaction.customerName}
-                  onChange={(e) => setDraftTransaction((prev) => ({ ...prev, customerName: e.target.value }))}
+                  onChange={(e) => {
+                    const newName = e.target.value;
+                    const matchedCust = customersData.find(
+                      (c) => c.name.toLowerCase() === newName.trim().toLowerCase()
+                    );
+                    setDraftTransaction((prev) => ({
+                      ...prev,
+                      customerName: newName,
+                      customerId: matchedCust ? matchedCust._id : '',
+                    }));
+                  }}
                   required
                   placeholder={t('Enter customer name')}
                   className={inputCls}
@@ -1466,6 +1493,9 @@ const VoiceBilling = () => {
                   step="0.01"
                   value={draftTransaction.amount}
                   onChange={(e) => setDraftTransaction((prev) => ({ ...prev, amount: e.target.value }))}
+                  onFocus={(e) => {
+                    if (e.target.value === '0') e.target.select();
+                  }}
                   required
                   placeholder="0"
                   className={inputCls}
