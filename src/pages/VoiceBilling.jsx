@@ -685,7 +685,7 @@ const VoiceBilling = () => {
   };
 
   const inputCls =
-    'w-full h-[42px] rounded-lg border border-[#DCE1EA] px-3 text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-[#FBFBFC] transition-colors outline-none shadow-none';
+    'w-full h-10 sm:h-[42px] rounded-lg border border-[#DCE1EA] px-3 text-[13px] sm:text-sm font-medium text-[#191E2B] placeholder-[#9AA4B8] placeholder:text-[13px] sm:placeholder:text-sm focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-[#FBFBFC] transition-colors outline-none shadow-none';
 
   return (
     <div className="w-full">
@@ -713,7 +713,7 @@ const VoiceBilling = () => {
                 onClick={() => setInputMode('voice')}
                 className={`cursor-pointer flex items-center justify-center gap-1.5 flex-1 px-3 py-1.5 sm:py-2 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-200 active:scale-[0.98] focus:outline-none ${
                   inputMode === 'voice'
-                    ? 'bg-[#4338CA] text-white shadow-sm'
+                    ? 'bg-[#4338CA] text-white shadow-none'
                     : 'bg-transparent text-[#4E5668] hover:bg-[#E4E7ED] hover:text-[#191E2B]'
                 }`}
               >
@@ -725,7 +725,7 @@ const VoiceBilling = () => {
                 onClick={() => setInputMode('manual')}
                 className={`cursor-pointer flex items-center justify-center gap-1.5 flex-1 px-3 py-1.5 sm:py-2 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-200 active:scale-[0.98] focus:outline-none ${
                   inputMode === 'manual'
-                    ? 'bg-[#4338CA] text-white shadow-sm'
+                    ? 'bg-[#4338CA] text-white shadow-none'
                     : 'bg-transparent text-[#4E5668] hover:bg-[#E4E7ED] hover:text-[#191E2B]'
                 }`}
               >
@@ -738,25 +738,25 @@ const VoiceBilling = () => {
 
         {/** Voice Mic Container */}
         {inputMode === 'voice' && !draftBill && !draftTransaction && !createdBill && (
-          <div className="bg-[#FBFBFC] rounded-2xl p-5 sm:p-8 text-center flex flex-col items-center justify-center min-h-[290px] sm:min-h-[320px] relative overflow-hidden animate-slide-up border border-[#DCE1EA] shadow-none">
-            <div className="relative flex items-center justify-center my-3 sm:my-4">
+          <div className="bg-[#FBFBFC] rounded-2xl p-4 sm:p-7 text-center flex flex-col items-center justify-center relative overflow-hidden animate-slide-up border border-[#DCE1EA] shadow-none space-y-3 sm:space-y-4">
+            {/** Mic Stage with strictly bounded pulse waves (No cutoffs, No text overlap) */}
+            <div className="relative flex items-center justify-center py-2 sm:py-4">
               {isRecording && (
-                <>
-                  <div
-                    className="absolute w-[140%] h-[140%] bg-[#B91C1C]/20 rounded-full animate-ping pointer-events-none"
-                    style={{ animationDuration: '2s' }}
-                  ></div>
-                  <div
-                    className="absolute w-[180%] h-[180%] bg-[#B91C1C]/10 rounded-full animate-ping pointer-events-none"
-                    style={{ animationDuration: '3s', animationDelay: '500ms' }}
-                  ></div>
-                </>
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  {/** Soft outer expanding ripple - strictly bounded inside stage */}
+                  <span
+                    className="absolute w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-[#B91C1C]/15 animate-ping pointer-events-none"
+                    style={{ animationDuration: '2.5s' }}
+                  />
+                  {/** Soft middle pulsing aura */}
+                  <span className="absolute w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#B91C1C]/20 animate-pulse pointer-events-none" />
+                </div>
               )}
 
               <button
                 onClick={isRecording ? stopVoiceRecognition : startVoiceRecognition}
                 disabled={isProcessing}
-                className={`cursor-pointer w-24 h-24 sm:w-28 sm:h-28 rounded-full flex items-center justify-center transition-all duration-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/40 focus:ring-offset-4 ${
+                className={`relative z-10 cursor-pointer w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center transition-all duration-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/30 focus:ring-offset-2 ${
                   isRecording
                     ? 'bg-[#B91C1C] text-white shadow-none border-4 border-[#FECDD3]'
                     : 'bg-[#4338CA] hover:bg-[#3730A3] text-white shadow-none border-4 border-[#D8DCF5]'
@@ -764,28 +764,89 @@ const VoiceBilling = () => {
                 aria-label={isRecording ? t('Stop Recording') : t('Start Voice Recording')}
               >
                 {isProcessing ? (
-                  <SwirlingLoader className="w-9 h-9 sm:w-10 sm:h-10 text-white" />
+                  <SwirlingLoader className="w-8 h-8 sm:w-9 sm:h-9 text-white" />
                 ) : (
-                  <Mic className={`w-9 h-9 sm:w-10 sm:h-10 ${isRecording ? 'animate-pulse' : ''}`} />
+                  <Mic className={`w-8 h-8 sm:w-9 sm:h-9 ${isRecording ? 'animate-pulse' : ''}`} />
                 )}
               </button>
             </div>
 
-            <div className="min-h-12 flex flex-col items-center justify-center">
-              <p className="text-sm sm:text-base font-semibold text-[#191E2B] px-4">
-                {transcript || (isRecording ? t('Listening... Speak now!') : t('Tap mic to start billing'))}
-              </p>
-              <p className="text-[11px] sm:text-xs font-medium text-[#4E5668] mt-1">
-                {isRecording ? t('Listening for items, quantities & customer name...') : t('Auto-matches products from your catalog & drafts invoice')}
+            {/** Status & Feedback - Always distinct, Never overlapped */}
+            <div className="relative z-10 flex flex-col items-center justify-center min-h-[52px]">
+              {isRecording ? (
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FFF1F2] border border-[#FECDD3] rounded-full text-xs font-semibold text-[#B91C1C] mb-1">
+                  <span className="w-2 h-2 rounded-full bg-[#B91C1C] animate-pulse" />
+                  <span className="truncate max-w-[280px] sm:max-w-md">
+                    {transcript || t('Listening... Speak now!')}
+                  </span>
+                </div>
+              ) : (
+                <p className="text-sm sm:text-base font-semibold text-[#191E2B] px-4">
+                  {transcript || t('Tap mic to start billing')}
+                </p>
+              )}
+              <p className="text-xs font-medium text-[#757F94] mt-0.5 max-w-sm sm:max-w-md px-2">
+                {isRecording
+                  ? t('Listening for customer name, item name & quantity...')
+                  : t('Auto-matches products from your catalog & drafts invoice')}
               </p>
             </div>
 
-            <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 text-xs font-medium text-[#4338CA] w-full max-w-md px-1">
-              <div className="bg-[#EEF0FB] px-3 py-1.5 rounded-lg border border-[#D8DCF5] text-center text-[11px] sm:text-xs leading-normal">
-                "{t('Ramesh ko 2 packet Parle-G, 1 chini udhar do')}"
+            {/** How to Use Guide for Voice Mode */}
+            <div className="w-full border-t border-[#E8ECF2] pt-4 mt-2">
+              <div className="flex items-center justify-center gap-1.5 text-xs font-semibold text-[#4E5668] mb-3">
+                <Sparkles className="w-3.5 h-3.5 text-[#4338CA]" />
+                <span>{t('How to Use Voice Billing')}</span>
               </div>
-              <div className="bg-[#EEF0FB] px-3 py-1.5 rounded-lg border border-[#D8DCF5] text-center text-[11px] sm:text-xs leading-normal">
-                "{t('3 frooti aur 2 chips cash bill banao')}"
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-left mb-4">
+                <div className="bg-white border border-[#DCE1EA] rounded-lg p-3">
+                  <span className="inline-block text-[10px] font-semibold text-[#4338CA] bg-[#EEF0FB] px-1.5 py-0.5 rounded mb-1">
+                    {t('Step 1')}
+                  </span>
+                  <p className="text-xs font-semibold text-[#191E2B]">{t('Tap Mic')}</p>
+                  <p className="text-[11px] font-medium text-[#757F94] mt-0.5 leading-snug">
+                    {t('Click mic button to start recording')}
+                  </p>
+                </div>
+
+                <div className="bg-white border border-[#DCE1EA] rounded-lg p-3">
+                  <span className="inline-block text-[10px] font-semibold text-[#4338CA] bg-[#EEF0FB] px-1.5 py-0.5 rounded mb-1">
+                    {t('Step 2')}
+                  </span>
+                  <p className="text-xs font-semibold text-[#191E2B]">{t('Speak Your Bill')}</p>
+                  <p className="text-[11px] font-medium text-[#757F94] mt-0.5 leading-snug">
+                    {t('Name customer, item name & quantity')}
+                  </p>
+                </div>
+
+                <div className="bg-white border border-[#DCE1EA] rounded-lg p-3">
+                  <span className="inline-block text-[10px] font-semibold text-[#4338CA] bg-[#EEF0FB] px-1.5 py-0.5 rounded mb-1">
+                    {t('Step 3')}
+                  </span>
+                  <p className="text-xs font-semibold text-[#191E2B]">{t('Review & Save')}</p>
+                  <p className="text-[11px] font-medium text-[#757F94] mt-0.5 leading-snug">
+                    {t('Draft is auto-created with stock matching')}
+                  </p>
+                </div>
+              </div>
+
+              {/** Example Voice Commands */}
+              <div className="space-y-1.5">
+                <p className="text-[11px] font-semibold text-[#757F94] text-center">
+                  {t('Sample Voice Commands (Try Speaking These)')}:
+                </p>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2">
+                  <div className="bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] px-3 py-1.5 rounded-lg text-[11px] font-medium text-center">
+                    🛒 "{t('Rahul ko 2 packet Parle-G aur 1 frooti do')}"
+                  </div>
+                  <div className="bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] px-3 py-1.5 rounded-lg text-[11px] font-medium text-center">
+                    📋 "{t('Suresh ko 5 packet Maggi udhar likho')}"
+                  </div>
+                  <div className="bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] px-3 py-1.5 rounded-lg text-[11px] font-medium text-center">
+                    💰 "{t('Ramesh se 500 rupaye jama mila')}"
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -806,8 +867,8 @@ const VoiceBilling = () => {
                   type="text"
                   value={manualText}
                   onChange={(e) => setManualText(e.target.value)}
-                  className="w-full rounded-lg border border-[#DCE1EA] px-3.5 py-2.5 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-white text-[#191E2B] placeholder-[#9AA4B8] shadow-none"
-                  placeholder="e.g. Ramesh ko 2 bread aur 1 amul butter ka bill banao, cash me"
+                  className="w-full h-11 sm:h-12 rounded-lg border border-[#DCE1EA] px-3.5 text-[13px] sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-white text-[#191E2B] placeholder-[#9AA4B8] placeholder:text-[13px] sm:placeholder:text-sm shadow-none"
+                  placeholder={t('Ramesh ko 2 bread aur 1 amul butter ka bill banao, cash me')}
                   disabled={isProcessing}
                   autoFocus
                 />
@@ -816,7 +877,7 @@ const VoiceBilling = () => {
               <button
                 type="submit"
                 disabled={isProcessing || !manualText.trim()}
-                className="cursor-pointer w-full flex justify-center items-center px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all focus:outline-none shadow-none"
+                className="cursor-pointer w-full h-10 sm:h-11 flex justify-center items-center px-4 rounded-lg text-xs sm:text-sm font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all focus:outline-none shadow-none"
               >
                 {isProcessing ? (
                   <>
@@ -830,6 +891,42 @@ const VoiceBilling = () => {
                   </>
                 )}
               </button>
+
+              {/** How to Use Guide for Manual Mode */}
+              <div className="border-t border-[#E8ECF2] pt-4 mt-2 space-y-3">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-[#4E5668]">
+                  <Sparkles className="w-3.5 h-3.5 text-[#4338CA]" />
+                  <span>{t('How to Use & Quick Examples')}</span>
+                </div>
+
+                <p className="text-xs font-medium text-[#757F94] leading-relaxed">
+                  {t('Type in plain Hindi or English with customer name, items, and quantity. Click any sample below to auto-fill:')}
+                </p>
+
+                <div className="flex flex-wrap gap-2 pt-0.5">
+                  <button
+                    type="button"
+                    onClick={() => setManualText(t('Rahul ko 2 packet Parle-G aur 1 frooti do, cash me'))}
+                    className="cursor-pointer bg-[#EEF0FB] hover:bg-[#E0E4F9] text-[#4338CA] border border-[#D8DCF5] px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium transition-colors text-left active:scale-95"
+                  >
+                    🛒 {t('Rahul ko 2 packet Parle-G aur 1 frooti do, cash me')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setManualText(t('Suresh ko 5 packet Maggi udhar likho'))}
+                    className="cursor-pointer bg-[#EEF0FB] hover:bg-[#E0E4F9] text-[#4338CA] border border-[#D8DCF5] px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium transition-colors text-left active:scale-95"
+                  >
+                    📋 {t('Suresh ko 5 packet Maggi udhar likho')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setManualText(t('Ramesh se 500 rupaye jama mila'))}
+                    className="cursor-pointer bg-[#EEF0FB] hover:bg-[#E0E4F9] text-[#4338CA] border border-[#D8DCF5] px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium transition-colors text-left active:scale-95"
+                  >
+                    💰 {t('Ramesh se 500 rupaye jama mila')}
+                  </button>
+                </div>
+              </div>
             </div>
           </form>
         )}
@@ -837,26 +934,17 @@ const VoiceBilling = () => {
         {/** 🛒 PROFESSIONAL POS BILL DRAFT (1:1 with User Specification & Market Standards) */}
         {draftBill && (
           <div className="bg-white rounded-xl border border-[#DCE1EA] p-3.5 sm:p-5 md:p-6 space-y-4 sm:space-y-5 shadow-none animate-slide-up">
-            {/** Header (1:1 with exact user UI layout) */}
-            <div className="flex items-start sm:items-center justify-between gap-3 pb-3 border-b border-[#E8ECF2]">
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <ShoppingBag className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-[#4338CA] shrink-0" />
-                  <h2 className="text-base sm:text-lg font-semibold text-[#191E2B]">
-                    {t('Voice POS Bill Draft')}
-                  </h2>
-                </div>
-                <p className="text-xs sm:text-[13px] font-medium text-[#757F94] mt-0.5">
-                  {t('Review items, adjust quantities, and generate official invoice')}
-                </p>
+            {/** Header (Clean, zero clutter) */}
+            <div className="pb-3 border-b border-[#E8ECF2]">
+              <div className="flex items-center gap-2">
+                <ShoppingBag className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-[#4338CA] shrink-0" />
+                <h2 className="text-base sm:text-lg font-semibold text-[#191E2B]">
+                  {t('Voice POS Bill Draft')}
+                </h2>
               </div>
-              <button
-                type="button"
-                onClick={() => setDraftBill(null)}
-                className="cursor-pointer text-[#B91C1C] hover:text-[#991B1B] hover:underline text-xs sm:text-sm font-semibold shrink-0 pt-0.5"
-              >
-                {t('Discard Draft')}
-              </button>
+              <p className="text-xs sm:text-[13px] font-medium text-[#757F94] mt-0.5">
+                {t('Review items, adjust quantities, and generate official invoice')}
+              </p>
             </div>
 
             {/** Spoken Transcript Banner (Responsive on all viewports) */}
@@ -1316,12 +1404,12 @@ const VoiceBilling = () => {
               </div>
             )}
 
-            {/** 6. Action Triggers */}
-            <div className="flex flex-col-reverse sm:flex-row gap-2.5 sm:gap-3 pt-1">
+            {/** 6. Action Triggers (Solid, responsive side-by-side on all viewports) */}
+            <div className="flex items-center gap-2.5 sm:gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => setDraftBill(null)}
-                className="cursor-pointer flex-1 h-[42px] rounded-lg text-xs sm:text-sm font-semibold text-[#4E5668] bg-[#F0F2F6] hover:bg-[#EBEEF4] border border-[#DCE1EA] active:scale-95 transition-all text-center flex items-center justify-center"
+                className="cursor-pointer flex-1 sm:flex-none sm:w-36 min-h-[44px] h-[44px] sm:h-[46px] rounded-lg text-xs sm:text-sm font-semibold text-[#4E5668] bg-[#F0F2F6] hover:bg-[#EBEEF4] border border-[#DCE1EA] active:scale-[0.98] transition-all flex items-center justify-center shrink-0 shadow-none"
               >
                 {t('Cancel')}
               </button>
@@ -1329,17 +1417,17 @@ const VoiceBilling = () => {
                 type="button"
                 onClick={handleFinalizeBill}
                 disabled={isSubmitting}
-                className="cursor-pointer flex-1 sm:flex-[2] h-[42px] rounded-lg text-xs sm:text-sm font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] disabled:opacity-50 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-none"
+                className="cursor-pointer flex-[2] sm:flex-1 min-h-[44px] h-[44px] sm:h-[46px] rounded-lg text-xs sm:text-sm font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] disabled:opacity-50 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 shrink-0 shadow-none"
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin shrink-0" />
                     <span>{t('Processing...')}</span>
                   </>
                 ) : (
                   <>
-                    <FileText className="w-4 h-4" />
-                    <span>{t('Generate Bill')}</span>
+                    <FileText className="w-4 h-4 shrink-0" />
+                    <span className="truncate">{t('Create Bill & Invoice')} ({`₹${totalAmount.toLocaleString('en-IN')}`})</span>
                   </>
                 )}
               </button>
@@ -1420,27 +1508,27 @@ const VoiceBilling = () => {
               </div>
             </div>
 
-            <div className="flex flex-col-reverse sm:flex-row gap-2.5 sm:gap-3 pt-2">
+            <div className="flex items-center gap-2.5 sm:gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => setDraftTransaction(null)}
-                className="cursor-pointer flex-1 h-[42px] rounded-lg text-xs sm:text-sm font-semibold text-[#4E5668] bg-[#F0F2F6] hover:bg-[#EBEEF4] border border-[#DCE1EA] flex items-center justify-center"
+                className="cursor-pointer flex-1 sm:flex-none sm:w-36 min-h-[44px] h-[44px] sm:h-[46px] rounded-lg text-xs sm:text-sm font-semibold text-[#4E5668] bg-[#F0F2F6] hover:bg-[#EBEEF4] border border-[#DCE1EA] active:scale-[0.98] transition-all flex items-center justify-center shrink-0 shadow-none"
               >
                 {t('Cancel')}
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="cursor-pointer flex-1 h-[42px] rounded-lg text-xs sm:text-sm font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] disabled:opacity-50 flex items-center justify-center gap-2 shadow-none"
+                className="cursor-pointer flex-[2] sm:flex-1 min-h-[44px] h-[44px] sm:h-[46px] rounded-lg text-xs sm:text-sm font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] disabled:opacity-50 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 shrink-0 shadow-none"
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin shrink-0" />
                     <span>{t('Saving...')}</span>
                   </>
                 ) : (
                   <>
-                    <CheckCircle2 className="w-4 h-4" />
+                    <CheckCircle2 className="w-4 h-4 shrink-0" />
                     <span>{t('Save to Khata')}</span>
                   </>
                 )}
