@@ -1426,36 +1426,40 @@ const VoiceBilling = () => {
         {draftTransaction && (
           <form
             onSubmit={handleFinalizeTransaction}
-            className="bg-[#FBFBFC] border border-[#DCE1EA] rounded-xl p-4 sm:p-6 space-y-4 animate-slide-up shadow-none"
+            className="bg-white border border-[#DCE1EA] rounded-xl p-4 sm:p-6 space-y-4 animate-slide-up shadow-none"
           >
-            <div className="flex items-center justify-between pb-3 border-b border-[#DCE1EA]">
+            {/** Header */}
+            <div className="pb-3 border-b border-[#E8ECF2]">
               <div className="flex items-center gap-2">
-                <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5 text-[#4338CA]" />
-                <h2 className="text-sm sm:text-base md:text-lg font-semibold text-[#191E2B]">{t('Review Khata Entry')}</h2>
+                <RotateCcw className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-[#4338CA] shrink-0" />
+                <h2 className="text-base sm:text-lg font-semibold text-[#191E2B]">
+                  {t('Review Khata Entry')}
+                </h2>
               </div>
-              <button
-                type="button"
-                onClick={() => setDraftTransaction(null)}
-                className="cursor-pointer text-xs font-medium text-[#757F94] hover:text-[#191E2B]"
-              >
-                ✕ {t('Cancel')}
-              </button>
+              <p className="text-xs sm:text-[13px] font-medium text-[#757F94] mt-0.5">
+                {t('Verify transaction details before saving to customer ledger')}
+              </p>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3.5">
               <div>
-                <label className="block text-xs font-semibold text-[#191E2B] mb-1">👤 {t('Customer Name')}</label>
+                <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
+                  {t('Customer Name')} <span className="text-[#B91C1C]">*</span>
+                </label>
                 <input
                   type="text"
                   value={draftTransaction.customerName}
                   onChange={(e) => setDraftTransaction((prev) => ({ ...prev, customerName: e.target.value }))}
                   required
+                  placeholder={t('Enter customer name')}
                   className={inputCls}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#191E2B] mb-1">💰 {t('Amount')} (₹)</label>
+                <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
+                  {t('Amount')} (₹) <span className="text-[#B91C1C]">*</span>
+                </label>
                 <input
                   type="number"
                   min="1"
@@ -1463,13 +1467,16 @@ const VoiceBilling = () => {
                   value={draftTransaction.amount}
                   onChange={(e) => setDraftTransaction((prev) => ({ ...prev, amount: e.target.value }))}
                   required
+                  placeholder="0"
                   className={inputCls}
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-[#191E2B] mb-1">🎯 {t('Transaction Type')}</label>
+                  <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
+                    {t('Transaction Type')}
+                  </label>
                   <select
                     value={draftTransaction.intent}
                     onChange={(e) => setDraftTransaction((prev) => ({ ...prev, intent: e.target.value }))}
@@ -1481,7 +1488,9 @@ const VoiceBilling = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#191E2B] mb-1">💳 {t('Payment Mode')}</label>
+                  <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
+                    {t('Payment Mode')}
+                  </label>
                   <select
                     value={draftTransaction.paymentMode}
                     onChange={(e) => setDraftTransaction((prev) => ({ ...prev, paymentMode: e.target.value }))}
