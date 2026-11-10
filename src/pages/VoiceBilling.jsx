@@ -11,6 +11,7 @@ import {
   Loader2,
   CheckCircle2,
   Keyboard,
+  Minus,
   Plus,
   FileText,
   Printer,
@@ -108,7 +109,7 @@ const VoiceBilling = () => {
   // Memoized options for SearchableSelect
   const customerOptions = useMemo(() => {
     const list = [
-      { value: 'WALKIN', label: `📦 ${t('Counter Sale')}` },
+      { value: 'WALKIN', label: t('Counter Sale') },
       ...customersData.map((c) => ({
         value: String(c._id),
         label: `${c.name} +91 ${c.phone}`,
@@ -119,7 +120,7 @@ const VoiceBilling = () => {
     if (draftBill?.isNewSpokenCustomer && draftBill?.customerName) {
       list.splice(1, 0, {
         value: 'NEW_SPOKEN_CUSTOMER',
-        label: `✨ ${draftBill.customerName} (${t('New Customer')})`,
+        label: `${draftBill.customerName} (${t('New Customer')})`,
       });
     }
 
@@ -1058,7 +1059,7 @@ const VoiceBilling = () => {
                   <div className="text-[#92400E] font-medium flex items-center gap-1.5 min-w-0">
                     <Sparkles className="w-3.5 h-3.5 text-[#B45309] shrink-0" />
                     <span className="leading-snug break-words">
-                      ⚠️ {t('Spoken name')}: <strong className="font-semibold text-[#78350F]">{draftBill.customerName}</strong> ({t('Not in contacts')})
+                      {t('Spoken name')}: <strong className="font-semibold text-[#78350F]">{draftBill.customerName}</strong> ({t('Not in contacts')})
                     </span>
                   </div>
                   <button
@@ -1157,7 +1158,7 @@ const VoiceBilling = () => {
                   return (
                     <div
                       key={index}
-                      className="bg-white p-3 sm:p-3.5 rounded-lg border border-[#DCE1EA] hover:border-[#CBD5E1] transition-all space-y-2.5 shadow-none"
+                      className="bg-white p-3 sm:p-3.5 rounded-xl border border-[#DCE1EA] hover:border-[#CBD5E1] transition-all space-y-2.5 shadow-none"
                     >
                       {/** If unmapped spoken item, show warning alert */}
                       {!isMapped && item.name && (
@@ -1167,90 +1168,70 @@ const VoiceBilling = () => {
                         </div>
                       )}
 
-                      {/** Tier 1: Full-width Product Selector */}
-                      <div>
-                        <SearchableSelect
-                          options={productOptions}
-                          value={item.productId}
-                          onChange={(prodId) => handleProductSelect(index, prodId)}
-                          placeholder={
-                            item.name
-                              ? `${item.name}${item.price ? ` - ₹${item.price}` : ''}`
-                              : t('Choose Product from Store...')
-                          }
-                          searchPlaceholder={t('Search by product name...')}
-                        />
-                      </div>
+                      {/** If selected product is out of stock, show warning badge */}
+                      {isMapped && isOutOfStock && (
+                        <div className="text-[11px] font-semibold text-[#B91C1C] bg-[#FEF2F2] px-2.5 py-1 rounded-md border border-[#FECDD3] flex items-center gap-1.5 w-fit">
+                          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                          <span>{t('Out of Stock')} (0)</span>
+                        </div>
+                      )}
 
-                      {/** Tier 2: Stock Badge & Price (Left) + Stepper & Line Total + Trash (Right) */}
-                      <div className="flex items-center justify-between gap-2 pt-0.5">
-                        {/** Left: Stock Badge & Unit Price */}
-                        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-wrap">
-                          {isMapped ? (
-                            <>
-                              {isOutOfStock ? (
-                                <span className="text-[10px] sm:text-[11px] font-semibold text-[#B91C1C] bg-[#FEF2F2] px-2 py-0.5 rounded-md border border-[#FECDD3] whitespace-nowrap">
-                                  {t('Out of Stock')} (0)
-                                </span>
-                              ) : (
-                                <span className="text-[10px] sm:text-[11px] font-semibold text-[#0D7A57] bg-[#ECFDF5] px-2 py-0.5 rounded-md border border-[#A7F3D0] whitespace-nowrap">
-                                  ✓ {t('In Stock')}: {stockVal ?? 0}
-                                </span>
-                              )}
-                              <span className="text-xs font-semibold text-[#4E5668] whitespace-nowrap">
-                                ₹{item.price} / PCS
-                              </span>
-                            </>
-                          ) : (
-                            <span className="text-[11px] font-medium text-[#757F94] italic whitespace-nowrap">
-                              {t('Select product above')}
-                            </span>
-                          )}
+                      {/** Responsive Line Item Row: Full width dropdown on mobile, single flex row on desktop */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                        {/** Product Selector */}
+                        <div className="flex-1 min-w-0">
+                          <SearchableSelect
+                            options={productOptions}
+                            value={item.productId}
+                            onChange={(prodId) => handleProductSelect(index, prodId)}
+                            placeholder={
+                              item.name
+                                ? `${item.name}${item.price ? ` - ₹${item.price}` : ''}`
+                                : t('Choose Product from Store...')
+                            }
+                            searchPlaceholder={t('Search by product name...')}
+                          />
                         </div>
 
-                        {/** Right: Stepper [-] [Qty] [+] + Line Total + Trash */}
-                        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-                          {/** Stepper */}
-                          <div className="flex items-center border border-[#DCE1EA] rounded-lg bg-[#FBFBFC] h-8 sm:h-9 overflow-hidden">
+                        {/** Controls: Stepper & Rounded Delete Button (Height precisely matched to SearchableSelect 42px) */}
+                        <div className="flex items-center justify-end gap-2 sm:gap-2.5 shrink-0">
+                          {/** Stepper [-] [Qty] [+] with distinct background & exact 42px height */}
+                          <div className="flex items-center border border-[#DCE1EA] rounded-lg bg-[#F0F2F6] h-[42px] overflow-hidden shrink-0">
                             <button
                               type="button"
                               onClick={() => handleQuantityChange(index, item.quantity - 1)}
-                              className="cursor-pointer w-7 sm:w-8 h-full flex items-center justify-center text-xs font-semibold text-[#4E5668] hover:bg-[#F0F2F6] active:bg-[#E4E7ED] select-none"
+                              className="cursor-pointer w-8 sm:w-9 h-full flex items-center justify-center text-[#4E5668] bg-[#F0F2F6] hover:bg-[#E4E7ED] hover:text-[#191E2B] active:bg-[#DCE1EA] transition-colors select-none"
                               aria-label="Decrease quantity"
                             >
-                              -
+                              <Minus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                             </button>
                             <input
                               type="number"
                               value={item.quantity || 1}
                               onChange={(e) => handleQuantityChange(index, e.target.value)}
-                              className="w-8 sm:w-9 h-full text-center text-xs sm:text-sm font-semibold text-[#191E2B] bg-white border-x border-[#DCE1EA] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                              className="w-10 sm:w-12 h-full text-center text-sm font-semibold text-[#191E2B] bg-white border-x border-[#DCE1EA] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                               min="1"
                             />
                             <button
                               type="button"
                               onClick={() => handleQuantityChange(index, item.quantity + 1)}
-                              className="cursor-pointer w-7 sm:w-8 h-full flex items-center justify-center text-xs font-semibold text-[#4E5668] hover:bg-[#F0F2F6] active:bg-[#E4E7ED] select-none"
+                              className="cursor-pointer w-8 sm:w-9 h-full flex items-center justify-center text-[#4E5668] bg-[#F0F2F6] hover:bg-[#E4E7ED] hover:text-[#191E2B] active:bg-[#DCE1EA] transition-colors select-none"
                               aria-label="Increase quantity"
                             >
-                              +
+                              <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                             </button>
                           </div>
 
-                          {/** Line Total */}
-                          <span className="text-xs sm:text-sm font-semibold text-[#191E2B] min-w-[48px] sm:min-w-[56px] text-right">
-                            ₹{item.total.toLocaleString('en-IN')}
-                          </span>
-
+                          {/** Rounded Delete Button matching CreateBillModal with exact 42px height */}
                           {draftBill.products.length > 1 && (
                             <button
                               type="button"
                               onClick={() => handleRemoveItem(index)}
-                              className="cursor-pointer text-[#757F94] hover:text-[#B91C1C] hover:bg-[#FFF1F2] w-8 h-8 rounded-lg flex items-center justify-center transition-all border border-transparent hover:border-[#FECDD3] shrink-0"
+                              className="cursor-pointer text-[#B91C1C] bg-[#FFF1F2] hover:bg-[#FFE4E6] hover:text-[#991B1B] w-[42px] h-[42px] flex items-center justify-center rounded-full transition-all active:scale-95 shrink-0 border border-[#FECDD3]"
                               aria-label={t('Remove item')}
                               title={t('Remove item')}
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <Trash2 className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
                             </button>
                           )}
                         </div>
