@@ -692,45 +692,45 @@ const VoiceBilling = () => {
       <div className="max-w-3xl mx-auto space-y-4 sm:space-y-6 pb-20">
         {/** Top Title banner */}
         <div className="text-center animate-fade-in pt-1 sm:pt-2 px-1">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#EEF0FB] rounded-full text-xs font-semibold text-[#4338CA] mb-1.5 sm:mb-2">
-            <ShoppingBag className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4338CA] mb-1 sm:mb-1.5">
+            <ShoppingBag className="w-4 h-4 shrink-0" />
             <span>{t('Voice POS & Smart Billing')}</span>
           </div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-[#191E2B]">
             {t('Smart Voice Billing Assistant')}
           </h1>
-          <p className="text-xs sm:text-sm font-medium text-[#4E5668] mt-1 max-w-lg mx-auto">
-            {t('Speak your bill naturally in Hindi or English — instantly drafted into an official invoice')}
+          <p className="text-xs sm:text-[13px] font-medium text-[#757F94] mt-1 max-w-md mx-auto leading-relaxed">
+            {t('Speak or type bills naturally in Hindi or English for instant invoices')}
           </p>
         </div>
 
         {/** Mode Switcher */}
         {!draftBill && !draftTransaction && !createdBill && (
           <div className="flex justify-center animate-slide-up px-1">
-            <div className="inline-flex bg-[#F0F2F6] rounded-xl p-1 border border-[#DCE1EA] w-full max-w-xs shadow-none">
+            <div className="inline-flex items-center bg-[#F0F2F6] rounded-xl p-1 border border-[#DCE1EA] w-full max-w-xs shadow-none">
               <button
                 type="button"
                 onClick={() => setInputMode('voice')}
-                className={`cursor-pointer flex items-center justify-center gap-1.5 flex-1 px-3 py-1.5 sm:py-2 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-200 active:scale-[0.98] focus:outline-none ${
+                className={`cursor-pointer inline-flex items-center justify-center gap-2 flex-1 h-9 px-3 rounded-lg font-semibold text-xs sm:text-[13px] leading-none transition-all duration-200 active:scale-[0.98] focus:outline-none select-none ${
                   inputMode === 'voice'
                     ? 'bg-[#4338CA] text-white shadow-none'
                     : 'bg-transparent text-[#4E5668] hover:bg-[#E4E7ED] hover:text-[#191E2B]'
                 }`}
               >
-                <Mic className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-                <span>{t('Voice Mic')}</span>
+                <Mic className="w-4 h-4 shrink-0" />
+                <span className="leading-none pt-[1px]">{t('Voice Mic')}</span>
               </button>
               <button
                 type="button"
                 onClick={() => setInputMode('manual')}
-                className={`cursor-pointer flex items-center justify-center gap-1.5 flex-1 px-3 py-1.5 sm:py-2 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-200 active:scale-[0.98] focus:outline-none ${
+                className={`cursor-pointer inline-flex items-center justify-center gap-2 flex-1 h-9 px-3 rounded-lg font-semibold text-xs sm:text-[13px] leading-none transition-all duration-200 active:scale-[0.98] focus:outline-none select-none ${
                   inputMode === 'manual'
                     ? 'bg-[#4338CA] text-white shadow-none'
                     : 'bg-transparent text-[#4E5668] hover:bg-[#E4E7ED] hover:text-[#191E2B]'
                 }`}
               >
-                <Keyboard className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-                <span>{t('Type Manually')}</span>
+                <Keyboard className="w-4 h-4 shrink-0" />
+                <span className="leading-none pt-[1px]">{t('Type Manually')}</span>
               </button>
             </div>
           </div>
@@ -738,25 +738,21 @@ const VoiceBilling = () => {
 
         {/** Voice Mic Container */}
         {inputMode === 'voice' && !draftBill && !draftTransaction && !createdBill && (
-          <div className="bg-[#FBFBFC] rounded-2xl p-4 sm:p-7 text-center flex flex-col items-center justify-center relative overflow-hidden animate-slide-up border border-[#DCE1EA] shadow-none space-y-3 sm:space-y-4">
-            {/** Mic Stage with strictly bounded pulse waves (No cutoffs, No text overlap) */}
-            <div className="relative flex items-center justify-center py-2 sm:py-4">
+          <div className="bg-[#FBFBFC] rounded-2xl p-5 sm:p-7 text-center flex flex-col items-center justify-center animate-slide-up border border-[#DCE1EA] shadow-none space-y-4">
+            {/** Mic Stage */}
+            <div className="relative flex items-center justify-center py-5 sm:py-6">
               {isRecording && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  {/** Soft outer expanding ripple - strictly bounded inside stage */}
-                  <span
-                    className="absolute w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-[#B91C1C]/15 animate-ping pointer-events-none"
-                    style={{ animationDuration: '2.5s' }}
-                  />
-                  {/** Soft middle pulsing aura */}
-                  <span className="absolute w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#B91C1C]/20 animate-pulse pointer-events-none" />
-                </div>
+                <>
+                  {/** Soft concentric aura that never expands or gets cut off */}
+                  <span className="absolute w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-[#B91C1C]/10 animate-pulse pointer-events-none" />
+                  <span className="absolute w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#B91C1C]/15 pointer-events-none" />
+                </>
               )}
 
               <button
                 onClick={isRecording ? stopVoiceRecognition : startVoiceRecognition}
                 disabled={isProcessing}
-                className={`relative z-10 cursor-pointer w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center transition-all duration-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/30 focus:ring-offset-2 ${
+                className={`relative z-10 cursor-pointer w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center transition-all duration-300 active:scale-95 focus:outline-none ${
                   isRecording
                     ? 'bg-[#B91C1C] text-white shadow-none border-4 border-[#FECDD3]'
                     : 'bg-[#4338CA] hover:bg-[#3730A3] text-white shadow-none border-4 border-[#D8DCF5]'
@@ -771,21 +767,12 @@ const VoiceBilling = () => {
               </button>
             </div>
 
-            {/** Status & Feedback - Always distinct, Never overlapped */}
-            <div className="relative z-10 flex flex-col items-center justify-center min-h-[52px]">
-              {isRecording ? (
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FFF1F2] border border-[#FECDD3] rounded-full text-xs font-semibold text-[#B91C1C] mb-1">
-                  <span className="w-2 h-2 rounded-full bg-[#B91C1C] animate-pulse" />
-                  <span className="truncate max-w-[280px] sm:max-w-md">
-                    {transcript || t('Listening... Speak now!')}
-                  </span>
-                </div>
-              ) : (
-                <p className="text-sm sm:text-base font-semibold text-[#191E2B] px-4">
-                  {transcript || t('Tap mic to start billing')}
-                </p>
-              )}
-              <p className="text-xs font-medium text-[#757F94] mt-0.5 max-w-sm sm:max-w-md px-2">
+            {/** Status & Feedback - Plain text without any rounded pill box */}
+            <div className="flex flex-col items-center justify-center min-h-[48px] px-2">
+              <p className="text-sm sm:text-base font-semibold text-[#191E2B] px-4">
+                {transcript || (isRecording ? t('Listening... Speak now!') : t('Tap mic to start billing'))}
+              </p>
+              <p className="text-xs font-medium text-[#757F94] mt-1">
                 {isRecording
                   ? t('Listening for customer name, item name & quantity...')
                   : t('Auto-matches products from your catalog & drafts invoice')}
@@ -860,8 +847,8 @@ const VoiceBilling = () => {
           >
             <div className="space-y-4">
               <div>
-                <label className="block text-xs sm:text-sm font-semibold text-[#191E2B] mb-2">
-                  ⌨️ {t('Type your billing command in plain words')}
+                <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
+                  {t('Type your billing command in plain words')}
                 </label>
                 <input
                   type="text"
