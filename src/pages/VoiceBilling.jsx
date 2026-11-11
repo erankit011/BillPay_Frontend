@@ -528,7 +528,11 @@ const VoiceBilling = () => {
       isNewSpokenCustomer: false,
     }));
 
-    if (draftBill?.rawSpokenCustomer && draftBill.rawSpokenCustomer.length >= 2) {
+    if (
+      draftBill?.rawSpokenCustomer &&
+      draftBill.rawSpokenCustomer.length >= 2 &&
+      draftBill.rawSpokenCustomer.toLowerCase() !== sug.name.toLowerCase()
+    ) {
       api.post('/voice/alias', {
         entityType: 'CUSTOMER',
         entityId: sug._id,
