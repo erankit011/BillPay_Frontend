@@ -398,7 +398,7 @@ const AdminBills = () => {
                        */}
                       <td className="py-3.5 px-4">
                         <div className="font-semibold text-[#191E2B] truncate max-w-[140px]" title={bill.customerId?.name}>
-                          {bill.customerId?.name || 'Walk-in Customer'}
+                          {bill.customerId?.name || 'Counter Sale'}
                         </div>
                         <div className="text-[11px] text-[#757F94] font-normal truncate max-w-[140px]">{bill.customerId?.phone || '—'}</div>
                       </td>
@@ -472,7 +472,7 @@ const AdminBills = () => {
             <div className="md:hidden space-y-3 p-3 bg-[#F0F2F6]/50">
               {bills.map((bill) => {
                 const shopName = bill.shopId?.businessName || bill.shopId?.name || 'Shop';
-                const customerName = bill.customerId?.name || 'Walk-in Customer';
+                const customerName = bill.customerId?.name || 'Counter Sale';
 
                 return (
                   <div
@@ -645,7 +645,7 @@ const AdminBills = () => {
                     <span className="text-[11px] font-semibold text-[#757F94] uppercase tracking-wider block mb-1">
                       Customer
                     </span>
-                    <p className="text-sm font-semibold text-[#191E2B]">{selectedBill.customerId?.name || 'Walk-in'}</p>
+                    <p className="text-sm font-semibold text-[#191E2B]">{selectedBill.customerId?.name || 'Counter Sale'}</p>
                     <p className="text-xs text-[#757F94]">{selectedBill.customerId?.phone || '—'}</p>
                   </div>
                 </div>

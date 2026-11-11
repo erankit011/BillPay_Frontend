@@ -272,7 +272,7 @@ const VoiceBilling = () => {
 
       recognition.lang = shopSettings?.voiceLanguage || 'hi-IN';
       recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
+      recognition.maxAlternatives = 5;
       recognition.continuous = false;
 
       recognition.onstart = () => {
@@ -367,7 +367,7 @@ const VoiceBilling = () => {
 
           if (resolvedCustomerId) {
             matchedCustomerObj = customersData.find((c) => c._id === resolvedCustomerId);
-          } else if (data.customerName && data.customerName !== 'Walk-in Customer') {
+          } else if (data.customerName && data.customerName !== 'Counter Sale' && data.customerName !== 'Walk-in Customer') {
             matchedCustomerObj = customersData.find(
               (c) => c.name.toLowerCase() === data.customerName.toLowerCase()
             );
@@ -391,14 +391,16 @@ const VoiceBilling = () => {
                 return {
                   productId: p.productId ? String(p.productId) : '',
                   name: p.name,
+                  rawSpokenName: p.rawSpokenName || p.name,
                   price: Number(p.price) || 0,
                   quantity: Number(p.quantity) || 1,
                   stock: stockVal,
                   total: (Number(p.price) || 0) * (Number(p.quantity) || 1),
                   matched: Boolean(p.matched),
+                  suggestions: Array.isArray(p.suggestions) ? p.suggestions : [],
                 };
               })
-            : [{ productId: '', name: '', price: 0, quantity: 1, stock: null, total: 0, matched: false }];
+            : [{ productId: '', name: '', rawSpokenName: '', price: 0, quantity: 1, stock: null, total: 0, matched: false, suggestions: [] }];
 
           const computedSubtotal = initialProducts.reduce((sum, it) => sum + it.total, 0);
           const paymentMode = data.paymentMode || 'CASH';
@@ -419,6 +421,8 @@ const VoiceBilling = () => {
             customerPhone: matchedCustomerObj?.phone || '',
             customerBalance: matchedCustomerObj?.balance || 0,
             isNewSpokenCustomer: isRealSpokenCustomer && !matchedCustomerObj,
+            customerSuggestions: Array.isArray(data.customerSuggestions) ? data.customerSuggestions : [],
+            rawSpokenCustomer: data.customerName || '',
             products: initialProducts,
             paymentMode: isCredit ? 'CREDIT' : paymentMode,
             discountInput: '',
@@ -474,13 +478,14 @@ const VoiceBilling = () => {
   };
 
   // Line item manipulation helpers
-  const handleProductSelect = (index, productId) => {
+  const handleProductSelect = (index, productId, spokenPhraseToLearn) => {
     const selectedProd = productsData.find((p) => p._id === productId);
     if (!selectedProd) return;
 
     setDraftBill((prev) => {
       const nextProducts = [...prev.products];
-      const qty = nextProducts[index]?.quantity || 1;
+      const currentItem = nextProducts[index] || {};
+      const qty = currentItem.quantity || 1;
       nextProducts[index] = {
         productId: selectedProd._id,
         name: selectedProd.name,
@@ -489,6 +494,8 @@ const VoiceBilling = () => {
         stock: selectedProd.stock,
         total: selectedProd.price * qty,
         matched: true,
+        rawSpokenName: currentItem.rawSpokenName,
+        suggestions: [],
       };
 
       const newSubtotal = nextProducts.reduce((sum, it) => sum + it.total, 0);
@@ -498,6 +505,36 @@ const VoiceBilling = () => {
         subtotal: newSubtotal,
       };
     });
+
+    // Silently learn alias in background if spoken phrase exists
+    const phrase = spokenPhraseToLearn || draftBill?.products?.[index]?.rawSpokenName;
+    if (phrase && phrase.length >= 2 && phrase.toLowerCase() !== selectedProd.name.toLowerCase()) {
+      api.post('/voice/alias', {
+        entityType: 'PRODUCT',
+        entityId: selectedProd._id,
+        spokenPhrase: phrase,
+      }).catch(() => {});
+    }
+  };
+
+  const handleSelectCustomerSuggestion = (sug) => {
+    setDraftBill((prev) => ({
+      ...prev,
+      customerId: String(sug._id),
+      customerName: sug.name,
+      customerPhone: sug.phone || '',
+      customerBalance: sug.balance || 0,
+      customerSuggestions: [],
+      isNewSpokenCustomer: false,
+    }));
+
+    if (draftBill?.rawSpokenCustomer && draftBill.rawSpokenCustomer.length >= 2) {
+      api.post('/voice/alias', {
+        entityType: 'CUSTOMER',
+        entityId: sug._id,
+        spokenPhrase: draftBill.rawSpokenCustomer,
+      }).catch(() => {});
+    }
   };
 
   const handleQuantityChange = (index, newQuantity) => {
@@ -1060,6 +1097,24 @@ const VoiceBilling = () => {
                 searchPlaceholder={t('Search by name or phone...')}
               />
 
+              {/** Customer suggestion chips */}
+              {Array.isArray(draftBill.customerSuggestions) && draftBill.customerSuggestions.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                  <span className="text-[11px] font-medium text-[#4E5668]">{t('Suggestions')}:</span>
+                  {draftBill.customerSuggestions.map((sug) => (
+                    <button
+                      key={sug._id}
+                      type="button"
+                      onClick={() => handleSelectCustomerSuggestion(sug)}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-[#432BC9] bg-[#EEF2FF] hover:bg-[#E0E7FF] border border-[#C7D2FE] rounded-lg transition-colors cursor-pointer"
+                    >
+                      <Sparkles className="w-3 h-3 text-[#432BC9]" />
+                      <span>{sug.name} {sug.phone ? `(${sug.phone})` : ''}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {/** Alert if a real customer was spoken but not in contacts */}
               {isNewSpokenCustomer && (
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 p-2.5 sm:px-3 sm:py-2 bg-[#FFFBEB] rounded-lg border border-[#FDE68A] text-xs">
@@ -1167,11 +1222,31 @@ const VoiceBilling = () => {
                       key={index}
                       className="bg-white p-3 sm:p-3.5 rounded-xl border border-[#DCE1EA] hover:border-[#CBD5E1] transition-all space-y-2.5 shadow-none"
                     >
-                      {/** If unmapped spoken item, show warning alert */}
+                      {/** Friendly guidance if item needs manual confirmation or wasn't auto-matched */}
                       {!isMapped && item.name && (
-                        <div className="text-[11px] sm:text-xs font-semibold text-[#B91C1C] bg-[#FEF2F2] px-2.5 py-1 rounded-md border border-[#FECDD3] flex items-center gap-1.5">
-                          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                          <span className="break-words">{t('Map spoken item')}: "{item.name}"</span>
+                        <div className="text-[11px] sm:text-xs font-medium text-[#92400E] bg-[#FFFBEB] px-2.5 py-1.5 rounded-lg border border-[#FDE68A] flex items-center gap-1.5">
+                          <Sparkles className="w-3.5 h-3.5 text-[#B45309] shrink-0" />
+                          <span className="break-words">
+                            {t('Please select product from list or tap suggestion')}: "{item.name}"
+                          </span>
+                        </div>
+                      )}
+
+                      {/** Line item suggestion chips */}
+                      {Array.isArray(item.suggestions) && item.suggestions.length > 0 && (
+                        <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                          <span className="text-[11px] font-medium text-[#4E5668]">{t('Suggestions')}:</span>
+                          {item.suggestions.map((sug) => (
+                            <button
+                              key={sug._id}
+                              type="button"
+                              onClick={() => handleProductSelect(index, sug._id, item.rawSpokenName || item.name)}
+                              className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-[#432BC9] bg-[#EEF2FF] hover:bg-[#E0E7FF] border border-[#C7D2FE] rounded-lg transition-colors cursor-pointer"
+                            >
+                              <Sparkles className="w-3 h-3 text-[#432BC9]" />
+                              <span>{sug.name} {sug.price ? `(₹${sug.price})` : ''}</span>
+                            </button>
+                          ))}
                         </div>
                       )}
 

@@ -957,7 +957,7 @@ const Dashboard = () => {
             {recentBills.length > 0 ? (
               <div className="divide-y divide-[#E8ECF2]">
                 {recentBills.slice(0, 5).map((bill) => {
-                  const customerName = bill.customerId?.name || bill.customer?.name || bill.customerName || t('Walk-in Customer');
+                  const customerName = bill.customerId?.name || bill.customer?.name || bill.customerName || t('Counter Sale');
                   const status = bill.paymentStatus || 'UNPAID';
 
                   return (

@@ -564,7 +564,7 @@ const Bills = () => {
                                                 <div className="flex items-center gap-3 w-full">
                                                     <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-lg p-[2px] border border-[#DCE1EA] bg-[#FBFBFC] flex-shrink-0">
                                                         <div className="w-full h-full rounded-md flex items-center justify-center text-sm lg:text-base font-semibold bg-[#EEF0FB] text-[#4338CA]">
-                                                            {getInitials(bill.customerId?.name)}
+                                                            {getInitials(bill.customerId?.name || t('Counter Sale'))}
                                                         </div>
                                                     </div>
                                                     <span className="text-xs lg:text-sm font-semibold text-[#4338CA] truncate">{bill.invoiceNumber}</span>
@@ -737,7 +737,7 @@ const Bills = () => {
                                         <div className="flex items-center gap-2.5 min-w-0">
                                             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg p-[2px] border border-[#DCE1EA] bg-[#FBFBFC] flex-shrink-0">
                                                 <div className="w-full h-full rounded-md flex items-center justify-center text-sm font-semibold bg-[#EEF0FB] text-[#4338CA]">
-                                                    {getInitials(bill.customerId?.name)}
+                                                    {getInitials(bill.customerId?.name || t('Counter Sale'))}
                                                 </div>
                                             </div>
                                             <div className="min-w-0 flex flex-col justify-center">
