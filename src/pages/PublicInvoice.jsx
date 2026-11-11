@@ -161,7 +161,7 @@ const PublicInvoice = () => {
             <div className="flex flex-col space-y-1.5 sm:space-y-2.5">
               <div className="flex flex-col">
                 <span className="text-[#757F94] font-medium text-[11px] sm:text-xs uppercase tracking-wider mb-0.5">Billed To</span>
-                <span className="font-semibold text-[#191E2B] text-base sm:text-lg">{bill?.customerId?.name || 'Walk-in Customer'}</span>
+                <span className="font-semibold text-[#191E2B] text-base sm:text-lg">{bill?.customerId?.name || 'Counter Sale'}</span>
               </div>
 
               {bill?.customerId?.phone && (
