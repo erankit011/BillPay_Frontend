@@ -432,8 +432,8 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                   </div>
                 )}
                 <div className="pt-2 mt-2 border-t border-[#D8DCF5] flex items-center justify-between">
-                  <span className="text-sm font-bold text-[#191E2B]">{t('Total Bill Amount')}</span>
-                  <span className="text-base sm:text-lg font-bold text-[#4338CA]">₹{totalAmount.toLocaleString('en-IN')}</span>
+                  <span className="text-sm font-semibold text-[#191E2B]">{t('Total Bill Amount')}</span>
+                  <span className="text-base sm:text-lg font-semibold text-[#4338CA]">₹{totalAmount.toLocaleString('en-IN')}</span>
                 </div>
               </div>
 
