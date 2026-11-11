@@ -547,12 +547,18 @@ const VoiceBilling = () => {
   };
 
   // Financial Calculations (1:1 with CreateBillModal)
-  const subtotal = draftBill?.subtotal || 0;
+  const subtotal = draftBill?.products
+    ? draftBill.products.reduce(
+        (sum, item) => sum + (Number(item.price) || 0) * (Number(item.quantity) || 0),
+        0
+      )
+    : (draftBill?.subtotal || 0);
   const isPercentage = draftBill?.discountType === 'PERCENTAGE';
   const discountInput = Number(draftBill?.discountInput) || 0;
-  const discountAmount = isPercentage ? Math.round((subtotal * discountInput) / 100) : discountInput;
-  const taxRate = shopSettings?.taxRate || 0;
-  const taxAmount = shopSettings?.taxEnabled ? Math.round(((subtotal - discountAmount) * taxRate) / 100) : 0;
+  const rawDiscount = isPercentage ? Math.round((subtotal * discountInput) / 100) : discountInput;
+  const discountAmount = Math.min(subtotal, Math.max(0, rawDiscount));
+  const taxRate = shopSettings?.taxEnabled ? (shopSettings?.taxRate || 0) : 0;
+  const taxAmount = Math.round(((subtotal - discountAmount) * taxRate) / 100);
   const totalAmount = Math.max(0, Math.round(subtotal - discountAmount + taxAmount));
 
   // Sync grandTotal with totalAmount without overriding user's manual amountPaid
@@ -1376,18 +1382,6 @@ const VoiceBilling = () => {
               </div>
             </div>
 
-            {/** 5. Customer Ledger Impact Notification */}
-            {newPending > 0 && !isWalkin && (
-              <div className="bg-[#FFFBEB] border border-[#FDE68A] rounded-lg p-3 text-xs space-y-1">
-                <p className="font-semibold text-[#92400E] flex items-center gap-1.5">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
-                  <span>{t('Customer Udhar Khata will be updated')}:</span>
-                </p>
-                <p className="text-[#78350F] font-medium leading-relaxed">
-                  {draftBill.customerName}: {t('Previous Bal')}: ₹{currentBalance} + {t('Unpaid')}: ₹{newPending} = <strong className="font-semibold text-[#B91C1C]">₹{newTotalBalance}</strong>
-                </p>
-              </div>
-            )}
 
             {isWalkin && newPending > 0 && (
               <div className="bg-[#FEF2F2] border border-[#FECDD3] rounded-lg p-3 text-xs text-[#B91C1C] font-semibold flex items-center gap-1.5">
