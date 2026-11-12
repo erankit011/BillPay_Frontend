@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { X, Plus, Loader2, AlertCircle } from 'lucide-react';
+import { X, Plus, Loader2, AlertCircle, UserPlus } from 'lucide-react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -13,6 +13,8 @@ import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../api/axios';
 import SearchableSelect from '../common/SearchableSelect';
+import QuickAddCustomer from '../common/QuickAddCustomer';
+import QuickAddProduct from '../common/QuickAddProduct';
 import { useSelector } from 'react-redux';
 import { generateInvoicePDF } from '../../utils/generateInvoicePDF';
 import toast from 'react-hot-toast';
@@ -44,11 +46,10 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
   const queryClient = useQueryClient();
   const { user: shopDetails } = useSelector(state => state.auth);
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
-  const [newProduct, setNewProduct] = useState({ name: '', price: '', stock: '' });
   const [isAddCustomerOpen, setIsAddCustomerOpen] = useState(false);
-  const [newCustomer, setNewCustomer] = useState({ name: '', phone: '', email: '', address: '' });
-  const [customerError, setCustomerError] = useState('');
-  const [productError, setProductError] = useState('');
+  const [quickAddCustomerName, setQuickAddCustomerName] = useState('');
+  const [quickAddProductName, setQuickAddProductName] = useState('');
+  const [targetProductIndex, setTargetProductIndex] = useState(null);
   const [billError, setBillError] = useState('');
 
   const { register, handleSubmit, control, formState: { errors }, reset, setValue, getValues, watch } = useForm({
@@ -145,63 +146,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
     }
   });
 
-  const addProductMutation = useMutation({
-    mutationFn: (prod) => api.post('/products', prod),
-    onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-      setIsAddProductOpen(false);
-      setNewProduct({ name: '', price: '', stock: '' });
-      setProductError('');
-      toast.success(t('Product added successfully!'));
-      if (res.data?.data?._id) {
-        const newId = res.data.data._id;
-        const currentProducts = getValues('products') || [];
-        const emptyIndex = currentProducts.findIndex(p => !p.productId);
-        if (emptyIndex !== -1) { setValue(`products.${emptyIndex}.productId`, newId); }
-        else { append({ productId: newId, quantity: 1 }); }
-      }
-    },
-    onError: (err) => { 
-      const errMsg = err.response?.data?.message || err.message;
-      setProductError(errMsg);
-      toast.error(errMsg);
-    }
-  });
 
-  const addCustomerMutation = useMutation({
-    mutationFn: (cust) => api.post('/customers', cust),
-    onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: ['customers'] });
-      setIsAddCustomerOpen(false);
-      setNewCustomer({ name: '', phone: '', email: '', address: '' });
-      setCustomerError('');
-      toast.success(t('Customer added successfully!'));
-      if (res.data?.data?._id) { setValue('customerId', res.data.data._id); }
-    },
-    onError: (err) => { 
-      const errMsg = err.response?.data?.message || err.message;
-      setCustomerError(errMsg);
-      toast.error(errMsg);
-    }
-  });
-
-  const handleAddProduct = (e) => {
-    e.preventDefault();
-    setProductError('');
-    if (!newProduct.name || newProduct.price === '' || newProduct.stock === '') {
-      setProductError(t('Please fill all product fields')); return;
-    }
-    addProductMutation.mutate({ name: newProduct.name, price: Number(newProduct.price), stock: Number(newProduct.stock) });
-  };
-
-  const handleAddCustomer = (e) => {
-    e.preventDefault();
-    setCustomerError('');
-    if (!newCustomer.name || !newCustomer.phone) {
-      setCustomerError(t('Please fill required customer fields (Name and Phone)')); return;
-    }
-    addCustomerMutation.mutate({ name: newCustomer.name, phone: newCustomer.phone, email: newCustomer.email, address: newCustomer.address });
-  };
 
   useEffect(() => {
     if (isModalOpen) {
@@ -274,33 +219,30 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                   <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668]">
                     {t('Customer')} <span className="text-[#B91C1C]">*</span>
                   </label>
-                  <button type="button" onClick={() => setIsAddCustomerOpen(!isAddCustomerOpen)}
+                  <button type="button" onClick={() => {
+                    setQuickAddCustomerName('');
+                    setIsAddCustomerOpen(!isAddCustomerOpen);
+                  }}
                     className="cursor-pointer bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] hover:bg-[#E0E4F9] h-6 sm:h-7 !min-h-[24px] sm:!min-h-[28px] px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] leading-none font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all shadow-none">
                     <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> {t('Create Customer')}
                   </button>
                 </div>
 
-                {isAddCustomerOpen && (
-                  <div className="bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg p-3 sm:p-4 mb-3 animate-fade-in shadow-none">
-                    <h4 className="text-xs font-semibold text-[#191E2B] mb-2">{t('Quick Add Customer')}</h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                      <input type="text" placeholder={t('Full Name')} value={newCustomer.name} onChange={e => setNewCustomer({ ...newCustomer, name: e.target.value })} className={inputCls} />
-                      <input type="text" placeholder={t('Phone Number')} value={newCustomer.phone} onChange={e => setNewCustomer({ ...newCustomer, phone: e.target.value })} className={inputCls} />
-                      <input type="email" placeholder={t('Email')} value={newCustomer.email} onChange={e => setNewCustomer({ ...newCustomer, email: e.target.value })} className={inputCls} />
-                      <input type="text" placeholder={t('Address')} value={newCustomer.address} onChange={e => setNewCustomer({ ...newCustomer, address: e.target.value })} className={inputCls} />
-                    </div>
-                    {customerError && (
-                      <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-2 font-medium flex items-center gap-1">
-                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                        <span className="leading-none pt-[1px]">{t(customerError)}</span>
-                      </p>
-                    )}
-                    <div className="flex justify-end gap-2 mt-3">
-                      <button type="button" onClick={() => { setIsAddCustomerOpen(false); setCustomerError(''); }} className="cursor-pointer h-7 sm:h-8 !min-h-[28px] sm:!min-h-[32px] px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-medium text-[#4E5668] hover:bg-[#EBEEF4] rounded-lg transition-colors">{t('Cancel')}</button>
-                      <button type="button" onClick={handleAddCustomer} disabled={addCustomerMutation.isPending} className="cursor-pointer h-7 sm:h-8 !min-h-[28px] sm:!min-h-[32px] px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] rounded-lg transition-colors disabled:opacity-50 shadow-none">{addCustomerMutation.isPending ? t('Saving...') : t('Save')}</button>
-                    </div>
-                  </div>
-                )}
+                <QuickAddCustomer
+                  isOpen={isAddCustomerOpen}
+                  initialName={quickAddCustomerName}
+                  onClose={() => {
+                    setIsAddCustomerOpen(false);
+                    setQuickAddCustomerName('');
+                  }}
+                  onSuccess={(created) => {
+                    setIsAddCustomerOpen(false);
+                    setQuickAddCustomerName('');
+                    if (created?._id) {
+                      setValue('customerId', created._id);
+                    }
+                  }}
+                />
 
                 <Controller name="customerId" control={control} render={({ field }) => (
                   <SearchableSelect
@@ -312,6 +254,11 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                     onChange={field.onChange}
                     placeholder={`${t('Select Customer')}`}
                     searchPlaceholder={t('Search by name or phone...')}
+                    onCreateNew={(term) => {
+                      setQuickAddCustomerName(term);
+                      setIsAddCustomerOpen(true);
+                    }}
+                    createButtonLabel={t('Create Customer')}
                   />
                 )} />
                 {errors.customerId && (
@@ -331,38 +278,61 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                   <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668]">
                     {t('Products')} <span className="text-[#B91C1C]">*</span>
                   </label>
-                  <button type="button" onClick={() => setIsAddProductOpen(!isAddProductOpen)}
+                  <button type="button" onClick={() => {
+                    setTargetProductIndex(null);
+                    setQuickAddProductName('');
+                    setIsAddProductOpen(!isAddProductOpen);
+                  }}
                     className="cursor-pointer bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] hover:bg-[#E0E4F9] h-6 sm:h-7 !min-h-[24px] sm:!min-h-[28px] px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] leading-none font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all shadow-none">
                     <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> {t('Create Product')}
                   </button>
                 </div>
 
-                {isAddProductOpen && (
-                  <div className="bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg p-3 sm:p-4 mb-3 animate-fade-in shadow-none">
-                    <h4 className="text-xs font-semibold text-[#191E2B] mb-2">{t('Quick Add Product')}</h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                      <input type="text" placeholder={t('Product Name')} value={newProduct.name} onChange={e => setNewProduct({ ...newProduct, name: e.target.value })} className={`${inputCls} sm:col-span-2`} />
-                      <input type="number" placeholder={t('Price')} value={newProduct.price} onChange={e => setNewProduct({ ...newProduct, price: e.target.value })} className={inputCls} />
-                      <input type="number" placeholder={t('Stock')} value={newProduct.stock} onChange={e => setNewProduct({ ...newProduct, stock: e.target.value })} className={inputCls} />
-                    </div>
-                    {productError && (
-                      <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-2 font-medium flex items-center gap-1">
-                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                        <span className="leading-none pt-[1px]">{t(productError)}</span>
-                      </p>
-                    )}
-                    <div className="flex justify-end gap-2 mt-3">
-                      <button type="button" onClick={() => { setIsAddProductOpen(false); setProductError(''); }} className="cursor-pointer h-7 sm:h-8 !min-h-[28px] sm:!min-h-[32px] px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-medium text-[#4E5668] hover:bg-[#EBEEF4] rounded-lg transition-colors">{t('Cancel')}</button>
-                      <button type="button" onClick={handleAddProduct} disabled={addProductMutation.isPending} className="cursor-pointer h-7 sm:h-8 !min-h-[28px] sm:!min-h-[32px] px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] rounded-lg transition-colors disabled:opacity-50 shadow-none">{addProductMutation.isPending ? t('Saving...') : t('Save')}</button>
-                    </div>
-                  </div>
-                )}
+                <QuickAddProduct
+                  isOpen={isAddProductOpen}
+                  initialName={quickAddProductName}
+                  onClose={() => {
+                    setIsAddProductOpen(false);
+                    setQuickAddProductName('');
+                    setTargetProductIndex(null);
+                  }}
+                  onSuccess={(created) => {
+                    setIsAddProductOpen(false);
+                    setQuickAddProductName('');
+                    if (created?._id) {
+                      if (targetProductIndex !== null && targetProductIndex !== undefined) {
+                        setValue(`products.${targetProductIndex}.productId`, created._id);
+                        setTargetProductIndex(null);
+                      } else {
+                        const currentProducts = getValues('products') || [];
+                        const emptyIndex = currentProducts.findIndex(p => !p.productId);
+                        if (emptyIndex !== -1) {
+                          setValue(`products.${emptyIndex}.productId`, created._id);
+                        } else {
+                          append({ productId: created._id, quantity: 1 });
+                        }
+                      }
+                    }
+                  }}
+                />
 
                 {fields.map((field, index) => (
                   <div key={field.id} className="flex gap-2 items-start">
                     <div className="flex-1 min-w-0">
                       <Controller name={`products.${index}.productId`} control={control} render={({ field }) => (
-                        <SearchableSelect options={products.map(p => ({ value: p._id, label: `${p.name} - ₹${p.price}` }))} value={field.value} onChange={field.onChange} placeholder={`${t('Select Product')}`} searchPlaceholder={t('Search by product name...')} />
+                        <SearchableSelect
+                          options={products.map(p => ({ value: p._id, label: `${p.name} - ₹${p.price}` }))}
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder={`${t('Select Product')}`}
+                          searchPlaceholder={t('Search by product name...')}
+                          onCreateNew={(term) => {
+                            setQuickAddProductName(term);
+                            setTargetProductIndex(index);
+                            setIsAddProductOpen(true);
+                          }}
+                          createButtonLabel={t('Create Product')}
+                        />
                       )} />
                       {errors.products?.[index]?.productId && (
                         <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1 font-medium flex items-center gap-1">

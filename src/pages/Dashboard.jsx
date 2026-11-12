@@ -405,7 +405,7 @@ const Dashboard = () => {
             { to: '/customers', label: 'Add Customer', icon: UserPlus },
             { to: '/products', label: 'Add Product', icon: PackagePlus },
             { to: '/reminders', label: 'Reminders', icon: BellRing },
-            { to: '/voice', label: 'Voice Entry', icon: Mic },
+            { to: '/voice', label: 'Voice Billing', icon: Mic },
             { to: '/reports', label: 'Reports', icon: BarChart3 },
           ].map((action) => {
             const Icon = action.icon;
