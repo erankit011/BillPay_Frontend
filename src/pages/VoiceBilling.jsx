@@ -21,6 +21,8 @@ import {
   RotateCcw,
   Sparkles,
   Trash2,
+  UserPlus,
+  X,
 } from 'lucide-react';
 import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
@@ -98,6 +100,8 @@ const VoiceBilling = () => {
   const [isAddCustomerOpen, setIsAddCustomerOpen] = useState(false);
   const [newCustomer, setNewCustomer] = useState({ name: '', phone: '', email: '', address: '' });
   const [customerError, setCustomerError] = useState('');
+  const customerSectionRef = useRef(null);
+  const customerPhoneInputRef = useRef(null);
 
   // Inline Quick-Add Product state
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
@@ -153,6 +157,7 @@ const VoiceBilling = () => {
           customerPhone: created.phone,
           customerBalance: 0,
           isNewSpokenCustomer: false,
+          newCustomerPhone: '',
         }));
       }
     },
@@ -232,15 +237,20 @@ const VoiceBilling = () => {
   };
 
   const handleQuickAddCustomer = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setCustomerError('');
     if (!newCustomer.name || !newCustomer.phone) {
       setCustomerError(t('Please fill required customer fields (Name and Phone)'));
       return;
     }
+    const cleanPhone = newCustomer.phone.trim();
+    if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
+      setCustomerError(t('Please enter a valid 10-digit mobile number'));
+      return;
+    }
     addCustomerMutation.mutate({
       name: newCustomer.name.trim(),
-      phone: newCustomer.phone.trim(),
+      phone: cleanPhone,
       email: newCustomer.email?.trim() || undefined,
       address: newCustomer.address?.trim() || undefined,
     });
@@ -419,6 +429,7 @@ const VoiceBilling = () => {
             customerId: initialCustomerId,
             customerName: matchedCustomerObj ? matchedCustomerObj.name : (isRealSpokenCustomer ? data.customerName : t('Counter Sale')),
             customerPhone: matchedCustomerObj?.phone || '',
+            newCustomerPhone: '',
             customerBalance: matchedCustomerObj?.balance || 0,
             isNewSpokenCustomer: isRealSpokenCustomer && !matchedCustomerObj,
             customerSuggestions: Array.isArray(data.customerSuggestions) ? data.customerSuggestions : [],
@@ -434,16 +445,20 @@ const VoiceBilling = () => {
         } else {
           // Pre-populate single Khata transaction
           let resolvedCustomerId = data.customerId || '';
-          if (!resolvedCustomerId && data.customerName) {
-            const foundCust = customersData.find(
+          let matchedCust = null;
+          if (resolvedCustomerId) {
+            matchedCust = customersData.find((c) => String(c._id) === String(resolvedCustomerId));
+          } else if (data.customerName) {
+            matchedCust = customersData.find(
               (c) => c.name.toLowerCase() === data.customerName.toLowerCase()
             );
-            if (foundCust) resolvedCustomerId = foundCust._id;
+            if (matchedCust) resolvedCustomerId = matchedCust._id;
           }
 
           setDraftTransaction({
-            customerId: resolvedCustomerId,
-            customerName: data.customerName || '',
+            customerId: resolvedCustomerId ? String(resolvedCustomerId) : '',
+            customerName: matchedCust ? matchedCust.name : (data.customerName || ''),
+            customerPhone: matchedCust ? matchedCust.phone : '',
             amount: data.amount || '',
             intent: data.intent || 'UDHAR',
             paymentMode: data.paymentMode || 'CASH',
@@ -523,6 +538,7 @@ const VoiceBilling = () => {
       customerId: String(sug._id),
       customerName: sug.name,
       customerPhone: sug.phone || '',
+      newCustomerPhone: '',
       customerBalance: sug.balance || 0,
       customerSuggestions: [],
       isNewSpokenCustomer: false,
@@ -620,39 +636,12 @@ const VoiceBilling = () => {
   const isCreditLimitExceeded = creditLimit > 0 && newTotalBalance > creditLimit && !isWalkin;
 
   /**
-   * Finalize Retail Bill Dispatch
+   * Internal Bill Execution Dispatch
    */
-  const handleFinalizeBill = async () => {
-    if (!draftBill || draftBill.products.length === 0) {
-      toast.error(t('Please add at least one product'));
-      return;
-    }
-
-    // Validation: All items must be matched to a product ID
-    const unmatchedIndex = draftBill.products.findIndex((p) => !p.productId);
-    if (unmatchedIndex !== -1) {
-      toast.error(
-        t('Please select a product from catalog for item #') +
-          (unmatchedIndex + 1) +
-          (draftBill.products[unmatchedIndex].name ? ` (${draftBill.products[unmatchedIndex].name})` : '')
-      );
-      return;
-    }
-
-    if ((isWalkin || isNewSpokenCustomer) && newPending > 0) {
-      toast.error(t('Udhaar is not allowed for Counter Sale or unsaved customers. Please enter full amount paid.'));
-      return;
-    }
-
-    if (isCreditLimitExceeded && !isWalkin) {
-      toast.error(`${t('Credit Limit Exceeded! Max udhaar allowed is ₹')}${creditLimit}`);
-      return;
-    }
-
+  const executeCreateBill = async () => {
     setIsSubmitting(true);
     try {
       let finalCustomerId = undefined;
-
       if (!isWalkin && draftBill.customerId && draftBill.customerId !== 'NEW_SPOKEN_CUSTOMER') {
         finalCustomerId = draftBill.customerId;
       }
@@ -696,6 +685,64 @@ const VoiceBilling = () => {
   };
 
   /**
+   * Finalize Retail Bill Dispatch
+   */
+  const handleFinalizeBill = async () => {
+    if (!draftBill || draftBill.products.length === 0) {
+      toast.error(t('Please add at least one product'));
+      return;
+    }
+
+    // Validation: All items must be matched to a product ID
+    const unmatchedIndex = draftBill.products.findIndex((p) => !p.productId);
+    if (unmatchedIndex !== -1) {
+      toast.error(
+        t('Please select a product from catalog for item #') +
+          (unmatchedIndex + 1) +
+          (draftBill.products[unmatchedIndex].name ? ` (${draftBill.products[unmatchedIndex].name})` : '')
+      );
+      return;
+    }
+
+    // If customer is a new spoken contact: show toast, scroll to customer input, and open Quick Create!
+    if (isNewSpokenCustomer) {
+      toast.error(
+        `${t('New customer')} "${draftBill.customerName}" ${t('detected! Please enter 10-digit mobile number to save customer.')}`,
+        { id: 'new-customer-required-toast', duration: 4500 }
+      );
+      setNewCustomer({
+        name: draftBill.customerName && draftBill.customerName !== t('Counter Sale') && draftBill.customerName !== 'Counter Sale'
+          ? draftBill.customerName
+          : '',
+        phone: '',
+        email: '',
+        address: '',
+      });
+      setCustomerError('');
+      setIsAddCustomerOpen(true);
+      if (customerSectionRef.current) {
+        customerSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      setTimeout(() => {
+        customerPhoneInputRef.current?.focus();
+      }, 250);
+      return;
+    }
+
+    if (isWalkin && newPending > 0) {
+      toast.error(t('Udhaar is not allowed for Counter Sale. Please enter full amount paid.'));
+      return;
+    }
+
+    if (isCreditLimitExceeded && !isWalkin) {
+      toast.error(`${t('Credit Limit Exceeded! Max udhaar allowed is ₹')}${creditLimit}`);
+      return;
+    }
+
+    await executeCreateBill();
+  };
+
+  /**
    * Finalize Single Khata Transaction
    */
   const handleFinalizeTransaction = async (e) => {
@@ -705,11 +752,20 @@ const VoiceBilling = () => {
       return;
     }
 
+    if (!draftTransaction.customerId) {
+      const phoneInput = (draftTransaction.customerPhone || '').trim();
+      if (!phoneInput || !/^[6-9]\d{9}$/.test(phoneInput)) {
+        toast.error(t('Please enter a valid 10-digit mobile number for new customer'));
+        return;
+      }
+    }
+
     setIsSubmitting(true);
     try {
       const response = await api.post('/transactions', {
         customerId: draftTransaction.customerId || undefined,
-        customerName: draftTransaction.customerName,
+        customerName: draftTransaction.customerName.trim(),
+        customerPhone: draftTransaction.customerPhone?.trim() || undefined,
         amount: parseFloat(draftTransaction.amount),
         type: draftTransaction.intent,
         paymentMode: draftTransaction.paymentMode,
@@ -1005,83 +1061,29 @@ const VoiceBilling = () => {
             </div>
 
             {/** 1. Customer Selection Section */}
-            <div className="space-y-1.5">
+            <div ref={customerSectionRef} className="space-y-1.5 scroll-mt-20">
               <div className="flex items-center justify-between">
                 <label className="text-xs sm:text-[13px] font-semibold text-[#191E2B]">
                   {t('Billed To Customer')}:
                 </label>
                 <button
                   type="button"
-                  onClick={() => setIsAddCustomerOpen(!isAddCustomerOpen)}
+                  onClick={() => {
+                    if (!isAddCustomerOpen && draftBill?.customerName && draftBill.customerName !== t('Counter Sale') && draftBill.customerName !== 'Counter Sale') {
+                      setNewCustomer((prev) => ({ ...prev, name: draftBill.customerName }));
+                    }
+                    const nextState = !isAddCustomerOpen;
+                    setIsAddCustomerOpen(nextState);
+                    if (nextState) {
+                      setTimeout(() => customerPhoneInputRef.current?.focus(), 250);
+                    }
+                  }}
                   className="cursor-pointer bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] hover:bg-[#E0E4F9] h-6 sm:h-7 px-2.5 rounded-lg text-[11px] font-semibold flex items-center gap-1 active:scale-95 transition-all shadow-none"
                 >
                   <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                   <span>{t('Create Customer')}</span>
                 </button>
               </div>
-
-              {/** Inline Quick-Add Customer Box */}
-              {isAddCustomerOpen && (
-                <div className="bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg p-3 sm:p-4 mb-2 animate-fade-in shadow-none">
-                  <h4 className="text-xs font-semibold text-[#191E2B] mb-2">{t('Quick Add Customer')}</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                    <input
-                      type="text"
-                      placeholder={t('Full Name')}
-                      value={newCustomer.name}
-                      onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
-                      className={inputCls}
-                    />
-                    <input
-                      type="text"
-                      placeholder={t('Phone Number')}
-                      value={newCustomer.phone}
-                      onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
-                      className={inputCls}
-                    />
-                    <input
-                      type="email"
-                      placeholder={t('Email')}
-                      value={newCustomer.email}
-                      onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
-                      className={inputCls}
-                    />
-                    <input
-                      type="text"
-                      placeholder={t('Address')}
-                      value={newCustomer.address}
-                      onChange={(e) => setNewCustomer({ ...newCustomer, address: e.target.value })}
-                      className={inputCls}
-                    />
-                  </div>
-                  {customerError && (
-                    <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-2 font-medium flex items-center gap-1">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                      <span className="leading-none pt-[1px]">{customerError}</span>
-                    </p>
-                  )}
-                  <div className="flex justify-end gap-2 mt-3">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsAddCustomerOpen(false);
-                        setCustomerError('');
-                      }}
-                      className="cursor-pointer h-7 sm:h-8 px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-medium text-[#4E5668] hover:bg-[#EBEEF4] rounded-lg transition-colors"
-                    >
-                      {t('Cancel')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleQuickAddCustomer}
-                      disabled={addCustomerMutation.isPending}
-                      className="cursor-pointer h-7 sm:h-8 px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] rounded-lg transition-colors disabled:opacity-50 shadow-none"
-                    >
-                      {addCustomerMutation.isPending ? t('Saving...') : t('Save')}
-                    </button>
-                  </div>
-                </div>
-              )}
 
               <SearchableSelect
                 options={customerOptions}
@@ -1119,25 +1121,87 @@ const VoiceBilling = () => {
                 </div>
               )}
 
-              {/** Alert if a real customer was spoken but not in contacts */}
-              {isNewSpokenCustomer && (
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 p-2.5 sm:px-3 sm:py-2 bg-[#FFFBEB] rounded-lg border border-[#FDE68A] text-xs">
-                  <div className="text-[#92400E] font-medium flex items-center gap-1.5 min-w-0">
-                    <Sparkles className="w-3.5 h-3.5 text-[#B45309] shrink-0" />
-                    <span className="leading-snug break-words">
-                      {t('Spoken name')}: <strong className="font-semibold text-[#78350F]">{draftBill.customerName}</strong> ({t('Not in contacts')})
-                    </span>
+              {/** Inline Quick-Add Customer Box (Right Under Customer Selection) */}
+              {isAddCustomerOpen && (
+                <div className="bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg p-3 sm:p-4 mt-2 animate-fade-in shadow-none">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="text-xs font-semibold text-[#191E2B] flex items-center gap-1.5">
+                      <UserPlus className="w-3.5 h-3.5 text-[#4338CA]" />
+                      <span>{t('Quick Add Customer')}</span>
+                    </h4>
+                    {isNewSpokenCustomer && (
+                      <span className="text-[11px] font-medium text-[#B45309] bg-[#FEF3C7] px-2 py-0.5 rounded border border-[#FDE68A]">
+                        {t('Spoken Name Auto-Filled')}
+                      </span>
+                    )}
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setNewCustomer((prev) => ({ ...prev, name: draftBill.customerName }));
-                      setIsAddCustomerOpen(true);
-                    }}
-                    className="cursor-pointer text-[#4338CA] font-semibold hover:underline self-start sm:self-auto shrink-0 text-[11px] sm:text-xs"
-                  >
-                    + {t('Save as New Customer')}
-                  </button>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                    <input
+                      type="text"
+                      placeholder={t('Full Name')}
+                      value={newCustomer.name}
+                      onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
+                      className={inputCls}
+                    />
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#757F94]">+91</span>
+                      <input
+                        ref={customerPhoneInputRef}
+                        type="tel"
+                        maxLength={10}
+                        placeholder={t('10-digit mobile number')}
+                        value={newCustomer.phone}
+                        onChange={(e) =>
+                          setNewCustomer({
+                            ...newCustomer,
+                            phone: e.target.value.replace(/\D/g, '').slice(0, 10),
+                          })
+                        }
+                        className="w-full h-10 sm:h-[42px] pl-11 pr-3 rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] text-xs sm:text-sm font-medium text-[#191E2B] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                        autoFocus
+                      />
+                    </div>
+                    <input
+                      type="email"
+                      placeholder={t('Email (Optional)')}
+                      value={newCustomer.email}
+                      onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
+                      className={inputCls}
+                    />
+                    <input
+                      type="text"
+                      placeholder={t('Address (Optional)')}
+                      value={newCustomer.address}
+                      onChange={(e) => setNewCustomer({ ...newCustomer, address: e.target.value })}
+                      className={inputCls}
+                    />
+                  </div>
+                  {customerError && (
+                    <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-2 font-medium flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span className="leading-none pt-[1px]">{customerError}</span>
+                    </p>
+                  )}
+                  <div className="flex justify-end gap-2 mt-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsAddCustomerOpen(false);
+                        setCustomerError('');
+                      }}
+                      className="cursor-pointer h-7 sm:h-8 px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-medium text-[#4E5668] hover:bg-[#EBEEF4] rounded-lg transition-colors"
+                    >
+                      {t('Cancel')}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleQuickAddCustomer}
+                      disabled={addCustomerMutation.isPending || !newCustomer.phone || newCustomer.phone.length !== 10}
+                      className="cursor-pointer h-7 sm:h-8 px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] rounded-lg transition-colors disabled:opacity-50 shadow-none"
+                    >
+                      {addCustomerMutation.isPending ? t('Saving...') : t('Save Customer')}
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -1533,9 +1597,20 @@ const VoiceBilling = () => {
 
             <div className="space-y-3.5">
               <div>
-                <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
-                  {t('Customer Name')} <span className="text-[#B91C1C]">*</span>
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs sm:text-[13px] font-medium text-[#4E5668]">
+                    {t('Customer Name')} <span className="text-[#B91C1C]">*</span>
+                  </label>
+                  {draftTransaction.customerId ? (
+                    <span className="text-[11px] font-semibold text-[#15803D] bg-[#DCFCE7] px-2 py-0.5 rounded border border-[#BBF7D0]">
+                      {t('Registered Customer')} {draftTransaction.customerPhone ? `(+91 ${draftTransaction.customerPhone})` : ''}
+                    </span>
+                  ) : (
+                    <span className="text-[11px] font-semibold text-[#B45309] bg-[#FEF3C7] px-2 py-0.5 rounded border border-[#FDE68A]">
+                      {t('New Customer')}
+                    </span>
+                  )}
+                </div>
                 <input
                   type="text"
                   value={draftTransaction.customerName}
@@ -1548,6 +1623,7 @@ const VoiceBilling = () => {
                       ...prev,
                       customerName: newName,
                       customerId: matchedCust ? matchedCust._id : '',
+                      customerPhone: matchedCust ? matchedCust.phone : (prev.customerPhone || ''),
                     }));
                   }}
                   required
@@ -1555,6 +1631,32 @@ const VoiceBilling = () => {
                   className={inputCls}
                 />
               </div>
+
+              {!draftTransaction.customerId && (
+                <div className="bg-[#FFFBEB] border border-[#FDE68A] rounded-lg p-3 space-y-1.5 animate-fade-in shadow-none">
+                  <label className="block text-xs sm:text-[13px] font-semibold text-[#92400E]">
+                    {t('Mobile Number')} <span className="text-[#B91C1C]">*</span>
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#757F94]">+91</span>
+                    <input
+                      type="tel"
+                      maxLength={10}
+                      value={draftTransaction.customerPhone || ''}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                        setDraftTransaction((prev) => ({ ...prev, customerPhone: val }));
+                      }}
+                      required
+                      placeholder={t('10-digit mobile number')}
+                      className="w-full h-10 rounded-lg border border-[#FDE68A] bg-white pl-11 pr-3 text-xs sm:text-sm font-medium text-[#191E2B] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                    />
+                  </div>
+                  <p className="text-[11px] font-medium text-[#B45309]">
+                    {t('A 10-digit mobile number is mandatory to register this new customer in your Khata.')}
+                  </p>
+                </div>
+              )}
 
               <div>
                 <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-1.5">
