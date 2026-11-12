@@ -5,7 +5,7 @@
  * Uses <div> container (NO nested <form>) and type="button" to prevent parent form submission
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Plus, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -16,14 +16,38 @@ const QuickAddProduct = ({
   isOpen = false,
   onClose,
   onSuccess,
+  initialName = '',
 }) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 
-  const [name, setName] = useState('');
+  const [name, setName] = useState(initialName || '');
   const [price, setPrice] = useState('');
   const [stock, setStock] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
+
+  const nameInputRef = useRef(null);
+  const priceInputRef = useRef(null);
+  const stockInputRef = useRef(null);
+
+  useEffect(() => {
+    if (initialName) {
+      setName(initialName);
+    }
+  }, [initialName]);
+
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        if (initialName) {
+          priceInputRef.current?.focus();
+        } else {
+          nameInputRef.current?.focus();
+        }
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, initialName]);
 
   const addProductMutation = useMutation({
     mutationFn: (newProd) => api.post('/products', newProd),
@@ -82,6 +106,13 @@ const QuickAddProduct = ({
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
+      if (errors.name) {
+        nameInputRef.current?.focus();
+      } else if (errors.price) {
+        priceInputRef.current?.focus();
+      } else if (errors.stock) {
+        stockInputRef.current?.focus();
+      }
       return;
     }
 
@@ -116,18 +147,25 @@ const QuickAddProduct = ({
   return (
     <div className="bg-[#F0F2F6] border border-[#DCE1EA] rounded-xl p-3.5 sm:p-4 mb-3.5 animate-fade-in shadow-none">
       {/** Drawer Header */}
-      <div className="flex items-center gap-2.5 pb-2.5 mb-3 border-b border-[#DCE1EA]">
-        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0 border border-[#D8DCF5]">
-          <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+      <div className="flex items-center justify-between gap-2.5 pb-2.5 mb-3 border-b border-[#DCE1EA]">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#EEF0FB] text-[#4338CA] flex items-center justify-center shrink-0 border border-[#D8DCF5]">
+            <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          </div>
+          <div>
+            <h4 className="text-xs sm:text-[13px] font-semibold text-[#191E2B] leading-tight">
+              {t('Add New Product')}
+            </h4>
+            <p className="text-[11px] font-medium text-[#757F94] leading-tight mt-0.5">
+              {t('Add a new item directly to your inventory')}
+            </p>
+          </div>
         </div>
-        <div>
-          <h4 className="text-xs sm:text-[13px] font-semibold text-[#191E2B] leading-tight">
-            {t('Add New Product')}
-          </h4>
-          <p className="text-[11px] font-medium text-[#757F94] leading-tight mt-0.5">
-            {t('Add a new item directly to your inventory')}
-          </p>
-        </div>
+        {initialName && (
+          <span className="text-[11px] font-medium text-[#4338CA] bg-[#EEF0FB] px-2 py-0.5 rounded border border-[#D8DCF5] shrink-0">
+            {t('Auto-Filled')}
+          </span>
+        )}
       </div>
 
       {/** Server-level error notification */}
@@ -147,6 +185,7 @@ const QuickAddProduct = ({
             {t('Product Name')} <span className="text-[#B91C1C]">*</span>
           </label>
           <input
+            ref={nameInputRef}
             type="text"
             placeholder="e.g. Atta 5kg"
             value={name}
@@ -174,6 +213,7 @@ const QuickAddProduct = ({
             {t('Price (₹)')} <span className="text-[#B91C1C]">*</span>
           </label>
           <input
+            ref={priceInputRef}
             type="number"
             placeholder="0"
             min="0"
@@ -203,6 +243,7 @@ const QuickAddProduct = ({
             {t('Stock Qty')} <span className="text-[#B91C1C]">*</span>
           </label>
           <input
+            ref={stockInputRef}
             type="number"
             placeholder="0"
             min="0"

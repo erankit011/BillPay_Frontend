@@ -5,13 +5,21 @@
 
 import { useTranslation } from 'react-i18next';
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, ChevronDown } from 'lucide-react';
+import { Search, ChevronDown, Plus } from 'lucide-react';
 import ReactDOM from 'react-dom';
 
 /**
  * SearchableSelect Component
  */
-const SearchableSelect = ({ options, value, onChange, placeholder, searchPlaceholder = "Search..." }) => {
+const SearchableSelect = ({
+  options,
+  value,
+  onChange,
+  placeholder,
+  searchPlaceholder = "Search...",
+  onCreateNew,
+  createButtonLabel,
+}) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -105,7 +113,26 @@ const SearchableSelect = ({ options, value, onChange, placeholder, searchPlaceho
        */}
       <div className="overflow-y-auto max-h-48">
         {filteredOptions.length === 0 ? (
-          <div className="p-4 text-sm text-center text-[#757F94] font-medium">{t("No results found")}</div>
+          <div className="p-3.5 text-center">
+            <div className="text-xs text-[#757F94] font-medium mb-2">
+              {searchTerm.trim() ? `${t('No results found for')} "${searchTerm}"` : t('No results found')}
+            </div>
+            {onCreateNew && searchTerm.trim() && (
+              <button
+                type="button"
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  const term = searchTerm.trim();
+                  closeDropdown();
+                  onCreateNew(term);
+                }}
+                className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#EEF0FB] hover:bg-[#E0E4F9] text-[#4338CA] border border-[#D8DCF5] rounded-lg text-xs font-semibold transition-all shadow-none active:scale-95"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>{createButtonLabel ? `${createButtonLabel} "${searchTerm}"` : `${t('Create')} "${searchTerm}"`}</span>
+              </button>
+            )}
+          </div>
         ) : (
           filteredOptions.map(opt => (
             <div

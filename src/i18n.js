@@ -813,7 +813,14 @@ const resources = {
       "UdharPay v{{version}} is ready to install. Update now to experience new features and improvements.": "UdharPay v{{version}} is ready to install. Update now to experience new features and improvements.",
       "You are using the latest version of UdharPay": "You are using the latest version of UdharPay",
       "Unable to check for updates right now": "Unable to check for updates right now",
-      "You are offline. Please check your internet connection.": "You are offline. Please check your internet connection."
+      "You are offline. Please check your internet connection.": "You are offline. Please check your internet connection.",
+      "Product not found in store": "Product not found in store",
+      "Add to Catalog": "Add to Catalog",
+      "Please choose a product from catalog": "Please choose a product from catalog",
+      "Auto-Filled": "Auto-Filled",
+      "No results found for": "No results found for",
+      "Please add": "Please add",
+      "to catalog or select from list": "to catalog or select from list"
     }
   },
   hi: {
@@ -1711,7 +1718,14 @@ const resources = {
       "UdharPay v{{version}} is ready to install. Update now to experience new features and improvements.": "उधारपे v{{version}} इंस्टॉल के लिए तैयार है। नए फीचर्स और सुधारों के लिए अभी अपडेट करें।",
       "You are using the latest version of UdharPay": "आप उधारपे का नवीनतम संस्करण इस्तेमाल कर रहे हैं",
       "Unable to check for updates right now": "इस समय अपडेट की जाँच नहीं हो सकी",
-      "You are offline. Please check your internet connection.": "आप ऑफ़लाइन हैं। कृपया इंटरनेट कनेक्शन जांचें।"
+      "You are offline. Please check your internet connection.": "आप ऑफ़लाइन हैं। कृपया इंटरनेट कनेक्शन जांचें।",
+      "Product not found in store": "सामान दुकान में नहीं मिला",
+      "Add to Catalog": "स्टोर में जोड़ें",
+      "Please choose a product from catalog": "कृपया स्टोर सूची से सामान चुनें",
+      "Auto-Filled": "स्वतः भरा गया",
+      "No results found for": "इसके लिए कोई परिणाम नहीं मिला",
+      "Please add": "कृपया",
+      "to catalog or select from list": "को स्टोर में जोड़ें या सूची से चुनें"
     }
   }
 };

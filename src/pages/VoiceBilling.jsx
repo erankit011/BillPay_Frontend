@@ -100,10 +100,13 @@ const VoiceBilling = () => {
 
   // Inline Quick-Add Customer & Product states
   const [isAddCustomerOpen, setIsAddCustomerOpen] = useState(false);
+  const [quickAddCustomerName, setQuickAddCustomerName] = useState('');
   const customerSectionRef = useRef(null);
   const khataCustomerSectionRef = useRef(null);
   const customerPhoneInputRef = useRef(null);
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
+  const [quickAddProductName, setQuickAddProductName] = useState('');
+  const [quickAddProductLineIndex, setQuickAddProductLineIndex] = useState(null);
 
   const recognitionRef = useRef(null);
 
@@ -435,8 +438,8 @@ const VoiceBilling = () => {
       };
     });
 
-    // Silently learn alias in background if spoken phrase exists
-    const phrase = spokenPhraseToLearn || draftBill?.products?.[index]?.rawSpokenName;
+    // Only learn alias when explicitly selected from suggested phonetic matches
+    const phrase = spokenPhraseToLearn;
     if (phrase && phrase.length >= 2 && phrase.toLowerCase() !== selectedProd.name.toLowerCase()) {
       api.post('/voice/alias', {
         entityType: 'PRODUCT',
@@ -624,11 +627,16 @@ const VoiceBilling = () => {
     // Validation: All items must be matched to a product ID
     const unmatchedIndex = draftBill.products.findIndex((p) => !p.productId);
     if (unmatchedIndex !== -1) {
+      const unmatchedItem = draftBill.products[unmatchedIndex];
       toast.error(
-        t('Please select a product from catalog for item #') +
-          (unmatchedIndex + 1) +
-          (draftBill.products[unmatchedIndex].name ? ` (${draftBill.products[unmatchedIndex].name})` : '')
+        unmatchedItem.name
+          ? `${t('Please add')} "${unmatchedItem.name}" ${t('to catalog or select from list')}`
+          : `${t('Please select a product from catalog for item #')}${unmatchedIndex + 1}`,
+        { id: 'unmatched-product-toast', duration: 4000 }
       );
+      setQuickAddProductLineIndex(unmatchedIndex);
+      setQuickAddProductName(unmatchedItem.name || unmatchedItem.rawSpokenName || '');
+      setIsAddProductOpen(true);
       return;
     }
 
@@ -1042,6 +1050,11 @@ const VoiceBilling = () => {
                 }}
                 placeholder={t('Select Customer or Counter Sale')}
                 searchPlaceholder={t('Search by name or phone...')}
+                onCreateNew={(term) => {
+                  setQuickAddCustomerName(term);
+                  setIsAddCustomerOpen(true);
+                }}
+                createButtonLabel={t('Create Customer')}
               />
 
               {/** Customer suggestion chips */}
@@ -1066,17 +1079,22 @@ const VoiceBilling = () => {
               <QuickAddCustomer
                 isOpen={isAddCustomerOpen}
                 initialName={
-                  draftBill?.customerName &&
+                  quickAddCustomerName ||
+                  (draftBill?.customerName &&
                   draftBill.customerName !== t('Counter Sale') &&
                   draftBill.customerName !== 'Counter Sale'
                     ? draftBill.customerName
-                    : ''
+                    : '')
                 }
                 isSpokenName={Boolean(isNewSpokenCustomer && draftBill?.customerName)}
                 phoneInputRef={customerPhoneInputRef}
-                onClose={() => setIsAddCustomerOpen(false)}
+                onClose={() => {
+                  setIsAddCustomerOpen(false);
+                  setQuickAddCustomerName('');
+                }}
                 onSuccess={(created) => {
                   setIsAddCustomerOpen(false);
+                  setQuickAddCustomerName('');
                   if (created?._id) {
                     setDraftBill((prev) => ({
                       ...prev,
@@ -1100,7 +1118,11 @@ const VoiceBilling = () => {
                 </label>
                 <button
                   type="button"
-                  onClick={() => setIsAddProductOpen(!isAddProductOpen)}
+                  onClick={() => {
+                    setQuickAddProductLineIndex(null);
+                    setQuickAddProductName('');
+                    setIsAddProductOpen(!isAddProductOpen);
+                  }}
                   className="cursor-pointer bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] hover:bg-[#E0E4F9] h-6 sm:h-7 px-2.5 rounded-lg text-[11px] font-semibold flex items-center gap-1 active:scale-95 transition-all shadow-none"
                 >
                   <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
@@ -1111,27 +1133,40 @@ const VoiceBilling = () => {
               {/** Inline Quick-Add Product Box */}
               <QuickAddProduct
                 isOpen={isAddProductOpen}
-                onClose={() => setIsAddProductOpen(false)}
+                initialName={quickAddProductName}
+                onClose={() => {
+                  setIsAddProductOpen(false);
+                  setQuickAddProductName('');
+                  setQuickAddProductLineIndex(null);
+                }}
                 onSuccess={(created) => {
                   setIsAddProductOpen(false);
+                  setQuickAddProductName('');
                   if (created?._id) {
                     setDraftBill((prev) => {
                       const nextProducts = [...prev.products];
-                      const emptyIdx = nextProducts.findIndex((p) => !p.productId);
-                      if (emptyIdx !== -1) {
-                        nextProducts[emptyIdx] = {
+                      const targetIdx =
+                        quickAddProductLineIndex !== null && quickAddProductLineIndex !== undefined
+                          ? quickAddProductLineIndex
+                          : nextProducts.findIndex((p) => !p.productId);
+
+                      if (targetIdx !== -1 && nextProducts[targetIdx]) {
+                        const currentQty = nextProducts[targetIdx].quantity || 1;
+                        nextProducts[targetIdx] = {
                           productId: created._id,
                           name: created.name,
+                          rawSpokenName: nextProducts[targetIdx].rawSpokenName || created.name,
                           price: created.price,
-                          quantity: nextProducts[emptyIdx].quantity || 1,
+                          quantity: currentQty,
                           stock: created.stock,
-                          total: created.price * (nextProducts[emptyIdx].quantity || 1),
+                          total: created.price * currentQty,
                           matched: true,
                         };
                       } else {
                         nextProducts.push({
                           productId: created._id,
                           name: created.name,
+                          rawSpokenName: created.name,
                           price: created.price,
                           quantity: 1,
                           stock: created.stock,
@@ -1139,6 +1174,7 @@ const VoiceBilling = () => {
                           matched: true,
                         });
                       }
+                      setQuickAddProductLineIndex(null);
                       const newSubtotal = nextProducts.reduce((sum, it) => sum + (it.total || 0), 0);
                       return {
                         ...prev,
@@ -1164,13 +1200,29 @@ const VoiceBilling = () => {
                       key={index}
                       className="bg-white p-3 sm:p-3.5 rounded-xl border border-[#DCE1EA] hover:border-[#CBD5E1] transition-all space-y-2.5 shadow-none"
                     >
-                      {/** Friendly guidance if item needs manual confirmation or wasn't auto-matched */}
-                      {!isMapped && item.name && (
-                        <div className="text-[11px] sm:text-xs font-medium text-[#92400E] bg-[#FFFBEB] px-2.5 py-1.5 rounded-lg border border-[#FDE68A] flex items-center gap-1.5">
-                          <Sparkles className="w-3.5 h-3.5 text-[#B45309] shrink-0" />
-                          <span className="break-words">
-                            {t('Please select product from list or tap suggestion')}: "{item.name}"
-                          </span>
+                      {/** Unmatched product guidance banner with 1-click Add to Catalog button */}
+                      {!isMapped && (
+                        <div className="text-[11px] sm:text-xs font-medium text-[#92400E] bg-[#FFFBEB] p-2.5 rounded-lg border border-[#FDE68A] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <Sparkles className="w-3.5 h-3.5 text-[#B45309] shrink-0" />
+                            <span className="truncate">
+                              {item.name
+                                ? `${t('Product not found in store')}: "${item.name}"`
+                                : t('Please choose a product from catalog')}
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setQuickAddProductLineIndex(index);
+                              setQuickAddProductName(item.name || item.rawSpokenName || '');
+                              setIsAddProductOpen(true);
+                            }}
+                            className="cursor-pointer shrink-0 inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-[#432BC9] bg-[#EEF2FF] hover:bg-[#E0E7FF] border border-[#C7D2FE] rounded-lg transition-all active:scale-95 shadow-none self-start sm:self-auto"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>{t('Add to Catalog')}</span>
+                          </button>
                         </div>
                       )}
 
@@ -1214,6 +1266,12 @@ const VoiceBilling = () => {
                                 : t('Choose Product from Store...')
                             }
                             searchPlaceholder={t('Search by product name...')}
+                            onCreateNew={(term) => {
+                              setQuickAddProductLineIndex(index);
+                              setQuickAddProductName(term);
+                              setIsAddProductOpen(true);
+                            }}
+                            createButtonLabel={t('Create Product')}
                           />
                         </div>
 
@@ -1507,6 +1565,11 @@ const VoiceBilling = () => {
                   }}
                   placeholder={t('Select Customer')}
                   searchPlaceholder={t('Search by name or phone...')}
+                  onCreateNew={(term) => {
+                    setQuickAddCustomerName(term);
+                    setIsAddCustomerOpen(true);
+                  }}
+                  createButtonLabel={t('Create Customer')}
                 />
 
                 {/** Customer suggestion chips */}
@@ -1531,17 +1594,22 @@ const VoiceBilling = () => {
                 <QuickAddCustomer
                   isOpen={isAddCustomerOpen}
                   initialName={
-                    draftTransaction?.customerName &&
+                    quickAddCustomerName ||
+                    (draftTransaction?.customerName &&
                     draftTransaction.customerName !== t('Counter Sale') &&
                     draftTransaction.customerName !== 'Counter Sale'
                       ? draftTransaction.customerName
-                      : ''
+                      : '')
                   }
                   isSpokenName={Boolean(draftTransaction?.isNewSpokenCustomer && draftTransaction?.customerName)}
                   phoneInputRef={customerPhoneInputRef}
-                  onClose={() => setIsAddCustomerOpen(false)}
+                  onClose={() => {
+                    setIsAddCustomerOpen(false);
+                    setQuickAddCustomerName('');
+                  }}
                   onSuccess={(created) => {
                     setIsAddCustomerOpen(false);
+                    setQuickAddCustomerName('');
                     if (created?._id) {
                       setDraftTransaction((prev) => ({
                         ...prev,

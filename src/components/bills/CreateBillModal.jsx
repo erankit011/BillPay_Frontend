@@ -47,6 +47,9 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
   const { user: shopDetails } = useSelector(state => state.auth);
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
   const [isAddCustomerOpen, setIsAddCustomerOpen] = useState(false);
+  const [quickAddCustomerName, setQuickAddCustomerName] = useState('');
+  const [quickAddProductName, setQuickAddProductName] = useState('');
+  const [targetProductIndex, setTargetProductIndex] = useState(null);
   const [billError, setBillError] = useState('');
 
   const { register, handleSubmit, control, formState: { errors }, reset, setValue, getValues, watch } = useForm({
@@ -216,7 +219,10 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                   <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668]">
                     {t('Customer')} <span className="text-[#B91C1C]">*</span>
                   </label>
-                  <button type="button" onClick={() => setIsAddCustomerOpen(!isAddCustomerOpen)}
+                  <button type="button" onClick={() => {
+                    setQuickAddCustomerName('');
+                    setIsAddCustomerOpen(!isAddCustomerOpen);
+                  }}
                     className="cursor-pointer bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] hover:bg-[#E0E4F9] h-6 sm:h-7 !min-h-[24px] sm:!min-h-[28px] px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] leading-none font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all shadow-none">
                     <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> {t('Create Customer')}
                   </button>
@@ -224,9 +230,14 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
 
                 <QuickAddCustomer
                   isOpen={isAddCustomerOpen}
-                  onClose={() => setIsAddCustomerOpen(false)}
+                  initialName={quickAddCustomerName}
+                  onClose={() => {
+                    setIsAddCustomerOpen(false);
+                    setQuickAddCustomerName('');
+                  }}
                   onSuccess={(created) => {
                     setIsAddCustomerOpen(false);
+                    setQuickAddCustomerName('');
                     if (created?._id) {
                       setValue('customerId', created._id);
                     }
@@ -243,6 +254,11 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                     onChange={field.onChange}
                     placeholder={`${t('Select Customer')}`}
                     searchPlaceholder={t('Search by name or phone...')}
+                    onCreateNew={(term) => {
+                      setQuickAddCustomerName(term);
+                      setIsAddCustomerOpen(true);
+                    }}
+                    createButtonLabel={t('Create Customer')}
                   />
                 )} />
                 {errors.customerId && (
@@ -262,7 +278,11 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                   <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668]">
                     {t('Products')} <span className="text-[#B91C1C]">*</span>
                   </label>
-                  <button type="button" onClick={() => setIsAddProductOpen(!isAddProductOpen)}
+                  <button type="button" onClick={() => {
+                    setTargetProductIndex(null);
+                    setQuickAddProductName('');
+                    setIsAddProductOpen(!isAddProductOpen);
+                  }}
                     className="cursor-pointer bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] hover:bg-[#E0E4F9] h-6 sm:h-7 !min-h-[24px] sm:!min-h-[28px] px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] leading-none font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all shadow-none">
                     <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> {t('Create Product')}
                   </button>
@@ -270,16 +290,27 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
 
                 <QuickAddProduct
                   isOpen={isAddProductOpen}
-                  onClose={() => setIsAddProductOpen(false)}
+                  initialName={quickAddProductName}
+                  onClose={() => {
+                    setIsAddProductOpen(false);
+                    setQuickAddProductName('');
+                    setTargetProductIndex(null);
+                  }}
                   onSuccess={(created) => {
                     setIsAddProductOpen(false);
+                    setQuickAddProductName('');
                     if (created?._id) {
-                      const currentProducts = getValues('products') || [];
-                      const emptyIndex = currentProducts.findIndex(p => !p.productId);
-                      if (emptyIndex !== -1) {
-                        setValue(`products.${emptyIndex}.productId`, created._id);
+                      if (targetProductIndex !== null && targetProductIndex !== undefined) {
+                        setValue(`products.${targetProductIndex}.productId`, created._id);
+                        setTargetProductIndex(null);
                       } else {
-                        append({ productId: created._id, quantity: 1 });
+                        const currentProducts = getValues('products') || [];
+                        const emptyIndex = currentProducts.findIndex(p => !p.productId);
+                        if (emptyIndex !== -1) {
+                          setValue(`products.${emptyIndex}.productId`, created._id);
+                        } else {
+                          append({ productId: created._id, quantity: 1 });
+                        }
                       }
                     }
                   }}
@@ -289,7 +320,19 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                   <div key={field.id} className="flex gap-2 items-start">
                     <div className="flex-1 min-w-0">
                       <Controller name={`products.${index}.productId`} control={control} render={({ field }) => (
-                        <SearchableSelect options={products.map(p => ({ value: p._id, label: `${p.name} - ₹${p.price}` }))} value={field.value} onChange={field.onChange} placeholder={`${t('Select Product')}`} searchPlaceholder={t('Search by product name...')} />
+                        <SearchableSelect
+                          options={products.map(p => ({ value: p._id, label: `${p.name} - ₹${p.price}` }))}
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder={`${t('Select Product')}`}
+                          searchPlaceholder={t('Search by product name...')}
+                          onCreateNew={(term) => {
+                            setQuickAddProductName(term);
+                            setTargetProductIndex(index);
+                            setIsAddProductOpen(true);
+                          }}
+                          createButtonLabel={t('Create Product')}
+                        />
                       )} />
                       {errors.products?.[index]?.productId && (
                         <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1 font-medium flex items-center gap-1">

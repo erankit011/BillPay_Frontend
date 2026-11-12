@@ -39,15 +39,19 @@ const QuickAddCustomer = ({
     }
   }, [initialName]);
 
-  // Auto-focus on phone input after drawer opens
+  // Auto-focus on appropriate input after drawer opens
   useEffect(() => {
     if (isOpen) {
       const timer = setTimeout(() => {
-        activePhoneRef.current?.focus();
+        if (initialName) {
+          activePhoneRef.current?.focus();
+        } else {
+          nameInputRef.current?.focus();
+        }
       }, 200);
       return () => clearTimeout(timer);
     }
-  }, [isOpen, activePhoneRef]);
+  }, [isOpen, initialName, activePhoneRef]);
 
   const addCustomerMutation = useMutation({
     mutationFn: (newCust) => api.post('/customers', newCust),
