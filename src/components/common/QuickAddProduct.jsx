@@ -82,8 +82,6 @@ const QuickAddProduct = ({
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
-      const firstError = errors.name || errors.price || errors.stock;
-      toast.error(firstError);
       return;
     }
 

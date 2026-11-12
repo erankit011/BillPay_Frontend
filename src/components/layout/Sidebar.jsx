@@ -63,8 +63,7 @@ const Sidebar = ({
   const isShopkeeperBillingActive = useMemo(() => {
     return (
       location.pathname === '/bills' ||
-      location.pathname === '/voice' ||
-      location.pathname === '/reminders'
+      location.pathname === '/voice'
     );
   }, [location.pathname]);
 
@@ -551,27 +550,33 @@ const Sidebar = ({
                       }`
                     }
                   >
-                    {t('Voice Entry')}
-                  </NavLink>
-
-                  <NavLink
-                    to="/reminders"
-                    onClick={handleNavClick}
-                    className={({ isActive }) =>
-                      `flex items-center px-3 py-1.5 rounded-lg border text-[13px] transition-colors ${
-                        isActive
-                          ? 'bg-[#EEF0FB] text-[#3730A3] border-transparent font-medium shadow-none'
-                          : 'text-[#4E5668] hover:text-[#191E2B] hover:bg-[#F0F2F6] border-transparent font-medium'
-                      }`
-                    }
-                  >
-                    {t('Reminders')}
+                    {t('Voice Billing')}
                   </NavLink>
                 </div>
               )}
             </div>
           )}
         </div>
+
+        {/**
+         * Payment Reminders Route
+         * Automated and manual customer payment notifications
+         */}
+        <NavLink
+          to="/reminders"
+          onClick={handleNavClick}
+          title={isCollapsed ? t('Reminders') : undefined}
+          className={({ isActive }) =>
+            `flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
+              isActive
+                ? 'bg-[#EEF0FB] text-[#3730A3] border-transparent font-medium shadow-none'
+                : 'text-[#4E5668] hover:text-[#191E2B] hover:bg-[#F0F2F6] border-transparent font-medium'
+            } ${isCollapsed ? 'justify-center px-2' : ''}`
+          }
+        >
+          <Bell className="w-4 h-4 shrink-0" />
+          {!isCollapsed && <span>{t('Reminders')}</span>}
+        </NavLink>
 
         {/**
          * Financial Reports Route

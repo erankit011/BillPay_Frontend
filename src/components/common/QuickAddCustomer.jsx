@@ -23,6 +23,7 @@ const QuickAddCustomer = ({
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const internalPhoneRef = useRef(null);
+  const nameInputRef = useRef(null);
   const activePhoneRef = externalPhoneRef || internalPhoneRef;
 
   const [name, setName] = useState(initialName || '');
@@ -108,10 +109,8 @@ const QuickAddCustomer = ({
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
-      const firstError = errors.name || errors.phone || errors.email;
-      toast.error(firstError);
       if (errors.name) {
-        // keep focus on current field
+        nameInputRef.current?.focus();
       } else if (errors.phone) {
         activePhoneRef.current?.focus();
       }
@@ -189,6 +188,7 @@ const QuickAddCustomer = ({
             {t('Full Name')} <span className="text-[#B91C1C]">*</span>
           </label>
           <input
+            ref={nameInputRef}
             type="text"
             placeholder={t('Enter Full Name')}
             value={name}
