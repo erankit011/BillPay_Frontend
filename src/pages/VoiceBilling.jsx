@@ -31,6 +31,8 @@ import { useSelector } from 'react-redux';
 import SwirlingLoader from '../components/common/SwirlingLoader';
 import BusinessSetupModal from '../components/common/BusinessSetupModal';
 import SearchableSelect from '../components/common/SearchableSelect';
+import QuickAddCustomer from '../components/common/QuickAddCustomer';
+import QuickAddProduct from '../components/common/QuickAddProduct';
 import { generateInvoicePDF } from '../utils/generateInvoicePDF';
 import toast from 'react-hot-toast';
 
@@ -96,18 +98,12 @@ const VoiceBilling = () => {
   const [createdBill, setCreatedBill] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Inline Quick-Add Customer state
+  // Inline Quick-Add Customer & Product states
   const [isAddCustomerOpen, setIsAddCustomerOpen] = useState(false);
-  const [newCustomer, setNewCustomer] = useState({ name: '', phone: '', email: '', address: '' });
-  const [customerError, setCustomerError] = useState('');
   const customerSectionRef = useRef(null);
   const khataCustomerSectionRef = useRef(null);
   const customerPhoneInputRef = useRef(null);
-
-  // Inline Quick-Add Product state
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
-  const [newProduct, setNewProduct] = useState({ name: '', price: '', stock: '' });
-  const [productError, setProductError] = useState('');
 
   const recognitionRef = useRef(null);
 
@@ -156,133 +152,7 @@ const VoiceBilling = () => {
     }));
   }, [productsData, t]);
 
-  // Quick Customer Creation Mutation
-  const addCustomerMutation = useMutation({
-    mutationFn: (cust) => api.post('/customers', cust),
-    onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: ['customers'] });
-      setIsAddCustomerOpen(false);
-      const created = res.data.data;
-      setNewCustomer({ name: '', phone: '', email: '', address: '' });
-      setCustomerError('');
-      toast.success(t('Customer created successfully'));
 
-      if (draftBill) {
-        setDraftBill((prev) => ({
-          ...prev,
-          customerId: created._id,
-          customerName: created.name,
-          customerPhone: created.phone,
-          customerBalance: 0,
-          isNewSpokenCustomer: false,
-          newCustomerPhone: '',
-        }));
-      }
-
-      if (draftTransaction) {
-        setDraftTransaction((prev) => ({
-          ...prev,
-          customerId: created._id,
-          customerName: created.name,
-          customerPhone: created.phone,
-          isNewSpokenCustomer: false,
-        }));
-      }
-    },
-    onError: (err) => {
-      const errMsg = err.response?.data?.message || err.message;
-      setCustomerError(errMsg);
-      toast.error(errMsg);
-    },
-  });
-
-  // Quick Product Creation Mutation
-  const addProductMutation = useMutation({
-    mutationFn: (prod) => api.post('/products', prod),
-    onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-      setIsAddProductOpen(false);
-      const created = res.data.data;
-      setNewProduct({ name: '', price: '', stock: '' });
-      setProductError('');
-      toast.success(t('Product created successfully'));
-
-      if (draftBill) {
-        setDraftBill((prev) => {
-          const nextProducts = [...prev.products];
-          const emptyIdx = nextProducts.findIndex((p) => !p.productId);
-          if (emptyIdx !== -1) {
-            nextProducts[emptyIdx] = {
-              productId: created._id,
-              name: created.name,
-              price: created.price,
-              quantity: nextProducts[emptyIdx].quantity || 1,
-              stock: created.stock,
-              total: created.price * (nextProducts[emptyIdx].quantity || 1),
-              matched: true,
-            };
-          } else {
-            nextProducts.push({
-              productId: created._id,
-              name: created.name,
-              price: created.price,
-              quantity: 1,
-              stock: created.stock,
-              total: created.price,
-              matched: true,
-            });
-          }
-          const newSubtotal = nextProducts.reduce((sum, it) => sum + (it.total || 0), 0);
-          return {
-            ...prev,
-            products: nextProducts,
-            subtotal: newSubtotal,
-            grandTotal: newSubtotal,
-            amountPaid: prev.paymentMode === 'CREDIT' ? 0 : newSubtotal,
-          };
-        });
-      }
-    },
-    onError: (err) => {
-      const errMsg = err.response?.data?.message || err.message;
-      setProductError(errMsg);
-      toast.error(errMsg);
-    },
-  });
-
-  const handleQuickAddProduct = (e) => {
-    e.preventDefault();
-    setProductError('');
-    if (!newProduct.name || newProduct.price === '' || newProduct.stock === '') {
-      setProductError(t('Please fill all product fields'));
-      return;
-    }
-    addProductMutation.mutate({
-      name: newProduct.name.trim(),
-      price: Number(newProduct.price),
-      stock: Number(newProduct.stock),
-    });
-  };
-
-  const handleQuickAddCustomer = (e) => {
-    if (e) e.preventDefault();
-    setCustomerError('');
-    if (!newCustomer.name || !newCustomer.phone) {
-      setCustomerError(t('Please fill required customer fields (Name and Phone)'));
-      return;
-    }
-    const cleanPhone = newCustomer.phone.trim();
-    if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
-      setCustomerError(t('Please enter a valid 10-digit mobile number'));
-      return;
-    }
-    addCustomerMutation.mutate({
-      name: newCustomer.name.trim(),
-      phone: cleanPhone,
-      email: newCustomer.email?.trim() || undefined,
-      address: newCustomer.address?.trim() || undefined,
-    });
-  };
 
   /**
    * Browser Speech Recognition Trigger
@@ -768,15 +638,6 @@ const VoiceBilling = () => {
         `${t('New customer')} "${draftBill.customerName}" ${t('detected! Please enter 10-digit mobile number to save customer.')}`,
         { id: 'new-customer-required-toast', duration: 4500 }
       );
-      setNewCustomer({
-        name: draftBill.customerName && draftBill.customerName !== t('Counter Sale') && draftBill.customerName !== 'Counter Sale'
-          ? draftBill.customerName
-          : '',
-        phone: '',
-        email: '',
-        address: '',
-      });
-      setCustomerError('');
       setIsAddCustomerOpen(true);
       if (customerSectionRef.current) {
         customerSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -827,13 +688,6 @@ const VoiceBilling = () => {
           : t('Please select or register a customer for Khata entry'),
         { id: 'khata-new-customer-toast', duration: 4500 }
       );
-      setNewCustomer({
-        name: custName,
-        phone: draftTransaction.customerPhone || '',
-        email: '',
-        address: '',
-      });
-      setCustomerError('');
       setIsAddCustomerOpen(true);
       if (khataCustomerSectionRef.current) {
         khataCustomerSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1159,9 +1013,6 @@ const VoiceBilling = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    if (!isAddCustomerOpen && draftBill?.customerName && draftBill.customerName !== t('Counter Sale') && draftBill.customerName !== 'Counter Sale') {
-                      setNewCustomer((prev) => ({ ...prev, name: draftBill.customerName }));
-                    }
                     const nextState = !isAddCustomerOpen;
                     setIsAddCustomerOpen(nextState);
                     if (nextState) {
@@ -1212,88 +1063,33 @@ const VoiceBilling = () => {
               )}
 
               {/** Inline Quick-Add Customer Box (Right Under Customer Selection) */}
-              {isAddCustomerOpen && (
-                <div className="bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg p-3 sm:p-4 mt-2 animate-fade-in shadow-none">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-xs font-semibold text-[#191E2B] flex items-center gap-1.5">
-                      <UserPlus className="w-3.5 h-3.5 text-[#4338CA]" />
-                      <span>{t('Quick Add Customer')}</span>
-                    </h4>
-                    {isNewSpokenCustomer && (
-                      <span className="text-[11px] font-medium text-[#B45309] bg-[#FEF3C7] px-2 py-0.5 rounded border border-[#FDE68A]">
-                        {t('Spoken Name Auto-Filled')}
-                      </span>
-                    )}
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                    <input
-                      type="text"
-                      placeholder={t('Full Name')}
-                      value={newCustomer.name}
-                      onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
-                      className={inputCls}
-                    />
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#757F94]">+91</span>
-                      <input
-                        ref={customerPhoneInputRef}
-                        type="tel"
-                        maxLength={10}
-                        placeholder={t('10-digit mobile number')}
-                        value={newCustomer.phone}
-                        onChange={(e) =>
-                          setNewCustomer({
-                            ...newCustomer,
-                            phone: e.target.value.replace(/\D/g, '').slice(0, 10),
-                          })
-                        }
-                        className="w-full h-10 sm:h-[42px] pl-11 pr-3 rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] text-xs sm:text-sm font-medium text-[#191E2B] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
-                        autoFocus
-                      />
-                    </div>
-                    <input
-                      type="email"
-                      placeholder={t('Email (Optional)')}
-                      value={newCustomer.email}
-                      onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
-                      className={inputCls}
-                    />
-                    <input
-                      type="text"
-                      placeholder={t('Address (Optional)')}
-                      value={newCustomer.address}
-                      onChange={(e) => setNewCustomer({ ...newCustomer, address: e.target.value })}
-                      className={inputCls}
-                    />
-                  </div>
-                  {customerError && (
-                    <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-2 font-medium flex items-center gap-1">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                      <span className="leading-none pt-[1px]">{customerError}</span>
-                    </p>
-                  )}
-                  <div className="flex justify-end gap-2 mt-3">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsAddCustomerOpen(false);
-                        setCustomerError('');
-                      }}
-                      className="cursor-pointer h-7 sm:h-8 px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-medium text-[#4E5668] hover:bg-[#EBEEF4] rounded-lg transition-colors"
-                    >
-                      {t('Cancel')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleQuickAddCustomer}
-                      disabled={addCustomerMutation.isPending || !newCustomer.phone || newCustomer.phone.length !== 10}
-                      className="cursor-pointer h-7 sm:h-8 px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] rounded-lg transition-colors disabled:opacity-50 shadow-none"
-                    >
-                      {addCustomerMutation.isPending ? t('Saving...') : t('Save Customer')}
-                    </button>
-                  </div>
-                </div>
-              )}
+              <QuickAddCustomer
+                isOpen={isAddCustomerOpen}
+                initialName={
+                  draftBill?.customerName &&
+                  draftBill.customerName !== t('Counter Sale') &&
+                  draftBill.customerName !== 'Counter Sale'
+                    ? draftBill.customerName
+                    : ''
+                }
+                isSpokenName={Boolean(isNewSpokenCustomer && draftBill?.customerName)}
+                phoneInputRef={customerPhoneInputRef}
+                onClose={() => setIsAddCustomerOpen(false)}
+                onSuccess={(created) => {
+                  setIsAddCustomerOpen(false);
+                  if (created?._id) {
+                    setDraftBill((prev) => ({
+                      ...prev,
+                      customerId: created._id,
+                      customerName: created.name,
+                      customerPhone: created.phone,
+                      customerBalance: 0,
+                      isNewSpokenCustomer: false,
+                      newCustomerPhone: '',
+                    }));
+                  }
+                }}
+              />
             </div>
 
             {/** 2. Products & Line Items Builder (Bulletproof 2-Tier Responsive Design) */}
@@ -1313,60 +1109,48 @@ const VoiceBilling = () => {
               </div>
 
               {/** Inline Quick-Add Product Box */}
-              {isAddProductOpen && (
-                <div className="bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg p-3 sm:p-4 mb-2 animate-fade-in shadow-none">
-                  <h4 className="text-xs font-semibold text-[#191E2B] mb-2">{t('Quick Add Product')}</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                    <input
-                      type="text"
-                      placeholder={t('Product Name')}
-                      value={newProduct.name}
-                      onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                      className={`${inputCls} sm:col-span-2`}
-                    />
-                    <input
-                      type="number"
-                      placeholder={t('Price')}
-                      value={newProduct.price}
-                      onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-                      className={inputCls}
-                    />
-                    <input
-                      type="number"
-                      placeholder={t('Stock')}
-                      value={newProduct.stock}
-                      onChange={(e) => setNewProduct({ ...newProduct, stock: e.target.value })}
-                      className={inputCls}
-                    />
-                  </div>
-                  {productError && (
-                    <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-2 font-medium flex items-center gap-1">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                      <span className="leading-none pt-[1px]">{productError}</span>
-                    </p>
-                  )}
-                  <div className="flex justify-end gap-2 mt-3">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsAddProductOpen(false);
-                        setProductError('');
-                      }}
-                      className="cursor-pointer h-7 sm:h-8 px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-medium text-[#4E5668] hover:bg-[#EBEEF4] rounded-lg transition-colors"
-                    >
-                      {t('Cancel')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleQuickAddProduct}
-                      disabled={addProductMutation.isPending}
-                      className="cursor-pointer h-7 sm:h-8 px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] rounded-lg transition-colors disabled:opacity-50 shadow-none"
-                    >
-                      {addProductMutation.isPending ? t('Saving...') : t('Save')}
-                    </button>
-                  </div>
-                </div>
-              )}
+              <QuickAddProduct
+                isOpen={isAddProductOpen}
+                onClose={() => setIsAddProductOpen(false)}
+                onSuccess={(created) => {
+                  setIsAddProductOpen(false);
+                  if (created?._id) {
+                    setDraftBill((prev) => {
+                      const nextProducts = [...prev.products];
+                      const emptyIdx = nextProducts.findIndex((p) => !p.productId);
+                      if (emptyIdx !== -1) {
+                        nextProducts[emptyIdx] = {
+                          productId: created._id,
+                          name: created.name,
+                          price: created.price,
+                          quantity: nextProducts[emptyIdx].quantity || 1,
+                          stock: created.stock,
+                          total: created.price * (nextProducts[emptyIdx].quantity || 1),
+                          matched: true,
+                        };
+                      } else {
+                        nextProducts.push({
+                          productId: created._id,
+                          name: created.name,
+                          price: created.price,
+                          quantity: 1,
+                          stock: created.stock,
+                          total: created.price,
+                          matched: true,
+                        });
+                      }
+                      const newSubtotal = nextProducts.reduce((sum, it) => sum + (it.total || 0), 0);
+                      return {
+                        ...prev,
+                        products: nextProducts,
+                        subtotal: newSubtotal,
+                        grandTotal: newSubtotal,
+                        amountPaid: prev.paymentMode === 'CREDIT' ? 0 : newSubtotal,
+                      };
+                    });
+                  }
+                }}
+              />
 
               {/** Line Item Cards */}
               <div className="space-y-2.5">
@@ -1695,9 +1479,6 @@ const VoiceBilling = () => {
                   <button
                     type="button"
                     onClick={() => {
-                      if (!isAddCustomerOpen && draftTransaction?.customerName && draftTransaction.customerName !== t('Counter Sale')) {
-                        setNewCustomer((prev) => ({ ...prev, name: draftTransaction.customerName }));
-                      }
                       const nextState = !isAddCustomerOpen;
                       setIsAddCustomerOpen(nextState);
                       if (nextState) {
@@ -1747,88 +1528,31 @@ const VoiceBilling = () => {
                 )}
 
                 {/** Inline Quick-Add Customer Box (Right Under Customer Selection) */}
-                {isAddCustomerOpen && (
-                  <div className="bg-[#F0F2F6] border border-[#DCE1EA] rounded-lg p-3 sm:p-4 mt-2 animate-fade-in shadow-none">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-xs font-semibold text-[#191E2B] flex items-center gap-1.5">
-                        <UserPlus className="w-3.5 h-3.5 text-[#4338CA]" />
-                        <span>{t('Quick Add Customer')}</span>
-                      </h4>
-                      {draftTransaction.isNewSpokenCustomer && (
-                        <span className="text-[11px] font-medium text-[#B45309] bg-[#FEF3C7] px-2 py-0.5 rounded border border-[#FDE68A]">
-                          {t('Spoken Name Auto-Filled')}
-                        </span>
-                      )}
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                      <input
-                        type="text"
-                        placeholder={t('Full Name')}
-                        value={newCustomer.name}
-                        onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
-                        className={inputCls}
-                      />
-                      <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#757F94]">+91</span>
-                        <input
-                          ref={customerPhoneInputRef}
-                          type="tel"
-                          maxLength={10}
-                          placeholder={t('10-digit mobile number')}
-                          value={newCustomer.phone}
-                          onChange={(e) =>
-                            setNewCustomer({
-                              ...newCustomer,
-                              phone: e.target.value.replace(/\D/g, '').slice(0, 10),
-                            })
-                          }
-                          className="w-full h-10 sm:h-[42px] pl-11 pr-3 rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] text-xs sm:text-sm font-medium text-[#191E2B] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
-                          autoFocus
-                        />
-                      </div>
-                      <input
-                        type="email"
-                        placeholder={t('Email (Optional)')}
-                        value={newCustomer.email}
-                        onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
-                        className={inputCls}
-                      />
-                      <input
-                        type="text"
-                        placeholder={t('Address (Optional)')}
-                        value={newCustomer.address}
-                        onChange={(e) => setNewCustomer({ ...newCustomer, address: e.target.value })}
-                        className={inputCls}
-                      />
-                    </div>
-                    {customerError && (
-                      <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-2 font-medium flex items-center gap-1">
-                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                        <span className="leading-none pt-[1px]">{customerError}</span>
-                      </p>
-                    )}
-                    <div className="flex justify-end gap-2 mt-3">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsAddCustomerOpen(false);
-                          setCustomerError('');
-                        }}
-                        className="cursor-pointer h-7 sm:h-8 px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-medium text-[#4E5668] hover:bg-[#EBEEF4] rounded-lg transition-colors"
-                      >
-                        {t('Cancel')}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleQuickAddCustomer}
-                        disabled={addCustomerMutation.isPending || !newCustomer.phone || newCustomer.phone.length !== 10}
-                        className="cursor-pointer h-7 sm:h-8 px-3 sm:px-4 flex items-center justify-center text-[11px] sm:text-xs leading-none font-semibold text-white bg-[#4338CA] hover:bg-[#3730A3] rounded-lg transition-colors disabled:opacity-50 shadow-none"
-                      >
-                        {addCustomerMutation.isPending ? t('Saving...') : t('Save Customer')}
-                      </button>
-                    </div>
-                  </div>
-                )}
+                <QuickAddCustomer
+                  isOpen={isAddCustomerOpen}
+                  initialName={
+                    draftTransaction?.customerName &&
+                    draftTransaction.customerName !== t('Counter Sale') &&
+                    draftTransaction.customerName !== 'Counter Sale'
+                      ? draftTransaction.customerName
+                      : ''
+                  }
+                  isSpokenName={Boolean(draftTransaction?.isNewSpokenCustomer && draftTransaction?.customerName)}
+                  phoneInputRef={customerPhoneInputRef}
+                  onClose={() => setIsAddCustomerOpen(false)}
+                  onSuccess={(created) => {
+                    setIsAddCustomerOpen(false);
+                    if (created?._id) {
+                      setDraftTransaction((prev) => ({
+                        ...prev,
+                        customerId: created._id,
+                        customerName: created.name,
+                        customerPhone: created.phone,
+                        isNewSpokenCustomer: false,
+                      }));
+                    }
+                  }}
+                />
               </div>
 
               <div>
