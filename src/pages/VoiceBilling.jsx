@@ -1218,10 +1218,10 @@ const VoiceBilling = () => {
                               setQuickAddProductName(item.name || item.rawSpokenName || '');
                               setIsAddProductOpen(true);
                             }}
-                            className="cursor-pointer shrink-0 inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-[#432BC9] bg-[#EEF2FF] hover:bg-[#E0E7FF] border border-[#C7D2FE] rounded-lg transition-all active:scale-95 shadow-none self-start sm:self-auto"
+                            className="cursor-pointer shrink-0 inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-[#432BC9] bg-[#EEF2FF] hover:bg-[#E0E7FF] border border-[#C7D2FE] rounded-md transition-all active:scale-95 shadow-none self-start sm:self-auto"
                           >
                             <Plus className="w-3.5 h-3.5" />
-                            <span>{t('Add to Catalog')}</span>
+                            <span>{t('Add To Product')}</span>
                           </button>
                         </div>
                       )}
