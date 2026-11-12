@@ -635,8 +635,8 @@ const VoiceBilling = () => {
     // If customer is a new spoken contact: show toast, scroll to customer input, and open Quick Create!
     if (isNewSpokenCustomer) {
       toast.error(
-        `${t('New customer')} "${draftBill.customerName}" ${t('detected! Please enter 10-digit mobile number to save customer.')}`,
-        { id: 'new-customer-required-toast', duration: 4500 }
+        `${t('Please enter a phone number to register')} "${draftBill.customerName}"`,
+        { id: 'new-customer-required-toast', duration: 4000 }
       );
       setIsAddCustomerOpen(true);
       if (customerSectionRef.current) {
@@ -649,12 +649,12 @@ const VoiceBilling = () => {
     }
 
     if (isWalkin && newPending > 0) {
-      toast.error(t('Udhaar is not allowed for Counter Sale. Please enter full amount paid.'));
+      toast.error(t('Credit is not allowed for Counter Sale. Please enter full amount paid.'));
       return;
     }
 
     if (isCreditLimitExceeded && !isWalkin) {
-      toast.error(`${t('Credit Limit Exceeded! Max udhaar allowed is ₹')}${creditLimit}`);
+      toast.error(`${t('Credit limit exceeded! Max credit allowed is ₹')}${creditLimit}`);
       return;
     }
 
@@ -669,7 +669,7 @@ const VoiceBilling = () => {
     if (!draftTransaction) return;
 
     if (!draftTransaction.amount) {
-      toast.error(t('Please fill in amount'));
+      toast.error(t('Please enter an amount'));
       return;
     }
 
@@ -684,9 +684,9 @@ const VoiceBilling = () => {
         : '';
       toast.error(
         custName
-          ? `${t('New customer')} "${custName}" ${t('detected! Please enter 10-digit mobile number to save customer.')}`
+          ? `${t('Please enter a phone number to register')} "${custName}"`
           : t('Please select or register a customer for Khata entry'),
-        { id: 'khata-new-customer-toast', duration: 4500 }
+        { id: 'khata-new-customer-toast', duration: 4000 }
       );
       setIsAddCustomerOpen(true);
       if (khataCustomerSectionRef.current) {

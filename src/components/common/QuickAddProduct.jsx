@@ -65,15 +65,19 @@ const QuickAddProduct = ({
     const trimmedName = name.trim();
 
     if (!trimmedName) {
-      errors.name = t('Product Name is required');
+      errors.name = t('Name is required');
     }
 
-    if (price === '' || isNaN(Number(price)) || Number(price) < 0) {
-      errors.price = t('Please enter a valid price (₹)');
+    if (price === '' || price === null || price === undefined || String(price).trim() === '') {
+      errors.price = t('Price is required');
+    } else if (isNaN(Number(price)) || Number(price) < 0) {
+      errors.price = t('Price cannot be negative');
     }
 
-    if (stock === '' || isNaN(Number(stock)) || Number(stock) < 0) {
-      errors.stock = t('Please enter a valid stock quantity');
+    if (stock === '' || stock === null || stock === undefined || String(stock).trim() === '') {
+      errors.stock = t('Stock is required');
+    } else if (isNaN(Number(stock)) || Number(stock) < 0) {
+      errors.stock = t('Stock cannot be negative');
     }
 
     if (Object.keys(errors).length > 0) {

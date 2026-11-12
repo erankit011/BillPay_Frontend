@@ -90,27 +90,29 @@ const QuickAddCustomer = ({
     const cleanPhone = phone.trim().replace(/\D/g, '').slice(-10);
 
     if (!trimmedName) {
-      errors.name = t('Full Name is required');
+      errors.name = t('Name is required');
     }
 
     if (!cleanPhone) {
-      errors.phone = t('Please enter a valid 10-digit mobile number');
+      errors.phone = t('Phone is required');
     } else if (cleanPhone.length !== 10 || !/^[6-9]\d{9}$/.test(cleanPhone)) {
-      errors.phone = t('Please enter a valid 10-digit mobile number');
+      errors.phone = t('Enter a valid 10-digit number');
     }
 
     if (email && email.trim()) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email.trim())) {
-        errors.email = t('Please enter a valid email address');
+        errors.email = t('Please provide a valid email address');
       }
     }
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
-      const firstError = errors.phone || errors.name || errors.email;
+      const firstError = errors.name || errors.phone || errors.email;
       toast.error(firstError);
-      if (errors.phone) {
+      if (errors.name) {
+        // keep focus on current field
+      } else if (errors.phone) {
         activePhoneRef.current?.focus();
       }
       return;
