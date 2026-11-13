@@ -1027,10 +1027,10 @@ const VoiceBilling = () => {
                       setTimeout(() => customerPhoneInputRef.current?.focus(), 250);
                     }
                   }}
-                  className="cursor-pointer bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] hover:bg-[#E0E4F9] h-6 sm:h-7 px-2.5 rounded-lg text-[11px] font-semibold flex items-center gap-1 active:scale-95 transition-all shadow-none"
+                  className="cursor-pointer bg-[#EEF2FF] text-[#432BC9] border border-[#C7D2FE] hover:bg-[#E0E7FF] h-6 sm:h-7 px-2.5 rounded-md text-xs font-semibold flex items-center gap-1 active:scale-95 transition-all shadow-none"
                 >
-                  <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                  <span>{t('Create Customer')}</span>
+                  <Plus className="w-3 h-3" />
+                  <span>{t('Add Customer')}</span>
                 </button>
               </div>
 
@@ -1054,7 +1054,7 @@ const VoiceBilling = () => {
                   setQuickAddCustomerName(term);
                   setIsAddCustomerOpen(true);
                 }}
-                createButtonLabel={t('Create Customer')}
+                createButtonLabel={t('Add Customer')}
               />
 
               {/** Customer suggestion chips */}
@@ -1123,9 +1123,9 @@ const VoiceBilling = () => {
                     setQuickAddProductName('');
                     setIsAddProductOpen(!isAddProductOpen);
                   }}
-                  className="cursor-pointer bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] hover:bg-[#E0E4F9] h-6 sm:h-7 px-2.5 rounded-lg text-[11px] font-semibold flex items-center gap-1 active:scale-95 transition-all shadow-none"
+                  className="cursor-pointer bg-[#EEF2FF] text-[#432BC9] border border-[#C7D2FE] hover:bg-[#E0E7FF] h-6 sm:h-7 px-2.5 rounded-md text-xs font-semibold flex items-center gap-1 active:scale-95 transition-all shadow-none"
                 >
-                  <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                  <Plus className="w-3 h-3" />
                   <span>{t('Add Product')}</span>
                 </button>
               </div>
@@ -1221,7 +1221,7 @@ const VoiceBilling = () => {
                             className="cursor-pointer shrink-0 inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-[#432BC9] bg-[#EEF2FF] hover:bg-[#E0E7FF] border border-[#C7D2FE] rounded-md transition-all active:scale-95 shadow-none self-start sm:self-auto"
                           >
                             <Plus className="w-3.5 h-3.5" />
-                            <span>{t('Add To Product')}</span>
+                            <span>{t('Add Product')}</span>
                           </button>
                         </div>
                       )}
@@ -1271,7 +1271,7 @@ const VoiceBilling = () => {
                               setQuickAddProductName(term);
                               setIsAddProductOpen(true);
                             }}
-                            createButtonLabel={t('Create Product')}
+                            createButtonLabel={t('Add Product')}
                           />
                         </div>
 
@@ -1543,10 +1543,10 @@ const VoiceBilling = () => {
                         setTimeout(() => customerPhoneInputRef.current?.focus(), 250);
                       }
                     }}
-                    className="cursor-pointer bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] hover:bg-[#E0E4F9] h-6 sm:h-7 px-2.5 rounded-lg text-[11px] font-semibold flex items-center gap-1 active:scale-95 transition-all shadow-none"
+                    className="cursor-pointer bg-[#EEF2FF] text-[#432BC9] border border-[#C7D2FE] hover:bg-[#E0E7FF] h-6 sm:h-7 px-2.5 rounded-md text-xs font-semibold flex items-center gap-1 active:scale-95 transition-all shadow-none"
                   >
-                    <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                    <span>{t('Create Customer')}</span>
+                    <Plus className="w-3 h-3" />
+                    <span>{t('Add Customer')}</span>
                   </button>
                 </div>
 
@@ -1569,7 +1569,7 @@ const VoiceBilling = () => {
                     setQuickAddCustomerName(term);
                     setIsAddCustomerOpen(true);
                   }}
-                  createButtonLabel={t('Create Customer')}
+                  createButtonLabel={t('Add Customer')}
                 />
 
                 {/** Customer suggestion chips */}

@@ -223,8 +223,8 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                     setQuickAddCustomerName('');
                     setIsAddCustomerOpen(!isAddCustomerOpen);
                   }}
-                    className="cursor-pointer bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] hover:bg-[#E0E4F9] h-6 sm:h-7 !min-h-[24px] sm:!min-h-[28px] px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] leading-none font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all shadow-none">
-                    <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> {t('Create Customer')}
+                    className="cursor-pointer bg-[#EEF2FF] text-[#432BC9] border border-[#C7D2FE] hover:bg-[#E0E7FF] h-6 sm:h-7 !min-h-[24px] sm:!min-h-[28px] px-2.5 rounded-md text-xs font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all shadow-none">
+                    <Plus className="w-3 h-3" /> {t('Add Customer')}
                   </button>
                 </div>
 
@@ -258,7 +258,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                       setQuickAddCustomerName(term);
                       setIsAddCustomerOpen(true);
                     }}
-                    createButtonLabel={t('Create Customer')}
+                    createButtonLabel={t('Add Customer')}
                   />
                 )} />
                 {errors.customerId && (
@@ -283,8 +283,8 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                     setQuickAddProductName('');
                     setIsAddProductOpen(!isAddProductOpen);
                   }}
-                    className="cursor-pointer bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] hover:bg-[#E0E4F9] h-6 sm:h-7 !min-h-[24px] sm:!min-h-[28px] px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] leading-none font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all shadow-none">
-                    <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> {t('Create Product')}
+                    className="cursor-pointer bg-[#EEF2FF] text-[#432BC9] border border-[#C7D2FE] hover:bg-[#E0E7FF] h-6 sm:h-7 !min-h-[24px] sm:!min-h-[28px] px-2.5 rounded-md text-xs font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all shadow-none">
+                    <Plus className="w-3 h-3" /> {t('Add Product')}
                   </button>
                 </div>
 
@@ -331,7 +331,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                             setTargetProductIndex(index);
                             setIsAddProductOpen(true);
                           }}
-                          createButtonLabel={t('Create Product')}
+                          createButtonLabel={t('Add Product')}
                         />
                       )} />
                       {errors.products?.[index]?.productId && (
