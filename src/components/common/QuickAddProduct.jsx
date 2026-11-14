@@ -232,11 +232,13 @@ const QuickAddProduct = ({
               if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
               handleKeyDown(e);
             }}
+            onFocus={(e) => e.target.select()}
+            onWheel={(e) => e.target.blur()}
             className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none ${
               fieldErrors.price
                 ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
                 : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
-            }`}
+            } [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
           />
           {fieldErrors.price && (
             <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
@@ -268,11 +270,13 @@ const QuickAddProduct = ({
               if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
               handleKeyDown(e);
             }}
+            onFocus={(e) => e.target.select()}
+            onWheel={(e) => e.target.blur()}
             className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none ${
               fieldErrors.stock
                 ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
                 : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]'
-            }`}
+            } [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
           />
           {fieldErrors.stock && (
             <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">

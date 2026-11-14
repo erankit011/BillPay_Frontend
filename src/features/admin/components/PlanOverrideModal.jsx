@@ -435,7 +435,12 @@ const PlanOverrideModal = ({ isOpen, onClose, shop, onConfirm, isLoading }) => {
                           step="1"
                           value={customAmount}
                           onChange={(e) => setCustomAmount(e.target.value)}
-                          className="w-full pl-7 pr-3 py-2 text-xs font-semibold text-[#191E2B] bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                          onKeyDown={(e) => {
+                            if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
+                          }}
+                          onFocus={(e) => e.target.select()}
+                          onWheel={(e) => e.target.blur()}
+                          className="w-full pl-7 pr-3 py-2 text-xs font-semibold text-[#191E2B] bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           placeholder="Amount in Rupees"
                         />
                       </div>

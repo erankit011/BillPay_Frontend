@@ -53,7 +53,7 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: Math.max(0, parseInt(value, 10) || 0),
+      [name]: value === '' ? '' : Math.max(0, parseInt(value, 10) || 0),
     }));
   };
 
@@ -61,7 +61,12 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdate(formData, t('Operations and store quota settings updated successfully'));
+    onUpdate({
+      ...formData,
+      defaultFreeTrialDays: Number(formData.defaultFreeTrialDays) || 0,
+      freePlanMonthlyBillLimit: Number(formData.freePlanMonthlyBillLimit) || 0,
+      freePlanCustomerLimit: Number(formData.freePlanCustomerLimit) || 0,
+    }, t('Operations and store quota settings updated successfully'));
   };
 
   return (
@@ -106,8 +111,10 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
                   onKeyDown={(e) => {
                     if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
                   }}
+                  onFocus={(e) => e.target.select()}
+                  onWheel={(e) => e.target.blur()}
                   placeholder="7"
-                  className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                  className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
                 <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">
                   {t('Free Pro trial granted to new merchants upon signup')}
@@ -132,8 +139,10 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
                   onKeyDown={(e) => {
                     if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
                   }}
+                  onFocus={(e) => e.target.select()}
+                  onWheel={(e) => e.target.blur()}
                   placeholder="5"
-                  className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                  className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
                 <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">
                   {t('Maximum bills allowed per month on Free tier')}
@@ -158,8 +167,10 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
                   onKeyDown={(e) => {
                     if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
                   }}
+                  onFocus={(e) => e.target.select()}
+                  onWheel={(e) => e.target.blur()}
                   placeholder="2"
-                  className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                  className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
                 <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">
                   {t('Maximum customer profiles allowed on Free tier')}

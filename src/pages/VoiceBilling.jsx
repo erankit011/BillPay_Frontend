@@ -341,7 +341,7 @@ const VoiceBilling = () => {
             discountType: shopSettings?.discountType || 'PERCENTAGE',
             subtotal: computedSubtotal,
             grandTotal: computedSubtotal,
-            amountPaid: 0,
+            amountPaid: '',
           });
         } else {
           // Pre-populate single Khata transaction
@@ -1181,7 +1181,7 @@ const VoiceBilling = () => {
                         products: nextProducts,
                         subtotal: newSubtotal,
                         grandTotal: newSubtotal,
-                        amountPaid: prev.paymentMode === 'CREDIT' ? 0 : newSubtotal,
+                        amountPaid: prev.amountPaid !== undefined && prev.amountPaid !== null ? prev.amountPaid : '',
                       };
                     });
                   }
@@ -1300,6 +1300,7 @@ const VoiceBilling = () => {
                                 }
                               }}
                               onFocus={(e) => e.target.select()}
+                              onWheel={(e) => e.target.blur()}
                               className="w-10 sm:w-12 h-full text-center text-sm font-semibold text-[#191E2B] bg-white border-x border-[#DCE1EA] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                               min="1"
                               step="1"
@@ -1361,22 +1362,21 @@ const VoiceBilling = () => {
                     type="number"
                     min="0"
                     step="1"
-                    value={draftBill.discountInput !== undefined && draftBill.discountInput !== null ? draftBill.discountInput : ''}
+                    value={draftBill.discountInput === 0 || draftBill.discountInput === '0' || !draftBill.discountInput ? '' : draftBill.discountInput}
                     onChange={(e) => {
                       let val = e.target.value;
                       if (val.startsWith('-')) val = val.replace(/^-+/, '');
                       setDraftBill((prev) => ({
                         ...prev,
-                        discountInput: val === '' ? '' : Math.max(0, parseFloat(val) || 0),
+                        discountInput: val,
                       }));
                     }}
                     onKeyDown={(e) => {
                       if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
                     }}
-                    onFocus={(e) => {
-                      if (e.target.value === '0') e.target.select();
-                    }}
-                    className="w-20 rounded-md border border-[#DCE1EA] px-2 py-1 text-sm font-medium text-right text-[#191E2B] bg-white focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                    onFocus={(e) => e.target.select()}
+                    onWheel={(e) => e.target.blur()}
+                    className="w-20 rounded-md border border-[#DCE1EA] px-2 py-1 text-sm font-medium text-right text-[#191E2B] bg-white focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     placeholder="0"
                   />
                 </div>
@@ -1450,22 +1450,21 @@ const VoiceBilling = () => {
                   type="number"
                   min="0"
                   step="1"
-                  value={draftBill.amountPaid !== undefined && draftBill.amountPaid !== null ? draftBill.amountPaid : ''}
+                  value={draftBill.amountPaid === 0 || draftBill.amountPaid === '0' || !draftBill.amountPaid ? '' : draftBill.amountPaid}
                   onChange={(e) => {
                     let val = e.target.value;
                     if (val.startsWith('-')) val = val.replace(/^-+/, '');
                     setDraftBill((prev) => ({
                       ...prev,
-                      amountPaid: val === '' ? '' : Math.max(0, parseFloat(val) || 0),
+                      amountPaid: val,
                     }));
                   }}
                   onKeyDown={(e) => {
                     if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
                   }}
-                  onFocus={(e) => {
-                    if (e.target.value === '0') e.target.select();
-                  }}
-                  className={inputCls}
+                  onFocus={(e) => e.target.select()}
+                  onWheel={(e) => e.target.blur()}
+                  className={`${inputCls} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                   placeholder="0"
                 />
               </div>
@@ -1645,7 +1644,7 @@ const VoiceBilling = () => {
                   type="number"
                   min="1"
                   step="1"
-                  value={draftTransaction.amount}
+                  value={draftTransaction.amount === 0 || draftTransaction.amount === '0' || !draftTransaction.amount ? '' : draftTransaction.amount}
                   onChange={(e) => {
                     let val = e.target.value;
                     if (val.startsWith('-')) val = val.replace(/^-+/, '');
@@ -1654,12 +1653,11 @@ const VoiceBilling = () => {
                   onKeyDown={(e) => {
                     if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
                   }}
-                  onFocus={(e) => {
-                    if (e.target.value === '0') e.target.select();
-                  }}
+                  onFocus={(e) => e.target.select()}
+                  onWheel={(e) => e.target.blur()}
                   required
                   placeholder="0"
-                  className={inputCls}
+                  className={`${inputCls} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                 />
               </div>
 

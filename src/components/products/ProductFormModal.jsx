@@ -16,12 +16,12 @@ import { useTranslation } from 'react-i18next';
 const productSchema = yup.object({
   name: yup.string().required('Name is required'),
   price: yup.number()
-    .transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value)
+    .transform((value, originalValue) => (originalValue === '' || originalValue === null || originalValue === undefined) ? undefined : Number(originalValue))
     .typeError('Price must be a valid number')
     .min(0, 'Price cannot be negative')
     .required('Price is required'),
   stock: yup.number()
-    .transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value)
+    .transform((value, originalValue) => (originalValue === '' || originalValue === null || originalValue === undefined) ? undefined : Number(originalValue))
     .typeError('Stock must be a valid number')
     .integer('Stock must be a whole number')
     .min(0, 'Stock cannot be negative')
@@ -40,7 +40,11 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
       name: editingProduct.name,
       price: editingProduct.price,
       stock: editingProduct.stock
-    } : {}
+    } : {
+      name: '',
+      price: '',
+      stock: ''
+    }
   });
 
   React.useEffect(() => {
@@ -52,7 +56,11 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
           stock: editingProduct.stock
         });
       } else {
-        reset({});
+        reset({
+          name: '',
+          price: '',
+          stock: ''
+        });
       }
     }
   }, [isOpen, editingProduct, reset]);
@@ -106,7 +114,7 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
           </div>
 
           <div className="p-5 md:p-6 overflow-y-auto">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit((data) => onSubmit({ ...data, price: Number(data.price), stock: Number(data.stock) }))} className="space-y-4">
               {errors.root?.server && (
                 <div className="bg-[#FFF1F2] border-l-[3px] border-[#E11D48] p-2 rounded-r-md mb-4">
                   <div className="flex items-center gap-1.5">
@@ -142,18 +150,18 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
                     min="0"
                     step="1"
                     {...register('price', {
-                      valueAsNumber: true,
                       onChange: (e) => {
-                        const val = parseFloat(e.target.value);
-                        if (isNaN(val) || val < 0) {
-                          setValue('price', 0);
-                        }
+                        let val = e.target.value;
+                        if (val.startsWith('-')) val = val.replace(/^-+/, '');
+                        setValue('price', val, { shouldValidate: true });
                       }
                     })}
                     onKeyDown={(e) => {
                       if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
                     }}
-                    className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none ${errors.price ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC]'}`}
+                    onFocus={(e) => e.target.select()}
+                    onWheel={(e) => e.target.blur()}
+                    className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none ${errors.price ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC]'} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                     placeholder="0"
                   />
                   {errors.price && (
@@ -172,18 +180,18 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
                     min="0"
                     step="1"
                     {...register('stock', {
-                      valueAsNumber: true,
                       onChange: (e) => {
-                        const val = parseInt(e.target.value, 10);
-                        if (isNaN(val) || val < 0) {
-                          setValue('stock', 0);
-                        }
+                        let val = e.target.value;
+                        if (val.startsWith('-')) val = val.replace(/^-+/, '');
+                        setValue('stock', val, { shouldValidate: true });
                       }
                     })}
                     onKeyDown={(e) => {
                       if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
                     }}
-                    className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none ${errors.stock ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC]'}`}
+                    onFocus={(e) => e.target.select()}
+                    onWheel={(e) => e.target.blur()}
+                    className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none ${errors.stock ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC]'} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                     placeholder="0"
                   />
                   {errors.stock && (

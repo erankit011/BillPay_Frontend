@@ -337,7 +337,9 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                     onKeyDown={(e) => {
                       if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
                     }}
-                    className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                    onFocus={(e) => e.target.select()}
+                    onWheel={(e) => e.target.blur()}
+                    className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                 </div>
               </div>
@@ -361,8 +363,10 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                       onKeyDown={(e) => {
                         if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
                       }}
+                      onFocus={(e) => e.target.select()}
+                      onWheel={(e) => e.target.blur()}
                       placeholder="No cap (e.g. 500)"
-                      className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                      className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                   </div>
                 )}
@@ -380,8 +384,10 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                     onKeyDown={(e) => {
                       if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
                     }}
+                    onFocus={(e) => e.target.select()}
+                    onWheel={(e) => e.target.blur()}
                     placeholder="0 (no minimum)"
-                    className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                    className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                 </div>
               </div>
@@ -430,8 +436,10 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                     onKeyDown={(e) => {
                       if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
                     }}
+                    onFocus={(e) => e.target.select()}
+                    onWheel={(e) => e.target.blur()}
                     placeholder="Unlimited (e.g. 100)"
-                    className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                    className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                 </div>
 
@@ -448,7 +456,9 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                     onKeyDown={(e) => {
                       if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
                     }}
-                    className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
+                    onFocus={(e) => e.target.select()}
+                    onWheel={(e) => e.target.blur()}
+                    className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                 </div>
               </div>

@@ -927,7 +927,9 @@ const Settings = () => {
                         onKeyDown={(e) => {
                           if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
                         }}
-                        className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        onFocus={(e) => e.target.select()}
+                        onWheel={(e) => e.target.blur()}
+                        className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
                       <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Default due period for invoices')}</p>
                     </div>
@@ -982,7 +984,9 @@ const Settings = () => {
                         onKeyDown={(e) => {
                           if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
                         }}
-                        className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        onFocus={(e) => e.target.select()}
+                        onWheel={(e) => e.target.blur()}
+                        className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
                       <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('0 means unlimited credit')}</p>
                     </div>
@@ -1059,7 +1063,12 @@ const Settings = () => {
                             min="0"
                             max="100"
                             step="0.1"
-                            className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                            onKeyDown={(e) => {
+                              if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
+                            }}
+                            onFocus={(e) => e.target.select()}
+                            onWheel={(e) => e.target.blur()}
+                            className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           />
                           <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Applied to all new invoices')}</p>
                         </div>
@@ -1314,7 +1323,9 @@ const Settings = () => {
                           onKeyDown={(e) => {
                             if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
                           }}
-                          className="block w-full max-w-xs rounded-lg border border-[#DCE1EA] bg-white px-3 py-2 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                          onFocus={(e) => e.target.select()}
+                          onWheel={(e) => e.target.blur()}
+                          className="block w-full max-w-xs rounded-lg border border-[#DCE1EA] bg-white px-3 py-2 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         />
                         <p className="text-[#757F94] text-[11px] sm:text-xs mt-1 font-medium">{t('Products with remaining stock at or below this value will trigger alerts')}</p>
                       </div>
@@ -1380,7 +1391,9 @@ const Settings = () => {
                           onKeyDown={(e) => {
                             if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
                           }}
-                          className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                          onFocus={(e) => e.target.select()}
+                          onWheel={(e) => e.target.blur()}
+                          className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         />
                         <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Products below this quantity will be flagged')}</p>
                       </div>

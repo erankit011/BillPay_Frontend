@@ -36,17 +36,17 @@ const createBillSchema = yup.object({
     })
   ).min(1, 'Add at least one product'),
   amountPaid: yup.number()
-    .transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value)
+    .transform((value, originalValue) => (originalValue === '' || originalValue === null || originalValue === undefined) ? 0 : Number(originalValue))
     .typeError('Amount paid must be a valid number')
     .min(0, 'Amount cannot be negative')
     .default(0),
   discountInput: yup.number()
-    .transform((value, originalValue) => String(originalValue).trim() === '' ? 0 : value)
+    .transform((value, originalValue) => (originalValue === '' || originalValue === null || originalValue === undefined) ? 0 : Number(originalValue))
     .typeError('Discount must be a valid number')
     .min(0, 'Discount cannot be negative')
     .default(0),
   paymentMode: yup.string().when('amountPaid', {
-    is: (val) => val > 0,
+    is: (val) => Number(val) > 0,
     then: () => yup.string().required('Payment mode is required when amount is paid'),
     otherwise: () => yup.string()
   })
@@ -70,8 +70,8 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
     resolver: yupResolver(createBillSchema),
     defaultValues: {
       products: [{ productId: '', quantity: 1 }],
-      amountPaid: 0,
-      discountInput: 0,
+      amountPaid: '',
+      discountInput: '',
       paymentMode: shopSettings?.defaultPaymentMode || 'CASH'
     }
   });
@@ -128,6 +128,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
 
       const payload = {
         ...newBill,
+        amountPaid: Number(newBill.amountPaid) || 0,
         tax: taxAmount,
         discount: discountAmount
       };
@@ -149,7 +150,12 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
       }
 
       setIsModalOpen(false);
-      reset();
+      reset({
+        products: [{ productId: '', quantity: 1 }],
+        amountPaid: '',
+        discountInput: '',
+        paymentMode: shopSettings?.defaultPaymentMode || 'CASH'
+      });
       setBillError('');
       toast.success(t('Bill created & WhatsApp invoice sent!'));
     },
@@ -166,6 +172,12 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
     if (isModalOpen) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
+      reset({
+        products: [{ productId: '', quantity: 1 }],
+        amountPaid: '',
+        discountInput: '',
+        paymentMode: shopSettings?.defaultPaymentMode || 'CASH'
+      });
     } else {
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
@@ -175,7 +187,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
       document.documentElement.style.overflow = '';
       setBillError('');
     };
-  }, [isModalOpen]);
+  }, [isModalOpen, reset, shopSettings]);
 
   if (!isModalOpen) return null;
 
@@ -384,6 +396,8 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                           onKeyDown={(e) => {
                             if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
                           }}
+                          onFocus={(e) => e.target.select()}
+                          onWheel={(e) => e.target.blur()}
                           placeholder="1"
                           className="w-10 sm:w-12 h-full text-center text-sm font-semibold text-[#191E2B] bg-white border-x border-[#DCE1EA] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         />
@@ -444,18 +458,18 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                       min="0"
                       step="1"
                       {...register('discountInput', {
-                        valueAsNumber: true,
                         onChange: (e) => {
-                          const val = parseFloat(e.target.value);
-                          if (isNaN(val) || val < 0) {
-                            setValue('discountInput', 0);
-                          }
+                          let val = e.target.value;
+                          if (val.startsWith('-')) val = val.replace(/^-+/, '');
+                          setValue('discountInput', val, { shouldValidate: true });
                         }
                       })}
                       onKeyDown={(e) => {
                         if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
                       }}
-                      className="w-20 rounded-md border border-[#DCE1EA] px-2 py-1 text-sm font-medium text-right text-[#191E2B] bg-white focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                      onFocus={(e) => e.target.select()}
+                      onWheel={(e) => e.target.blur()}
+                      className="w-20 rounded-md border border-[#DCE1EA] px-2 py-1 text-sm font-medium text-right text-[#191E2B] bg-white focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       placeholder="0"
                     />
                   </div>
@@ -504,26 +518,37 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                   )}
                 </div>
                 <div>
-                  <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-0.5">
-                    {t('Amount Paid')} <span className="text-[#B91C1C]">*</span>
-                  </label>
+                  <div className="flex items-center justify-between mb-0.5">
+                    <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668]">
+                      {t('Amount Paid')} <span className="text-[#B91C1C]">*</span>
+                    </label>
+                    {totalAmount > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setValue('amountPaid', totalAmount, { shouldValidate: true })}
+                        className="cursor-pointer text-[11px] font-semibold text-[#4338CA] hover:underline"
+                      >
+                        {t('Full Amount')} (₹{totalAmount.toLocaleString('en-IN')})
+                      </button>
+                    )}
+                  </div>
                   <input
                     type="number"
                     min="0"
                     step="1"
                     {...register('amountPaid', {
-                      valueAsNumber: true,
                       onChange: (e) => {
-                        const val = parseFloat(e.target.value);
-                        if (isNaN(val) || val < 0) {
-                          setValue('amountPaid', 0);
-                        }
+                        let val = e.target.value;
+                        if (val.startsWith('-')) val = val.replace(/^-+/, '');
+                        setValue('amountPaid', val, { shouldValidate: true });
                       }
                     })}
                     onKeyDown={(e) => {
                       if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
                     }}
-                    className={inputCls}
+                    onFocus={(e) => e.target.select()}
+                    onWheel={(e) => e.target.blur()}
+                    className={`${inputCls} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                     placeholder="0"
                   />
                   {errors.amountPaid && (

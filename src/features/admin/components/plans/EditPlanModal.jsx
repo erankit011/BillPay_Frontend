@@ -389,11 +389,13 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                         min="0"
                         step="1"
                         value={price}
-                        onChange={(e) => setPrice(Math.max(0, Number(e.target.value)))}
+                        onChange={(e) => setPrice(e.target.value === '' ? '' : Math.max(0, Number(e.target.value)))}
                         onKeyDown={(e) => {
                           if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
                         }}
-                        className="block w-full rounded-lg border border-[#DCE1EA] pl-7 pr-3 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-[#191E2B] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        onFocus={(e) => e.target.select()}
+                        onWheel={(e) => e.target.blur()}
+                        className="block w-full rounded-lg border border-[#DCE1EA] pl-7 pr-3 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-[#191E2B] bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         required
                       />
                     </div>
@@ -409,11 +411,13 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                         min="1"
                         step="1"
                         value={billingCycleDays}
-                        onChange={(e) => setBillingCycleDays(Math.max(1, Number(e.target.value)))}
+                        onChange={(e) => setBillingCycleDays(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
                         onKeyDown={(e) => {
                           if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
                         }}
-                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 pr-12 py-2 sm:py-2.5 text-xs sm:text-sm font-medium bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        onFocus={(e) => e.target.select()}
+                        onWheel={(e) => e.target.blur()}
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 pr-12 py-2 sm:py-2.5 text-xs sm:text-sm font-medium bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         required
                       />
                       <span className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[#757F94] text-xs font-medium">
@@ -432,11 +436,13 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                         min="0"
                         step="1"
                         value={trialDays}
-                        onChange={(e) => setTrialDays(Math.max(0, Number(e.target.value)))}
+                        onChange={(e) => setTrialDays(e.target.value === '' ? '' : Math.max(0, Number(e.target.value)))}
                         onKeyDown={(e) => {
                           if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
                         }}
-                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 pr-12 py-2 sm:py-2.5 text-xs sm:text-sm font-medium bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        onFocus={(e) => e.target.select()}
+                        onWheel={(e) => e.target.blur()}
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 pr-12 py-2 sm:py-2.5 text-xs sm:text-sm font-medium bg-[#FBFBFC] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
                       <span className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[#757F94] text-xs font-medium">
                         {t('Days')}
@@ -480,11 +486,13 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                         min="1"
                         step="1"
                         value={maxCustomers}
-                        onChange={(e) => setMaxCustomers(Math.max(1, Number(e.target.value)))}
+                        onChange={(e) => setMaxCustomers(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
                         onKeyDown={(e) => {
                           if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
                         }}
-                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 text-xs sm:text-sm font-medium bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        onFocus={(e) => e.target.select()}
+                        onWheel={(e) => e.target.blur()}
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 text-xs sm:text-sm font-medium bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         placeholder={t('Max allowed customers')}
                       />
                     </div>
@@ -524,11 +532,13 @@ const EditPlanModal = ({ isOpen, plan, onClose, onSave }) => {
                         min="1"
                         step="1"
                         value={maxBills}
-                        onChange={(e) => setMaxBills(Math.max(1, Number(e.target.value)))}
+                        onChange={(e) => setMaxBills(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
                         onKeyDown={(e) => {
                           if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
                         }}
-                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 text-xs sm:text-sm font-medium bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                        onFocus={(e) => e.target.select()}
+                        onWheel={(e) => e.target.blur()}
+                        className="block w-full rounded-lg border border-[#DCE1EA] px-3 py-2 text-xs sm:text-sm font-medium bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         placeholder={t('Max allowed bills')}
                       />
                     </div>
