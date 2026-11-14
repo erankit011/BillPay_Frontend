@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { X, Plus, Loader2, AlertCircle, UserPlus } from 'lucide-react';
+import { X, Plus, Minus, Loader2, AlertCircle, UserPlus } from 'lucide-react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -27,10 +27,24 @@ const createBillSchema = yup.object({
   products: yup.array().of(
     yup.object({
       productId: yup.string().required('Product is required'),
-      quantity: yup.number().transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value).min(1, 'Min quantity 1').required(),
+      quantity: yup.number()
+        .transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value)
+        .typeError('Quantity must be a valid number')
+        .integer('Quantity must be a whole number')
+        .min(1, 'Quantity must be at least 1')
+        .required('Quantity is required'),
     })
   ).min(1, 'Add at least one product'),
-  amountPaid: yup.number().transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value).min(0, 'Cannot be negative').default(0),
+  amountPaid: yup.number()
+    .transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value)
+    .typeError('Amount paid must be a valid number')
+    .min(0, 'Amount cannot be negative')
+    .default(0),
+  discountInput: yup.number()
+    .transform((value, originalValue) => String(originalValue).trim() === '' ? 0 : value)
+    .typeError('Discount must be a valid number')
+    .min(0, 'Discount cannot be negative')
+    .default(0),
   paymentMode: yup.string().when('amountPaid', {
     is: (val) => val > 0,
     then: () => yup.string().required('Payment mode is required when amount is paid'),
@@ -223,8 +237,8 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                     setQuickAddCustomerName('');
                     setIsAddCustomerOpen(!isAddCustomerOpen);
                   }}
-                    className="cursor-pointer bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] hover:bg-[#E0E4F9] h-6 sm:h-7 !min-h-[24px] sm:!min-h-[28px] px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] leading-none font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all shadow-none">
-                    <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> {t('Create Customer')}
+                    className="cursor-pointer bg-[#EEF2FF] text-[#432BC9] border border-[#C7D2FE] hover:bg-[#E0E7FF] h-6 sm:h-7 !min-h-[24px] sm:!min-h-[28px] px-2.5 rounded-md text-xs font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all shadow-none">
+                    <Plus className="w-3 h-3" /> {t('Add Customer')}
                   </button>
                 </div>
 
@@ -258,7 +272,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                       setQuickAddCustomerName(term);
                       setIsAddCustomerOpen(true);
                     }}
-                    createButtonLabel={t('Create Customer')}
+                    createButtonLabel={t('Add Customer')}
                   />
                 )} />
                 {errors.customerId && (
@@ -283,8 +297,8 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                     setQuickAddProductName('');
                     setIsAddProductOpen(!isAddProductOpen);
                   }}
-                    className="cursor-pointer bg-[#EEF0FB] text-[#4338CA] border border-[#D8DCF5] hover:bg-[#E0E4F9] h-6 sm:h-7 !min-h-[24px] sm:!min-h-[28px] px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] leading-none font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all shadow-none">
-                    <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> {t('Create Product')}
+                    className="cursor-pointer bg-[#EEF2FF] text-[#432BC9] border border-[#C7D2FE] hover:bg-[#E0E7FF] h-6 sm:h-7 !min-h-[24px] sm:!min-h-[28px] px-2.5 rounded-md text-xs font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all shadow-none">
+                    <Plus className="w-3 h-3" /> {t('Add Product')}
                   </button>
                 </div>
 
@@ -331,7 +345,7 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                             setTargetProductIndex(index);
                             setIsAddProductOpen(true);
                           }}
-                          createButtonLabel={t('Create Product')}
+                          createButtonLabel={t('Add Product')}
                         />
                       )} />
                       {errors.products?.[index]?.productId && (
@@ -342,8 +356,49 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                       )}
                     </div>
                     <div className="flex-shrink-0">
-                      <input type="number" {...register(`products.${index}.quantity`)} placeholder="1"
-                        className="w-16 sm:w-20 h-[42px] font-medium rounded-lg border border-[#DCE1EA] px-2 text-sm text-center text-[#191E2B] placeholder-[#9AA4B8] focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] bg-[#FBFBFC] transition-colors outline-none shadow-none" />
+                      <div className="flex items-center h-[42px] border border-[#DCE1EA] rounded-lg bg-[#F4F6F9] overflow-hidden">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const cur = parseInt(getValues(`products.${index}.quantity`), 10) || 1;
+                            setValue(`products.${index}.quantity`, Math.max(1, cur - 1), { shouldValidate: true });
+                          }}
+                          className="cursor-pointer w-7 sm:w-8 h-full flex items-center justify-center text-[#4E5668] bg-[#F0F2F6] hover:bg-[#E4E7ED] hover:text-[#191E2B] active:bg-[#DCE1EA] transition-colors select-none"
+                          aria-label="Decrease quantity"
+                        >
+                          <Minus className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                        </button>
+                        <input
+                          type="number"
+                          min="1"
+                          step="1"
+                          {...register(`products.${index}.quantity`, {
+                            valueAsNumber: true,
+                            onChange: (e) => {
+                              const val = parseInt(e.target.value, 10);
+                              if (isNaN(val) || val < 1) {
+                                setValue(`products.${index}.quantity`, 1, { shouldValidate: true });
+                              }
+                            }
+                          })}
+                          onKeyDown={(e) => {
+                            if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
+                          }}
+                          placeholder="1"
+                          className="w-10 sm:w-12 h-full text-center text-sm font-semibold text-[#191E2B] bg-white border-x border-[#DCE1EA] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const cur = parseInt(getValues(`products.${index}.quantity`), 10) || 1;
+                            setValue(`products.${index}.quantity`, cur + 1, { shouldValidate: true });
+                          }}
+                          className="cursor-pointer w-7 sm:w-8 h-full flex items-center justify-center text-[#4E5668] bg-[#F0F2F6] hover:bg-[#E4E7ED] hover:text-[#191E2B] active:bg-[#DCE1EA] transition-colors select-none"
+                          aria-label="Increase quantity"
+                        >
+                          <Plus className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                        </button>
+                      </div>
                       {errors.products?.[index]?.quantity && (
                         <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1 font-medium text-center">
                           {t(errors.products[index].quantity.message)}
@@ -384,7 +439,25 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                   <span className="text-sm font-medium text-[#3730A3]">{t('Discount')} {isPercentage ? '(%)' : '(₹)'}</span>
                   <div className="flex items-center gap-1">
                     <span className="text-sm font-medium text-[#3730A3]">{isPercentage ? '%' : '₹'}</span>
-                    <input type="number" {...register('discountInput')} className="w-20 rounded-md border border-[#DCE1EA] px-2 py-1 text-sm font-medium text-right text-[#191E2B] bg-white focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]" placeholder="0" min="0" />
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      {...register('discountInput', {
+                        valueAsNumber: true,
+                        onChange: (e) => {
+                          const val = parseFloat(e.target.value);
+                          if (isNaN(val) || val < 0) {
+                            setValue('discountInput', 0);
+                          }
+                        }
+                      })}
+                      onKeyDown={(e) => {
+                        if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
+                      }}
+                      className="w-20 rounded-md border border-[#DCE1EA] px-2 py-1 text-sm font-medium text-right text-[#191E2B] bg-white focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
+                      placeholder="0"
+                    />
                   </div>
                 </div>
 
@@ -434,7 +507,25 @@ const CreateBillModal = ({ isModalOpen, setIsModalOpen, customers, products, sho
                   <label className="block text-xs sm:text-[13px] font-medium text-[#4E5668] mb-0.5">
                     {t('Amount Paid')} <span className="text-[#B91C1C]">*</span>
                   </label>
-                  <input type="number" {...register('amountPaid')} className={inputCls} placeholder="0" min="0" />
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    {...register('amountPaid', {
+                      valueAsNumber: true,
+                      onChange: (e) => {
+                        const val = parseFloat(e.target.value);
+                        if (isNaN(val) || val < 0) {
+                          setValue('amountPaid', 0);
+                        }
+                      }
+                    })}
+                    onKeyDown={(e) => {
+                      if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
+                    }}
+                    className={inputCls}
+                    placeholder="0"
+                  />
                   {errors.amountPaid && (
                     <p className="text-[#B91C1C] text-[11px] sm:text-xs mt-1.5 font-medium flex items-center gap-1">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />

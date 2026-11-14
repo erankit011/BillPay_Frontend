@@ -102,6 +102,10 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
                   onChange={handleNumberChange}
                   min={0}
                   max={90}
+                  step={1}
+                  onKeyDown={(e) => {
+                    if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
+                  }}
                   placeholder="7"
                   className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                 />
@@ -124,6 +128,10 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
                   value={formData.freePlanMonthlyBillLimit}
                   onChange={handleNumberChange}
                   min={0}
+                  step={1}
+                  onKeyDown={(e) => {
+                    if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
+                  }}
                   placeholder="5"
                   className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                 />
@@ -146,6 +154,10 @@ const PlatformOperationsSettings = ({ settings, onUpdate, isUpdating }) => {
                   value={formData.freePlanCustomerLimit}
                   onChange={handleNumberChange}
                   min={0}
+                  step={1}
+                  onKeyDown={(e) => {
+                    if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
+                  }}
                   placeholder="2"
                   className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                 />

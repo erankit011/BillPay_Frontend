@@ -15,8 +15,17 @@ import { useTranslation } from 'react-i18next';
  */
 const productSchema = yup.object({
   name: yup.string().required('Name is required'),
-  price: yup.number().transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value).min(0, 'Price cannot be negative').required('Price is required'),
-  stock: yup.number().transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value).min(0, 'Stock cannot be negative').required('Stock is required'),
+  price: yup.number()
+    .transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value)
+    .typeError('Price must be a valid number')
+    .min(0, 'Price cannot be negative')
+    .required('Price is required'),
+  stock: yup.number()
+    .transform((value, originalValue) => String(originalValue).trim() === '' ? undefined : value)
+    .typeError('Stock must be a valid number')
+    .integer('Stock must be a whole number')
+    .min(0, 'Stock cannot be negative')
+    .required('Stock is required'),
 });
 
 /**
@@ -130,9 +139,21 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
                   </label>
                   <input
                     type="number"
-                    step="0.01"
-                    {...register('price')}
-                    className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none ${errors.price ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] bg-[#FBFBFC]'}`}
+                    min="0"
+                    step="1"
+                    {...register('price', {
+                      valueAsNumber: true,
+                      onChange: (e) => {
+                        const val = parseFloat(e.target.value);
+                        if (isNaN(val) || val < 0) {
+                          setValue('price', 0);
+                        }
+                      }
+                    })}
+                    onKeyDown={(e) => {
+                      if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
+                    }}
+                    className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none ${errors.price ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC]'}`}
                     placeholder="0"
                   />
                   {errors.price && (
@@ -148,8 +169,21 @@ const ProductFormModal = ({ isOpen, editingProduct, onClose, onSubmit, isPending
                   </label>
                   <input
                     type="number"
-                    {...register('stock')}
-                    className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none ${errors.stock ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC] bg-[#FBFBFC]'}`}
+                    min="0"
+                    step="1"
+                    {...register('stock', {
+                      valueAsNumber: true,
+                      onChange: (e) => {
+                        const val = parseInt(e.target.value, 10);
+                        if (isNaN(val) || val < 0) {
+                          setValue('stock', 0);
+                        }
+                      }
+                    })}
+                    onKeyDown={(e) => {
+                      if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
+                    }}
+                    className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2.5 text-sm md:text-base font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none ${errors.stock ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B] placeholder-[#9AA4B8] bg-[#FBFBFC]'}`}
                     placeholder="0"
                   />
                   {errors.stock && (

@@ -923,6 +923,10 @@ const Settings = () => {
                         value={formData.defaultPaymentTerms}
                         onChange={handleChange}
                         min="0"
+                        step="1"
+                        onKeyDown={(e) => {
+                          if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
+                        }}
                         className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                       />
                       <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Default due period for invoices')}</p>
@@ -974,6 +978,10 @@ const Settings = () => {
                         value={formData.defaultCreditLimit}
                         onChange={handleChange}
                         min="0"
+                        step="1"
+                        onKeyDown={(e) => {
+                          if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
+                        }}
                         className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                       />
                       <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('0 means unlimited credit')}</p>
@@ -1302,6 +1310,10 @@ const Settings = () => {
                           onChange={handleChange}
                           min="1"
                           max="100000"
+                          step="1"
+                          onKeyDown={(e) => {
+                            if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
+                          }}
                           className="block w-full max-w-xs rounded-lg border border-[#DCE1EA] bg-white px-3 py-2 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                         />
                         <p className="text-[#757F94] text-[11px] sm:text-xs mt-1 font-medium">{t('Products with remaining stock at or below this value will trigger alerts')}</p>
@@ -1364,6 +1376,10 @@ const Settings = () => {
                           value={formData.lowStockThreshold}
                           onChange={handleChange}
                           min="1"
+                          step="1"
+                          onKeyDown={(e) => {
+                            if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
+                          }}
                           className="block w-full rounded-lg border border-[#DCE1EA] bg-[#FBFBFC] px-3 py-2.5 text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                         />
                         <p className="text-[#757F94] text-[11px] sm:text-xs mt-1.5 font-medium">{t('Products below this quantity will be flagged')}</p>

@@ -126,7 +126,7 @@ const SearchableSelect = ({
                   closeDropdown();
                   onCreateNew(term);
                 }}
-                className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#EEF0FB] hover:bg-[#E0E4F9] text-[#4338CA] border border-[#D8DCF5] rounded-lg text-xs font-semibold transition-all shadow-none active:scale-95"
+                className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#EEF2FF] hover:bg-[#E0E7FF] text-[#432BC9] border border-[#C7D2FE] rounded-md text-xs font-semibold transition-all shadow-none active:scale-95"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>{createButtonLabel ? `${createButtonLabel} "${searchTerm}"` : `${t('Create')} "${searchTerm}"`}</span>

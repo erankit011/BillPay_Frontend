@@ -329,10 +329,14 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                   <input
                     type="number"
                     min="1"
+                    step="1"
                     max={discountType === 'PERCENTAGE' ? 100 : 5000}
                     required
                     value={discountValue}
                     onChange={(e) => setDiscountValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
+                    }}
                     className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                   />
                 </div>
@@ -351,8 +355,12 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                     <input
                       type="number"
                       min="1"
+                      step="1"
                       value={maxDiscountAmount}
                       onChange={(e) => setMaxDiscountAmount(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
+                      }}
                       placeholder="No cap (e.g. 500)"
                       className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                     />
@@ -366,8 +374,12 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                   <input
                     type="number"
                     min="0"
+                    step="1"
                     value={minOrderAmount}
                     onChange={(e) => setMinOrderAmount(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
+                    }}
                     placeholder="0 (no minimum)"
                     className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                   />
@@ -412,8 +424,12 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                   <input
                     type="number"
                     min="1"
+                    step="1"
                     value={usageLimit}
                     onChange={(e) => setUsageLimit(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
+                    }}
                     placeholder="Unlimited (e.g. 100)"
                     className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                   />
@@ -426,8 +442,12 @@ const CouponModal = ({ isOpen, coupon, onClose, onSave }) => {
                   <input
                     type="number"
                     min="1"
+                    step="1"
                     value={perUserLimit}
                     onChange={(e) => setPerUserLimit(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
+                    }}
                     className="w-full text-sm px-3.5 py-2 bg-[#FBFBFC] text-[#191E2B] placeholder-[#9AA4B8] border border-[#DCE1EA] rounded-lg focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] outline-none"
                   />
                 </div>

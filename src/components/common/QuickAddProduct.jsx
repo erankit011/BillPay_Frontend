@@ -102,6 +102,8 @@ const QuickAddProduct = ({
       errors.stock = t('Stock is required');
     } else if (isNaN(Number(stock)) || Number(stock) < 0) {
       errors.stock = t('Stock cannot be negative');
+    } else if (!Number.isInteger(Number(stock))) {
+      errors.stock = t('Stock must be a whole number');
     }
 
     if (Object.keys(errors).length > 0) {
@@ -217,13 +219,19 @@ const QuickAddProduct = ({
             type="number"
             placeholder="0"
             min="0"
-            step="any"
+            step="1"
             value={price}
             onChange={(e) => {
-              setPrice(e.target.value);
+              let val = e.target.value;
+              if (val.startsWith('-')) val = val.replace(/^-+/, '');
+              if (Number(val) < 0) val = '0';
+              setPrice(val);
               if (fieldErrors.price) setFieldErrors((prev) => ({ ...prev, price: '' }));
             }}
-            onKeyDown={handleKeyDown}
+            onKeyDown={(e) => {
+              if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
+              handleKeyDown(e);
+            }}
             className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none ${
               fieldErrors.price
                 ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
@@ -247,12 +255,19 @@ const QuickAddProduct = ({
             type="number"
             placeholder="0"
             min="0"
+            step="1"
             value={stock}
             onChange={(e) => {
-              setStock(e.target.value);
+              let val = e.target.value;
+              if (val.startsWith('-')) val = val.replace(/^-+/, '');
+              if (Number(val) < 0) val = '0';
+              setStock(val);
               if (fieldErrors.stock) setFieldErrors((prev) => ({ ...prev, stock: '' }));
             }}
-            onKeyDown={handleKeyDown}
+            onKeyDown={(e) => {
+              if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
+              handleKeyDown(e);
+            }}
             className={`block w-full rounded-lg border bg-[#FBFBFC] px-3 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-[#191E2B] placeholder:text-[#9AA4B8] transition-colors duration-200 shadow-none focus:outline-none ${
               fieldErrors.stock
                 ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]'
