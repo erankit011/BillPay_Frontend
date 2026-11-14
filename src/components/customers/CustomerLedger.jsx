@@ -123,7 +123,8 @@ const CustomerLedger = ({ customer, onClose }) => {
     e.preventDefault();
 
     const newErrors = {};
-    if (!amount || amount <= 0) {
+    const numAmount = Number(amount);
+    if (!amount || isNaN(numAmount) || numAmount <= 0) {
       newErrors.amount = 'Enter valid amount';
     }
 
@@ -260,10 +261,18 @@ const CustomerLedger = ({ customer, onClose }) => {
                     </div>
                     <input
                       type="number"
+                      min="1"
+                      step="1"
                       value={amount}
                       onChange={(e) => {
-                        setAmount(e.target.value);
+                        let val = e.target.value;
+                        if (val.startsWith('-')) val = val.replace(/^-+/, '');
+                        if (Number(val) < 0) val = '';
+                        setAmount(val);
                         if (errors.amount) setErrors({ ...errors, amount: null });
+                      }}
+                      onKeyDown={(e) => {
+                        if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault();
                       }}
                       className={`block w-full h-10 sm:h-11 pl-9 pr-3 py-2 bg-[#FBFBFC] border ${errors.amount ? 'border-[#B91C1C] focus:ring-2 focus:ring-[#B91C1C]/20 focus:border-[#B91C1C]' : 'border-[#DCE1EA] focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA] text-[#191E2B]'} rounded-lg focus:outline-none font-medium transition-colors duration-200 text-sm`}
                       placeholder="0"

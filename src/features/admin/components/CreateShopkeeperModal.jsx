@@ -877,10 +877,14 @@ const CreateShopkeeperModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
                         type="number"
                         min="0"
                         max="365"
+                        step="1"
                         value={formData.trialDays}
                         onChange={(e) =>
                           setFormData({ ...formData, trialDays: Math.max(0, parseInt(e.target.value, 10) || 0) })
                         }
+                        onKeyDown={(e) => {
+                          if (['-', '+', 'e', 'E', '.'].includes(e.key)) e.preventDefault();
+                        }}
                         className="w-16 h-8 text-center text-xs font-semibold text-[#191E2B] bg-[#FBFBFC] border border-[#DCE1EA] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4338CA]/20 focus:border-[#4338CA]"
                       />
                       <span className="text-xs font-medium text-[#4E5668]">Days</span>
